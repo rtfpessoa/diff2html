@@ -1,0 +1,73 @@
+/*
+ *
+ * Pretty Diff Style
+ *
+ */
+
+body {
+  text-align: center;
+}
+
+#wrapper {
+  display: inline-block;
+  margin-top: 1em;
+  min-width: 800px;
+  text-align: left;
+}
+
+h2 {
+  background: #fafafa;
+  background: -moz-linear-gradient(#fafafa, #eaeaea);
+  background: -webkit-linear-gradient(#fafafa, #eaeaea);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')";
+  border: 1px solid #d8d8d8;
+  border-bottom: 0;
+  color: #555;
+  font: 14px sans-serif;
+  overflow: hidden;
+  padding: 10px 6px;
+  text-shadow: 0 1px 0 white;
+  margin: 0;
+}
+
+.file-diff {
+  border: 1px solid #d8d8d8;
+  margin-bottom: 1em;
+  overflow: auto;
+  padding: 0.5em 0;
+}
+
+.file-diff > div {
+  width: 100%:
+}
+
+pre {
+  margin: 0;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+  line-height: 18px;
+  text-indent: 5px;
+  color: #333;
+  border: solid #eeeeee;
+  border-width: 0 1px 0 0;
+  cursor: pointer;
+}
+
+.file {
+  color: #aaa;
+}
+
+.delete {
+  background-color: #f7c8c8;
+  border-color: #e9aeae;
+}
+
+.insert {
+  background-color: #ceffce;
+  border-color: #b4e2b4;
+}
+
+.info {
+  background-color: #f8fafd;
+  color: rgba(0,0,0,0.3);
+}
