@@ -1,199 +1,61 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>Diff to HTML by rtfpessoa</title>
+    <meta charset="utf-8">
+    <title>Diff to HTML by rtfpessoa</title>
 
-	<!--
-		Diff to HTML (template.html)
-		Author: rtfpessoa
-		Date: Friday 29 August 2014
-	-->
+    <!--
+        Diff to HTML (template.html)
+        Author: rtfpessoa
+        Date: Friday 29 August 2014
+        Last Update: Saturday 30 August 2014
+    -->
 
-	<link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
 
-	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-	<script type="text/javascript" src="word-diff-parser.js"></script>
-	<script type="text/javascript" src="diff2html.js"></script>
-	<script>
-		var exInput = 'diff --git a/components/enginePlugins/src/main/scala/metrics/Tools.scala b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'index c68cfb8..a1edc93 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'@@ -1,6 +1,7 @@\n' +
-		' package metrics\n' +
-		' \n' +
-		' import java.io\n' +
-		'+import java.nio.file.Files._\n' +
-		' \n' +
-		' import framework.common.Logger.LoggerSystem\n' +
-		' import org.apache.commons.io.FileUtils\n' +
-		'@@ -43,7 +44,7 @@ object Tools {\n' +
-		'   }\n' +
-		' \n' +
-		'   def withTempDir[A](block: io.File => A): A = {\n' +
-		'-    val dir = io.File.createTempFile("codacy", ".tmp")\n' +
-		'+    val dir = createTempDirectory("codacy").toFile\n' +
-		' \n' +
-		'     val res = block(dir)\n' +
-		'     FileUtils.deleteDirectory(dir)\n' +
-		'diff --git a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'index 5935d36..4e7e085 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'@@ -24,7 +24,7 @@ object Plato extends PlatoReads {\n' +
-		'     withTempDir {\n' +
-		'       outputDirectory =>\n' +
-		'         runTool(directory, files, outputDirectory) match {\n' +
-		'-          case (_, tmpFileMapper) =>\n' +
-		'+          case (Some(_), tmpFileMapper) =>\n' +
-		'             val fileFolders = new io.File(outputDirectory, "files")\n' +
-		' \n' +
-		'             fileFolders.list().flatMap {';
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="diff2html.js"></script>
+    <script>
+        var exInput = 'diff --git a/components/enginePlugins/src/main/scala/metrics/Tools.scala b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
+                'index c68cfb8..a1edc93 100644\n' +
+                '--- a/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
+                '+++ b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
+                '@@ -1,6 +1,7 @@\n' +
+                'package metrics\n' +
+                ' \n' +
+                'import java.io\n' +
+                '{+import java.nio.file.Files._+}\n' +
+                ' \n' +
+                'import framework.common.Logger.LoggerSystem\n' +
+                'import org.apache.commons.io.FileUtils\n' +
+                '@@ -43,7 +44,7 @@ object Tools {\n' +
+                '  }\n' +
+                ' \n' +
+                '  def withTempDir[A](block: io.File => A): A = {\n' +
+                '    val dir = [-io.File.-]createTemp[-F-]{+D+}i[-l-]{+r+}e{+ctory+}("codacy"[-, "-]{+)+}.t[-mp")-]{+oFile+}\n' +
+                ' \n' +
+                '    val res = block(dir)\n' +
+                '    FileUtils.deleteDirectory(dir)\n' +
+                'diff --git a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
+                'index 5935d36..4e7e085 100644\n' +
+                '--- a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
+                '+++ b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
+                '@@ -24,7 +24,7 @@ object Plato extends PlatoReads {\n' +
+                '    withTempDir {\n' +
+                '      outputDirectory =>\n' +
+                '        runTool(directory, files, outputDirectory) match {\n' +
+                '          case ({+Some(+}_{+)+}, tmpFileMapper) =>\n' +
+                '            val fileFolders = new io.File(outputDirectory, "files")\n' +
+                ' \n' +
+                '            fileFolders.list().flatMap {';
 
-		var exWordInput = 'diff --git a/components/enginePlugins/src/main/scala/metrics/Tools.scala b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'index c68cfb8..a1edc93 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'@@ -1,6 +1,7 @@\n' +
-		'package metrics\n' +
-    ' \n' +
-		'import java.io\n' +
-		'{+import java.nio.file.Files._+}\n' +
-		' \n' +
-		'import framework.common.Logger.LoggerSystem\n' +
-		'import org.apache.commons.io.FileUtils\n' +
-		'@@ -43,7 +44,7 @@ object Tools {\n' +
-		'  }\n' +
-		' \n' +
-		'  def withTempDir[A](block: io.File => A): A = {\n' +
-		'    val dir = [-io.File.createTempFile("codacy", ".tmp")-]{+createTempDirectory("codacy").toFile+}\n' +
-    ' \n' +
-		'    val res = block(dir)\n' +
-		'    FileUtils.deleteDirectory(dir)\n' +
-		'diff --git a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'index 5935d36..4e7e085 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'@@ -24,7 +24,7 @@ object Plato extends PlatoReads {\n' +
-		'    withTempDir {\n' +
-		'      outputDirectory =>\n' +
-		'        runTool(directory, files, outputDirectory) match {\n' +
-		'          case [-(_,-]{+(Some(_),+} tmpFileMapper) =>\n' +
-		'            val fileFolders = new io.File(outputDirectory, "files")\n' +
-		' \n' +
-		'            fileFolders.list().flatMap {';
-
-		var exDiffInput = 'diff --git a/components/enginePlugins/src/main/scala/metrics/Tools.scala b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'index c68cfb8..a1edc93 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'@@ -1,6 +1,7 @@\n' +
-		' package metrics\n' +
-		' \n' +
-		' import java.io\n' +
-		'+import java.nio.file.Files._\n' +
-		' \n' +
-		' import framework.common.Logger.LoggerSystem\n' +
-		' import org.apache.commons.io.FileUtils\n' +
-		'@@ -43,7 +44,7 @@ object Tools {\n' +
-		'   }\n' +
-		' \n' +
-		'   def withTempDir[A](block: io.File => A): A = {\n' +
-		'-    val dir = io.File.createTempFile("codacy", ".tmp")\n' +
-		'+    val dir = createTempDirectory("codacy").toFile\n' +
-		' \n' +
-		'     val res = block(dir)\n' +
-		'     FileUtils.deleteDirectory(dir)\n' +
-		'diff --git a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'index 5935d36..4e7e085 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'@@ -24,7 +24,7 @@ object Plato extends PlatoReads {\n' +
-		'     withTempDir {\n' +
-		'       outputDirectory =>\n' +
-		'         runTool(directory, files, outputDirectory) match {\n' +
-		'-          case (_, tmpFileMapper) =>\n' +
-		'+          case (Some(_), tmpFileMapper) =>\n' +
-		'             val fileFolders = new io.File(outputDirectory, "files")\n' +
-		' \n' +
-		'             fileFolders.list().flatMap {';
-
-		var exBetterDiffInput = 'diff --git a/components/enginePlugins/src/main/scala/metrics/Tools.scala b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'index c68cfb8..a1edc93 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'@@ -1,6 +1,7 @@\n' +
-		'package metrics\n' +
-		' \n' +
-		'import java.io\n' +
-		'{+import java.nio.file.Files._+}\n' +
-		' \n' +
-		'import framework.common.Logger.LoggerSystem\n' +
-		'import org.apache.commons.io.FileUtils\n' +
-		'@@ -43,7 +44,7 @@ object Tools {\n' +
-		'  }\n' +
-		' \n' +
-		'  def withTempDir[A](block: io.File => A): A = {\n' +
-		'    val dir = [-io.File.createTempFile-]{+createTempDirectory+}("codacy"[-, ".tmp"-]){+.toFile+}\n' +
-		' \n' +
-		'    val res = block(dir)\n' +
-		'    FileUtils.deleteDirectory(dir)\n' +
-		'diff --git a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'index 5935d36..4e7e085 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'@@ -24,7 +24,7 @@ object Plato extends PlatoReads {\n' +
-		'    withTempDir {\n' +
-		'      outputDirectory =>\n' +
-		'        runTool(directory, files, outputDirectory) match {\n' +
-		'          case ({+Some(+}_{+)+}, tmpFileMapper) =>\n' +
-		'            val fileFolders = new io.File(outputDirectory, "files")\n' +
-		' \n' +
-		'            fileFolders.list().flatMap {';
-
-		var exEvenBetterDiffInput = 'diff --git a/components/enginePlugins/src/main/scala/metrics/Tools.scala b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'index c68cfb8..a1edc93 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-		'@@ -1,6 +1,7 @@\n' +
-		'package metrics\n' +
-		' \n' +
-		'import java.io\n' +
-		'{+import java.nio.file.Files._+}\n' +
-		' \n' +
-		'import framework.common.Logger.LoggerSystem\n' +
-		'import org.apache.commons.io.FileUtils\n' +
-		'@@ -43,7 +44,7 @@ object Tools {\n' +
-		'  }\n' +
-		' \n' +
-		'  def withTempDir[A](block: io.File => A): A = {\n' +
-		'    val dir = [-io.File.-]createTemp[-F-]{+D+}i[-l-]{+r+}e{+ctory+}("codacy"[-, "-]{+)+}.t[-mp")-]{+oFile+}\n' +
-		' \n' +
-		'    val res = block(dir)\n' +
-		'    FileUtils.deleteDirectory(dir)\n' +
-		'diff --git a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'index 5935d36..4e7e085 100644\n' +
-		'--- a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'+++ b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-		'@@ -24,7 +24,7 @@ object Plato extends PlatoReads {\n' +
-		'    withTempDir {\n' +
-		'      outputDirectory =>\n' +
-		'        runTool(directory, files, outputDirectory) match {\n' +
-		'          case ({+Some(+}_{+)+}, tmpFileMapper) =>\n' +
-		'            val fileFolders = new io.File(outputDirectory, "files")\n' +
-		' \n' +
-		'            fileFolders.list().flatMap {';
-
-	  $( document ).ready(function() {
-	    $("#wrapper").html(Diff2Html.getInstance().generatePrettyDiff(exDiffInput, exEvenBetterDiffInput));
-			//console.log(WordDiffParser.getInstance().generateChangedWords(exWordInput));
-		});
-	</script>
+        $(document).ready(function () {
+            var content = Diff2Html.getPrettyHtmlFromDiff(exInput);
+            $("body").html(content);
+        });
+    </script>
 
 </head>
 <body>
-	<div id="wrapper">
-	</div>
 </body>
 </html>

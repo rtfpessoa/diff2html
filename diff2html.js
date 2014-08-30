@@ -3,254 +3,290 @@
  * Diff to HTML (diff2html.js)
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
+ * Last Update: Saturday 30 August 2014
  *
- * Useful commands:
- *   git diff HEAD~1
- *   git diff HEAD~1 --word-diff-regex='[[:alnum:]]+|[^[:space:]]'
- *   git diff HEAD~1 --word-diff-regex=.
+ * Diff command:
+ *   git diff --word-diff-regex=. HEAD~1
  */
 
-(function($, window) {
-  var ClassVariable;
+(function (window) {
+    var ClassVariable;
 
-  ClassVariable = (function() {
+    ClassVariable = (function () {
 
-    var CSS_STYLES = {
-      INFO: "info",
-      CONTEXT: "context",
-      NEW: "insert",
-      DELETED: "delete"
-    };
+        var CSS_STYLES = {
+            INFO: "info",
+            CONTEXT: "context",
+            NEW: "insert",
+            DELETED: "delete"
+        };
 
-    var BLOCK_HEADER_LINE = "...";
+        var BLOCK_HEADER_LINE = "...";
 
-    var wordDiffParser = WordDiffParser.getInstance();
-
-    function Diff2Html() {}
-
-    Diff2Html.prototype.generatePrettyDiff = function(diffInput, wordDiffInput) {
-      var diffFiles = splitByFile(diffInput);
-      var changedWords = wordDiffParser.generateChangedWords(wordDiffInput);
-
-      if (!changedWords) {
-        changedWords = {};
-      }
-
-      var html = generateHtml(diffFiles, changedWords);
-
-      return html;
-    };
-
-    var splitByFile = function(diffInput) {
-      var files = [],
-        currentFile = null,
-        currentBlock = null,
-        oldLine = null,
-        newLine = null;
-
-      diffInput.split("\n").forEach(function(line) {
-        // Unmerged paths, and possibly other non-diffable files
-        // https://github.com/scottgonzalez/pretty-diff/issues/11
-        // Also, remove some useless lines
-        if (!line || line.charAt(0) === "*" ||
-          line.indexOf("new") === 0 ||
-          line.indexOf("index") === 0 ||
-          line.indexOf("---") === 0 ||
-          line.indexOf("+++") === 0) {
-          return;
+        function Diff2Html() {
         }
 
-        if (line.indexOf("diff") === 0) {
-          /* File Diff Line */
+        /*
+         * Generates pretty html from string diff input
+         */
+        Diff2Html.prototype.getPrettyHtmlFromDiff = function (diffInput) {
+            var diffJson = generateDiffJson(diffInput);
+            return generateJsonHtml(diffJson);
+        };
 
-          /* add previous block(if exists) before start a new file */
-          if (currentBlock) {
-            currentFile.blocks.push(currentBlock);
-            currentBlock = null;
-          }
+        /*
+         * Generates json object from string diff input
+         */
+        Diff2Html.prototype.getJsonFromDiff = function (diffInput) {
+            return generateDiffJson(diffInput);
+        };
 
-          /* add previous file(if exists) before start a new one */
-          if (currentFile) {
-            files.push(currentFile);
-            currentFile = null;
-          }
+        /*
+         * Generates pretty html from a json object
+         */
+        Diff2Html.prototype.getPrettyHtmlFromJson = function (diffJson) {
+            return generateJsonHtml(diffJson);
+        };
 
-          /* create file structure */
-          currentFile = {};
-          currentFile.blocks = [];
-          currentFile.deletedLines = 0,
-          currentFile.addedLines = 0;
+        var generateDiffJson = function (diffInput) {
+            var files = [],
+                currentFile = null,
+                currentBlock = null,
+                oldLine = null,
+                newLine = null;
 
-          /* save file paths, before and after the diff */
-          var values = /^diff --git a\/(\S+) b\/(\S+).*$/.exec(line);
-          currentFile.oldName = values[1];
-          currentFile.newName = values[2];
+            var saveBlock = function () {
+                /* add previous block(if exists) before start a new file */
+                if (currentBlock) {
+                    currentFile.blocks.push(currentBlock);
+                    currentBlock = null;
+                }
+            };
 
-        } else if (line.indexOf("@@") === 0) {
-          /* Diff Block Header Line */
+            var saveFile = function () {
+                /* add previous file(if exists) before start a new one */
+                if (currentFile) {
+                    files.push(currentFile);
+                    currentFile = null;
+                }
+            };
 
-          var values = /^(@@ -(\d+),(\d+) \+(\d+),(\d+) @@).*/.exec(line);
+            var startFile = function (line) {
+                saveBlock();
+                saveFile();
 
-          /* add previous block(if exists) before start a new one */
-          if (currentBlock) {
-            currentFile.blocks.push(currentBlock);
-            currentBlock = null;
-          }
+                /* create file structure */
+                currentFile = {};
+                currentFile.blocks = [];
+                currentFile.deletedLines = 0;
+                currentFile.addedLines = 0;
 
-          /* create block metadata */
-          currentBlock = {};
-          currentBlock.lines = [];
-          currentBlock.oldStartLine = oldLine = values[2];
-          currentBlock.newStartLine = newLine = values[4];
-          /* update file added and deleted lines */
-          currentFile.deletedLines += currentBlock.deletedLines = parseInt(values[3], 10);
-          currentFile.addedLines += currentBlock.addedLines = parseInt(values[5], 10);
+                /* save file paths, before and after the diff */
+                var values = /^diff --git a\/(\S+) b\/(\S+).*$/.exec(line);
+                currentFile.oldName = values[1];
+                currentFile.newName = values[2];
+            };
 
-          /* create block header line */
-          var currentLine = {};
-          currentLine.type = CSS_STYLES.INFO;
-          currentLine.content = line;
-          currentLine.oldNumber = BLOCK_HEADER_LINE;
-          currentLine.newNumber = BLOCK_HEADER_LINE;
+            var startBlock = function (line) {
+                saveBlock();
 
-          /* add line to block */
-          currentBlock.lines.push(currentLine);
+                var values = /^(@@ -(\d+),(\d+) \+(\d+),(\d+) @@).*/.exec(line);
 
-        } else {
-          /* Regular Diff Line */
+                /* create block metadata */
+                currentBlock = {};
+                currentBlock.lines = [];
+                currentBlock.oldStartLine = oldLine = values[2];
+                currentBlock.newStartLine = newLine = values[4];
 
-          var currentLine = {};
-          currentLine.content = line;
+                /* create block header line */
+                var currentLine = {};
+                currentLine.type = CSS_STYLES.INFO;
+                currentLine.content = line;
+                currentLine.oldNumber = BLOCK_HEADER_LINE;
+                currentLine.newNumber = BLOCK_HEADER_LINE;
 
-          if (line.indexOf("+") === 0) {
-            currentLine.type = CSS_STYLES.NEW;
-            currentLine.oldNumber = null;
-            currentLine.newNumber = newLine++;
+                /* add line to block */
+                currentBlock.lines.push(currentLine);
+            };
 
-          } else if (line.indexOf("-") === 0) {
-            currentLine.type = CSS_STYLES.DELETED;
-            currentLine.oldNumber = oldLine++;
-            currentLine.newNumber = null;
+            var createLine = function (line) {
+                var isLineWithInserts = /{\+.*?\+}/.exec(line);
+                var isLineWithDeletes = /\[-.*?-\]/.exec(line);
+                var isNewLine = /^{\+.*?\+}$/.exec(line);
+                var isContextLine = !isLineWithInserts && !isLineWithDeletes;
 
-          } else {
-            currentLine.type = CSS_STYLES.CONTEXT;
-            currentLine.oldNumber = oldLine++;
-            currentLine.newNumber = newLine++;
+                var currentLine = {};
 
-          }
+                if (isContextLine) {
+                    currentLine = {};
+                    currentLine.type = CSS_STYLES.CONTEXT;
+                    currentLine.oldNumber = oldLine++;
+                    currentLine.newNumber = newLine++;
+                    currentLine.content = line;
 
-          /* add line to block */
-          currentBlock.lines.push(currentLine);
+                    currentBlock.lines.push(currentLine);
+                } else {
+
+                    if (isLineWithDeletes) {
+                        currentFile.deletedLines++;
+
+                        currentLine = {};
+                        currentLine.type = CSS_STYLES.DELETED;
+                        currentLine.oldNumber = oldLine++;
+                        currentLine.newNumber = null;
+                        currentLine.content = line;
+
+                        currentBlock.lines.push(currentLine);
+
+                    }
+
+                    if (isLineWithInserts) {
+                        currentFile.addedLines++;
+
+                        currentLine = {};
+                        currentLine.type = CSS_STYLES.NEW;
+                        currentLine.oldNumber = null;
+                        currentLine.newNumber = newLine++;
+                        currentLine.content = line;
+
+                        /* fix line numbers when new chars but no deletes and no whole new line  */
+                        if (isLineWithInserts && !isLineWithDeletes && !isNewLine) {
+                            currentFile.deletedLines++;
+
+                            currentLine.oldNumber = oldLine++;
+                        }
+
+                        currentBlock.lines.push(currentLine);
+                    }
+
+                }
+            };
+
+            var diffLines = diffInput.split("\n");
+            diffLines.forEach(function (line) {
+                // Unmerged paths, and possibly other non-diffable files
+                // https://github.com/scottgonzalez/pretty-diff/issues/11
+                // Also, remove some useless lines
+                if (!line || startsWith(line, "*") ||
+                    startsWith(line, "new") || startsWith(line, "index") ||
+                    startsWith(line, "---") || startsWith(line, "+++")) {
+                    return;
+                }
+
+                if (startsWith(line, "diff")) {
+                    startFile(line);
+                } else if (currentFile && startsWith(line, "@@")) {
+                    startBlock(line);
+                } else if (currentBlock) {
+                    createLine(line);
+                }
+            });
+
+            saveBlock();
+            saveFile();
+
+            return files;
+        };
+
+        var generateJsonHtml = function (diffFiles) {
+            return "<div id=\"wrapper\">\n" +
+                diffFiles.map(function (file) {
+                    return "<div class=\"file-wrapper\">\n" +
+                        "     <div class=\"file-header\">\n" +
+                        "       <div class=\"file-stats\">\n" +
+                        "         <span class=\"lines-added\">+" + file.addedLines + "</span>\n" +
+                        "         <span class=\"lines-deleted\">-" + file.deletedLines + "</span>\n" +
+                        "       </div>\n" +
+                        "       <div class=\"file-name\">" + getDiffName(file.oldName, file.newName) + "</div>\n" +
+                        "     </div>\n" +
+                        "     <div class=\"file-diff\">\n" +
+                        "       <div class=\"code-wrapper\">\n" +
+                        "         <table class=\"diff-table\">\n" +
+                        "           <tbody>\n" +
+                        "         " + generateFileHtml(file) +
+                        "           </tbody>\n" +
+                        "         </table>\n" +
+                        "       </div>\n" +
+                        "     </div>\n" +
+                        "   </div>\n";
+                }).join("\n") +
+                "</div>\n";
+        };
+
+        var getDiffName = function (oldFilename, newFilename) {
+            return oldFilename === newFilename ? newFilename : oldFilename + " -> " + newFilename;
+        };
+
+        var generateFileHtml = function (file) {
+            return file.blocks.map(function (block) {
+                return block.lines.map(function (line) {
+
+                    var oldLine = valueOrEmpty(line.oldNumber);
+                    var newLine = valueOrEmpty(line.newNumber);
+
+                    var escapedLine = escape(line.content);
+
+                    if (line.type === CSS_STYLES.NEW) {
+                        escapedLine = generateLineInsertions(escapedLine);
+                    } else if (line.type === CSS_STYLES.DELETED) {
+                        escapedLine = generateLineDeletions(escapedLine);
+                    }
+
+                    return "<tr>\n" +
+                        "  <td class=\"code-linenumber " + line.type + "\">" + oldLine + "</td>\n" +
+                        "  <td class=\"code-linenumber " + line.type + "\">" + newLine + "</td>\n" +
+                        "  <td class=\"code-line " + line.type + "\"><pre class=\"" + line.type + "\">" + escapedLine + "</pre></td>\n" +
+                        "</tr>\n";
+                }).join("\n");
+            }).join("\n");
+        };
+
+        var generateLineInsertions = function (line) {
+            return line.replace(/(\[-.*?-\])/g, "").
+                replace(/({\+(.*?)\+})/g, "<ins>$2</ins>");
+        };
+
+        var generateLineDeletions = function (line) {
+            return line.replace(/({\+.*?\+})/g, "").
+                replace(/(\[-(.*?)-\])/g, "<del>$2</del>");
+        };
+
+        /*
+         * Utils
+         */
+
+        function escape(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\t/g, "    ");
         }
-      });
 
-      /* add previous block(if exists) before start a new file */
-      if (currentBlock) {
-        currentFile.blocks.push(currentBlock);
-        currentBlock = null;
-      }
-
-      /* add previous file(if exists) before start a new one */
-      if (currentFile) {
-        files.push(currentFile);
-        currentFile = null;
-      }
-
-      return files;
-    };
-
-    var generateHtml = function(diffFiles, changedWords) {
-      return diffFiles.map(function(file, index) {
-        var fileHeader = file.oldName === file.newName ? file.newName : file.oldName + " -> " + file.newName
-
-        return "<div class=\"file-wrapper\">" +
-          "  <div class=\"file-header\">" +
-          "    <div class=\"file-stats\">" +
-          "    <span class=\"lines-added\">+" + file.addedLines + "</span>" +
-          "    <span class=\"lines-deleted\">-" + file.deletedLines + "</span>" +
-          "    </div>" +
-          "    <div class=\"file-name\">" + fileHeader + "</div>" +
-          "  </div>" +
-          "  <div class=\"file-diff\">" +
-          "    <div class=\"code-wrapper\">" +
-          "      <table class=\"diff-table\">" +
-          "        <tbody>" +
-          generateFileHtml(file, changedWords[index]) +
-          "        </tbody>" +
-          "      </table>" +
-          "    </div>" +
-          "  </div>" +
-          "</div>";
-      });
-    };
-
-    var generateFileHtml = function(file, changedWords) {
-      return file.blocks.map(function(block) {
-        return block.lines.map(function(line) {
-
-          var oldLine = line.oldNumber ? line.oldNumber : "";
-          var newLine = line.newNumber ? line.newNumber : "";
-
-          var oldWords = [];
-          var newWords = [];
-
-          if (oldLine && oldLine !== BLOCK_HEADER_LINE &&
-            changedWords && changedWords.deletedWords && changedWords.deletedWords[oldLine]) {
-            oldWords = changedWords.deletedWords[oldLine];
-          }
-
-          if (newLine && newLine !== BLOCK_HEADER_LINE &&
-            changedWords && changedWords.addedWords && changedWords.addedWords[newLine]) {
-            newWords = changedWords.addedWords[newLine];
-          }
-
-          //var newLine = escape(line.content);
-          var newCodeLine = line.content;
-          newCodeLine = markWords(oldWords, newCodeLine, "del");
-          newCodeLine = markWords(newWords, newCodeLine, "ins");
-
-          return "<tr>" +
-            "  <td class=\"code-linenumber " + line.type + "\">" + oldLine + "</td>" +
-            "  <td class=\"code-linenumber " + line.type + "\">" + newLine + "</td>" +
-            "  <td class=\"code-line " + line.type + "\"><pre>" + newCodeLine + "</pre></td>" +
-            "</tr>";
-        }).join("\n");
-      }).join("\n");
-    };
-
-    var markWords = function(words, line, clazz) {
-      var newLine = line;
-      words.forEach(function(word) {
-        newLine = newLine.replace(word, "<" + clazz + ">" + word + "</" + clazz + ">");
-      });
-
-      return newLine;
-    };
-
-    var escape = function(str) {
-      return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\t/g, "    ");
-    };
-
-    /* singleton pattern */
-    var instance;
-    return {
-      getInstance: function() {
-        if (instance === undefined) {
-          instance = new Diff2Html();
-          /* Hide the constructor so the returned objected can't be new'd */
-          instance.constructor = null;
+        function startsWith(str, start) {
+            return str.indexOf(start) === 0;
         }
-        return instance;
-      }
-    };
 
-  })();
+        function valueOrEmpty(value) {
+            return value ? value : "";
+        }
 
-  window.Diff2Html = ClassVariable;
-  return window.Diff2Html;
+        /* singleton pattern */
+        var instance;
+        return {
+            getInstance: function () {
+                if (instance === undefined) {
+                    instance = new Diff2Html();
+                    /* Hide the constructor so the returned objected can't be new'd */
+                    instance.constructor = null;
+                }
+                return instance;
+            }
+        };
 
-})(jQuery, window);
+    })();
+
+    window.Diff2Html = ClassVariable.getInstance();
+    return window.Diff2Html;
+
+})(window);
