@@ -150,8 +150,6 @@ td, th {
   vertical-align: top;
   white-space: pre;
   overflow: visible;
-  padding-top: 4px;
-  padding-bottom: 4px;
 }
 
 .delete {
@@ -171,4 +169,20 @@ td, th {
   vertical-align: middle;
   color: rgba(0,0,0,0.3);
   border-color: #d5e4f2;
+}
+
+.code-line del {
+  display: inline-block;
+  margin-top: -1px;
+  text-decoration: none;
+  background-color: #ffb6ba;
+  font-weight: 700;
+}
+
+.code-line ins {
+  display: inline-block;
+  margin-top: -1px;
+  text-decoration: none;
+  background-color: #97f295;
+  font-weight: 700;
 }

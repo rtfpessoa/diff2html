@@ -4,6 +4,10 @@
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
  *
+ * Useful commands:
+ *   git diff HEAD~1
+ *   git diff HEAD~1 --word-diff-regex='[[:alnum:]]+|[^[:space:]]'
+ *   git diff HEAD~1 --word-diff-regex=.
  */
 
 (function($, window) {
@@ -18,13 +22,21 @@
       DELETED: "delete"
     };
 
-    var BLOCK_HEADER_LINE = "..."
+    var BLOCK_HEADER_LINE = "...";
 
-      function Diff2Html() {}
+    var wordDiffParser = WordDiffParser.getInstance();
 
-    Diff2Html.prototype.generatePrettyDiff = function(diffInput) {
+    function Diff2Html() {}
+
+    Diff2Html.prototype.generatePrettyDiff = function(diffInput, wordDiffInput) {
       var diffFiles = splitByFile(diffInput);
-      var html = generateHtml(diffFiles);
+      var changedWords = wordDiffParser.generateChangedWords(wordDiffInput);
+
+      if (!changedWords) {
+        changedWords = {};
+      }
+
+      var html = generateHtml(diffFiles, changedWords);
 
       return html;
     };
@@ -147,45 +159,72 @@
       return files;
     };
 
-    var generateHtml = function( diffFiles ) {
-      return diffFiles.map(function( file ) {
+    var generateHtml = function(diffFiles, changedWords) {
+      return diffFiles.map(function(file, index) {
         var fileHeader = file.oldName === file.newName ? file.newName : file.oldName + " -> " + file.newName
 
         return "<div class=\"file-wrapper\">" +
-               "  <div class=\"file-header\">" +
-               "    <div class=\"file-stats\">" +
-               "    <span class=\"lines-added\">+" + file.addedLines + "</span>" +
-               "    <span class=\"lines-deleted\">-" + file.deletedLines + "</span>" +
-               "    </div>" +
-               "    <div class=\"file-name\">" + fileHeader + "</div>" +
-               "  </div>" +
-               "  <div class=\"file-diff\">" +
-               "    <div class=\"code-wrapper\">" +
-               "      <table class=\"diff-table\">" +
-               "        <tbody>" +
-                          generateFileHtml(file) +
-               "        </tbody>" +
-               "      </table>" +
-               "    </div>" +
-               "  </div>" +
-               "</div>";
+          "  <div class=\"file-header\">" +
+          "    <div class=\"file-stats\">" +
+          "    <span class=\"lines-added\">+" + file.addedLines + "</span>" +
+          "    <span class=\"lines-deleted\">-" + file.deletedLines + "</span>" +
+          "    </div>" +
+          "    <div class=\"file-name\">" + fileHeader + "</div>" +
+          "  </div>" +
+          "  <div class=\"file-diff\">" +
+          "    <div class=\"code-wrapper\">" +
+          "      <table class=\"diff-table\">" +
+          "        <tbody>" +
+          generateFileHtml(file, changedWords[index]) +
+          "        </tbody>" +
+          "      </table>" +
+          "    </div>" +
+          "  </div>" +
+          "</div>";
       });
     };
 
-    var generateFileHtml = function(file) {
+    var generateFileHtml = function(file, changedWords) {
       return file.blocks.map(function(block) {
         return block.lines.map(function(line) {
 
-          var oldLine = line.oldNumber ? line.oldNumber : "",
-            newLine = line.newNumber ? line.newNumber : "";
+          var oldLine = line.oldNumber ? line.oldNumber : "";
+          var newLine = line.newNumber ? line.newNumber : "";
+
+          var oldWords = [];
+          var newWords = [];
+
+          if (oldLine && oldLine !== BLOCK_HEADER_LINE &&
+            changedWords && changedWords.deletedWords && changedWords.deletedWords[oldLine]) {
+            oldWords = changedWords.deletedWords[oldLine];
+          }
+
+          if (newLine && newLine !== BLOCK_HEADER_LINE &&
+            changedWords && changedWords.addedWords && changedWords.addedWords[newLine]) {
+            newWords = changedWords.addedWords[newLine];
+          }
+
+          //var newLine = escape(line.content);
+          var newCodeLine = line.content;
+          newCodeLine = markWords(oldWords, newCodeLine, "del");
+          newCodeLine = markWords(newWords, newCodeLine, "ins");
 
           return "<tr>" +
             "  <td class=\"code-linenumber " + line.type + "\">" + oldLine + "</td>" +
             "  <td class=\"code-linenumber " + line.type + "\">" + newLine + "</td>" +
-            "  <td class=\"code-line " + line.type + "\">" + escape(line.content) + "</td>" +
+            "  <td class=\"code-line " + line.type + "\"><pre>" + newCodeLine + "</pre></td>" +
             "</tr>";
         }).join("\n");
       }).join("\n");
+    };
+
+    var markWords = function(words, line, clazz) {
+      var newLine = line;
+      words.forEach(function(word) {
+        newLine = newLine.replace(word, "<" + clazz + ">" + word + "</" + clazz + ">");
+      });
+
+      return newLine;
     };
 
     var escape = function(str) {
