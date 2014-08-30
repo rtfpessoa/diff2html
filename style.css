@@ -1,6 +1,8 @@
 /*
  *
- * Pretty Diff Style
+ * Diff to HTML (style.css)
+ * Author: rtfpessoa
+ * Date: Friday 29 August 2014
  *
  */
 
@@ -11,30 +13,35 @@ body {
 #wrapper {
   display: inline-block;
   margin-top: 1em;
-  min-width: 800px;
   text-align: left;
+  width: 920px;
 }
 
-h2 {
-  background: #fafafa;
-  background: -moz-linear-gradient(#fafafa, #eaeaea);
-  background: -webkit-linear-gradient(#fafafa, #eaeaea);
-  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')";
-  border: 1px solid #d8d8d8;
-  border-bottom: 0;
-  color: #555;
-  font: 14px sans-serif;
-  overflow: hidden;
-  padding: 10px 6px;
-  text-shadow: 0 1px 0 white;
-  margin: 0;
+.file-wrapper {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin-bottom: 1em;
+}
+
+.file-header {
+  padding: 5px 10px;
+  text-shadow: 0 1px 0 #fff;
+  border-bottom: 1px solid #d8d8d8;
+  background-color: #f7f7f7;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  box-sizing: border-box;
+}
+
+.file-name {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+  height: 33px;
+  line-height: 33px;
 }
 
 .file-diff {
-  border: 1px solid #d8d8d8;
-  margin-bottom: 1em;
   overflow: auto;
-  padding: 0.5em 0;
 }
 
 .file-diff > div {
@@ -53,21 +60,89 @@ pre {
   cursor: pointer;
 }
 
-.file {
-  color: #aaa;
+.code-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.diff-table {
+  border-collapse: separate;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+
+tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
+td, th {
+  padding: 0;
+}
+
+.code-linenumber {
+  width: 1%;
+  min-width: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(0,0,0,0.3);
+  vertical-align: top;
+  text-align: right;
+  border: solid #eeeeee;
+  border-width: 0 1px 0 0;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.code-line {
+  position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+  color: #333;
+  vertical-align: top;
+  white-space: pre;
+  overflow: visible;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 .delete {
+  vertical-align: middle;
   background-color: #f7c8c8;
   border-color: #e9aeae;
 }
 
 .insert {
+  vertical-align: middle;
   background-color: #ceffce;
   border-color: #b4e2b4;
 }
 
 .info {
   background-color: #f8fafd;
+  vertical-align: middle;
   color: rgba(0,0,0,0.3);
+  border-color: #d5e4f2;
 }
