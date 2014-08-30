@@ -34,10 +34,36 @@ body {
 }
 
 .file-name {
+  display: inline-block;
   font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
   line-height: 1.4;
   height: 33px;
   line-height: 33px;
+}
+
+.file-stats {
+  display: inline-block;
+  font-family: monospace,monospace;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.lines-added {
+  background-color: #ceffce;
+  border-color: #b4e2b4;
+  border: 1px solid;
+  color: #399839;
+  border-radius: 5px 0 0 5px;
+  padding: 5px;
+}
+
+.lines-deleted {
+  background-color: #f7c8c8;
+  border-color: #e9aeae;
+  border: 1px solid;
+  color: #c33;
+  border-radius: 0 5px 5px 0;
+  padding: 5px;
 }
 
 .file-diff {

@@ -66,6 +66,8 @@
           /* create file structure */
           currentFile = {};
           currentFile.blocks = [];
+          currentFile.deletedLines = 0,
+          currentFile.addedLines = 0;
 
           /* save file paths, before and after the diff */
           var values = /^diff --git a\/(\S+) b\/(\S+).*$/.exec(line);
@@ -88,8 +90,9 @@
           currentBlock.lines = [];
           currentBlock.oldStartLine = oldLine = values[2];
           currentBlock.newStartLine = newLine = values[4];
-          currentBlock.deletedLines = values[3];
-          currentBlock.addedLines = values[5];
+          /* update file added and deleted lines */
+          currentFile.deletedLines += currentBlock.deletedLines = parseInt(values[3], 10);
+          currentFile.addedLines += currentBlock.addedLines = parseInt(values[5], 10);
 
           /* create block header line */
           var currentLine = {};
@@ -150,6 +153,10 @@
 
         return "<div class=\"file-wrapper\">" +
                "  <div class=\"file-header\">" +
+               "    <div class=\"file-stats\">" +
+               "    <span class=\"lines-added\">+" + file.addedLines + "</span>" +
+               "    <span class=\"lines-deleted\">-" + file.deletedLines + "</span>" +
+               "    </div>" +
                "    <div class=\"file-name\">" + fileHeader + "</div>" +
                "  </div>" +
                "  <div class=\"file-diff\">" +
