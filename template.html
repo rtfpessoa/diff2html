@@ -13,46 +13,54 @@
 
     <link rel="stylesheet" type="text/css" href="style.css">
 
-    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="diff2html.js"></script>
     <script>
-        var exInput = 'diff --git a/components/enginePlugins/src/main/scala/metrics/Tools.scala b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-                'index c68cfb8..a1edc93 100644\n' +
-                '--- a/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-                '+++ b/components/enginePlugins/src/main/scala/metrics/Tools.scala\n' +
-                '@@ -1,6 +1,7 @@\n' +
-                'package metrics\n' +
-                ' \n' +
-                'import java.io\n' +
-                '{+import java.nio.file.Files._+}\n' +
-                ' \n' +
-                'import framework.common.Logger.LoggerSystem\n' +
-                'import org.apache.commons.io.FileUtils\n' +
-                '@@ -43,7 +44,7 @@ object Tools {\n' +
-                '  }\n' +
-                ' \n' +
-                '  def withTempDir[A](block: io.File => A): A = {\n' +
-                '    val dir = [-io.File.-]createTemp[-F-]{+D+}i[-l-]{+r+}e{+ctory+}("codacy"[-, "-]{+)+}.t[-mp")-]{+oFile+}\n' +
-                ' \n' +
-                '    val res = block(dir)\n' +
-                '    FileUtils.deleteDirectory(dir)\n' +
-                'diff --git a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-                'index 5935d36..4e7e085 100644\n' +
-                '--- a/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-                '+++ b/components/enginePlugins/src/main/scala/metrics/js/Plato.scala\n' +
-                '@@ -24,7 +24,7 @@ object Plato extends PlatoReads {\n' +
-                '    withTempDir {\n' +
-                '      outputDirectory =>\n' +
-                '        runTool(directory, files, outputDirectory) match {\n' +
-                '          case ({+Some(+}_{+)+}, tmpFileMapper) =>\n' +
-                '            val fileFolders = new io.File(outputDirectory, "files")\n' +
-                ' \n' +
-                '            fileFolders.list().flatMap {';
+        var exInput = 'diff --git a/src/app/language/en.json b/src/app/language/en.json\n' +
+        'index ccf92c9..68b8345 100644\n' +
+        '--- a/src/app/language/en.json\n' +
+        '+++ b/src/app/language/en.json\n' +
+        '@@ -270,5 +270,6 @@\n' +
+        '    "Open Item Details": "Open Item Details",\n' +
+        '    "Add Item to Favorites": "Add Item to Favorites",\n' +
+        '    "Mark as Seen": "Mark as Seen",\n' +
+        '    "Open Settings": "Open Settings"{+,+}\n' +
+        '{+  "Custom...": "Custom..."+}\n' +
+        '}\n' +
+        'diff --git a/src/app/language/fr.json b/src/app/language/fr.json\n' +
+        'index 9c773c5..8fb637a 100644\n' +
+        '--- a/src/app/language/fr.json\n' +
+        '+++ b/src/app/language/fr.json\n' +
+        '@@ -266,5 +266,6 @@\n' +
+        '    "Add Item to Favorites": "Ajouter aux favoris",\n' +
+        '    "Mark as Seen": "Marquer comme vu",\n' +
+        '    "Open this screen": "Afficher cette page",\n' +
+        '    "Open Settings": "Ouvrir les Réglages"{+,+}\n' +
+        '{+  "Custom...": "Ajouter un fichier..."+}\n' +
+        '}\n' +
+        'diff --git a/src/app/vendor/videojsplugins.js b/src/app/vendor/videojsplugins.js\n' +
+        'index 10856e3..892b7ca 100644\n' +
+        '--- a/src/app/vendor/videojsplugins.js\n' +
+        '+++ b/src/app/vendor/videojsplugins.js\n' +
+        '@@ -83,7 +83,7 @@ videojs.plugin(\'customSubtitles\', function() {\n' +
+        '      options[\'track\'] = {\n' +
+        '        kind: function() { return \'subtitles\'; },\n' +
+        '        player: player,\n' +
+        '        label: function(){ return [-\'-]{+i18n.__("+}Custom...[-\'-]{+")+} },\n' +
+        '        dflt: function(){ return false; },\n' +
+        '        mode: function(){ return false; }\n' +
+        '      };\n' +
+        '@@ -107,7 +107,7 @@ videojs.plugin(\'customSubtitles\', function() {\n' +
+        '\n' +
+        '  CustomTrackMenuItem.prototype.loadSubtitle = function(filePath) {\n' +
+        '    // TODO Delete old track\n' +
+        '    this.track = this.player_.addTextTrack(\'subtitles\', [-\'-]{+i18n.__("+}Custom...[-\'-]{+")+}, \'00\', { src: filePath });\n' +
+        '    vjs.TextTrackMenuItem.prototype.onClick.call(this); // redirect to TextTrackMenuItem.onClick\n' +
+        '  }\n';
 
-        $(document).ready(function () {
-            var content = Diff2Html.getPrettyHtmlFromDiff(exInput);
-            $("body").html(content);
-        });
+        document.onreadystatechange = function () {
+          var content = Diff2Html.getPrettyHtmlFromDiff(exInput);
+          document.getElementsByTagName('body')[0].innerHTML = content;
+        }
     </script>
 
 </head>
