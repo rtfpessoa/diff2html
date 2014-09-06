@@ -3,7 +3,7 @@
  * Diff to HTML (diff2html.js)
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
- * Last Update: Saturday 30 August 2014
+ * Last Update: Friday 6 September 2014
  *
  * Diff command:
  *   git diff --word-diff-regex=. HEAD~1
@@ -15,10 +15,10 @@
     ClassVariable = (function () {
 
         var CSS_STYLES = {
-            INFO: "info",
-            CONTEXT: "context",
-            NEW: "insert",
-            DELETED: "delete"
+            INFO: "d2h-info",
+            CONTEXT: "d2h-context",
+            NEW: "d2h-insert",
+            DELETED: "d2h-delete"
         };
 
         var BLOCK_HEADER_LINE = "...";
@@ -189,20 +189,20 @@
         };
 
         var generateJsonHtml = function (diffFiles) {
-            return "<div id=\"wrapper\">\n" +
+            return "<div id=\"d2h-wrapper\">\n" +
                 diffFiles.map(function (file) {
-                    return "<div class=\"file-wrapper\">\n" +
-                        "     <div class=\"file-header\">\n" +
-                        "       <div class=\"file-stats\">\n" +
-                        "         <span class=\"lines-added\">+" + file.addedLines + "</span>\n" +
-                        "         <span class=\"lines-deleted\">-" + file.deletedLines + "</span>\n" +
+                    return "<div class=\"d2h-file-wrapper\">\n" +
+                        "     <div class=\"d2h-file-header\">\n" +
+                        "       <div class=\"d2h-file-stats\">\n" +
+                        "         <span class=\"d2h-lines-added\">+" + file.addedLines + "</span>\n" +
+                        "         <span class=\"d2h-lines-deleted\">-" + file.deletedLines + "</span>\n" +
                         "       </div>\n" +
-                        "       <div class=\"file-name\">" + getDiffName(file.oldName, file.newName) + "</div>\n" +
+                        "       <div class=\"d2h-file-name\">" + getDiffName(file.oldName, file.newName) + "</div>\n" +
                         "     </div>\n" +
-                        "     <div class=\"file-diff\">\n" +
-                        "       <div class=\"code-wrapper\">\n" +
-                        "         <table class=\"diff-table\">\n" +
-                        "           <tbody>\n" +
+                        "     <div class=\"d2h-file-diff\">\n" +
+                        "       <div class=\"d2h-code-wrapper\">\n" +
+                        "         <table class=\"d2h-diff-table\">\n" +
+                        "           <tbody class=\"d2h-diff-tbody\">\n" +
                         "         " + generateFileHtml(file) +
                         "           </tbody>\n" +
                         "         </table>\n" +
@@ -233,9 +233,9 @@
                     }
 
                     return "<tr>\n" +
-                        "  <td class=\"code-linenumber " + line.type + "\">" + oldLine + "</td>\n" +
-                        "  <td class=\"code-linenumber " + line.type + "\">" + newLine + "</td>\n" +
-                        "  <td class=\"code-line " + line.type + "\"><pre class=\"" + line.type + "\">" + escapedLine + "</pre></td>\n" +
+                        "  <td class=\"d2h-code-linenumber " + line.type + "\">" + oldLine + "</td>\n" +
+                        "  <td class=\"d2h-code-linenumber " + line.type + "\">" + newLine + "</td>\n" +
+                        "  <td class=\"d2h-code-line " + line.type + "\"><div class=\"" + line.type + "\">" + escapedLine + "</pre></td>\n" +
                         "</tr>\n";
                 }).join("\n");
             }).join("\n");
