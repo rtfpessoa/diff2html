@@ -4,7 +4,7 @@ Diff to Html generates pretty HTML diffs from git word diff output.
 
 ## Features
 
-* line-by-line diff (not side-by-side)
+* line-by-line` diff
 
 * char-by-char highlight
 
@@ -14,11 +14,21 @@ Diff to Html generates pretty HTML diffs from git word diff output.
 
 * GitHub like style
 
-## Setup
+## Real Example
 
-Import the diff2html.js in your html.
+> Go to [Diff2HTML](http://rtfpessoa.github.io/diff2html/)
 
-> Pretty Html From Git Word Diff Output
+## Distributions
+
+* [WebJar](http://www.webjars.org/)
+
+* [Node Module](https://www.npmjs.org/package/diff2html)
+
+* Manually download and import `diff2html.js` into your page
+
+## How to use
+
+> Pretty Line-by-Line Html From Git Word Diff Output
 
     Diff2Html.getPrettyHtmlFromDiff(exInput);
 
@@ -26,11 +36,11 @@ Import the diff2html.js in your html.
 
     Diff2Html.getJsonFromDiff(exInput);
 
-> Pretty Html From Json
+> Pretty Line-by-Line Html From Json
 
     Diff2Html.getPrettyHtmlFromJson(exInput);
 
-> Check out the `template.html` for a complete example.
+> Check out the `index.html` for a complete example.
 
 ## Contributions
 

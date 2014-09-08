@@ -35,7 +35,7 @@
          */
         Diff2Html.prototype.getPrettyHtmlFromDiff = function (diffInput) {
             var diffJson = generateDiffJson(diffInput);
-            return generateJsonHtml(diffJson);
+            return generateJsonHtml(diffJson, generateFileHtml);
         };
 
         /*
@@ -49,7 +49,7 @@
          * Generates pretty html from a json object
          */
         Diff2Html.prototype.getPrettyHtmlFromJson = function (diffJson) {
-            return generateJsonHtml(diffJson);
+            return generateJsonHtml(diffJson, generateFileHtml);
         };
 
         var generateDiffJson = function (diffInput) {
@@ -94,13 +94,20 @@
             var startBlock = function (line) {
                 saveBlock();
 
-                var values = /^(@@ -(\d+),(\d+) \+(\d+),(\d+) @@).*/.exec(line);
+                var values;
+                if (values = /^(@@ -(\d+),(\d+) \+(\d+),(\d+) @@).*/.exec(line)) {
+                    oldLine = values[2];
+                    newLine = values[4];
+                } else {
+                    oldLine = 0;
+                    newLine = 0;
+                }
 
                 /* create block metadata */
                 currentBlock = {};
                 currentBlock.lines = [];
-                currentBlock.oldStartLine = oldLine = values[2];
-                currentBlock.newStartLine = newLine = values[4];
+                currentBlock.oldStartLine = oldLine;
+                currentBlock.newStartLine = newLine;
                 currentBlock.header = line;
             };
 
@@ -206,8 +213,8 @@
          * Line By Line HTML
          */
 
-        var generateJsonHtml = function (diffFiles) {
-            return "<div id=\"d2h-wrapper\">\n" +
+        var generateJsonHtml = function (diffFiles, htmlTypeFunction) {
+            return "<div class=\"d2h-wrapper\">\n" +
                 diffFiles.map(function (file) {
                     return "<div class=\"d2h-file-wrapper\">\n" +
                         "     <div class=\"d2h-file-header\">\n" +
@@ -221,7 +228,7 @@
                         "       <div class=\"d2h-code-wrapper\">\n" +
                         "         <table class=\"d2h-diff-table\">\n" +
                         "           <tbody class=\"d2h-diff-tbody\">\n" +
-                        "         " + generateFileHtml(file) +
+                        "         " + htmlTypeFunction(file) +
                         "           </tbody>\n" +
                         "         </table>\n" +
                         "       </div>\n" +
@@ -297,17 +304,15 @@
 
         var generateLineHtml = function (line) {
             return "<tr>\n" +
-                "  <td class=\"d2h-code-linenumber " + line.type + "\">" + line.oldLine + "</td>\n" +
-                "  <td class=\"d2h-code-linenumber " + line.type + "\">" + line.newLine + "</td>\n" +
+                "  <td class=\"d2h-code-linenumber " + line.type + "\">" +
+                "    <div class=\"line-num1\">" + line.oldLine + "</div>" +
+                "    <div class=\"line-num2\">" + line.newLine + "</div>" +
+                "  </td>\n" +
                 "  <td class=\"" + line.type + "\">" +
                 "    <div class=\"d2h-code-line " + line.type + "\">" + line.content + "</div>" +
                 "  </td>\n" +
                 "</tr>\n";
         };
-
-        /*
-         * Side By Side HTML (work in progress)
-         */
 
         /*
          * HTML Helpers
