@@ -8,7 +8,7 @@
         Diff to HTML (template.html)
         Author: rtfpessoa
         Date: Friday 29 August 2014
-        Last Update: Saturday 6 September 2014
+        Last Update: Sunday 14 September 2014
     -->
 
     <!--<link rel="stylesheet" type="text/css" href="diff2html.css">-->
@@ -63,6 +63,8 @@
             var diffJson = Diff2Html.getJsonFromDiff(exInput);
             var lineByLineDiffHtml = Diff2Html.getPrettyHtmlFromJson(diffJson);
             document.getElementById('line-by-line').innerHTML = lineByLineDiffHtml;
+            var sideBySideDiffHtml = Diff2Html.getPrettySideBySideHtmlFromJson(diffJson);
+            document.getElementById('side-by-side').innerHTML = sideBySideDiffHtml;
         }
     </script>
 
@@ -72,7 +74,12 @@
 
 <h2>Line by Line</h2>
 
-<div id="line-by-line" style="margin: 0 auto; width: 900px;">
+<div id="line-by-line" style="margin: 0 auto; max-width: 900px;">
+</div>
+
+<h2>Side by Side</h2>
+
+<div id="side-by-side" style="margin: 0 auto;">
 </div>
 </body>
 </html>
