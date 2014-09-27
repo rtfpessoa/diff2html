@@ -3,7 +3,7 @@
  * Diff to HTML (diff2html.css)
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
- * Last Update: Saturday 6 September 2014
+ * Last Update: Saturday 27 September 2014
  *
  */
 
@@ -109,7 +109,7 @@
     display: inline-block;
     margin-top: -1px;
     text-decoration: none;
-    background-color: #f99;
+    background-color: #ffb6ba;
     font-weight: 700;
     border-radius: 0.2em;
 }
@@ -119,7 +119,7 @@
     display: inline-block;
     margin-top: -1px;
     text-decoration: none;
-    background-color: #6f7;
+    background-color: #97f295;
     font-weight: 700;
     border-radius: 0.2em;
 }
@@ -128,12 +128,16 @@
     display: inline-block;
     float: left;
     width: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .line-num2 {
     display: inline-block;
     float: right;
     width: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .d2h-code-linenumber {
@@ -154,8 +158,7 @@
 
 .d2h-code-side-linenumber {
     position: absolute;
-    width: 2%;
-    min-width: 35px;
+    width: 35px;
     padding-left: 10px;
     padding-right: 10px;
     height: 18px;
@@ -166,15 +169,17 @@
     border: solid #eeeeee;
     border-width: 0 1px 0 1px;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .d2h-del {
-    background-color: #f7c8c8;
+    background-color: #fee8e9;
     border-color: #e9aeae;
 }
 
 .d2h-ins {
-    background-color: #ceffce;
+    background-color: #dfd;
     border-color: #b4e2b4;
 }
 
