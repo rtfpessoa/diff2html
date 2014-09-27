@@ -176,10 +176,8 @@
 
         document.onreadystatechange = function () {
             var diffJson = Diff2Html.getJsonFromDiff(lineDiffExample);
-            var lineByLineDiffHtml = Diff2Html.getPrettyHtmlFromJson(diffJson);
-            document.getElementById('line-by-line').innerHTML = lineByLineDiffHtml;
-            var sideBySideDiffHtml = Diff2Html.getPrettySideBySideHtmlFromJson(diffJson);
-            document.getElementById('side-by-side').innerHTML = sideBySideDiffHtml;
+            document.getElementById('line-by-line').innerHTML = Diff2Html.getPrettyHtmlFromJson(diffJson);
+            document.getElementById('side-by-side').innerHTML = Diff2Html.getPrettySideBySideHtmlFromJson(diffJson);
         }
     </script>
 

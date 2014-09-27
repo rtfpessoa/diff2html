@@ -218,30 +218,29 @@
                     "</tr>\n";
 
                 for (var i = 0; i < block.lines.length; i++) {
+                    var prevLine = block.lines[i - 1];
                     var line = block.lines[i];
                     var newLine = block.lines[i + 1];
+                    var nextNewLine = block.lines[i + 2];
 
-                    if (line.type == LINE_TYPE.DELETES &&
-                        newLine && newLine.type == LINE_TYPE.INSERTS) {
-                        i++;
+                    var isOppositeTypeTwoLineBlock =
+                        line.type == LINE_TYPE.DELETES &&
+                        newLine && newLine.type == LINE_TYPE.INSERTS &&
+                        (!nextNewLine || nextNewLine && nextNewLine.type != LINE_TYPE.INSERTS) &&
+                        (!prevLine || prevLine && prevLine.type != LINE_TYPE.DELETES);
 
+                    if (isOppositeTypeTwoLineBlock) {
                         var escapedLine = escape(line.content);
                         var nextEscapedLine = escape(newLine.content);
 
-                        var diff = diffString(escapedLine, nextEscapedLine);
+                        var diff = diffHighlight(escapedLine, nextEscapedLine);
 
-                        var delLine = removeIns(diff);
-                        var insLine = removeDel(diff);
+                        lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, diff.o) +
+                            generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, diff.n);
 
-                        console.log("INS: " + insLine);
-                        console.log("DEL: " + delLine);
-
-                        lines = lines +
-                            generateLineHtml(line.type, line.oldNumber, line.newNumber, removeIns(diff)) +
-                            generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, removeDel(diff));
+                        i++;
                     } else {
-                        lines = lines +
-                            generateLineHtml(line.type, line.oldNumber, line.newNumber, line.content);
+                        lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, line.content);
                     }
                 }
 
@@ -325,24 +324,25 @@
                     "</tr>\n";
 
                 for (var i = 0; i < block.lines.length; i++) {
-
-                    fileHtml.left += "<tr>\n";
-                    fileHtml.right += "<tr>\n";
-
+                    var prevLine = block.lines[i - 1];
                     var line = block.lines[i];
                     var newLine = block.lines[i + 1];
+                    var nextNewLine = block.lines[i + 2];
 
-                    if (line.type == LINE_TYPE.DELETES &&
-                        newLine && newLine.type == LINE_TYPE.INSERTS) {
-                        i++;
+                    var isOpositeTypeTwoLineBlock = line.type == LINE_TYPE.DELETES && newLine && newLine.type == LINE_TYPE.INSERTS &&
+                        (!nextNewLine || nextNewLine && nextNewLine.type != LINE_TYPE.INSERTS) &&
+                        (!prevLine || prevLine && prevLine.type != LINE_TYPE.DELETES);
 
+                    if (isOpositeTypeTwoLineBlock) {
                         var escapedLine = escape(line.content);
                         var nextEscapedLine = escape(newLine.content);
 
-                        var diff = diffString(escapedLine, nextEscapedLine);
+                        var diff = diffHighlight(escapedLine, nextEscapedLine);
 
-                        fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, removeIns(diff));
-                        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, removeDel(diff));
+                        fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, diff.o);
+                        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.n);
+
+                        i++;
                     } else if (line.type == LINE_TYPE.DELETES) {
                         fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, line.content);
                         fileHtml.right += generateSingleLineHtml(LINE_TYPE.CONTEXT, "", "", "");
@@ -353,9 +353,6 @@
                         fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, line.content);
                         fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, line.content);
                     }
-
-                    fileHtml.left += "</tr>\n";
-                    fileHtml.right += "</tr>\n";
                 }
 
             });
@@ -364,10 +361,12 @@
         };
 
         var generateSingleLineHtml = function (type, number, content) {
-            return "<td class=\"d2h-code-side-linenumber " + type + "\">" + number + "</td>\n" +
-                "   <td class=\"" + type + "\">" +
-                "     <div class=\"d2h-code-side-line " + type + "\">" + content + "</div>" +
-                "   </td>\n";
+            return"<tr>\n" +
+                "    <td class=\"d2h-code-side-linenumber " + type + "\">" + number + "</td>\n" +
+                "    <td class=\"" + type + "\">" +
+                "      <div class=\"d2h-code-side-line " + type + "\">" + content + "</div>" +
+                "    </td>\n" +
+                "  </tr>\n";
         };
 
         /*
@@ -379,11 +378,11 @@
         };
 
         var removeIns = function (line) {
-            return line.replace(/(<ins>(.*?)<\/ins>)/g, "");
+            return line.replace(/(<ins>((.|\n)*?)<\/ins>)/g, "");
         };
 
         var removeDel = function (line) {
-            return line.replace(/(<del>(.*?)<\/del>)/g, "");
+            return line.replace(/(<del>((.|\n)*?)<\/del>)/g, "");
         };
 
         /*
@@ -404,6 +403,16 @@
 
         function valueOrEmpty(value) {
             return value ? value : "";
+        }
+
+        function diffHighlight(diffLine1, diffLine2) {
+            /* remove the initial -/+ to avoid always having diff in the first char */
+            var highlightedLine = diffString(diffLine1.substr(1), diffLine2.substr(1));
+
+            return {
+                o: diffLine1.charAt(0) + removeIns(highlightedLine),
+                n: diffLine2.charAt(0) + removeDel(highlightedLine)
+            }
         }
 
         /* singleton pattern */
