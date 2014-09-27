@@ -229,8 +229,9 @@
                         (!nextNewLine || nextNewLine && nextNewLine.type != LINE_TYPE.INSERTS) &&
                         (!prevLine || prevLine && prevLine.type != LINE_TYPE.DELETES);
 
+                    var escapedLine = escape(line.content);
+
                     if (isOppositeTypeTwoLineBlock) {
-                        var escapedLine = escape(line.content);
                         var nextEscapedLine = escape(newLine.content);
 
                         var diff = diffHighlight(escapedLine, nextEscapedLine);
@@ -240,7 +241,7 @@
 
                         i++;
                     } else {
-                        lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, line.content);
+                        lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
                     }
                 }
 
@@ -333,8 +334,9 @@
                         (!nextNewLine || nextNewLine && nextNewLine.type != LINE_TYPE.INSERTS) &&
                         (!prevLine || prevLine && prevLine.type != LINE_TYPE.DELETES);
 
+                    var escapedLine = escape(line.content);
+
                     if (isOpositeTypeTwoLineBlock) {
-                        var escapedLine = escape(line.content);
                         var nextEscapedLine = escape(newLine.content);
 
                         var diff = diffHighlight(escapedLine, nextEscapedLine);
@@ -344,14 +346,14 @@
 
                         i++;
                     } else if (line.type == LINE_TYPE.DELETES) {
-                        fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, line.content);
+                        fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine);
                         fileHtml.right += generateSingleLineHtml(LINE_TYPE.CONTEXT, "", "", "");
                     } else if (line.type == LINE_TYPE.INSERTS) {
                         fileHtml.left += generateSingleLineHtml(LINE_TYPE.CONTEXT, "", "", "");
-                        fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, line.content);
+                        fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine);
                     } else {
-                        fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, line.content);
-                        fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, line.content);
+                        fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine);
+                        fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine);
                     }
                 }
 
