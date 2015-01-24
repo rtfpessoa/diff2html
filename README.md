@@ -6,8 +6,6 @@ Diff to Html generates pretty HTML diffs from git word diff output.
 
 * `line-by-line` and `side-by-side` diff
 
-* char-by-char highlight
-
 * new and old line numbers
 
 * inserted and removed lines
