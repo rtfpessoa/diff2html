@@ -3,7 +3,7 @@
  * Diff to HTML (diff2html.js)
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
- * Last Update: Saturday 27 September 2014
+ * Last Update: Saturday 24 January 2015
  *
  * Diff command:
  *   git diff
@@ -77,14 +77,17 @@
             };
 
             var saveFile = function () {
-                /* add previous file(if exists) before start a new one */
-                if (currentFile) {
+                /*
+                 * add previous file(if exists) before start a new one
+                 * if it has name (to avoid binary files errors)
+                 */
+                if (currentFile && currentFile.newName) {
                     files.push(currentFile);
                     currentFile = null;
                 }
             };
 
-            var startFile = function (line) {
+            var startFile = function () {
                 saveBlock();
                 saveFile();
 
@@ -93,24 +96,17 @@
                 currentFile.blocks = [];
                 currentFile.deletedLines = 0;
                 currentFile.addedLines = 0;
-
-                /* save file paths, before and after the diff */
-                var values = /^diff --git a\/(\S+) b\/(\S+).*$/.exec(line);
-                currentFile.oldName = values[1];
-                currentFile.newName = values[2];
             };
 
             var startBlock = function (line) {
                 saveBlock();
 
-                var values;
-                if (values = /^(@@ -(\d+),(\d+) \+(\d+),(\d+) @@).*/.exec(line)) {
-                    oldLine = values[2];
-                    newLine = values[4];
-                } else {
-                    oldLine = 0;
-                    newLine = 0;
-                }
+                var values = /^@@ -(\d+),\d+ \+(\d+),\d+ @@.*/.exec(line) ||
+                    /^@@@ -(\d+),\d+ -\d+,\d+ \+(\d+),\d+ @@@.*/.exec(line) ||
+                    [0, 0, 0];
+
+                oldLine = values[1];
+                newLine = values[2];
 
                 /* create block metadata */
                 currentBlock = {};
@@ -125,7 +121,7 @@
                 currentLine.content = line;
 
                 /* fill the line data */
-                if (startsWith(line, "+")) {
+                if (startsWith(line, "+") || startsWith(line, " +")) {
                     currentFile.addedLines++;
 
                     currentLine.type = LINE_TYPE.INSERTS;
@@ -134,7 +130,7 @@
 
                     currentBlock.lines.push(currentLine);
 
-                } else if (startsWith(line, "-")) {
+                } else if (startsWith(line, "-") || startsWith(line, " -")) {
                     currentFile.deletedLines++;
 
                     currentLine.type = LINE_TYPE.DELETES;
@@ -158,13 +154,17 @@
                 // https://github.com/scottgonzalez/pretty-diff/issues/11
                 // Also, remove some useless lines
                 if (!line || startsWith(line, "*") ||
-                    startsWith(line, "new") || startsWith(line, "index") ||
-                    startsWith(line, "---") || startsWith(line, "+++")) {
+                    startsWith(line, "new") || startsWith(line, "index")) {
                     return;
                 }
 
+                var values = [];
                 if (startsWith(line, "diff")) {
-                    startFile(line);
+                    startFile();
+                } else if (currentFile && !currentFile.oldName && (values = /^--- a\/(\S+).*$/.exec(line))) {
+                    currentFile.oldName = values[1];
+                } else if (currentFile && !currentFile.newName && (values = /^\+\+\+ b\/(\S+).*$/.exec(line))) {
+                    currentFile.newName = values[1];
                 } else if (currentFile && startsWith(line, "@@")) {
                     startBlock(line);
                 } else if (currentBlock) {
@@ -237,7 +237,7 @@
                         var diff = diffHighlight(escapedLine, nextEscapedLine);
 
                         lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, diff.o) +
-                            generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, diff.n);
+                        generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, diff.n);
 
                         i++;
                     } else {
@@ -311,18 +311,18 @@
             file.blocks.forEach(function (block) {
 
                 fileHtml.left += "<tr>\n" +
-                    "  <td class=\"d2h-code-side-linenumber " + LINE_TYPE.INFO + "\"></td>\n" +
-                    "  <td class=\"" + LINE_TYPE.INFO + "\" colspan=\"3\">" +
-                    "    <div class=\"d2h-code-side-line " + LINE_TYPE.INFO + "\">" + escape(block.header) + "</div>" +
-                    "  </td>\n" +
-                    "</tr>\n";
+                "  <td class=\"d2h-code-side-linenumber " + LINE_TYPE.INFO + "\"></td>\n" +
+                "  <td class=\"" + LINE_TYPE.INFO + "\" colspan=\"3\">" +
+                "    <div class=\"d2h-code-side-line " + LINE_TYPE.INFO + "\">" + escape(block.header) + "</div>" +
+                "  </td>\n" +
+                "</tr>\n";
 
                 fileHtml.right += "<tr>\n" +
-                    "  <td class=\"d2h-code-side-linenumber " + LINE_TYPE.INFO + "\"></td>\n" +
-                    "  <td class=\"" + LINE_TYPE.INFO + "\" colspan=\"3\">" +
-                    "    <div class=\"d2h-code-side-line " + LINE_TYPE.INFO + "\"></div>" +
-                    "  </td>\n" +
-                    "</tr>\n";
+                "  <td class=\"d2h-code-side-linenumber " + LINE_TYPE.INFO + "\"></td>\n" +
+                "  <td class=\"" + LINE_TYPE.INFO + "\" colspan=\"3\">" +
+                "    <div class=\"d2h-code-side-line " + LINE_TYPE.INFO + "\"></div>" +
+                "  </td>\n" +
+                "</tr>\n";
 
                 for (var i = 0; i < block.lines.length; i++) {
                     var prevLine = block.lines[i - 1];
@@ -363,7 +363,7 @@
         };
 
         var generateSingleLineHtml = function (type, number, content) {
-            return"<tr>\n" +
+            return "<tr>\n" +
                 "    <td class=\"d2h-code-side-linenumber " + type + "\">" + number + "</td>\n" +
                 "    <td class=\"" + type + "\">" +
                 "      <div class=\"d2h-code-side-line " + type + "\">" + content + "</div>" +
@@ -376,7 +376,15 @@
          */
 
         var getDiffName = function (oldFilename, newFilename) {
-            return oldFilename === newFilename ? newFilename : oldFilename + " -> " + newFilename;
+            if (oldFilename && newFilename && oldFilename !== newFilename) {
+                return oldFilename + " -> " + newFilename;
+            } else if (newFilename) {
+                return newFilename;
+            } else if (oldFilename) {
+                return oldFilename;
+            } else {
+                return "Unknown filename";
+            }
         };
 
         var removeIns = function (line) {
