@@ -3,7 +3,7 @@
  * Diff to HTML (diff2html.js)
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
- * Last Update: Saturday 24 January 2015
+ * Last Update: Sunday 25 January 2015
  *
  * Diff command:
  *   git diff

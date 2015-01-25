@@ -3,7 +3,7 @@
  * Diff to HTML (diff2html.css)
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
- * Last Update: Saturday 27 September 2014
+ * Last Update: Sunday 25 January 2015
  *
  */
 
@@ -86,22 +86,32 @@
     margin-right: -4px;
 }
 
-.d2h-code-line {
+.d2h-code-line.hljs {
+    display: block;
     white-space: pre;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 10px;
     height: 18px;
     line-height: 18px;
     margin-left: 80px;
+    /* Override HighlightJS */
+    color: inherit;
+    overflow-x: inherit;
+    background: none;
+    /* ******************** */
 }
 
 .d2h-code-side-line {
+    display: block;
     white-space: pre;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 10px;
     height: 18px;
     line-height: 18px;
     margin-left: 50px;
+    /* Override HighlightJS */
+    color: inherit;
+    overflow-x: inherit;
+    background: none;
+    /* ******************** */
 }
 
 .d2h-code-line del,
