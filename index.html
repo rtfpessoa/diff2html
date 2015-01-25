@@ -8,13 +8,19 @@
         Diff to HTML (template.html)
         Author: rtfpessoa
         Date: Friday 29 August 2014
-        Last Update: Saturday 27 September 2014
+        Last Update: Sunday 25 January 2015
     -->
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
     <link rel="stylesheet" type="text/css" href="diff2html.css">
+
+
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 
     <script type="text/javascript" src="jsdiff.js"></script>
     <script type="text/javascript" src="diff2html.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/languages/scala.min.js"></script>
     <script>
         var lineDiffExample = 'diff --git a/src/attributes/attr.js b/src/attributes/attr.js\n' +
                 'index facdd41..b627fe8 100644\n' +
@@ -174,11 +180,21 @@
                 '-	return typeof undefined;\n' +
                 '-});\n';
 
-        document.onreadystatechange = function () {
+        $(document).ready(function () {
             var diffJson = Diff2Html.getJsonFromDiff(lineDiffExample);
-            document.getElementById('line-by-line').innerHTML = Diff2Html.getPrettyHtmlFromJson(diffJson);
-            document.getElementById('side-by-side').innerHTML = Diff2Html.getPrettySideBySideHtmlFromJson(diffJson);
-        }
+
+            $("#line-by-line").html(Diff2Html.getPrettyHtmlFromJson(diffJson));
+            var code = $(".d2h-code-line");
+            code.map(function (i, line) {
+                hljs.highlightBlock(line);
+            });
+
+            $("#side-by-side").html(Diff2Html.getPrettySideBySideHtmlFromJson(diffJson));
+            var codeSide = $(".d2h-code-side-line");
+            codeSide.map(function (i, line) {
+                hljs.highlightBlock(line);
+            });
+        });
     </script>
 
 </head>

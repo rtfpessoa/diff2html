@@ -10,7 +10,6 @@
  *  http://ejohn.org/projects/javascript-diff-algorithm/
  */
 
-
 function diffString(o, n) {
     o = o.replace(/\s+$/, '');
     n = n.replace(/\s+$/, '');
