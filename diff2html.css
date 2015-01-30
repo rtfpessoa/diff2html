@@ -3,7 +3,7 @@
  * Diff to HTML (diff2html.css)
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
- * Last Update: Sunday 25 January 2015
+ * Last Update: Friday 30 January 2015
  *
  */
 
@@ -86,7 +86,7 @@
     margin-right: -4px;
 }
 
-.d2h-code-line.hljs {
+.d2h-code-line {
     display: block;
     white-space: pre;
     padding: 0 10px;
@@ -100,7 +100,7 @@
     /* ******************** */
 }
 
-.d2h-code-side-line {
+.d2h-code-side-line.hljs {
     display: block;
     white-space: pre;
     padding: 0 10px;
