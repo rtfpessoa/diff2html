@@ -8,7 +8,7 @@
         Diff to HTML (template.html)
         Author: rtfpessoa
         Date: Friday 29 August 2014
-        Last Update: Sunday 25 January 2015
+        Last Update: Sunday 2 February 2015
     -->
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
@@ -182,6 +182,14 @@
 
         $(document).ready(function () {
             var diffJson = Diff2Html.getJsonFromDiff(lineDiffExample);
+
+            var languages = diffJson.map(function (line) {
+                return line.language;
+            });
+            var uniqueLanguages = languages.filter(function (v, i) {
+                return languages.indexOf(v) == i;
+            });
+            hljs.configure({languages: uniqueLanguages});
 
             $("#line-by-line").html(Diff2Html.getPrettyHtmlFromJson(diffJson));
             var code = $(".d2h-code-line");
