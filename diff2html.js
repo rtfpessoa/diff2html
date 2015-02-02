@@ -3,7 +3,7 @@
  * Diff to HTML (diff2html.js)
  * Author: rtfpessoa
  * Date: Friday 29 August 2014
- * Last Update: Sunday 25 January 2015
+ * Last Update: Sunday 2 February 2015
  *
  * Diff command:
  *   git diff
@@ -165,6 +165,9 @@
                     currentFile.oldName = values[1];
                 } else if (currentFile && !currentFile.newName && (values = /^\+\+\+ b\/(\S+).*$/.exec(line))) {
                     currentFile.newName = values[1];
+
+                    var fileSplit = currentFile.newName.split(".");
+                    currentFile.language = fileSplit[fileSplit.length - 1];
                 } else if (currentFile && startsWith(line, "@@")) {
                     startBlock(line);
                 } else if (currentBlock) {
@@ -185,7 +188,7 @@
         var generateJsonHtml = function (diffFiles) {
             return "<div class=\"d2h-wrapper\">\n" +
                 diffFiles.map(function (file) {
-                    return "<div class=\"d2h-file-wrapper\">\n" +
+                    return "<div class=\"d2h-file-wrapper\" data-lang=\"" + file.language + "\">\n" +
                         "     <div class=\"d2h-file-header\">\n" +
                         "       <div class=\"d2h-file-stats\">\n" +
                         "         <span class=\"d2h-lines-added\">+" + file.addedLines + "</span>\n" +
@@ -270,7 +273,7 @@
                 diffFiles.map(function (file) {
                     var diffs = generateSideBySideFileHtml(file);
 
-                    return "<div class=\"d2h-file-wrapper\">\n" +
+                    return "<div class=\"d2h-file-wrapper\" data-lang=\"" + file.language + "\">\n" +
                         "     <div class=\"d2h-file-header\">\n" +
                         "       <div class=\"d2h-file-stats\">\n" +
                         "         <span class=\"d2h-lines-added\">+" + file.addedLines + "</span>\n" +
