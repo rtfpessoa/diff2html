@@ -181,7 +181,8 @@
                 '-});\n';
 
         $(document).ready(function () {
-            var diffJson = Diff2Html.getJsonFromDiff(lineDiffExample);
+            var diff2Html = new Diff2Html();
+            var diffJson = diff2Html.getJsonFromDiff(lineDiffExample);
 
             var languages = diffJson.map(function (line) {
                 return line.language;
@@ -191,13 +192,13 @@
             });
             hljs.configure({languages: uniqueLanguages});
 
-            $("#line-by-line").html(Diff2Html.getPrettyHtmlFromJson(diffJson));
+            $("#line-by-line").html(diff2Html.getPrettyHtmlFromJson(diffJson));
             var code = $(".d2h-code-line");
             code.map(function (i, line) {
                 hljs.highlightBlock(line);
             });
 
-            $("#side-by-side").html(Diff2Html.getPrettySideBySideHtmlFromJson(diffJson));
+            $("#side-by-side").html(diff2Html.getPrettySideBySideHtmlFromJson(diffJson));
             var codeSide = $(".d2h-code-side-line");
             codeSide.map(function (i, line) {
                 hljs.highlightBlock(line);
