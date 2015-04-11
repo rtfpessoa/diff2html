@@ -220,24 +220,32 @@ var generateFileHtml = function (file) {
       "  </td>\n" +
       "</tr>\n";
 
-
     var oldLines = [], newLines = [];
     var processedOldLines = [], processedNewLines = [];
 
     for (var i = 0; i < block.lines.length; i++) {
       var line = block.lines[i];
+      var escapedLine = escape(line.content);
 
-      if (line.type == LINE_TYPE.DELETES && !newLines.length) {
+      if (line.type == LINE_TYPE.CONTEXT && !oldLines.length && !newLines.length) {
+        lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+      } else if (line.type == LINE_TYPE.INSERTS && !oldLines.length && !newLines.length) {
+        lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+      } else if (line.type == LINE_TYPE.DELETES && !newLines.length) {
         oldLines.push(line);
       } else if (line.type == LINE_TYPE.INSERTS && oldLines.length > newLines.length) {
         newLines.push(line);
       } else {
+        var j = 0;
+        var oldLine, newLine;
+        var oldEscapedLine, newEscapedLine;
+
         if (oldLines.length === newLines.length) {
-          for (var j = 0; j < oldLines.length; j++) {
-            var oldLine = oldLines[j];
-            var newLine = newLines[j];
-            var oldEscapedLine = escape(oldLine.content);
-            var newEscapedLine = escape(newLine.content);
+          for (j = 0; j < oldLines.length; j++) {
+            oldLine = oldLines[j];
+            newLine = newLines[j];
+            oldEscapedLine = escape(oldLine.content);
+            newEscapedLine = escape(newLine.content);
 
             var diff = diffHighlight(oldEscapedLine, newEscapedLine, file.isTripleDiff);
 
@@ -246,14 +254,25 @@ var generateFileHtml = function (file) {
           }
 
           lines += processedOldLines + processedNewLines;
-
-          oldLines = [];
-          newLines = [];
-          processedOldLines = [];
-          processedNewLines = []
         } else {
-          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escape(line.content));
+          for (j = 0; j < oldLines.length; j++) {
+            oldLine = oldLines[j];
+            oldEscapedLine = escape(oldLine.content);
+            lines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+          }
+
+          for (j = 0; j < newLines.length; j++) {
+            newLine = newLines[j];
+            newEscapedLine = escape(newLine.content);
+            lines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+          }
         }
+
+        oldLines = [];
+        newLines = [];
+        processedOldLines = [];
+        processedNewLines = [];
+        i--;
       }
     }
 
@@ -336,39 +355,65 @@ var generateSideBySideFileHtml = function (file) {
     "  </td>\n" +
     "</tr>\n";
 
+    var oldLines = [], newLines = [];
+
     for (var i = 0; i < block.lines.length; i++) {
-      var prevLine = block.lines[i - 1];
       var line = block.lines[i];
-      var newLine = block.lines[i + 1];
-      var nextNewLine = block.lines[i + 2];
-
-      var isOpositeTypeTwoLineBlock = line.type == LINE_TYPE.DELETES && newLine && newLine.type == LINE_TYPE.INSERTS &&
-        (!nextNewLine || nextNewLine && nextNewLine.type != LINE_TYPE.INSERTS) &&
-        (!prevLine || prevLine && prevLine.type != LINE_TYPE.DELETES);
-
       var escapedLine = escape(line.content);
 
-      if (isOpositeTypeTwoLineBlock) {
-        var nextEscapedLine = escape(newLine.content);
-
-        var diff = diffHighlight(escapedLine, nextEscapedLine, file.isTripleDiff);
-
-        fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, diff.o);
-        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.n);
-
-        i++;
-      } else if (line.type == LINE_TYPE.DELETES) {
+      if (line.type == LINE_TYPE.CONTEXT && !oldLines.length && !newLines.length) {
         fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine);
-        fileHtml.right += generateSingleLineHtml(LINE_TYPE.CONTEXT, "", "", "");
-      } else if (line.type == LINE_TYPE.INSERTS) {
+        fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine);
+      } else if (line.type == LINE_TYPE.INSERTS && !oldLines.length && !newLines.length) {
         fileHtml.left += generateSingleLineHtml(LINE_TYPE.CONTEXT, "", "", "");
         fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine);
+      } else if (line.type == LINE_TYPE.DELETES && !newLines.length) {
+        oldLines.push(line);
+      } else if (line.type == LINE_TYPE.INSERTS && oldLines.length > newLines.length) {
+        newLines.push(line);
       } else {
-        fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine);
-        fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine);
+        var j = 0;
+        var oldLine, newLine;
+        var oldEscapedLine, newEscapedLine;
+
+        if (oldLines.length === newLines.length) {
+          for (j = 0; j < oldLines.length; j++) {
+            oldLine = oldLines[j];
+            newLine = newLines[j];
+            oldEscapedLine = escape(oldLine.content);
+            newEscapedLine = escape(newLine.content);
+
+            var diff = diffHighlight(oldEscapedLine, newEscapedLine, file.isTripleDiff);
+
+            fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, diff.o);
+            fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.n);
+          }
+        } else {
+          var maxLinesNumber = Math.max(oldLines.length, newLines.length);
+          for (j = 0; j < maxLinesNumber; j++) {
+            oldLine = oldLines[j];
+            newLine = newLines[j];
+
+            if (oldLine && newLine) {
+              fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, escape(oldLine.content));
+              fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, escape(newLine.content));
+            } else if (oldLine) {
+              fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, escape(oldLine.content));
+              fileHtml.right += generateSingleLineHtml(LINE_TYPE.CONTEXT, "", "", "");
+            } else if (newLine) {
+              fileHtml.left += generateSingleLineHtml(LINE_TYPE.CONTEXT, "", "", "");
+              fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, escape(newLine.content));
+            } else {
+              console.error("How did it get here?");
+            }
+          }
+        }
+
+        oldLines = [];
+        newLines = [];
+        i--;
       }
     }
-
   });
 
   return fileHtml;
