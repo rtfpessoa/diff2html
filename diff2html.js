@@ -18,7 +18,7 @@ function Diff2Html() {
  */
 Diff2Html.prototype.getPrettyHtmlFromDiff = function (diffInput) {
   var diffJson = diffParser.generateDiffJson(diffInput);
-  return htmlPrinter.generateJsonHtml(diffJson);
+  return htmlPrinter.generateLineByLineJsonHtml(diffJson);
 };
 
 /*
@@ -32,7 +32,7 @@ Diff2Html.prototype.getJsonFromDiff = function (diffInput) {
  * Generates pretty html from a json object
  */
 Diff2Html.prototype.getPrettyHtmlFromJson = function (diffJson) {
-  return htmlPrinter.generateJsonHtml(diffJson);
+  return htmlPrinter.generateLineByLineJsonHtml(diffJson);
 };
 
 /*
