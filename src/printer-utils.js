@@ -5,57 +5,68 @@
  *
  */
 
-var jsDiff = JsDiff;
+(function (global, undefined) {
 
-function PrinterUtils() {
-}
+  // dirty hack for browser compatibility
+  var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) || require("../lib/diff.js");
 
-PrinterUtils.prototype.getDiffName = function (oldFilename, newFilename) {
-  if (oldFilename && newFilename && oldFilename !== newFilename) {
-    return oldFilename + " -> " + newFilename;
-  } else if (newFilename) {
-    return newFilename;
-  } else if (oldFilename) {
-    return oldFilename;
-  } else {
-    return "Unknown filename";
+  function PrinterUtils() {
   }
-};
 
-PrinterUtils.prototype.diffHighlight = function (diffLine1, diffLine2, isTripleDiff) {
-  var lineStart1, lineStart2;
+  PrinterUtils.prototype.getDiffName = function (oldFilename, newFilename) {
+    if (oldFilename && newFilename && oldFilename !== newFilename) {
+      return oldFilename + " -> " + newFilename;
+    } else if (newFilename) {
+      return newFilename;
+    } else if (oldFilename) {
+      return oldFilename;
+    } else {
+      return "Unknown filename";
+    }
+  };
 
-  var prefixSize = 1;
+  PrinterUtils.prototype.diffHighlight = function (diffLine1, diffLine2, isTripleDiff) {
+    var lineStart1, lineStart2;
 
-  if (isTripleDiff) prefixSize = 2;
+    var prefixSize = 1;
 
-  lineStart1 = diffLine1.substr(0, prefixSize);
-  lineStart2 = diffLine2.substr(0, prefixSize);
+    if (isTripleDiff) prefixSize = 2;
 
-  diffLine1 = diffLine1.substr(prefixSize);
-  diffLine2 = diffLine2.substr(prefixSize);
+    lineStart1 = diffLine1.substr(0, prefixSize);
+    lineStart2 = diffLine2.substr(0, prefixSize);
 
-  var diff = jsDiff.diffChars(diffLine1, diffLine2);
+    diffLine1 = diffLine1.substr(prefixSize);
+    diffLine2 = diffLine2.substr(prefixSize);
 
-  var highlightedLine = "";
+    var diff = jsDiff.diffChars(diffLine1, diffLine2);
 
-  diff.forEach(function (part) {
-    var elemType = part.added ? 'ins' : part.removed ? 'del' : null;
+    var highlightedLine = "";
 
-    if (elemType !== null) highlightedLine += "<" + elemType + ">" + part.value + "</" + elemType + ">";
-    else highlightedLine += part.value;
-  });
+    diff.forEach(function (part) {
+      var elemType = part.added ? 'ins' : part.removed ? 'del' : null;
 
-  return {
-    o: lineStart1 + removeIns(highlightedLine),
-    n: lineStart2 + removeDel(highlightedLine)
+      if (elemType !== null) highlightedLine += "<" + elemType + ">" + part.value + "</" + elemType + ">";
+      else highlightedLine += part.value;
+    });
+
+    return {
+      o: lineStart1 + removeIns(highlightedLine),
+      n: lineStart2 + removeDel(highlightedLine)
+    }
+  };
+
+  function removeIns(line) {
+    return line.replace(/(<ins>((.|\n)*?)<\/ins>)/g, "");
   }
-};
 
-function removeIns(line) {
-  return line.replace(/(<ins>((.|\n)*?)<\/ins>)/g, "");
-}
+  function removeDel(line) {
+    return line.replace(/(<del>((.|\n)*?)<\/del>)/g, "");
+  }
 
-function removeDel(line) {
-  return line.replace(/(<del>((.|\n)*?)<\/del>)/g, "");
-}
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.PrinterUtils = new PrinterUtils();
+  } else if (typeof global.PrinterUtils === 'undefined') {
+    global.PrinterUtils = new PrinterUtils();
+  }
+
+})(this);

@@ -5,21 +5,31 @@
  *
  */
 
-function Utils() {
-}
+(function (global, undefined) {
 
-Utils.prototype.escape = function (str) {
-  return str.slice(0)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\t/g, "    ");
-};
+  function Utils() {
+  }
 
-Utils.prototype.startsWith = function (str, start) {
-  return str.indexOf(start) === 0;
-};
+  Utils.prototype.escape = function (str) {
+    return str.slice(0)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\t/g, "    ");
+  };
 
-Utils.prototype.valueOrEmpty = function (value) {
-  return value ? value : "";
-};
+  Utils.prototype.startsWith = function (str, start) {
+    return str.indexOf(start) === 0;
+  };
+
+  Utils.prototype.valueOrEmpty = function (value) {
+    return value ? value : "";
+  };
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.Utils = new Utils();
+  } else if (typeof global.Utils === 'undefined') {
+    global.Utils = new Utils();
+  }
+
+})(this);
