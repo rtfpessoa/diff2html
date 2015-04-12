@@ -16,11 +16,23 @@
   }
 
   /*
+   * config
+   * {
+   * "wordByWord" : true (default)
+   * OR
+   * "charByChar" : true
+   * }
+   *
+   */
+
+  /*
    * Generates pretty html from string diff input
    */
-  Diff2Html.prototype.getPrettyHtmlFromDiff = function (diffInput) {
+  Diff2Html.prototype.getPrettyHtmlFromDiff = function (diffInput, config) {
     var diffJson = diffParser.generateDiffJson(diffInput);
-    return htmlPrinter.generateLineByLineJsonHtml(diffJson);
+
+    var configOrEmpty = config || {};
+    return htmlPrinter.generateLineByLineJsonHtml(diffJson, configOrEmpty);
   };
 
   /*
@@ -33,23 +45,27 @@
   /*
    * Generates pretty html from a json object
    */
-  Diff2Html.prototype.getPrettyHtmlFromJson = function (diffJson) {
-    return htmlPrinter.generateLineByLineJsonHtml(diffJson);
+  Diff2Html.prototype.getPrettyHtmlFromJson = function (diffJson, config) {
+    var configOrEmpty = config || {};
+    return htmlPrinter.generateLineByLineJsonHtml(diffJson, configOrEmpty);
   };
 
   /*
    * Generates pretty side by side html from string diff input
    */
-  Diff2Html.prototype.getPrettySideBySideHtmlFromDiff = function (diffInput) {
+  Diff2Html.prototype.getPrettySideBySideHtmlFromDiff = function (diffInput, config) {
     var diffJson = diffParser.generateDiffJson(diffInput);
-    return htmlPrinter.generateSideBySideJsonHtml(diffJson);
+
+    var configOrEmpty = config || {};
+    return htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
   };
 
   /*
    * Generates pretty side by side html from a json object
    */
-  Diff2Html.prototype.getPrettySideBySideHtmlFromJson = function (diffJson) {
-    return htmlPrinter.generateSideBySideJsonHtml(diffJson);
+  Diff2Html.prototype.getPrettySideBySideHtmlFromJson = function (diffJson, config) {
+    var configOrEmpty = config || {};
+    return htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
   };
 
   if (typeof module !== 'undefined' && module.exports) {

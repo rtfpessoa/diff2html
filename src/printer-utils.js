@@ -25,12 +25,12 @@
     }
   };
 
-  PrinterUtils.prototype.diffHighlight = function (diffLine1, diffLine2, isTripleDiff) {
+  PrinterUtils.prototype.diffHighlight = function (diffLine1, diffLine2, config) {
     var lineStart1, lineStart2;
 
     var prefixSize = 1;
 
-    if (isTripleDiff) prefixSize = 2;
+    if (config.isTripleDiff) prefixSize = 2;
 
     lineStart1 = diffLine1.substr(0, prefixSize);
     lineStart2 = diffLine2.substr(0, prefixSize);
@@ -38,7 +38,12 @@
     diffLine1 = diffLine1.substr(prefixSize);
     diffLine2 = diffLine2.substr(prefixSize);
 
-    var diff = jsDiff.diffChars(diffLine1, diffLine2);
+    var diff;
+    if (config.charByChar) diff = jsDiff.diffChars(diffLine1, diffLine2);
+    else diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
+
+    //var diff = jsDiff.diffChars(diffLine1, diffLine2);
+    //var diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
 
     var highlightedLine = "";
 

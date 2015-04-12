@@ -14,7 +14,7 @@
   function LineByLinePrinter() {
   }
 
-  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function (diffFiles) {
+  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function (diffFiles, config) {
     return "<div class=\"d2h-wrapper\">\n" +
       diffFiles.map(function (file) {
         return "<div class=\"d2h-file-wrapper\" data-lang=\"" + file.language + "\">\n" +
@@ -29,7 +29,7 @@
           "       <div class=\"d2h-code-wrapper\">\n" +
           "         <table class=\"d2h-diff-table\">\n" +
           "           <tbody class=\"d2h-diff-tbody\">\n" +
-          "         " + generateFileHtml(file) +
+          "         " + generateFileHtml(file, config) +
           "           </tbody>\n" +
           "         </table>\n" +
           "       </div>\n" +
@@ -39,7 +39,7 @@
       "</div>\n";
   };
 
-  function generateFileHtml(file) {
+  function generateFileHtml(file, config) {
     return file.blocks.map(function (block) {
 
       var lines = "<tr>\n" +
@@ -76,7 +76,8 @@
               oldEscapedLine = utils.escape(oldLine.content);
               newEscapedLine = utils.escape(newLine.content);
 
-              var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, file.isTripleDiff);
+              config.isTripleDiff = file.isTripleDiff;
+              var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
 
               processedOldLines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, diff.o);
               processedNewLines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, diff.n);

@@ -14,10 +14,10 @@
   function SideBySidePrinter() {
   }
 
-  SideBySidePrinter.prototype.generateSideBySideJsonHtml = function (diffFiles) {
+  SideBySidePrinter.prototype.generateSideBySideJsonHtml = function (diffFiles, config) {
     return "<div class=\"d2h-wrapper\">\n" +
       diffFiles.map(function (file) {
-        var diffs = generateSideBySideFileHtml(file);
+        var diffs = generateSideBySideFileHtml(file, config);
 
         return "<div class=\"d2h-file-wrapper\" data-lang=\"" + file.language + "\">\n" +
           "     <div class=\"d2h-file-header\">\n" +
@@ -52,7 +52,7 @@
       "</div>\n";
   };
 
-  function generateSideBySideFileHtml(file) {
+  function generateSideBySideFileHtml(file, config) {
     var fileHtml = {};
     fileHtml.left = "";
     fileHtml.right = "";
@@ -101,7 +101,9 @@
               oldEscapedLine = utils.escape(oldLine.content);
               newEscapedLine = utils.escape(newLine.content);
 
-              var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, file.isTripleDiff);
+              config.isTripleDiff = file.isTripleDiff;
+
+              var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
 
               fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, diff.o);
               fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.n);
