@@ -17,7 +17,10 @@
   SideBySidePrinter.prototype.generateSideBySideJsonHtml = function (diffFiles, config) {
     return "<div class=\"d2h-wrapper\">\n" +
       diffFiles.map(function (file) {
-        var diffs = generateSideBySideFileHtml(file, config);
+
+        var diffs;
+        if (file.blocks.length) diffs = generateSideBySideFileHtml(file, config);
+        else diffs = generateEmptyDiff();
 
         return "<div class=\"d2h-file-wrapper\" data-lang=\"" + file.language + "\">\n" +
           "     <div class=\"d2h-file-header\">\n" +
@@ -25,7 +28,7 @@
           "         <span class=\"d2h-lines-added\">+" + file.addedLines + "</span>\n" +
           "         <span class=\"d2h-lines-deleted\">-" + file.deletedLines + "</span>\n" +
           "       </div>\n" +
-          "       <div class=\"d2h-file-name\">" + printerUtils.getDiffName(file.oldName, file.newName) + "</div>\n" +
+          "       <div class=\"d2h-file-name\">" + printerUtils.getDiffName(file) + "</div>\n" +
           "     </div>\n" +
           "     <div class=\"d2h-files-diff\">\n" +
           "       <div class=\"d2h-file-side-diff\">\n" +
@@ -74,6 +77,7 @@
       "</tr>\n";
 
       var oldLines = [], newLines = [];
+      var tmpHtml = "";
 
       for (var i = 0; i < block.lines.length; i++) {
         var line = block.lines[i];
@@ -101,7 +105,7 @@
               oldEscapedLine = utils.escape(oldLine.content);
               newEscapedLine = utils.escape(newLine.content);
 
-              config.isTripleDiff = file.isTripleDiff;
+              config.isCombined = file.isCombined;
 
               var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
 
@@ -109,24 +113,9 @@
               fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.n);
             }
           } else {
-            var maxLinesNumber = Math.max(oldLines.length, newLines.length);
-            for (j = 0; j < maxLinesNumber; j++) {
-              oldLine = oldLines[j];
-              newLine = newLines[j];
-
-              if (oldLine && newLine) {
-                fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, utils.escape(oldLine.content));
-                fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, utils.escape(newLine.content));
-              } else if (oldLine) {
-                fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, utils.escape(oldLine.content));
-                fileHtml.right += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, "", "", "");
-              } else if (newLine) {
-                fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, "", "", "");
-                fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, utils.escape(newLine.content));
-              } else {
-                console.error("How did it get here?");
-              }
-            }
+            tmpHtml = processLines(oldLines, newLines);
+            fileHtml.left += tmpHtml.left;
+            fileHtml.right += tmpHtml.right;
           }
 
           oldLines = [];
@@ -134,7 +123,38 @@
           i--;
         }
       }
+
+      tmpHtml = processLines(oldLines, newLines);
+      fileHtml.left += tmpHtml.left;
+      fileHtml.right += tmpHtml.right;
     });
+
+    return fileHtml;
+  }
+
+  function processLines(oldLines, newLines) {
+    var fileHtml = {};
+    fileHtml.left = "";
+    fileHtml.right = "";
+
+    var maxLinesNumber = Math.max(oldLines.length, newLines.length);
+    for (j = 0; j < maxLinesNumber; j++) {
+      var oldLine = oldLines[j];
+      var newLine = newLines[j];
+
+      if (oldLine && newLine) {
+        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, utils.escape(oldLine.content));
+        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, utils.escape(newLine.content));
+      } else if (oldLine) {
+        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, utils.escape(oldLine.content));
+        fileHtml.right += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, "", "", "");
+      } else if (newLine) {
+        fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, "", "", "");
+        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, utils.escape(newLine.content));
+      } else {
+        console.error("How did it get here?");
+      }
+    }
 
     return fileHtml;
   }
@@ -146,6 +166,21 @@
       "      <div class=\"d2h-code-side-line " + type + "\">" + content + "</div>" +
       "    </td>\n" +
       "  </tr>\n";
+  }
+
+  function generateEmptyDiff() {
+    var fileHtml = {};
+    fileHtml.right = "";
+
+    fileHtml.left = "<tr>\n" +
+    "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
+    "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" +
+    "File without changes" +
+    "    </div>" +
+    "  </td>\n" +
+    "</tr>\n";
+
+    return fileHtml;
   }
 
   if (typeof module !== 'undefined' && module.exports) {
