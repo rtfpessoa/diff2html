@@ -17,19 +17,24 @@
   LineByLinePrinter.prototype.generateLineByLineJsonHtml = function (diffFiles, config) {
     return "<div class=\"d2h-wrapper\">\n" +
       diffFiles.map(function (file) {
+
+        var diffs;
+        if (file.blocks.length) diffs = generateFileHtml(file, config);
+        else diffs = generateEmptyDiff();
+
         return "<div class=\"d2h-file-wrapper\" data-lang=\"" + file.language + "\">\n" +
           "     <div class=\"d2h-file-header\">\n" +
           "       <div class=\"d2h-file-stats\">\n" +
           "         <span class=\"d2h-lines-added\">+" + file.addedLines + "</span>\n" +
           "         <span class=\"d2h-lines-deleted\">-" + file.deletedLines + "</span>\n" +
           "       </div>\n" +
-          "       <div class=\"d2h-file-name\">" + printerUtils.getDiffName(file.oldName, file.newName) + "</div>\n" +
+          "       <div class=\"d2h-file-name\">" + printerUtils.getDiffName(file) + "</div>\n" +
           "     </div>\n" +
           "     <div class=\"d2h-file-diff\">\n" +
           "       <div class=\"d2h-code-wrapper\">\n" +
           "         <table class=\"d2h-diff-table\">\n" +
           "           <tbody class=\"d2h-diff-tbody\">\n" +
-          "         " + generateFileHtml(file, config) +
+          "         " + diffs +
           "           </tbody>\n" +
           "         </table>\n" +
           "       </div>\n" +
@@ -76,7 +81,7 @@
               oldEscapedLine = utils.escape(oldLine.content);
               newEscapedLine = utils.escape(newLine.content);
 
-              config.isTripleDiff = file.isTripleDiff;
+              config.isCombined = file.isCombined;
               var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
 
               processedOldLines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, diff.o);
@@ -85,17 +90,7 @@
 
             lines += processedOldLines + processedNewLines;
           } else {
-            for (j = 0; j < oldLines.length; j++) {
-              oldLine = oldLines[j];
-              oldEscapedLine = utils.escape(oldLine.content);
-              lines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
-            }
-
-            for (j = 0; j < newLines.length; j++) {
-              newLine = newLines[j];
-              newEscapedLine = utils.escape(newLine.content);
-              lines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
-            }
+            lines += processLines(oldLines, newLines);
           }
 
           oldLines = [];
@@ -106,8 +101,28 @@
         }
       }
 
+      lines += processLines(oldLines, newLines);
+
       return lines;
     }).join("\n");
+  }
+
+  function processLines(oldLines, newLines) {
+    var lines = "";
+
+    for (j = 0; j < oldLines.length; j++) {
+      var oldLine = oldLines[j];
+      var oldEscapedLine = utils.escape(oldLine.content);
+      lines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+    }
+
+    for (j = 0; j < newLines.length; j++) {
+      var newLine = newLines[j];
+      var newEscapedLine = utils.escape(newLine.content);
+      lines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+    }
+
+    return lines;
   }
 
   function generateLineHtml(type, oldNumber, newNumber, content) {
@@ -118,6 +133,16 @@
       "  </td>\n" +
       "  <td class=\"" + type + "\">" +
       "    <div class=\"d2h-code-line " + type + "\">" + content + "</div>" +
+      "  </td>\n" +
+      "</tr>\n";
+  }
+
+  function generateEmptyDiff() {
+    return "<tr>\n" +
+      "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
+      "    <div class=\"d2h-code-line " + diffParser.LINE_TYPE.INFO + "\">" +
+      "File without changes" +
+      "    </div>" +
       "  </td>\n" +
       "</tr>\n";
   }
