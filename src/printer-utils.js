@@ -13,10 +13,15 @@
   function PrinterUtils() {
   }
 
-  PrinterUtils.prototype.getDiffName = function (oldFilename, newFilename) {
-    if (oldFilename && newFilename && oldFilename !== newFilename) {
+  PrinterUtils.prototype.getDiffName = function (file) {
+    var oldFilename = file.oldName;
+    var newFilename = file.newName;
+
+    if (oldFilename && newFilename
+      && oldFilename !== newFilename
+      && !isDeletedName(newFilename)) {
       return oldFilename + " -> " + newFilename;
-    } else if (newFilename) {
+    } else if (newFilename && !isDeletedName(newFilename)) {
       return newFilename;
     } else if (oldFilename) {
       return oldFilename;
@@ -30,7 +35,7 @@
 
     var prefixSize = 1;
 
-    if (config.isTripleDiff) prefixSize = 2;
+    if (config.isCombined) prefixSize = 2;
 
     lineStart1 = diffLine1.substr(0, prefixSize);
     lineStart2 = diffLine2.substr(0, prefixSize);
@@ -59,6 +64,10 @@
       n: lineStart2 + removeDel(highlightedLine)
     }
   };
+
+  function isDeletedName(name) {
+    return name === "dev/null";
+  }
 
   function removeIns(line) {
     return line.replace(/(<ins>((.|\n)*?)<\/ins>)/g, "");

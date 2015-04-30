@@ -30,7 +30,6 @@
    */
   Diff2Html.prototype.getPrettyHtmlFromDiff = function (diffInput, config) {
     var diffJson = diffParser.generateDiffJson(diffInput);
-
     var configOrEmpty = config || {};
     return htmlPrinter.generateLineByLineJsonHtml(diffJson, configOrEmpty);
   };
