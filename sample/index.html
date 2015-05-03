@@ -5,27 +5,34 @@
     <title>Diff to HTML by rtfpessoa</title>
 
     <!--
-        Diff to HTML (template.html)
+        Diff to HTML (index.html)
         Author: rtfpessoa
     -->
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
-    <link rel="stylesheet" type="text/css" href="diff2html.css">
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="../css/diff2html.min.css">
+    <script type="text/javascript" src="../lib/diff.js"></script>
+    <script type="text/javascript" src="../lib/fakeRequire.js"></script>
+    <script type="text/javascript" src="../src/utils.js"></script>
+    <script type="text/javascript" src="../src/diff-parser.js"></script>
+    <script type="text/javascript" src="../src/printer-utils.js"></script>
+    <script type="text/javascript" src="../src/side-by-side-printer.js"></script>
+    <script type="text/javascript" src="../src/line-by-line-printer.js"></script>
+    <script type="text/javascript" src="../src/html-printer.js"></script>
+    <script type="text/javascript" src="../src/diff2html.js"></script>
+    -->
+
+    <!-- -->
+    <link rel="stylesheet" type="text/css" href="../dist/diff2html.min.css">
+    <script type="text/javascript" src="../dist/diff2html.min.js"></script>
+    <!-- -->
 
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-
-    <script type="text/javascript" src="lib/diff.js"></script>
-    <script type="text/javascript" src="lib/fakeRequire.js"></script>
-
-    <script type="text/javascript" src="src/utils.js"></script>
-    <script type="text/javascript" src="src/diff-parser.js"></script>
-    <script type="text/javascript" src="src/printer-utils.js"></script>
-    <script type="text/javascript" src="src/side-by-side-printer.js"></script>
-    <script type="text/javascript" src="src/line-by-line-printer.js"></script>
-    <script type="text/javascript" src="src/html-printer.js"></script>
-    <script type="text/javascript" src="src/diff2html.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/languages/scala.min.js"></script>
+
     <script>
         var lineDiffExample = 'diff --git a/src/attributes/attr.js b/src/attributes/attr.js\n' +
                 'index facdd41..b627fe8 100644\n' +
