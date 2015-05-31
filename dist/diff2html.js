@@ -872,9 +872,6 @@ function require() {
     if (config.charByChar) diff = jsDiff.diffChars(diffLine1, diffLine2);
     else diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
 
-    //var diff = jsDiff.diffChars(diffLine1, diffLine2);
-    //var diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
-
     var highlightedLine = "";
 
     diff.forEach(function (part) {
@@ -885,8 +882,14 @@ function require() {
     });
 
     return {
-      o: lineStart1 + removeIns(highlightedLine),
-      n: lineStart2 + removeDel(highlightedLine)
+      first: {
+        prefix: lineStart1,
+        line: removeIns(highlightedLine)
+      },
+      second: {
+        prefix: lineStart2,
+        line: removeDel(highlightedLine)
+      }
     }
   };
 
@@ -974,18 +977,18 @@ function require() {
     file.blocks.forEach(function (block) {
 
       fileHtml.left += "<tr>\n" +
-      "  <td class=\"d2h-code-side-linenumber " + diffParser.LINE_TYPE.INFO + "\"></td>\n" +
-      "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
-      "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" + utils.escape(block.header) + "</div>" +
-      "  </td>\n" +
-      "</tr>\n";
+        "  <td class=\"d2h-code-side-linenumber " + diffParser.LINE_TYPE.INFO + "\"></td>\n" +
+        "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
+        "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" + utils.escape(block.header) + "</div>" +
+        "  </td>\n" +
+        "</tr>\n";
 
       fileHtml.right += "<tr>\n" +
-      "  <td class=\"d2h-code-side-linenumber " + diffParser.LINE_TYPE.INFO + "\"></td>\n" +
-      "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
-      "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\"></div>" +
-      "  </td>\n" +
-      "</tr>\n";
+        "  <td class=\"d2h-code-side-linenumber " + diffParser.LINE_TYPE.INFO + "\"></td>\n" +
+        "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
+        "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\"></div>" +
+        "  </td>\n" +
+        "</tr>\n";
 
       var oldLines = [], newLines = [];
       var tmpHtml = "";
@@ -1020,8 +1023,8 @@ function require() {
 
               var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
 
-              fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, diff.o);
-              fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.n);
+              fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, diff.first.line, diff.first.prefix);
+              fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.second.line, diff.second.prefix);
             }
           } else {
             tmpHtml = processLines(oldLines, newLines);
@@ -1070,11 +1073,17 @@ function require() {
     return fileHtml;
   }
 
-  function generateSingleLineHtml(type, number, content) {
+  function generateSingleLineHtml(type, number, content, prefix) {
+    var htmlPrefix = "";
+    if (prefix) htmlPrefix = "<span class=\"d2h-code-line-prefix\">" + prefix + "</span>";
+
+    var htmlContent = "";
+    if (content) htmlContent = "<span class=\"d2h-code-line-ctn\">" + content + "</span>";
+
     return "<tr>\n" +
       "    <td class=\"d2h-code-side-linenumber " + type + "\">" + number + "</td>\n" +
       "    <td class=\"" + type + "\">" +
-      "      <div class=\"d2h-code-side-line " + type + "\">" + content + "</div>" +
+      "      <div class=\"d2h-code-side-line " + type + "\">" + htmlPrefix + htmlContent + "</div>" +
       "    </td>\n" +
       "  </tr>\n";
   }
@@ -1084,12 +1093,12 @@ function require() {
     fileHtml.right = "";
 
     fileHtml.left = "<tr>\n" +
-    "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
-    "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" +
-    "File without changes" +
-    "    </div>" +
-    "  </td>\n" +
-    "</tr>\n";
+      "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
+      "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" +
+      "File without changes" +
+      "    </div>" +
+      "  </td>\n" +
+      "</tr>\n";
 
     return fileHtml;
   }
@@ -1187,8 +1196,8 @@ function require() {
               config.isCombined = file.isCombined;
               var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
 
-              processedOldLines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, diff.o);
-              processedNewLines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, diff.n);
+              processedOldLines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, diff.first.line, diff.first.prefix);
+              processedNewLines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, diff.second.line, diff.second.prefix);
             }
 
             lines += processedOldLines + processedNewLines;
@@ -1228,14 +1237,20 @@ function require() {
     return lines;
   }
 
-  function generateLineHtml(type, oldNumber, newNumber, content) {
+  function generateLineHtml(type, oldNumber, newNumber, content, prefix) {
+    var htmlPrefix = "";
+    if (prefix) htmlPrefix = "<span class=\"d2h-code-line-prefix\">" + prefix + "</span>";
+
+    var htmlContent = "";
+    if (content) htmlContent = "<span class=\"d2h-code-line-ctn\">" + content + "</span>";
+
     return "<tr>\n" +
       "  <td class=\"d2h-code-linenumber " + type + "\">" +
       "    <div class=\"line-num1\">" + utils.valueOrEmpty(oldNumber) + "</div>" +
       "    <div class=\"line-num2\">" + utils.valueOrEmpty(newNumber) + "</div>" +
       "  </td>\n" +
       "  <td class=\"" + type + "\">" +
-      "    <div class=\"d2h-code-line " + type + "\">" + content + "</div>" +
+      "    <div class=\"d2h-code-line " + type + "\">" + htmlPrefix + htmlContent + "</div>" +
       "  </td>\n" +
       "</tr>\n";
   }

@@ -63,18 +63,18 @@
     file.blocks.forEach(function (block) {
 
       fileHtml.left += "<tr>\n" +
-      "  <td class=\"d2h-code-side-linenumber " + diffParser.LINE_TYPE.INFO + "\"></td>\n" +
-      "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
-      "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" + utils.escape(block.header) + "</div>" +
-      "  </td>\n" +
-      "</tr>\n";
+        "  <td class=\"d2h-code-side-linenumber " + diffParser.LINE_TYPE.INFO + "\"></td>\n" +
+        "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
+        "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" + utils.escape(block.header) + "</div>" +
+        "  </td>\n" +
+        "</tr>\n";
 
       fileHtml.right += "<tr>\n" +
-      "  <td class=\"d2h-code-side-linenumber " + diffParser.LINE_TYPE.INFO + "\"></td>\n" +
-      "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
-      "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\"></div>" +
-      "  </td>\n" +
-      "</tr>\n";
+        "  <td class=\"d2h-code-side-linenumber " + diffParser.LINE_TYPE.INFO + "\"></td>\n" +
+        "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
+        "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\"></div>" +
+        "  </td>\n" +
+        "</tr>\n";
 
       var oldLines = [], newLines = [];
       var tmpHtml = "";
@@ -109,8 +109,8 @@
 
               var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
 
-              fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, diff.o);
-              fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.n);
+              fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, diff.first.line, diff.first.prefix);
+              fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.second.line, diff.second.prefix);
             }
           } else {
             tmpHtml = processLines(oldLines, newLines);
@@ -159,11 +159,17 @@
     return fileHtml;
   }
 
-  function generateSingleLineHtml(type, number, content) {
+  function generateSingleLineHtml(type, number, content, prefix) {
+    var htmlPrefix = "";
+    if (prefix) htmlPrefix = "<span class=\"d2h-code-line-prefix\">" + prefix + "</span>";
+
+    var htmlContent = "";
+    if (content) htmlContent = "<span class=\"d2h-code-line-ctn\">" + content + "</span>";
+
     return "<tr>\n" +
       "    <td class=\"d2h-code-side-linenumber " + type + "\">" + number + "</td>\n" +
       "    <td class=\"" + type + "\">" +
-      "      <div class=\"d2h-code-side-line " + type + "\">" + content + "</div>" +
+      "      <div class=\"d2h-code-side-line " + type + "\">" + htmlPrefix + htmlContent + "</div>" +
       "    </td>\n" +
       "  </tr>\n";
   }
@@ -173,12 +179,12 @@
     fileHtml.right = "";
 
     fileHtml.left = "<tr>\n" +
-    "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
-    "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" +
-    "File without changes" +
-    "    </div>" +
-    "  </td>\n" +
-    "</tr>\n";
+      "  <td class=\"" + diffParser.LINE_TYPE.INFO + "\">" +
+      "    <div class=\"d2h-code-side-line " + diffParser.LINE_TYPE.INFO + "\">" +
+      "File without changes" +
+      "    </div>" +
+      "  </td>\n" +
+      "</tr>\n";
 
     return fileHtml;
   }

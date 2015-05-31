@@ -9,7 +9,7 @@
         Author: rtfpessoa
     -->
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 
     <!--
     <link rel="stylesheet" type="text/css" href="../css/diff2html.min.css">
@@ -205,13 +205,13 @@
             hljs.configure({languages: uniqueLanguages});
 
             $("#line-by-line").html(diff2Html.getPrettyHtmlFromJson(diffJson));
-            var code = $(".d2h-code-line");
+            var code = $(".d2h-code-line-ctn");
             code.map(function (i, line) {
                 hljs.highlightBlock(line);
             });
 
             $("#side-by-side").html(diff2Html.getPrettySideBySideHtmlFromJson(diffJson));
-            var codeSide = $(".d2h-code-side-line");
+            var codeSide = $(".d2h-code-line-ctn");
             codeSide.map(function (i, line) {
                 hljs.highlightBlock(line);
             });
