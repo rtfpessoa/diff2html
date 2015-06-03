@@ -47,9 +47,6 @@
     if (config.charByChar) diff = jsDiff.diffChars(diffLine1, diffLine2);
     else diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
 
-    //var diff = jsDiff.diffChars(diffLine1, diffLine2);
-    //var diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
-
     var highlightedLine = "";
 
     diff.forEach(function (part) {
@@ -60,8 +57,14 @@
     });
 
     return {
-      o: lineStart1 + removeIns(highlightedLine),
-      n: lineStart2 + removeDel(highlightedLine)
+      first: {
+        prefix: lineStart1,
+        line: removeIns(highlightedLine)
+      },
+      second: {
+        prefix: lineStart2,
+        line: removeDel(highlightedLine)
+      }
     }
   };
 

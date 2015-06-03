@@ -98,7 +98,7 @@
     /* ******************** */
 }
 
-.d2h-code-side-line.hljs {
+.d2h-code-side-line {
     display: block;
     white-space: pre;
     padding: 0 10px;
@@ -128,6 +128,17 @@
     text-decoration: none;
     background-color: #97f295;
     border-radius: 0.2em;
+}
+
+.d2h-code-line-prefix {
+    float: left;
+    background: none;
+    padding: 0;
+}
+
+.d2h-code-line-ctn {
+    background: none;
+    padding: 0;
 }
 
 .line-num1 {
