@@ -11,19 +11,6 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 
-    <!--
-    <link rel="stylesheet" type="text/css" href="../css/diff2html.min.css">
-    <script type="text/javascript" src="../lib/diff.js"></script>
-    <script type="text/javascript" src="../lib/fakeRequire.js"></script>
-    <script type="text/javascript" src="../src/utils.js"></script>
-    <script type="text/javascript" src="../src/diff-parser.js"></script>
-    <script type="text/javascript" src="../src/printer-utils.js"></script>
-    <script type="text/javascript" src="../src/side-by-side-printer.js"></script>
-    <script type="text/javascript" src="../src/line-by-line-printer.js"></script>
-    <script type="text/javascript" src="../src/html-printer.js"></script>
-    <script type="text/javascript" src="../src/diff2html.js"></script>
-    -->
-
     <!-- -->
     <link rel="stylesheet" type="text/css" href="diff2html.min.css">
     <script type="text/javascript" src="diff2html.min.js"></script>
@@ -190,7 +177,20 @@
                 '@@ -1,3 +0,0 @@\n' +
                 '-define(function() {\n' +
                 '-	return typeof undefined;\n' +
-                '-});\n';
+                '-});\n' +
+                'diff --git a/components/textdiff/textdiff.html b/components/textdiff/textdiff.html\n' +
+                'index a3484bf..82209af 100644\n' +
+                '--- a/components/textdiff/textdiff.html\n' +
+                '+++ b/components/textdiff/textdiff.html\n' +
+                '@@ -1,6 +1,8 @@\n' +
+                ' <!-- ko if: isShowingDiffs -->\n' +
+                ' <div>\n' +
+                '-  <div data-bind="event: { load: setDom($element) }"></div>\n' +
+                '+  <!-- ko if: isParsed -->\n' +
+                '+  <div data-bind="template: {nodes: ko.utils.parseHtmlFragment(htmlSrc())}"></div>\n' +
+                '+  <!-- /ko -->\n' +
+                '   <div class="btn-load-more" data-bind="visible: loadMoreCount() > 0">\n' +
+                '   </div>\n';
 
         $(document).ready(function () {
             var diff2Html = Diff2Html;
