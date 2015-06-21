@@ -96,18 +96,15 @@
         } else {
           var j = 0;
           var oldLine, newLine;
-          var oldEscapedLine, newEscapedLine;
 
           if (oldLines.length === newLines.length) {
             for (j = 0; j < oldLines.length; j++) {
               oldLine = oldLines[j];
               newLine = newLines[j];
-              oldEscapedLine = utils.escape(oldLine.content);
-              newEscapedLine = utils.escape(newLine.content);
 
               config.isCombined = file.isCombined;
 
-              var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
+              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
 
               fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, diff.first.line, diff.first.prefix);
               fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.second.line, diff.second.prefix);

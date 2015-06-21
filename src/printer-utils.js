@@ -9,6 +9,7 @@
 
   // dirty hack for browser compatibility
   var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) || require("../lib/diff.js");
+  var utils = require("./utils.js").Utils;
 
   function PrinterUtils() {
   }
@@ -51,9 +52,10 @@
 
     diff.forEach(function (part) {
       var elemType = part.added ? 'ins' : part.removed ? 'del' : null;
+      var escapedValue = utils.escape(part.value);
 
-      if (elemType !== null) highlightedLine += "<" + elemType + ">" + part.value + "</" + elemType + ">";
-      else highlightedLine += part.value;
+      if (elemType !== null) highlightedLine += "<" + elemType + ">" + escapedValue + "</" + elemType + ">";
+      else highlightedLine += escapedValue;
     });
 
     return {
