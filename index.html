@@ -9,10 +9,25 @@
         Author: rtfpessoa
     -->
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 
+    <!--
+    <link rel="stylesheet" type="text/css" href="../css/diff2html.min.css">
+    <script type="text/javascript" src="../lib/diff.js"></script>
+    <script type="text/javascript" src="../lib/fakeRequire.js"></script>
+    <script type="text/javascript" src="../src/utils.js"></script>
+    <script type="text/javascript" src="../src/diff-parser.js"></script>
+    <script type="text/javascript" src="../src/printer-utils.js"></script>
+    <script type="text/javascript" src="../src/side-by-side-printer.js"></script>
+    <script type="text/javascript" src="../src/line-by-line-printer.js"></script>
+    <script type="text/javascript" src="../src/html-printer.js"></script>
+    <script type="text/javascript" src="../src/diff2html.js"></script>
+    -->
+
+    <!-- -->
     <link rel="stylesheet" type="text/css" href="diff2html.min.css">
     <script type="text/javascript" src="diff2html.min.js"></script>
+    <!-- -->
 
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
@@ -190,13 +205,13 @@
             hljs.configure({languages: uniqueLanguages});
 
             $("#line-by-line").html(diff2Html.getPrettyHtmlFromJson(diffJson));
-            var code = $(".d2h-code-line");
+            var code = $(".d2h-code-line-ctn");
             code.map(function (i, line) {
                 hljs.highlightBlock(line);
             });
 
             $("#side-by-side").html(diff2Html.getPrettySideBySideHtmlFromJson(diffJson));
-            var codeSide = $(".d2h-code-side-line");
+            var codeSide = $(".d2h-code-line-ctn");
             codeSide.map(function (i, line) {
                 hljs.highlightBlock(line);
             });
