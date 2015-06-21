@@ -834,6 +834,7 @@ function require() {
 
   // dirty hack for browser compatibility
   var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) || require("../lib/diff.js");
+  var utils = require("./utils.js").Utils;
 
   function PrinterUtils() {
   }
@@ -876,9 +877,10 @@ function require() {
 
     diff.forEach(function (part) {
       var elemType = part.added ? 'ins' : part.removed ? 'del' : null;
+      var escapedValue = utils.escape(part.value);
 
-      if (elemType !== null) highlightedLine += "<" + elemType + ">" + part.value + "</" + elemType + ">";
-      else highlightedLine += part.value;
+      if (elemType !== null) highlightedLine += "<" + elemType + ">" + escapedValue + "</" + elemType + ">";
+      else highlightedLine += escapedValue;
     });
 
     return {
@@ -1010,18 +1012,15 @@ function require() {
         } else {
           var j = 0;
           var oldLine, newLine;
-          var oldEscapedLine, newEscapedLine;
 
           if (oldLines.length === newLines.length) {
             for (j = 0; j < oldLines.length; j++) {
               oldLine = oldLines[j];
               newLine = newLines[j];
-              oldEscapedLine = utils.escape(oldLine.content);
-              newEscapedLine = utils.escape(newLine.content);
 
               config.isCombined = file.isCombined;
 
-              var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
+              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
 
               fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, diff.first.line, diff.first.prefix);
               fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, diff.second.line, diff.second.prefix);
@@ -1184,17 +1183,14 @@ function require() {
         } else {
           var j = 0;
           var oldLine, newLine;
-          var oldEscapedLine, newEscapedLine;
 
           if (oldLines.length === newLines.length) {
             for (j = 0; j < oldLines.length; j++) {
               oldLine = oldLines[j];
               newLine = newLines[j];
-              oldEscapedLine = utils.escape(oldLine.content);
-              newEscapedLine = utils.escape(newLine.content);
 
               config.isCombined = file.isCombined;
-              var diff = printerUtils.diffHighlight(oldEscapedLine, newEscapedLine, config);
+              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
 
               processedOldLines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, diff.first.line, diff.first.prefix);
               processedNewLines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, diff.second.line, diff.second.prefix);
