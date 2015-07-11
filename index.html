@@ -190,7 +190,19 @@
                 '+  <div data-bind="template: {nodes: ko.utils.parseHtmlFragment(htmlSrc())}"></div>\n' +
                 '+  <!-- /ko -->\n' +
                 '   <div class="btn-load-more" data-bind="visible: loadMoreCount() > 0">\n' +
-                '   </div>\n';
+                '   </div>\n' +
+                'diff --git a/test.js b/test.js\n' +
+                'new file mode 100644\n' +
+                'index 0000000..e1e22ec\n' +
+                '--- /dev/null\n' +
+                '+++ b/test.js\n' +
+                '@@ -0,0 +1,6 @@\n' +
+                "+var parser = require('./source/git-parser');\n" +
+                '+\n' +
+                "+var text = 'diff --git a/components/app/app.html b/components/app/app.html\\nindex ecb7a95..027bd9b 100644\\n--- a/components/app/app.html\\n+++ b/components/app/app.html\\n@@ -52,0 +53,3 @@\\n+\\n+\\n+\\n@@ -56,0 +60,3 @@\\n+\\n+\\n+\\n'\n" +
+                '+var patchLineList = [ false, false, false, false ];\n' +
+                '+\n' +
+                '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n';
 
         $(document).ready(function () {
             var diff2Html = Diff2Html;
