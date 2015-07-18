@@ -9,7 +9,7 @@
         Author: rtfpessoa
     -->
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/github.min.css">
 
     <!-- -->
     <link rel="stylesheet" type="text/css" href="diff2html.min.css">
@@ -17,11 +17,12 @@
     <!-- -->
 
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/languages/scala.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/scala.min.js"></script>
 
     <script>
-        var lineDiffExample = 'diff --git a/src/attributes/attr.js b/src/attributes/attr.js\n' +
+        var lineDiffExample =
+                'diff --git a/src/attributes/attr.js b/src/attributes/attr.js\n' +
                 'index facdd41..b627fe8 100644\n' +
                 '--- a/src/attributes/attr.js\n' +
                 '+++ b/src/attributes/attr.js\n' +
@@ -61,7 +62,7 @@
                 '-], function( jQuery, rnotwhite, strundefined, dataPriv ) {\n' +
                 '+], function( jQuery, rnotwhite, dataPriv ) {\n' +
                 ' \n' +
-                ' var rclass = /[\t\r\n\f]/g;\n' +
+                ' var rclass = /[\\t\\r\\n\\f]/g;\n' +
                 ' \n' +
                 '@@ -128,7 +127,7 @@ jQuery.fn.extend({\n' +
                 ' 				}\n' +
@@ -208,23 +209,19 @@
             var diff2Html = Diff2Html;
             var diffJson = diff2Html.getJsonFromDiff(lineDiffExample);
 
-            var languages = diffJson.map(function (line) {
+            var allFileLanguages = diffJson.map(function (line) {
                 return line.language;
             });
-            var uniqueLanguages = languages.filter(function (v, i) {
-                return languages.indexOf(v) == i;
+            var distinctLanguages = allFileLanguages.filter(function (v, i) {
+                return allFileLanguages.indexOf(v) == i;
             });
-            hljs.configure({languages: uniqueLanguages});
+            hljs.configure({languages: distinctLanguages});
 
             $("#line-by-line").html(diff2Html.getPrettyHtmlFromJson(diffJson));
+            $("#side-by-side").html(diff2Html.getPrettySideBySideHtmlFromJson(diffJson));
+
             var code = $(".d2h-code-line-ctn");
             code.map(function (i, line) {
-                hljs.highlightBlock(line);
-            });
-
-            $("#side-by-side").html(diff2Html.getPrettySideBySideHtmlFromJson(diffJson));
-            var codeSide = $(".d2h-code-line-ctn");
-            codeSide.map(function (i, line) {
                 hljs.highlightBlock(line);
             });
         });

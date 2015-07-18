@@ -75,11 +75,13 @@
 
 .d2h-file-diff {
     overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 .d2h-file-side-diff {
     display: inline-block;
     overflow-x: scroll;
+    overflow-y: hidden;
     width: 50%;
     margin-right: -4px;
 }
