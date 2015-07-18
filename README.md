@@ -22,7 +22,9 @@ Diff to Html generates pretty HTML diffs from git word diff output.
 
 * [Node Module](https://www.npmjs.org/package/diff2html)
 
-* Manually download and import `diff2html.js` into your page
+* [Bower Package](http://bower.io/search/?q=diff2html)
+
+* Manually download and import `dist/diff2html.min.js` into your page
 
 ## How to use
 
