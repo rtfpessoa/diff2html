@@ -8,7 +8,9 @@
 (function (global, undefined) {
 
   // dirty hack for browser compatibility
-  var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) || require("../lib/diff.js");
+  var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) ||
+    require("diff") ||
+    require("../lib/diff.js");
   var utils = require("./utils.js").Utils;
 
   function PrinterUtils() {

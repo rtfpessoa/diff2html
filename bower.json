@@ -2,38 +2,55 @@
   "name": "diff2html",
   "version": "0.2.5",
   "homepage": "https://github.com/rtfpessoa/diff2html",
+  "description": "Fast Diff to colorized HTML",
+  "keywords": [
+    "git",
+    "diff",
+    "pretty",
+    "side",
+    "line",
+    "side-by-side",
+    "line-by-line",
+    "character",
+    "highlight",
+    "pretty",
+    "color",
+    "html",
+    "diff2html",
+    "difftohtml",
+    "colorized"
+  ],
+
   "authors": [
     "Rodrigo Fernandes <rtfrodrigo@gmail.com>"
   ],
+
   "repository": {
-  "type": "git",
-  "url": "git://github.com/rtfpessoa/diff2html.git"
+    "type": "git",
+    "url": "git://github.com/rtfpessoa/diff2html.git"
   },
-  "description": "Fast Diff to colorized HTML",
+
   "main": "./src/diff2html.js",
-  "keywords": [
-      "git",
-      "diff",
-      "pretty",
-      "side",
-      "line",
-      "side-by-side",
-      "line-by-line",
-      "character",
-      "highlight",
-      "pretty",
-      "color",
-      "html",
-      "diff2html",
-      "difftohtml",
-      "colorized"
-  ],
+
   "license": "MIT",
+
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+
+  "dependencies": {
+    "jsdiff": ">= 1.4.0"
+  },
+
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "bin",
+    "package.json",
+    "release.sh"
   ]
 }
