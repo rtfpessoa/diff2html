@@ -1,8 +1,25 @@
 // Diff2Html minifier version (automatically generated)
-var global = this;
+/*
+ * Hack to allow nodejs require("package/file") in the browser
+ *  How?
+ *    Since every require is used as an object:
+ *      `require("./utils.js").Utils` // (notice the `.Utils`)
+ *
+ *    We can say that when there is no require method
+ *    we use the global object in which the `Utils`
+ *    object was already injected.
+ */
+
+var $globalHolder = (typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof this !== 'undefined' && this) ||
+  Function('return this')();
 function require() {
-  return global;
-}/* See LICENSE file for terms of use */
+  return $globalHolder;
+}
+/* See LICENSE file for terms of use */
 
 /*
  * Text diff implementation.
@@ -652,7 +669,7 @@ function require() {
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   function Utils() {
   }
@@ -673,11 +690,13 @@ function require() {
     return value ? value : "";
   };
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.Utils = new Utils();
-  } else if (typeof global.Utils === 'undefined') {
-    global.Utils = new Utils();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["Utils"] = new Utils();
 
 })(this);
 /*
@@ -687,7 +706,7 @@ function require() {
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var utils = require("./utils.js").Utils;
 
@@ -895,11 +914,13 @@ function require() {
     else return language;
   }
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.DiffParser = new DiffParser();
-  } else if (typeof global.DiffParser === 'undefined') {
-    global.DiffParser = new DiffParser();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["DiffParser"] = new DiffParser();
 
 })(this);
 /*
@@ -909,12 +930,10 @@ function require() {
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   // dirty hack for browser compatibility
-  var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) ||
-    require("diff") ||
-    require("../lib/diff.js");
+  var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) || require("diff");
   var utils = require("./utils.js").Utils;
 
   function PrinterUtils() {
@@ -988,11 +1007,13 @@ function require() {
     return line.replace(/(<del>((.|\n)*?)<\/del>)/g, "");
   }
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.PrinterUtils = new PrinterUtils();
-  } else if (typeof global.PrinterUtils === 'undefined') {
-    global.PrinterUtils = new PrinterUtils();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["PrinterUtils"] = new PrinterUtils();
 
 })(this);
 /*
@@ -1002,7 +1023,7 @@ function require() {
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var diffParser = require("./diff-parser.js").DiffParser;
   var printerUtils = require("./printer-utils.js").PrinterUtils;
@@ -1183,11 +1204,13 @@ function require() {
     return fileHtml;
   }
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.SideBySidePrinter = new SideBySidePrinter();
-  } else if (typeof global.SideBySidePrinter === 'undefined') {
-    global.SideBySidePrinter = new SideBySidePrinter();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["SideBySidePrinter"] = new SideBySidePrinter();
 
 })(this);
 /*
@@ -1197,7 +1220,7 @@ function require() {
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var diffParser = require("./diff-parser.js").DiffParser;
   var printerUtils = require("./printer-utils.js").PrinterUtils;
@@ -1342,11 +1365,13 @@ function require() {
       "</tr>\n";
   }
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.LineByLinePrinter = new LineByLinePrinter();
-  } else if (typeof global.LineByLinePrinter === 'undefined') {
-    global.LineByLinePrinter = new LineByLinePrinter();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["LineByLinePrinter"] = new LineByLinePrinter();
 
 })(this);
 /*
@@ -1356,7 +1381,7 @@ function require() {
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var lineByLinePrinter = require("./line-by-line-printer.js").LineByLinePrinter;
   var sideBySidePrinter = require("./side-by-side-printer.js").SideBySidePrinter;
@@ -1368,11 +1393,13 @@ function require() {
 
   HtmlPrinter.prototype.generateSideBySideJsonHtml = sideBySidePrinter.generateSideBySideJsonHtml;
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.HtmlPrinter = new HtmlPrinter();
-  } else if (typeof global.HtmlPrinter === 'undefined') {
-    global.HtmlPrinter = new HtmlPrinter();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["HtmlPrinter"] = new HtmlPrinter();
 
 })(this);
 /*
@@ -1380,11 +1407,9 @@ function require() {
  * Diff to HTML (diff2html.js)
  * Author: rtfpessoa
  *
- * Diff commands:
- *   git diff
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var diffParser = require("./diff-parser.js").DiffParser;
   var htmlPrinter = require("./html-printer.js").HtmlPrinter;
@@ -1393,13 +1418,12 @@ function require() {
   }
 
   /*
-   * config
-   * {
-   * "wordByWord" : true (default)
-   * OR
-   * "charByChar" : true
-   * }
-   *
+   * Line diff type configuration
+   var config = {
+   "wordByWord": true, // (default)
+   // OR
+   "charByChar": true
+   };
    */
 
   /*
@@ -1444,10 +1468,12 @@ function require() {
     return htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
   };
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.Diff2Html = new Diff2Html();
-  } else if (typeof global.Diff2Html === 'undefined') {
-    global.Diff2Html = new Diff2Html();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["Diff2Html"] = new Diff2Html();
 
 })(this);

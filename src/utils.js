@@ -5,7 +5,7 @@
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   function Utils() {
   }
@@ -26,10 +26,12 @@
     return value ? value : "";
   };
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.Utils = new Utils();
-  } else if (typeof global.Utils === 'undefined') {
-    global.Utils = new Utils();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["Utils"] = new Utils();
 
 })(this);

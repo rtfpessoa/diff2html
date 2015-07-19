@@ -5,7 +5,7 @@
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var utils = require("./utils.js").Utils;
 
@@ -213,10 +213,12 @@
     else return language;
   }
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.DiffParser = new DiffParser();
-  } else if (typeof global.DiffParser === 'undefined') {
-    global.DiffParser = new DiffParser();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["DiffParser"] = new DiffParser();
 
 })(this);
