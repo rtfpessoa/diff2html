@@ -59,14 +59,12 @@ Diff to Html generates pretty HTML diffs from git diff output.
 > Add the dependencies.
 Choose one color scheme, and add the main highlight code.
 If your favourite language is not included in the default package also add its javascript highlight file.
-jQuery is optional, just using it to help managing the highlight.
 
 ```html
 <!-- Stylesheet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/github.min.css">
 
 <!-- Javascripts -->
-<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/scala.min.js"></script>
 ```
