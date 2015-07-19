@@ -12,6 +12,8 @@ Diff to Html generates pretty HTML diffs from git diff output.
 
 * GitHub like style
 
+* Code syntax highlight
+
 ## Online Example
 
 > Go to [Diff2HTML](http://rtfpessoa.github.io/diff2html/)
