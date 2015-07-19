@@ -29,7 +29,6 @@
     <script type="text/javascript" src="../dist/diff2html.min.js"></script>
     <!-- -->
 
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/scala.min.js"></script>
 
@@ -218,23 +217,30 @@
                 '+\n' +
                 '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n';
 
-        $(document).ready(function () {
-            var diff2Html = Diff2Html;
-            var diffJson = diff2Html.getJsonFromDiff(lineDiffExample);
+        document.addEventListener("DOMContentLoaded", function () {
+            // parse the diff to json
+            var diffJson = Diff2Html.getJsonFromDiff(lineDiffExample);
 
+            // collect all the file extensions in the json
             var allFileLanguages = diffJson.map(function (line) {
                 return line.language;
             });
+
+            // remove duplicated languages
             var distinctLanguages = allFileLanguages.filter(function (v, i) {
                 return allFileLanguages.indexOf(v) == i;
             });
+
+            // pass the languages to the highlightjs plugin
             hljs.configure({languages: distinctLanguages});
 
-            $("#line-by-line").html(diff2Html.getPrettyHtmlFromJson(diffJson));
-            $("#side-by-side").html(diff2Html.getPrettySideBySideHtmlFromJson(diffJson));
+            // generate and inject the diff HTML into the desired place
+            document.getElementById("line-by-line").innerHTML = Diff2Html.getPrettyHtmlFromJson(diffJson);
+            document.getElementById("side-by-side").innerHTML = Diff2Html.getPrettySideBySideHtmlFromJson(diffJson);
 
-            var code = $(".d2h-code-line-ctn");
-            code.map(function (i, line) {
+            // collect all the code lines and execute the highlight on them
+            var codeLines = document.getElementsByClassName("d2h-code-line-ctn");
+            [].forEach.call(codeLines, function (line) {
                 hljs.highlightBlock(line);
             });
         });

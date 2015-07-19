@@ -5,12 +5,10 @@
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   // dirty hack for browser compatibility
-  var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) ||
-    require("diff") ||
-    require("../lib/diff.js");
+  var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) || require("diff");
   var utils = require("./utils.js").Utils;
 
   function PrinterUtils() {
@@ -84,10 +82,12 @@
     return line.replace(/(<del>((.|\n)*?)<\/del>)/g, "");
   }
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.PrinterUtils = new PrinterUtils();
-  } else if (typeof global.PrinterUtils === 'undefined') {
-    global.PrinterUtils = new PrinterUtils();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["PrinterUtils"] = new PrinterUtils();
 
 })(this);

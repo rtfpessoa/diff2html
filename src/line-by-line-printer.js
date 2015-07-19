@@ -5,7 +5,7 @@
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var diffParser = require("./diff-parser.js").DiffParser;
   var printerUtils = require("./printer-utils.js").PrinterUtils;
@@ -150,10 +150,12 @@
       "</tr>\n";
   }
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.LineByLinePrinter = new LineByLinePrinter();
-  } else if (typeof global.LineByLinePrinter === 'undefined') {
-    global.LineByLinePrinter = new LineByLinePrinter();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["LineByLinePrinter"] = new LineByLinePrinter();
 
 })(this);

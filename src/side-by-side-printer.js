@@ -5,7 +5,7 @@
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var diffParser = require("./diff-parser.js").DiffParser;
   var printerUtils = require("./printer-utils.js").PrinterUtils;
@@ -186,10 +186,12 @@
     return fileHtml;
   }
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.SideBySidePrinter = new SideBySidePrinter();
-  } else if (typeof global.SideBySidePrinter === 'undefined') {
-    global.SideBySidePrinter = new SideBySidePrinter();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["SideBySidePrinter"] = new SideBySidePrinter();
 
 })(this);

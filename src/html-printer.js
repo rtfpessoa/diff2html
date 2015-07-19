@@ -5,7 +5,7 @@
  *
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var lineByLinePrinter = require("./line-by-line-printer.js").LineByLinePrinter;
   var sideBySidePrinter = require("./side-by-side-printer.js").SideBySidePrinter;
@@ -17,10 +17,12 @@
 
   HtmlPrinter.prototype.generateSideBySideJsonHtml = sideBySidePrinter.generateSideBySideJsonHtml;
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.HtmlPrinter = new HtmlPrinter();
-  } else if (typeof global.HtmlPrinter === 'undefined') {
-    global.HtmlPrinter = new HtmlPrinter();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["HtmlPrinter"] = new HtmlPrinter();
 
 })(this);

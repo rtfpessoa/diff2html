@@ -3,11 +3,9 @@
  * Diff to HTML (diff2html.js)
  * Author: rtfpessoa
  *
- * Diff commands:
- *   git diff
  */
 
-(function (global, undefined) {
+(function (ctx, undefined) {
 
   var diffParser = require("./diff-parser.js").DiffParser;
   var htmlPrinter = require("./html-printer.js").HtmlPrinter;
@@ -16,13 +14,12 @@
   }
 
   /*
-   * config
-   * {
-   * "wordByWord" : true (default)
-   * OR
-   * "charByChar" : true
-   * }
-   *
+   * Line diff type configuration
+   var config = {
+   "wordByWord": true, // (default)
+   // OR
+   "charByChar": true
+   };
    */
 
   /*
@@ -67,10 +64,12 @@
     return htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
   };
 
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports.Diff2Html = new Diff2Html();
-  } else if (typeof global.Diff2Html === 'undefined') {
-    global.Diff2Html = new Diff2Html();
-  }
+  // expose this module
+  ((typeof module !== 'undefined' && module.exports) ||
+  (typeof exports !== 'undefined' && exports) ||
+  (typeof window !== 'undefined' && window) ||
+  (typeof self !== 'undefined' && self) ||
+  (typeof $this !== 'undefined' && $this) ||
+  Function('return this')())["Diff2Html"] = new Diff2Html();
 
 })(this);
