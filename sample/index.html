@@ -202,7 +202,17 @@
                 "+var text = 'diff --git a/components/app/app.html b/components/app/app.html\\nindex ecb7a95..027bd9b 100644\\n--- a/components/app/app.html\\n+++ b/components/app/app.html\\n@@ -52,0 +53,3 @@\\n+\\n+\\n+\\n@@ -56,0 +60,3 @@\\n+\\n+\\n+\\n'\n" +
                 '+var patchLineList = [ false, false, false, false ];\n' +
                 '+\n' +
-                '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n';
+                '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n' +
+                "diff --git a/a.xml b/b.xml\n" +
+                "index e54317e..82a9a56 100644\n" +
+                "--- a/a.xml\n" +
+                "+++ b/b.xml\n" +
+                "@@ -242,4 +242,6 @@ need to create a new job for native server java api and move these tests to a ne\n" +
+                "                </packages>\n" +
+                "        </test>\n" +
+                " -->\n" +
+                "+\n" +
+                "+\n";
 
         document.addEventListener("DOMContentLoaded", function() {
             // parse the diff to json

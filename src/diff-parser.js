@@ -87,8 +87,11 @@
       var currentLine = {};
       currentLine.content = line;
 
+      var newLinePrefixes = !currentFile.isCombined ? ['+'] : ['+', ' +'];
+      var delLinePrefixes = !currentFile.isCombined ? ['-'] : ['-', ' -'];
+
       /* Fill the line data */
-      if (utils.startsWith(line, '+') || utils.startsWith(line, ' +')) {
+      if (utils.startsWith(line, newLinePrefixes)) {
         currentFile.addedLines++;
 
         currentLine.type = LINE_TYPE.INSERTS;
@@ -97,7 +100,7 @@
 
         currentBlock.lines.push(currentLine);
 
-      } else if (utils.startsWith(line, '-') || utils.startsWith(line, ' -')) {
+      } else if (utils.startsWith(line, delLinePrefixes)) {
         currentFile.deletedLines++;
 
         currentLine.type = LINE_TYPE.DELETES;

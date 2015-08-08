@@ -19,6 +19,17 @@
   };
 
   Utils.prototype.startsWith = function(str, start) {
+    if (typeof start === 'object') {
+      var result = false;
+      start.forEach(function(s) {
+        if (str.indexOf(s) === 0) {
+          result = true;
+        }
+      });
+
+      return result;
+    }
+
     return str.indexOf(start) === 0;
   };
 
