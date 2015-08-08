@@ -11,19 +11,6 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/github.min.css">
 
-    <!--
-    <link rel="stylesheet" type="text/css" href="../css/diff2html.css">
-    <script type="text/javascript" src="../lib/diff.js"></script>
-    <script type="text/javascript" src="../lib/fakeRequire.js"></script>
-    <script type="text/javascript" src="../src/utils.js"></script>
-    <script type="text/javascript" src="../src/diff-parser.js"></script>
-    <script type="text/javascript" src="../src/printer-utils.js"></script>
-    <script type="text/javascript" src="../src/side-by-side-printer.js"></script>
-    <script type="text/javascript" src="../src/line-by-line-printer.js"></script>
-    <script type="text/javascript" src="../src/html-printer.js"></script>
-    <script type="text/javascript" src="../src/diff2html.js"></script>
-    -->
-
     <!-- -->
     <link rel="stylesheet" type="text/css" href="../dist/diff2html.min.css">
     <script type="text/javascript" src="../dist/diff2html.min.js"></script>
@@ -217,17 +204,17 @@
                 '+\n' +
                 '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n';
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             // parse the diff to json
             var diffJson = Diff2Html.getJsonFromDiff(lineDiffExample);
 
             // collect all the file extensions in the json
-            var allFileLanguages = diffJson.map(function (line) {
+            var allFileLanguages = diffJson.map(function(line) {
                 return line.language;
             });
 
             // remove duplicated languages
-            var distinctLanguages = allFileLanguages.filter(function (v, i) {
+            var distinctLanguages = allFileLanguages.filter(function(v, i) {
                 return allFileLanguages.indexOf(v) == i;
             });
 
@@ -240,7 +227,7 @@
 
             // collect all the code lines and execute the highlight on them
             var codeLines = document.getElementsByClassName("d2h-code-line-ctn");
-            [].forEach.call(codeLines, function (line) {
+            [].forEach.call(codeLines, function(line) {
                 hljs.highlightBlock(line);
             });
         });
