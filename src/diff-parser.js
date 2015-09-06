@@ -5,15 +5,15 @@
  *
  */
 
-(function (ctx, undefined) {
+(function(ctx, undefined) {
 
-  var utils = require("./utils.js").Utils;
+  var utils = require('./utils.js').Utils;
 
   var LINE_TYPE = {
-    INSERTS: "d2h-ins",
-    DELETES: "d2h-del",
-    CONTEXT: "d2h-cntx",
-    INFO: "d2h-info"
+    INSERTS: 'd2h-ins',
+    DELETES: 'd2h-del',
+    CONTEXT: 'd2h-cntx',
+    INFO: 'd2h-info'
   };
 
   function DiffParser() {
@@ -21,24 +21,24 @@
 
   DiffParser.prototype.LINE_TYPE = LINE_TYPE;
 
-  DiffParser.prototype.generateDiffJson = function (diffInput) {
-    var files = [],
-      currentFile = null,
-      currentBlock = null,
-      oldLine = null,
-      newLine = null;
+  DiffParser.prototype.generateDiffJson = function(diffInput) {
+    var files = [];
+    var currentFile = null;
+    var currentBlock = null;
+    var oldLine = null;
+    var newLine = null;
 
-    var saveBlock = function () {
-      /* add previous block(if exists) before start a new file */
+    var saveBlock = function() {
+      /* Add previous block(if exists) before start a new file */
       if (currentBlock) {
         currentFile.blocks.push(currentBlock);
         currentBlock = null;
       }
     };
 
-    var saveFile = function () {
+    var saveFile = function() {
       /*
-       * add previous file(if exists) before start a new one
+       * Add previous file(if exists) before start a new one
        * if it has name (to avoid binary files errors)
        */
       if (currentFile && currentFile.newName) {
@@ -47,18 +47,18 @@
       }
     };
 
-    var startFile = function () {
+    var startFile = function() {
       saveBlock();
       saveFile();
 
-      /* create file structure */
+      /* Create file structure */
       currentFile = {};
       currentFile.blocks = [];
       currentFile.deletedLines = 0;
       currentFile.addedLines = 0;
     };
 
-    var startBlock = function (line) {
+    var startBlock = function(line) {
       saveBlock();
 
       var values;
@@ -75,7 +75,7 @@
       oldLine = values[1];
       newLine = values[2];
 
-      /* create block metadata */
+      /* Create block metadata */
       currentBlock = {};
       currentBlock.lines = [];
       currentBlock.oldStartLine = oldLine;
@@ -83,12 +83,15 @@
       currentBlock.header = line;
     };
 
-    var createLine = function (line) {
+    var createLine = function(line) {
       var currentLine = {};
       currentLine.content = line;
 
-      /* fill the line data */
-      if (utils.startsWith(line, "+") || utils.startsWith(line, " +")) {
+      var newLinePrefixes = !currentFile.isCombined ? ['+'] : ['+', ' +'];
+      var delLinePrefixes = !currentFile.isCombined ? ['-'] : ['-', ' -'];
+
+      /* Fill the line data */
+      if (utils.startsWith(line, newLinePrefixes)) {
         currentFile.addedLines++;
 
         currentLine.type = LINE_TYPE.INSERTS;
@@ -97,7 +100,7 @@
 
         currentBlock.lines.push(currentLine);
 
-      } else if (utils.startsWith(line, "-") || utils.startsWith(line, " -")) {
+      } else if (utils.startsWith(line, delLinePrefixes)) {
         currentFile.deletedLines++;
 
         currentLine.type = LINE_TYPE.DELETES;
@@ -115,13 +118,12 @@
       }
     };
 
-    var diffLines = diffInput.split("\n");
-    diffLines.forEach(function (line) {
+    var diffLines = diffInput.split('\n');
+    diffLines.forEach(function(line) {
       // Unmerged paths, and possibly other non-diffable files
       // https://github.com/scottgonzalez/pretty-diff/issues/11
       // Also, remove some useless lines
-      if (!line || utils.startsWith(line, "*")) {
-        //|| utils.startsWith(line, "new") || utils.startsWith(line, "index")
+      if (!line || utils.startsWith(line, '*')) {
         return;
       }
 
@@ -148,7 +150,7 @@
       var combinedDeletedFile = /^deleted file mode (\d{6}),(\d{6})/;
 
       var values = [];
-      if (utils.startsWith(line, "diff")) {
+      if (utils.startsWith(line, 'diff')) {
         startFile();
       } else if (currentFile && !currentFile.oldName && (values = /^--- a\/(\S+).*$/.exec(line))) {
         currentFile.oldName = values[1];
@@ -156,7 +158,7 @@
       } else if (currentFile && !currentFile.newName && (values = /^\+\+\+ [b]?\/(\S+).*$/.exec(line))) {
         currentFile.newName = values[1];
         currentFile.language = getExtension(currentFile.newName, currentFile.language);
-      } else if (currentFile && utils.startsWith(line, "@@")) {
+      } else if (currentFile && utils.startsWith(line, '@@')) {
         startBlock(line);
       } else if ((values = oldMode.exec(line))) {
         currentFile.oldMode = values[1];
@@ -208,17 +210,14 @@
   };
 
   function getExtension(filename, language) {
-    var nameSplit = filename.split(".");
-    if (nameSplit.length > 1) return nameSplit[nameSplit.length - 1];
-    else return language;
+    var nameSplit = filename.split('.');
+    if (nameSplit.length > 1) {
+      return nameSplit[nameSplit.length - 1];
+    } else {
+      return language;
+    }
   }
 
-  // expose this module
-  ((typeof module !== 'undefined' && module.exports) ||
-  (typeof exports !== 'undefined' && exports) ||
-  (typeof window !== 'undefined' && window) ||
-  (typeof self !== 'undefined' && self) ||
-  (typeof $this !== 'undefined' && $this) ||
-  Function('return this')())["DiffParser"] = new DiffParser();
+  module.exports['DiffParser'] = new DiffParser();
 
 })(this);

@@ -5,38 +5,39 @@
  *
  */
 
-(function (ctx, undefined) {
+(function(ctx, undefined) {
 
-  // dirty hack for browser compatibility
-  var jsDiff = (typeof JsDiff !== "undefined" && JsDiff) || require("diff");
-  var utils = require("./utils.js").Utils;
+  var jsDiff = require('diff');
+  var utils = require('./utils.js').Utils;
 
   function PrinterUtils() {
   }
 
-  PrinterUtils.prototype.getDiffName = function (file) {
+  PrinterUtils.prototype.getDiffName = function(file) {
     var oldFilename = file.oldName;
     var newFilename = file.newName;
 
     if (oldFilename && newFilename
       && oldFilename !== newFilename
       && !isDeletedName(newFilename)) {
-      return oldFilename + " -> " + newFilename;
+      return oldFilename + ' -> ' + newFilename;
     } else if (newFilename && !isDeletedName(newFilename)) {
       return newFilename;
     } else if (oldFilename) {
       return oldFilename;
     } else {
-      return "Unknown filename";
+      return 'Unknown filename';
     }
   };
 
-  PrinterUtils.prototype.diffHighlight = function (diffLine1, diffLine2, config) {
+  PrinterUtils.prototype.diffHighlight = function(diffLine1, diffLine2, config) {
     var lineStart1, lineStart2;
 
     var prefixSize = 1;
 
-    if (config.isCombined) prefixSize = 2;
+    if (config.isCombined) {
+      prefixSize = 2;
+    }
 
     lineStart1 = diffLine1.substr(0, prefixSize);
     lineStart2 = diffLine2.substr(0, prefixSize);
@@ -45,17 +46,23 @@
     diffLine2 = diffLine2.substr(prefixSize);
 
     var diff;
-    if (config.charByChar) diff = jsDiff.diffChars(diffLine1, diffLine2);
-    else diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
+    if (config.charByChar) {
+      diff = jsDiff.diffChars(diffLine1, diffLine2);
+    } else {
+      diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
+    }
 
-    var highlightedLine = "";
+    var highlightedLine = '';
 
-    diff.forEach(function (part) {
+    diff.forEach(function(part) {
       var elemType = part.added ? 'ins' : part.removed ? 'del' : null;
       var escapedValue = utils.escape(part.value);
 
-      if (elemType !== null) highlightedLine += "<" + elemType + ">" + escapedValue + "</" + elemType + ">";
-      else highlightedLine += escapedValue;
+      if (elemType !== null) {
+        highlightedLine += '<' + elemType + '>' + escapedValue + '</' + elemType + '>';
+      } else {
+        highlightedLine += escapedValue;
+      }
     });
 
     return {
@@ -71,23 +78,17 @@
   };
 
   function isDeletedName(name) {
-    return name === "dev/null";
+    return name === 'dev/null';
   }
 
   function removeIns(line) {
-    return line.replace(/(<ins>((.|\n)*?)<\/ins>)/g, "");
+    return line.replace(/(<ins>((.|\n)*?)<\/ins>)/g, '');
   }
 
   function removeDel(line) {
-    return line.replace(/(<del>((.|\n)*?)<\/del>)/g, "");
+    return line.replace(/(<del>((.|\n)*?)<\/del>)/g, '');
   }
 
-  // expose this module
-  ((typeof module !== 'undefined' && module.exports) ||
-  (typeof exports !== 'undefined' && exports) ||
-  (typeof window !== 'undefined' && window) ||
-  (typeof self !== 'undefined' && self) ||
-  (typeof $this !== 'undefined' && $this) ||
-  Function('return this')())["PrinterUtils"] = new PrinterUtils();
+  module.exports['PrinterUtils'] = new PrinterUtils();
 
 })(this);
