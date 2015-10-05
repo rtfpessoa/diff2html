@@ -278,10 +278,10 @@
 	      var values = [];
 	      if (utils.startsWith(line, 'diff')) {
 	        startFile();
-	      } else if (currentFile && !currentFile.oldName && (values = /^--- a\/(\S+).*$/.exec(line))) {
+	      } else if (currentFile && !currentFile.oldName && (values = /^--- [aiwco]\/(.+)$/.exec(line))) {
 	        currentFile.oldName = values[1];
 	        currentFile.language = getExtension(currentFile.oldName, currentFile.language);
-	      } else if (currentFile && !currentFile.newName && (values = /^\+\+\+ [b]?\/(\S+).*$/.exec(line))) {
+	      } else if (currentFile && !currentFile.newName && (values = /^\+\+\+ [biwco]?\/(.+)$/.exec(line))) {
 	        currentFile.newName = values[1];
 	        currentFile.language = getExtension(currentFile.newName, currentFile.language);
 	      } else if (currentFile && utils.startsWith(line, '@@')) {
