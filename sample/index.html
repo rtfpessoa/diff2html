@@ -21,6 +21,19 @@
 
     <script>
         var lineDiffExample =
+                'diff --git a/coverage.init b/coverage.init\n' +
+                'index fc56817..e8e7e49 100644\n' +
+                '--- a/coverage.init\n' +
+                '+++ b/coverage.init\n' +
+                '@@ -19,7 +19,7 @@\n' +
+                ' -opt "\-nostart"\n' +
+                ' \n' +
+                ' # skip stopenv\n' +
+                '--do "runbvt,stopenv,getlogs,pullcoveragedata"\n' +
+                '+-do "runbvt,getlogs,pullcoveragedata"\n' +
+                ' \n' +
+                ' ##########################################\n' +
+                ' # logs files to bring back to base\n' +
                 'diff --git a/src/attributes/attr.js b/src/attributes/attr.js\n' +
                 'index facdd41..b627fe8 100644\n' +
                 '--- a/src/attributes/attr.js\n' +
