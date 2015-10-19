@@ -13,6 +13,10 @@
   function PrinterUtils() {
   }
 
+  PrinterUtils.prototype.getHtmlId = function(file) {
+    return "d2h-" + this.getDiffName(file);
+  };
+
   PrinterUtils.prototype.getDiffName = function(file) {
     var oldFilename = file.oldName;
     var newFilename = file.newName;

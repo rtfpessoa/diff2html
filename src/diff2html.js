@@ -8,6 +8,7 @@
 (function(ctx, undefined) {
 
   var diffParser = require('./diff-parser.js').DiffParser;
+  var fileLister = require('./file-list-printer.js').FileListPrinter;
   var htmlPrinter = require('./html-printer.js').HtmlPrinter;
 
   function Diff2Html() {
@@ -23,15 +24,6 @@
    */
 
   /*
-   * Generates pretty html from string diff input
-   */
-  Diff2Html.prototype.getPrettyHtmlFromDiff = function(diffInput, config) {
-    var diffJson = diffParser.generateDiffJson(diffInput);
-    var configOrEmpty = config || {};
-    return htmlPrinter.generateLineByLineJsonHtml(diffJson, configOrEmpty);
-  };
-
-  /*
    * Generates json object from string diff input
    */
   Diff2Html.prototype.getJsonFromDiff = function(diffInput) {
@@ -39,21 +31,64 @@
   };
 
   /*
+   * Generates the html diff. The config parameter configures the output/input formats and other options
+   */
+  Diff2Html.prototype.getPrettyHtml = function(diffInput, config) {
+    var configOrEmpty = config || {};
+
+    var diffJson = diffInput;
+    if(!configOrEmpty.inputFormat || configOrEmpty.inputFormat === 'diff') {
+      diffJson = diffParser.generateDiffJson(diffInput);
+    }
+
+    var fileList = "";
+    if(configOrEmpty.showFiles === true) {
+      fileList = fileLister.generateFileList(diffJson, configOrEmpty);
+    }
+
+    var diffOutput = "";
+    if(configOrEmpty.outputFormat === 'side-by-side') {
+      diffOutput = htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
+    } else {
+      diffOutput = htmlPrinter.generateLineByLineJsonHtml(diffJson, configOrEmpty);
+    }
+
+    return fileList + diffOutput
+  };
+
+
+  /*
+   * Deprecated methods - The following methods exist only to maintain compatibility with previous versions
+   */
+
+  /*
+   * Generates pretty html from string diff input
+   */
+  Diff2Html.prototype.getPrettyHtmlFromDiff = function(diffInput, config) {
+    var configOrEmpty = config || {};
+    configOrEmpty['inputFormat'] = 'diff';
+    configOrEmpty['outputFormat'] = 'line-by-line';
+    return this.getPrettyHtml(diffInput, configOrEmpty)
+  };
+
+  /*
    * Generates pretty html from a json object
    */
   Diff2Html.prototype.getPrettyHtmlFromJson = function(diffJson, config) {
     var configOrEmpty = config || {};
-    return htmlPrinter.generateLineByLineJsonHtml(diffJson, configOrEmpty);
+    configOrEmpty['inputFormat'] = 'json';
+    configOrEmpty['outputFormat'] = 'line-by-line';
+    return this.getPrettyHtml(diffJson, configOrEmpty)
   };
 
   /*
    * Generates pretty side by side html from string diff input
    */
   Diff2Html.prototype.getPrettySideBySideHtmlFromDiff = function(diffInput, config) {
-    var diffJson = diffParser.generateDiffJson(diffInput);
-
     var configOrEmpty = config || {};
-    return htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
+    configOrEmpty['inputFormat'] = 'diff';
+    configOrEmpty['outputFormat'] = 'side-by-side';
+    return this.getPrettyHtml(diffInput, configOrEmpty)
   };
 
   /*
@@ -61,7 +96,9 @@
    */
   Diff2Html.prototype.getPrettySideBySideHtmlFromJson = function(diffJson, config) {
     var configOrEmpty = config || {};
-    return htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
+    configOrEmpty['inputFormat'] = 'json';
+    configOrEmpty['outputFormat'] = 'side-by-side';
+    return this.getPrettyHtml(diffJson, configOrEmpty)
   };
 
   var diffName = 'Diff2Html';
