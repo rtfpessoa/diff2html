@@ -32,29 +32,25 @@ Diff to Html generates pretty HTML diffs from git diff output.
 
 ## How to use
 
-> Pretty Line-by-Line Html From Git Word Diff Output
+> Pretty HTML diff
 
-    Diff2Html.getPrettyHtmlFromDiff(exInput)
-
-> Pretty Side-by-Side Html From Git Word Diff Output
-
-    Diff2Html.getPrettySideBySideHtmlFromDiff(exInput)
+    Diff2Html.getPrettyHtml(exInput, configuration)
 
 > Intermediate Json From Git Word Diff Output
 
     Diff2Html.getJsonFromDiff(exInput)
 
-> Pretty Line-by-Line Html From Json
-
-    Diff2Html.getPrettyHtmlFromJson(exInput)
-
-> Pretty Side-by-Side Html From Json
-
-    Diff2Html.getPrettySideBySideHtmlFromJson(exInput)
-
 > Check out the `index.html` for a complete example.
 
-## Sintax Hightlight
+## Configuration
+The HTML output accepts a Javascript object with configuration. Possible options:
+
+  - `inputFormat`: the format of the input data: `'diff'` or `'json'`, default is `'diff'`
+  - `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
+  - `showFiles`: show a file list before the diff: `true` or `false`, default is `false`
+
+
+## Syntax Highlight
 
 > Add the dependencies.
 Choose one color scheme, and add the main highlight code.
@@ -90,8 +86,8 @@ document.addEventListener("DOMContentLoaded", function () {
     hljs.configure({languages: distinctLanguages});
 
     // generate and inject the diff HTML into the desired place
-    document.getElementById("line-by-line").innerHTML = Diff2Html.getPrettyHtmlFromJson(diffJson);
-    document.getElementById("side-by-side").innerHTML = Diff2Html.getPrettySideBySideHtmlFromJson(diffJson);
+    document.getElementById("line-by-line").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json' });
+    document.getElementById("side-by-side").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json', outputFormat: 'side-by-side' });
 
     // collect all the code lines and execute the highlight on them
     var codeLines = document.getElementsByClassName("d2h-code-line-ctn");

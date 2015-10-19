@@ -25,7 +25,7 @@
           diffs = generateEmptyDiff();
         }
 
-        return '<div class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
+        return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
           '     <div class="d2h-file-header">\n' +
           '       <div class="d2h-file-stats">\n' +
           '         <span class="d2h-lines-added">+' + file.addedLines + '</span>\n' +

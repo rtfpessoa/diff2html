@@ -207,3 +207,61 @@
     color: rgba(0, 0, 0, 0.3);
     border-color: #d5e4f2;
 }
+
+.d2h-file-list-wrapper {
+    margin-bottom: 10px;
+    padding: 0 10px;
+}
+
+.d2h-file-list-wrapper a {
+    text-decoration: none;
+    color: #3572b0;
+}
+
+.d2h-file-list-wrapper a:visited {
+    color: #3572b0;
+}
+
+.d2h-file-list-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+    display: inline;
+    float:left;
+}
+
+.d2h-file-list-line {
+    text-align: left;
+    font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.d2h-file-list-line .d2h-file-name  {
+    line-height: 21px;
+}
+
+.d2h-file-list {
+    display:none;
+}
+
+.d2h-clear {
+    display:block;
+    clear: both;
+}
+
+/* CSS only show/hide */
+.d2h-show {
+    display: none;
+    float:left;
+}
+.d2h-hide {
+    float:left;
+}
+.d2h-hide:target + .d2h-show {
+    display: inline;
+}
+.d2h-hide:target {
+    display: none;
+}
+.d2h-hide:target ~ .d2h-file-list {
+    display:block;
+}
