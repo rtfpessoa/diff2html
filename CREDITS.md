@@ -1,7 +1,7 @@
 # Credits
 
 This is the list of all the kind people that have contributed to the diff2html project.
-This list or ordered by first contribution.
+This list is ordered by first contribution.
 
 Thanks,
 @rtfpessoa
