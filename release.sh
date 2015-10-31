@@ -17,10 +17,6 @@ echo "Cleaning previous versions ..."
 rm -rf ${OUTPUT_DIR}
 mkdir -p ${OUTPUT_DIR}
 
-echo "Preparing dependencies ..."
-rm -rf node_modules
-npm install
-
 echo "Generating js aggregation file in ${OUTPUT_JS_FILE}"
 
 webpack ./src/diff2html.js ${OUTPUT_JS_FILE}
