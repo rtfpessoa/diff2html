@@ -33,6 +33,10 @@
 }
 
 .d2h-lines-added {
+    text-align: right;
+}
+
+.d2h-lines-added > * {
     background-color: #ceffce;
     border: 1px solid #b4e2b4;
     color: #399839;
@@ -42,6 +46,10 @@
 }
 
 .d2h-lines-deleted {
+    text-align: left;
+}
+
+.d2h-lines-deleted > * {
     background-color: #f7c8c8;
     border: 1px solid #e9aeae;
     color: #c33;
