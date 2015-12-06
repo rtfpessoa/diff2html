@@ -89,10 +89,10 @@
               var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
 
               processedOldLines +=
-                generateLineHtml(oldLine.type + ' d2h-change', oldLine.oldNumber, oldLine.newNumber,
+                generateLineHtml(diffParser.LINE_TYPE.DELETE_CHANGES, oldLine.oldNumber, oldLine.newNumber,
                   diff.first.line, diff.first.prefix);
               processedNewLines +=
-                generateLineHtml(newLine.type + ' d2h-change', newLine.oldNumber, newLine.newNumber,
+                generateLineHtml(diffParser.LINE_TYPE.INSERT_CHANGES, newLine.oldNumber, newLine.newNumber,
                   diff.second.line, diff.second.prefix);
             }
 

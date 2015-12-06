@@ -266,7 +266,7 @@ ins.d2h-change, del.d2h-change {
     background-color: #fae1af;
 }
 .d2h-file-diff .d2h-ins.d2h-change {
-    background-color: #faedaf;
+    background-color: #ded;
 }
 
 /* CSS only show/hide */
