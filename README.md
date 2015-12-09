@@ -50,7 +50,7 @@ The HTML output accepts a Javascript object with configuration. Possible options
   - `inputFormat`: the format of the input data: `'diff'` or `'json'`, default is `'diff'`
   - `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
   - `showFiles`: show a file list before the diff: `true` or `false`, default is `false`
-  - `matchWords`: matches changed words in diff output lines: `true` or `false`, default is `false`
+  - `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default is `none`
   - `matchWordsThreshold`: similarity threshold for word matching, default is 0.25
 
 

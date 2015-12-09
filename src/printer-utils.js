@@ -71,7 +71,7 @@
     var highlightedLine = '';
 
     var changedWords = [];
-    if (!config.charByChar && config.matchWords) {
+    if (!config.charByChar && config.matching === 'words') {
       var treshold = 0.25;
       if (typeof(config.matchWordsThreshold) !== "undefined") {
         treshold = config.matchWordsThreshold;

@@ -95,7 +95,19 @@
       var oldLines = [];
       var newLines = [];
       function processChangeBlock() {
-        var matches = matcher(oldLines, newLines);
+        var matches;
+        var insertType;
+        var deleteType;
+        var doMatching = config.matching === "lines" || config.matching === "words";
+        if (doMatching) {
+          matches = matcher(oldLines, newLines);
+          insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
+          deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
+        } else {
+          matches = [[oldLines,newLines]];
+          insertType = diffParser.LINE_TYPE.INSERTS;
+          deleteType = diffParser.LINE_TYPE.DELETES;
+        }
         matches.forEach(function(match){
           var oldLines = match[0];
           var newLines = match[1];
@@ -113,10 +125,10 @@
             var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
 
             fileHtml.left +=
-              generateSingleLineHtml(diffParser.LINE_TYPE.DELETE_CHANGES, oldLine.oldNumber,
+              generateSingleLineHtml(deleteType, oldLine.oldNumber,
                 diff.first.line, diff.first.prefix);
             fileHtml.right +=
-              generateSingleLineHtml(diffParser.LINE_TYPE.INSERT_CHANGES, newLine.newNumber,
+              generateSingleLineHtml(insertType, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
             }
             if (max > common) {
