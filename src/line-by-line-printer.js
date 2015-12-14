@@ -10,6 +10,7 @@
   var diffParser = require('./diff-parser.js').DiffParser;
   var printerUtils = require('./printer-utils.js').PrinterUtils;
   var utils = require('./utils.js').Utils;
+  var Rematch = require('./rematch.js').Rematch;
 
   function LineByLinePrinter() {
   }
@@ -51,6 +52,12 @@
       '</div>\n';
   };
 
+  var matcher=Rematch.rematch(function(a,b) {
+    var amod = a.content.substr(1),
+        bmod = b.content.substr(1);
+    return Rematch.distance(amod, bmod);
+  });
+
   function generateFileHtml(file, config) {
     return file.blocks.map(function(block) {
 
@@ -63,27 +70,30 @@
 
       var oldLines = [];
       var newLines = [];
-      var processedOldLines = [];
-      var processedNewLines = [];
-
-      for (var i = 0; i < block.lines.length; i++) {
-        var line = block.lines[i];
-        var escapedLine = utils.escape(line.content);
-
-        if (line.type == diffParser.LINE_TYPE.CONTEXT && !oldLines.length && !newLines.length) {
-          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
-        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length && !newLines.length) {
-          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
-        } else if (line.type == diffParser.LINE_TYPE.DELETES && !newLines.length) {
-          oldLines.push(line);
-        } else if (line.type == diffParser.LINE_TYPE.INSERTS && oldLines.length > newLines.length) {
-          newLines.push(line);
+      function processChangeBlock() {
+        var matches;
+        var insertType;
+        var deleteType;
+        var doMatching = config.matching === "lines" || config.matching === "words";
+        if (doMatching) {
+          matches = matcher(oldLines, newLines);
+          insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
+          deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
         } else {
+          matches = [[oldLines,newLines]];
+          insertType = diffParser.LINE_TYPE.INSERTS;
+          deleteType = diffParser.LINE_TYPE.DELETES;
+        }
+        matches.forEach(function(match){
+          var oldLines = match[0];
+          var newLines = match[1];
+          var processedOldLines = [];
+          var processedNewLines = [];
           var j = 0;
-          var oldLine, newLine;
-
-          if (oldLines.length === newLines.length) {
-            for (j = 0; j < oldLines.length; j++) {
+            var oldLine, newLine,
+              common = Math.min(oldLines.length, newLines.length),
+              max = Math.max(oldLines.length, newLines.length);
+            for (j = 0; j < common; j++) {
               oldLine = oldLines[j];
               newLine = newLines[j];
 
@@ -91,27 +101,46 @@
               var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
 
               processedOldLines +=
-                generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber,
+                generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
                   diff.first.line, diff.first.prefix);
               processedNewLines +=
-                generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber,
+                generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
                   diff.second.line, diff.second.prefix);
             }
 
             lines += processedOldLines + processedNewLines;
-          } else {
-            lines += processLines(oldLines, newLines);
-          }
+            lines += processLines(oldLines.slice(common), newLines.slice(common));
 
-          oldLines = [];
-          newLines = [];
-          processedOldLines = [];
-          processedNewLines = [];
-          i--;
+            processedOldLines = [];
+            processedNewLines = [];
+        });
+        oldLines = [];
+        newLines = [];
+      }
+
+      for (var i = 0; i < block.lines.length; i++) {
+        var line = block.lines[i];
+        var escapedLine = utils.escape(line.content);
+
+        if ( line.type !== diffParser.LINE_TYPE.INSERTS &&
+            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines > 0))) {
+          processChangeBlock();
+        }
+        if (line.type == diffParser.LINE_TYPE.CONTEXT) {
+          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
+          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+        } else if (line.type == diffParser.LINE_TYPE.DELETES) {
+          oldLines.push(line);
+        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
+          newLines.push(line);
+        } else {
+          console.error('unknown state in html line-by-line generator');
+          processChangeBlock();
         }
       }
 
-      lines += processLines(oldLines, newLines);
+      processChangeBlock();
 
       return lines;
     }).join('\n');

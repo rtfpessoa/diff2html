@@ -12,6 +12,8 @@
   var LINE_TYPE = {
     INSERTS: 'd2h-ins',
     DELETES: 'd2h-del',
+    INSERT_CHANGES: 'd2h-ins d2h-change',
+    DELETE_CHANGES: 'd2h-del d2h-change',
     CONTEXT: 'd2h-cntx',
     INFO: 'd2h-info'
   };

@@ -9,6 +9,7 @@
 
   var jsDiff = require('diff');
   var utils = require('./utils.js').Utils;
+  var Rematch = require('./rematch.js').Rematch;
 
   function PrinterUtils() {
   }
@@ -69,12 +70,42 @@
 
     var highlightedLine = '';
 
+    var changedWords = [];
+    if (!config.charByChar && config.matching === 'words') {
+      var treshold = 0.25;
+      if (typeof(config.matchWordsThreshold) !== "undefined") {
+        treshold = config.matchWordsThreshold;
+      }
+      var matcher = Rematch.rematch(function(a, b) {
+        var amod = a.value,
+            bmod = b.value,
+            result = Rematch.distance(amod, bmod);
+        return result;
+      });
+      var removed = diff.filter(function isRemoved(element){
+        return element.removed;
+      });
+      var added = diff.filter(function isAdded(element){
+        return element.added;
+      });
+      var chunks = matcher(added, removed);
+      chunks = chunks.forEach(function(chunk){
+        if(chunk[0].length === 1 && chunk[1].length === 1) {
+          var dist = Rematch.distance(chunk[0][0].value, chunk[1][0].value)
+          if (dist < treshold) {
+            changedWords.push(chunk[0][0]);
+            changedWords.push(chunk[1][0]);
+          }
+        }
+      });
+    }
     diff.forEach(function(part) {
+      var addClass = changedWords.indexOf(part) > -1 ? ' class="d2h-change"' : '';
       var elemType = part.added ? 'ins' : part.removed ? 'del' : null;
       var escapedValue = utils.escape(part.value);
 
       if (elemType !== null) {
-        highlightedLine += '<' + elemType + '>' + escapedValue + '</' + elemType + '>';
+        highlightedLine += '<' + elemType + addClass + '>' + escapedValue + '</' + elemType + '>';
       } else {
         highlightedLine += escapedValue;
       }
@@ -97,11 +128,11 @@
   }
 
   function removeIns(line) {
-    return line.replace(/(<ins>((.|\n)*?)<\/ins>)/g, '');
+    return line.replace(/(<ins[^>]*>((.|\n)*?)<\/ins>)/g, '');
   }
 
   function removeDel(line) {
-    return line.replace(/(<del>((.|\n)*?)<\/del>)/g, '');
+    return line.replace(/(<del[^>]*>((.|\n)*?)<\/del>)/g, '');
   }
 
   module.exports['PrinterUtils'] = new PrinterUtils();
