@@ -256,6 +256,19 @@
     clear: both;
 }
 
+.d2h-del.d2h-change, .d2h-ins.d2h-change {
+    background-color: #ffc;
+}
+ins.d2h-change, del.d2h-change {
+    background-color: #fad771;
+}
+.d2h-file-diff .d2h-del.d2h-change {
+    background-color: #fae1af;
+}
+.d2h-file-diff .d2h-ins.d2h-change {
+    background-color: #ded;
+}
+
 /* CSS only show/hide */
 .d2h-show {
     display: none;
