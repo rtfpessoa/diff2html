@@ -245,7 +245,7 @@
             hljs.configure({languages: distinctLanguages});
 
             // generate and inject the diff HTML into the desired place
-            document.getElementById("line-by-line").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json', showFiles: true });
+            document.getElementById("line-by-line").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json', showFiles: true, matching: 'lines' });
             document.getElementById("side-by-side").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json', outputFormat: 'side-by-side' });
 
             // collect all the code lines and execute the highlight on them
