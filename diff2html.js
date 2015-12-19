@@ -55,7 +55,7 @@
 
 	  var diffParser = __webpack_require__(1).DiffParser;
 	  var fileLister = __webpack_require__(3).FileListPrinter;
-	  var htmlPrinter = __webpack_require__(20).HtmlPrinter;
+	  var htmlPrinter = __webpack_require__(21).HtmlPrinter;
 
 	  function Diff2Html() {
 	  }
@@ -175,6 +175,8 @@
 	  var LINE_TYPE = {
 	    INSERTS: 'd2h-ins',
 	    DELETES: 'd2h-del',
+	    INSERT_CHANGES: 'd2h-ins d2h-change',
+	    DELETE_CHANGES: 'd2h-del d2h-change',
 	    CONTEXT: 'd2h-cntx',
 	    INFO: 'd2h-info'
 	  };
@@ -503,6 +505,7 @@
 
 	  var jsDiff = __webpack_require__(5);
 	  var utils = __webpack_require__(2).Utils;
+	  var Rematch = __webpack_require__(20).Rematch;
 
 	  function PrinterUtils() {
 	  }
@@ -563,12 +566,42 @@
 
 	    var highlightedLine = '';
 
+	    var changedWords = [];
+	    if (!config.charByChar && config.matching === 'words') {
+	      var treshold = 0.25;
+	      if (typeof(config.matchWordsThreshold) !== "undefined") {
+	        treshold = config.matchWordsThreshold;
+	      }
+	      var matcher = Rematch.rematch(function(a, b) {
+	        var amod = a.value,
+	            bmod = b.value,
+	            result = Rematch.distance(amod, bmod);
+	        return result;
+	      });
+	      var removed = diff.filter(function isRemoved(element){
+	        return element.removed;
+	      });
+	      var added = diff.filter(function isAdded(element){
+	        return element.added;
+	      });
+	      var chunks = matcher(added, removed);
+	      chunks = chunks.forEach(function(chunk){
+	        if(chunk[0].length === 1 && chunk[1].length === 1) {
+	          var dist = Rematch.distance(chunk[0][0].value, chunk[1][0].value)
+	          if (dist < treshold) {
+	            changedWords.push(chunk[0][0]);
+	            changedWords.push(chunk[1][0]);
+	          }
+	        }
+	      });
+	    }
 	    diff.forEach(function(part) {
+	      var addClass = changedWords.indexOf(part) > -1 ? ' class="d2h-change"' : '';
 	      var elemType = part.added ? 'ins' : part.removed ? 'del' : null;
 	      var escapedValue = utils.escape(part.value);
 
 	      if (elemType !== null) {
-	        highlightedLine += '<' + elemType + '>' + escapedValue + '</' + elemType + '>';
+	        highlightedLine += '<' + elemType + addClass + '>' + escapedValue + '</' + elemType + '>';
 	      } else {
 	        highlightedLine += escapedValue;
 	      }
@@ -591,11 +624,11 @@
 	  }
 
 	  function removeIns(line) {
-	    return line.replace(/(<ins>((.|\n)*?)<\/ins>)/g, '');
+	    return line.replace(/(<ins[^>]*>((.|\n)*?)<\/ins>)/g, '');
 	  }
 
 	  function removeDel(line) {
-	    return line.replace(/(<del>((.|\n)*?)<\/del>)/g, '');
+	    return line.replace(/(<del[^>]*>((.|\n)*?)<\/del>)/g, '');
 	  }
 
 	  module.exports['PrinterUtils'] = new PrinterUtils();
@@ -1430,41 +1463,42 @@
 	    var index = {};
 	    list.push(index);
 
-	    // Ignore any leading junk
+	    // Parse diff metadata
 	    while (i < diffstr.length) {
-	      if (/^(Index:|diff -r|@@)/.test(diffstr[i])) {
+	      var line = diffstr[i];
+
+	      // File header found, end parsing diff metadata
+	      if (/^(\-\-\-|\+\+\+|@@)\s/.test(line)) {
 	        break;
 	      }
-	      i++;
-	    }
 
-	    var header = /^(?:Index:|diff(?: -r \w+)+) (.*)/.exec(diffstr[i]);
-	    if (header) {
-	      index.index = header[1];
-	      i++;
-
-	      if (/^===/.test(diffstr[i])) {
-	        i++;
+	      // Diff index
+	      var header = /^(?:Index:|diff(?: -r \w+)+)\s+(.+?)\s*$/.exec(line);
+	      if (header) {
+	        index.index = header[1];
 	      }
 
-	      parseFileHeader(index);
-	      parseFileHeader(index);
-	    } else {
-	      // Ignore erant header components that might occur at the start of the file
-	      parseFileHeader({});
-	      parseFileHeader({});
+	      i++;
 	    }
 
+	    // Parse file headers if they are defined. Unified diff requires them, but
+	    // there's no technical issues to have an isolated hunk without file header
+	    parseFileHeader(index);
+	    parseFileHeader(index);
+
+	    // Parse hunks
 	    index.hunks = [];
 
 	    while (i < diffstr.length) {
-	      if (/^(Index:|diff -r)/.test(diffstr[i])) {
+	      var line = diffstr[i];
+
+	      if (/^(Index:|diff|\-\-\-|\+\+\+)\s/.test(line)) {
 	        break;
-	      } else if (/^@@/.test(diffstr[i])) {
+	      } else if (/^@@/.test(line)) {
 	        index.hunks.push(parseHunk());
-	      } else if (diffstr[i] && options.strict) {
+	      } else if (line && options.strict) {
 	        // Ignore unexpected content unless in strict mode
-	        throw new Error('Unknown line ' + (i + 1) + ' ' + JSON.stringify(diffstr[i]));
+	        throw new Error('Unknown line ' + (i + 1) + ' ' + JSON.stringify(line));
 	      } else {
 	        i++;
 	      }
@@ -1474,7 +1508,7 @@
 	  // Parses the --- and +++ headers, if none are found, no lines
 	  // are consumed.
 	  function parseFileHeader(index) {
-	    var fileHeader = /^(\-\-\-|\+\+\+)\s(\S+)\s?(.*)/.exec(diffstr[i]);
+	    var fileHeader = /^(\-\-\-|\+\+\+)\s+(\S+)\s?(.+?)\s*$/.exec(diffstr[i]);
 	    if (fileHeader) {
 	      var keyPrefix = fileHeader[1] === '---' ? 'old' : 'new';
 	      index[keyPrefix + 'FileName'] = fileHeader[2];
@@ -1547,7 +1581,7 @@
 
 	  return list;
 	}
-	//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9wYXRjaC9wYXJzZS5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztBQUFPLFNBQVMsVUFBVSxDQUFDLE9BQU8sRUFBZ0I7TUFBZCxPQUFPLHlEQUFHLEVBQUU7O0FBQzlDLE1BQUksT0FBTyxHQUFHLE9BQU8sQ0FBQyxLQUFLLENBQUMsSUFBSSxDQUFDO01BQzdCLElBQUksR0FBRyxFQUFFO01BQ1QsQ0FBQyxHQUFHLENBQUMsQ0FBQzs7QUFFVixXQUFTLFVBQVUsR0FBRztBQUNwQixRQUFJLEtBQUssR0FBRyxFQUFFLENBQUM7QUFDZixRQUFJLENBQUMsSUFBSSxDQUFDLEtBQUssQ0FBQyxDQUFDOzs7QUFHakIsV0FBTyxDQUFDLEdBQUcsT0FBTyxDQUFDLE1BQU0sRUFBRTtBQUN6QixVQUFJLHNCQUFzQixDQUFDLElBQUksQ0FBQyxPQUFPLENBQUMsQ0FBQyxDQUFDLENBQUMsRUFBRTtBQUMzQyxjQUFNO09BQ1A7QUFDRCxPQUFDLEVBQUUsQ0FBQztLQUNMOztBQUVELFFBQUksTUFBTSxHQUFJLG1DQUFtQyxDQUFDLElBQUksQ0FBQyxPQUFPLENBQUMsQ0FBQyxDQUFDLENBQUMsQUFBQyxDQUFDO0FBQ3BFLFFBQUksTUFBTSxFQUFFO0FBQ1YsV0FBSyxDQUFDLEtBQUssR0FBRyxNQUFNLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDeEIsT0FBQyxFQUFFLENBQUM7O0FBRUosVUFBSSxNQUFNLENBQUMsSUFBSSxDQUFDLE9BQU8sQ0FBQyxDQUFDLENBQUMsQ0FBQyxFQUFFO0FBQzNCLFNBQUMsRUFBRSxDQUFDO09BQ0w7O0FBRUQscUJBQWUsQ0FBQyxLQUFLLENBQUMsQ0FBQztBQUN2QixxQkFBZSxDQUFDLEtBQUssQ0FBQyxDQUFDO0tBQ3hCLE1BQU07O0FBRUwscUJBQWUsQ0FBQyxFQUFFLENBQUMsQ0FBQztBQUNwQixxQkFBZSxDQUFDLEVBQUUsQ0FBQyxDQUFDO0tBQ3JCOztBQUVELFNBQUssQ0FBQyxLQUFLLEdBQUcsRUFB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QyxRQUFRLElBQUksSUFBSSxDQUFDLFFBQVEsS0FBSyxDQUFDLEVBQUU7QUFDcEMsVUFBSSxDQUFDLFFBQVEsR0FBRyxDQUFDLENBQUM7S0FDbkI7QUFDRCxRQUFJLENBQUMsV0FBVyxJQUFJLElBQUksQ0FBQyxRQUFRLEtBQUssQ0FBQyxFQUFFO0FBQ3ZDLFVBQUksQ0FBQyxRQUFRLEdBQUcsQ0FBQyxDQUFDO0tBQ25COzs7QUFHRCxRQUFJLE9BQU8sQ0FBQyxNQUFNLEVBQUU7QUFDbEIsVUFBSSxRQUFRLEtBQUssSUFBSSxDQUFDLFFBQVEsRUFBRTtBQUM5QixjQUFNLElBQUksS0FBSyxDQUFDLGtEQUFrRCxJQUFJLGdCQUFnQixHQUFHLENBQUMsQ0FBQSxBQUFDLENBQUMsQ0FBQztPQUM5RjtBQUNELFVBQUksV0FBVyxLQUFLLElBQUksQ0FBQyxRQUFRLEVBQUU7QUFDakMsY0FBTSxJQUFJLEtBQUssQ0FBQyxvREFBb0QsSUFBSSxnQkFBZ0IsR0FBRyxDQUFDLENBQUEsQUFBQyxDQUFDLENBQUM7T0FDaEc7S0FDRjs7QUFFRCxXQUFPLElBQUksQ0FBQztHQUNiOztBQUVELFNBQU8sQ0FBQyxHQUFHLE9BQU8sQ0FBQyxNQUFNLEVBQUU7QUFDekIsY0FBVSxFQUFFLENBQUM7R0FDZDs7QUFFRCxTQUFPLElBQUksQ0FBQztDQUNiIiwiZmlsZSI6InBhcnNlLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGZ1bmN0aW9uIHBhcnNlUGF0Y2godW5pRGlmZiwgb3B0aW9ucyA9IHt9KSB7XG4gIGxldCBkaWZmc3RyID0gdW5pRGlmZi5zcGxpdCgnXFxuJyksXG4gICAgICBsaXN0ID0gW10sXG4gICAgICBpID0gMDtcblxuICBmdW5jdGlvbiBwYXJzZUluZGV4KCkge1xuICAgIGxldCBpbmRleCA9IHt9O1xuICAgIGxpc3QucHVzaChpbmRleCk7XG5cbiAgICAvLyBJZ25vcmUgYW55IGxlYWRpbmcganVua1xuICAgIHdoaWxlIChpIDwgZGlmZnN0ci5sZW5ndGgpIHtcbiAgICAgIGlmICgvXihJbmRleDp8ZGlmZiAtcnxAQCkvLnRlc3QoZGlmZnN0cltpXSkpIHtcbiAgICAgICAgYnJlYWs7XG4gICAgICB9XG4gICAgICBpKys7XG4gICAgfVxuXG4gICAgbGV0IGhlYWRlciA9ICgvXig/OkluZGV4OnxkaWZmKD86IC1yIFxcdyspKykgKC4qKS8uZXhlYyhkaWZmc3RyW2ldKSk7XG4gICAgaWYgKGhlYWRlcikge1xuICAgICAgaW5kZXguaW5kZXggPSBoZWFkZXJbMV07XG4gICAgICBpKys7XG5cbiAgICAgIGlmICgvXj09PS8udGVzdChkaWZmc3RyW2ldKSkge1xuICAgICAgICBpKys7XG4gICAgICB9XG5cbiAgICAgIHBhcnNlRmlsZUhlYWRlcihpbmRleCk7XG4gICAgICBwYXJzZUZpbGVIZWFkZXIoaW5kZXgpO1xuICAgIH0gZWxzZSB7XG4gICAgICAvLyBJZ25vcmUgZXJhbnQgaGVhZGVyIGNvbXBvbmVudHMgdGhhdCBtaWdodCBvY2N1ciBhdCB0aGUgc3RhcnQgb2YgdGhlIGZpbGVcbiAgICAgIHBhcnNlRmlsZUhlYWRlcih7fSk7XG4gICAgICBwYXJzZUZpbGVIZWFkZXIoe30pO1xuICAgIH1cblxuICAgIGluZGV4Lmh1bmtzID0gW107XG5cbiAgICB3aGlsZSAoaSA8IGRpZmZzdHIubGVuZ3RoKSB7XG4gICAgICBpZiAoL14oSW5kZXg6fGRpZmYgLXIpLy50ZXN0KGRpZmZzdHJbaV0pKSB7XG4gICAgICAgIGJyZWFrO1xuICAgICAgfSBlbHNlIGlmICgvXkBALy50ZXN0KGRpZmZzdHJbaV0pKSB7XG4gICAgICAgIGluZGV4Lmh1bmtzLnB1c2gocGFyc2VIdW5rKCkpO1xuICAgICAgfSBlbHNlIGlmIChkaWZmc3RyW2ldICYmIG9wdGlvbnMuc3RyaWN0KSB7XG4gICAgICAgIC8vIElnbm9yZSB1bmV4cGVjdGVkIGNvbnRlbnQgdW5sZXNzIGluIHN0cmljdCBtb2RlXG4gICAgICAgIHRocm93IG5ldyBFcnJvcignVW5rbm93biBsaW5lICcgKyAoaSArIDEpICsgJyAnICsgSlNPTi5zdHJpbmdpZnkoZGlmZnN0cltpXSkpO1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgaSsrO1xuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIC8vIFBhcnNlcyB0aGUgLS0tIGFuZCArKysgaGVhZGVycywgaWYgbm9uZSBhcmUgZm91bmQsIG5vIGxpbmVzXG4gIC8vIGFyZSBjb25zdW1lZC5cbiAgZnVuY3Rpb24gcGFyc2VGaWxlSGVhZGVyKGluZGV4KSB7XG4gICAgbGV0IGZpbGVIZWFkZXIgPSAoL14oXFwtXFwtXFwtfFxcK1xcK1xcKylcXHMoXFxTKylcXHM/KC4qKS8uZXhlYyhkaWZmc3RyW2ldKSk7XG4gICAgaWYgKGZpbGVIZWFkZXIpIHtcbiAgICAgIGxldCBrZXlQcmVmaXggPSBmaWxlSGVhZGVyWzFdID09PSAnLS0tJyA/ICdvbGQnIDogJ25ldyc7XG4gICAgICBpbmRleFtrZXlQcmVmaXggKyAnRmlsZU5hbWUnXSA9IGZpbGVIZWFkZXJbMl07XG4gICAgICBpbmRleFtrZXlQcmVmaXggKyAnSGVhZGVyJ10gPSBmaWxlSGVhZGVyWzNdO1xuXG4gICAgICBpKys7XG4gICAgfVxuICB9XG5cbiAgLy8gUGFyc2VzIGEgaHVua1xuICAvLyBUaGlzIGFzc3VtZXMgdGhhdCB3ZSBhcmUgYXQgdGhlIHN0YXJ0IG9mIGEgaHVuay5cbiAgZnVuY3Rpb24gcGFyc2VIdW5rKCkge1xuICAgIGxldCBjaHVua0hlYWRlckluZGV4ID0gaSxcbiAgICAgICAgY2h1bmtIZWFkZXJMaW5lID0gZGlmZnN0cltpKytdLFxuICAgICAgICBjaHVua0hlYWRlciA9IGNodW5rSGVhZGVyTGluZS5zcGxpdCgvQEAgLShcXGQrKSg/OiwoXFxkKykpPyBcXCsoXFxkKykoPzosKFxcZCspKT8gQEAvKTtcblxuICAgIGxldCBodW5rID0ge1xuICAgICAgb2xkU3RhcnQ6ICtjaHVua0hlYWRlclsxXSxcbiAgICAgIG9sZExpbmVzOiArY2h1bmtIZWFkZXJbMl0gfHwgMSxcbiAgICAgIG5ld1N0YXJ0OiArY2h1bmtIZWFkZXJbM10sXG4gICAgICBuZXdMaW5lczogK2NodW5rSGVhZGVyWzRdIHx8IDEsXG4gICAgICBsaW5lczogW11cbiAgICB9O1xuXG4gICAgbGV0IGFkZENvdW50ID0gMCxcbiAgICAgICAgcmVtb3ZlQ291bnQgPSAwO1xuICAgIGZvciAoOyBpIDwgZGlmZnN0ci5sZW5ndGg7IGkrKykge1xuICAgICAgbGV0IG9wZXJhdGlvbiA9IGRpZmZzdHJbaV1bMF07XG5cbiAgICAgIGlmIChvcGVyYXRpb24gPT09ICcrJyB8fCBvcGVyYXRpb24gPT09ICctJyB8fCBvcGVyYXRpb24gPT09ICcgJyB8fCBvcGVyYXRpb24gPT09ICdcXFxcJykge1xuICAgICAgICBodW5rLmxpbmVzLnB1c2goZGlmZnN0cltpXSk7XG5cbiAgICAgICAgaWYgKG9wZXJhdGlvbiA9PT0gJysnKSB7XG4gICAgICAgICAgYWRkQ291bnQrKztcbiAgICAgICAgfSBlbHNlIGlmIChvcGVyYXRpb24gPT09ICctJykge1xuICAgICAgICAgIHJlbW92ZUNvdW50Kys7XG4gICAgICAgIH0gZWxzZSBpZiAob3BlcmF0aW9uID09PSAnICcpIHtcbiAgICAgICAgICBhZGRDb3VudCsrO1xuICAgICAgICAgIHJlbW92ZUNvdW50Kys7XG4gICAgICAgIH1cbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIGJyZWFrO1xuICAgICAgfVxuICAgIH1cblxuICAgIC8vIEhhbmRsZSB0aGUgZW1wdHkgYmxvY2sgY291bnQgY2FzZVxuICAgIGlmICghYWRkQ291bnQgJiYgaHVuay5uZXdMaW5lcyA9PT0gMSkge1xuICAgICAgaHVuay5uZXdMaW5lcyA9IDA7XG4gICAgfVxuICAgIGlmICghcmVtb3ZlQ291bnQgJiYgaHVuay5vbGRMaW5lcyA9PT0gMSkge1xuICAgICAgaHVuay5vbGRMaW5lcyA9IDA7XG4gICAgfVxuXG4gICAgLy8gUGVyZm9ybSBvcHRpb25hbCBzYW5pdHkgY2hlY2tpbmdcbiAgICBpZiAob3B0aW9ucy5zdHJpY3QpIHtcbiAgICAgIGlmIChhZGRDb3VudCAhPT0gaHVuay5uZXdMaW5lcykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ0FkZGVkIGxpbmUgY291bnQgZGlkIG5vdCBtYXRjaCBmb3IgaHVuayBhdCBsaW5lICcgKyAoY2h1bmtIZWFkZXJJbmRleCArIDEpKTtcbiAgICAgIH1cbiAgICAgIGlmIChyZW1vdmVDb3VudCAhPT0gaHVuay5vbGRMaW5lcykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ1JlbW92ZWQgbGluZSBjb3VudCBkaWQgbm90IG1hdGNoIGZvciBodW5rIGF0IGxpbmUgJyArIChjaHVua0hlYWRlckluZGV4ICsgMSkpO1xuICAgICAgfVxuICAgIH1cblxuICAgIHJldHVybiBodW5rO1xuICB9XG5cbiAgd2hpbGUgKGkgPCBkaWZmc3RyLmxlbmd0aCkge1xuICAgIHBhcnNlSW5kZXgoKTtcbiAgfVxuXG4gIHJldHVybiBsaXN0O1xufVxuIl19
+	//# sourceMappingURL=data:application/json;base64,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QUM7S0FDbkI7OztBQUdELFFBQUksT0FBTyxDQUFDLE1BQU0sRUFBRTtBQUNsQixVQUFJLFFBQVEsS0FBSyxJQUFJLENBQUMsUUFBUSxFQUFFO0FBQzlCLGNBQU0sSUFBSSxLQUFLLENBQUMsa0RBQWtELElBQUksZ0JBQWdCLEdBQUcsQ0FBQyxDQUFBLEFBQUMsQ0FBQyxDQUFDO09BQzlGO0FBQ0QsVUFBSSxXQUFXLEtBQUssSUFBSSxDQUFDLFFBQVEsRUFBRTtBQUNqQyxjQUFNLElBQUksS0FBSyxDQUFDLG9EQUFvRCxJQUFJLGdCQUFnQixHQUFHLENBQUMsQ0FBQSxBQUFDLENBQUMsQ0FBQztPQUNoRztLQUNGOztBQUVELFdBQU8sSUFBSSxDQUFDO0dBQ2I7O0FBRUQsU0FBTyxDQUFDLEdBQUcsT0FBTyxDQUFDLE1BQU0sRUFBRTtBQUN6QixjQUFVLEVBQUUsQ0FBQztHQUNkOztBQUVELFNBQU8sSUFBSSxDQUFDO0NBQ2IiLCJmaWxlIjoicGFyc2UuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZnVuY3Rpb24gcGFyc2VQYXRjaCh1bmlEaWZmLCBvcHRpb25zID0ge30pIHtcbiAgbGV0IGRpZmZzdHIgPSB1bmlEaWZmLnNwbGl0KCdcXG4nKSxcbiAgICAgIGxpc3QgPSBbXSxcbiAgICAgIGkgPSAwO1xuXG4gIGZ1bmN0aW9uIHBhcnNlSW5kZXgoKSB7XG4gICAgbGV0IGluZGV4ID0ge307XG4gICAgbGlzdC5wdXNoKGluZGV4KTtcblxuICAgIC8vIFBhcnNlIGRpZmYgbWV0YWRhdGFcbiAgICB3aGlsZSAoaSA8IGRpZmZzdHIubGVuZ3RoKSB7XG4gICAgICBsZXQgbGluZSA9IGRpZmZzdHJbaV07XG5cbiAgICAgIC8vIEZpbGUgaGVhZGVyIGZvdW5kLCBlbmQgcGFyc2luZyBkaWZmIG1ldGFkYXRhXG4gICAgICBpZiAoL14oXFwtXFwtXFwtfFxcK1xcK1xcK3xAQClcXHMvLnRlc3QobGluZSkpIHtcbiAgICAgICAgYnJlYWs7XG4gICAgICB9XG5cbiAgICAgIC8vIERpZmYgaW5kZXhcbiAgICAgIGxldCBoZWFkZXIgPSAoL14oPzpJbmRleDp8ZGlmZig/OiAtciBcXHcrKSspXFxzKyguKz8pXFxzKiQvKS5leGVjKGxpbmUpO1xuICAgICAgaWYgKGhlYWRlcikge1xuICAgICAgICBpbmRleC5pbmRleCA9IGhlYWRlclsxXTtcbiAgICAgIH1cblxuICAgICAgaSsrO1xuICAgIH1cblxuICAgIC8vIFBhcnNlIGZpbGUgaGVhZGVycyBpZiB0aGV5IGFyZSBkZWZpbmVkLiBVbmlmaWVkIGRpZmYgcmVxdWlyZXMgdGhlbSwgYnV0XG4gICAgLy8gdGhlcmUncyBubyB0ZWNobmljYWwgaXNzdWVzIHRvIGhhdmUgYW4gaXNvbGF0ZWQgaHVuayB3aXRob3V0IGZpbGUgaGVhZGVyXG4gICAgcGFyc2VGaWxlSGVhZGVyKGluZGV4KTtcbiAgICBwYXJzZUZpbGVIZWFkZXIoaW5kZXgpO1xuXG4gICAgLy8gUGFyc2UgaHVua3NcbiAgICBpbmRleC5odW5rcyA9IFtdO1xuXG4gICAgd2hpbGUgKGkgPCBkaWZmc3RyLmxlbmd0aCkge1xuICAgICAgbGV0IGxpbmUgPSBkaWZmc3RyW2ldO1xuXG4gICAgICBpZiAoL14oSW5kZXg6fGRpZmZ8XFwtXFwtXFwtfFxcK1xcK1xcKylcXHMvLnRlc3QobGluZSkpIHtcbiAgICAgICAgYnJlYWs7XG4gICAgICB9IGVsc2UgaWYgKC9eQEAvLnRlc3QobGluZSkpIHtcbiAgICAgICAgaW5kZXguaHVua3MucHVzaChwYXJzZUh1bmsoKSk7XG4gICAgICB9IGVsc2UgaWYgKGxpbmUgJiYgb3B0aW9ucy5zdHJpY3QpIHtcbiAgICAgICAgLy8gSWdub3JlIHVuZXhwZWN0ZWQgY29udGVudCB1bmxlc3MgaW4gc3RyaWN0IG1vZGVcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdVbmtub3duIGxpbmUgJyArIChpICsgMSkgKyAnICcgKyBKU09OLnN0cmluZ2lmeShsaW5lKSk7XG4gICAgICB9IGVsc2Uge1xuICAgICAgICBpKys7XG4gICAgICB9XG4gICAgfVxuICB9XG5cbiAgLy8gUGFyc2VzIHRoZSAtLS0gYW5kICsrKyBoZWFkZXJzLCBpZiBub25lIGFyZSBmb3VuZCwgbm8gbGluZXNcbiAgLy8gYXJlIGNvbnN1bWVkLlxuICBmdW5jdGlvbiBwYXJzZUZpbGVIZWFkZXIoaW5kZXgpIHtcbiAgICBsZXQgZmlsZUhlYWRlciA9ICgvXihcXC1cXC1cXC18XFwrXFwrXFwrKVxccysoXFxTKylcXHM/KC4rPylcXHMqJC8pLmV4ZWMoZGlmZnN0cltpXSk7XG4gICAgaWYgKGZpbGVIZWFkZXIpIHtcbiAgICAgIGxldCBrZXlQcmVmaXggPSBmaWxlSGVhZGVyWzFdID09PSAnLS0tJyA/ICdvbGQnIDogJ25ldyc7XG4gICAgICBpbmRleFtrZXlQcmVmaXggKyAnRmlsZU5hbWUnXSA9IGZpbGVIZWFkZXJbMl07XG4gICAgICBpbmRleFtrZXlQcmVmaXggKyAnSGVhZGVyJ10gPSBmaWxlSGVhZGVyWzNdO1xuXG4gICAgICBpKys7XG4gICAgfVxuICB9XG5cbiAgLy8gUGFyc2VzIGEgaHVua1xuICAvLyBUaGlzIGFzc3VtZXMgdGhhdCB3ZSBhcmUgYXQgdGhlIHN0YXJ0IG9mIGEgaHVuay5cbiAgZnVuY3Rpb24gcGFyc2VIdW5rKCkge1xuICAgIGxldCBjaHVua0hlYWRlckluZGV4ID0gaSxcbiAgICAgICAgY2h1bmtIZWFkZXJMaW5lID0gZGlmZnN0cltpKytdLFxuICAgICAgICBjaHVua0hlYWRlciA9IGNodW5rSGVhZGVyTGluZS5zcGxpdCgvQEAgLShcXGQrKSg/OiwoXFxkKykpPyBcXCsoXFxkKykoPzosKFxcZCspKT8gQEAvKTtcblxuICAgIGxldCBodW5rID0ge1xuICAgICAgb2xkU3RhcnQ6ICtjaHVua0hlYWRlclsxXSxcbiAgICAgIG9sZExpbmVzOiArY2h1bmtIZWFkZXJbMl0gfHwgMSxcbiAgICAgIG5ld1N0YXJ0OiArY2h1bmtIZWFkZXJbM10sXG4gICAgICBuZXdMaW5lczogK2NodW5rSGVhZGVyWzRdIHx8IDEsXG4gICAgICBsaW5lczogW11cbiAgICB9O1xuXG4gICAgbGV0IGFkZENvdW50ID0gMCxcbiAgICAgICAgcmVtb3ZlQ291bnQgPSAwO1xuICAgIGZvciAoOyBpIDwgZGlmZnN0ci5sZW5ndGg7IGkrKykge1xuICAgICAgbGV0IG9wZXJhdGlvbiA9IGRpZmZzdHJbaV1bMF07XG5cbiAgICAgIGlmIChvcGVyYXRpb24gPT09ICcrJyB8fCBvcGVyYXRpb24gPT09ICctJyB8fCBvcGVyYXRpb24gPT09ICcgJyB8fCBvcGVyYXRpb24gPT09ICdcXFxcJykge1xuICAgICAgICBodW5rLmxpbmVzLnB1c2goZGlmZnN0cltpXSk7XG5cbiAgICAgICAgaWYgKG9wZXJhdGlvbiA9PT0gJysnKSB7XG4gICAgICAgICAgYWRkQ291bnQrKztcbiAgICAgICAgfSBlbHNlIGlmIChvcGVyYXRpb24gPT09ICctJykge1xuICAgICAgICAgIHJlbW92ZUNvdW50Kys7XG4gICAgICAgIH0gZWxzZSBpZiAob3BlcmF0aW9uID09PSAnICcpIHtcbiAgICAgICAgICBhZGRDb3VudCsrO1xuICAgICAgICAgIHJlbW92ZUNvdW50Kys7XG4gICAgICAgIH1cbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIGJyZWFrO1xuICAgICAgfVxuICAgIH1cblxuICAgIC8vIEhhbmRsZSB0aGUgZW1wdHkgYmxvY2sgY291bnQgY2FzZVxuICAgIGlmICghYWRkQ291bnQgJiYgaHVuay5uZXdMaW5lcyA9PT0gMSkge1xuICAgICAgaHVuay5uZXdMaW5lcyA9IDA7XG4gICAgfVxuICAgIGlmICghcmVtb3ZlQ291bnQgJiYgaHVuay5vbGRMaW5lcyA9PT0gMSkge1xuICAgICAgaHVuay5vbGRMaW5lcyA9IDA7XG4gICAgfVxuXG4gICAgLy8gUGVyZm9ybSBvcHRpb25hbCBzYW5pdHkgY2hlY2tpbmdcbiAgICBpZiAob3B0aW9ucy5zdHJpY3QpIHtcbiAgICAgIGlmIChhZGRDb3VudCAhPT0gaHVuay5uZXdMaW5lcykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ0FkZGVkIGxpbmUgY291bnQgZGlkIG5vdCBtYXRjaCBmb3IgaHVuayBhdCBsaW5lICcgKyAoY2h1bmtIZWFkZXJJbmRleCArIDEpKTtcbiAgICAgIH1cbiAgICAgIGlmIChyZW1vdmVDb3VudCAhPT0gaHVuay5vbGRMaW5lcykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ1JlbW92ZWQgbGluZSBjb3VudCBkaWQgbm90IG1hdGNoIGZvciBodW5rIGF0IGxpbmUgJyArIChjaHVua0hlYWRlckluZGV4ICsgMSkpO1xuICAgICAgfVxuICAgIH1cblxuICAgIHJldHVybiBodW5rO1xuICB9XG5cbiAgd2hpbGUgKGkgPCBkaWZmc3RyLmxlbmd0aCkge1xuICAgIHBhcnNlSW5kZXgoKTtcbiAgfVxuXG4gIHJldHVybiBsaXN0O1xufVxuIl19
 
 
 /***/ },
@@ -1848,6 +1882,146 @@
 
 /***/ },
 /* 20 */
+/***/ function(module, exports) {
+
+	/*
+	 *
+	 * Rematch (rematch.js)
+	 * Matching two sequences of objects by similarity
+	 * Author: W. Illmeyer, Nexxar GmbH
+	 *
+	 */
+
+	(function(ctx, undefined) {
+	  var Rematch = {};
+	  Rematch.arrayToString = function arrayToString(a) {
+	    if (Object.prototype.toString.apply(a,[]) === "[object Array]") {
+	      return "[" + a.map(arrayToString).join(", ") + "]";
+	    } else {
+	      return a;
+	    }
+	  }
+
+	  /*
+	  Copyright (c) 2011 Andrei Mackenzie
+	  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+	  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+	  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	  */
+	  function levenshtein(a, b){
+	    if(a.length == 0) return b.length;
+	    if(b.length == 0) return a.length;
+
+	    var matrix = [];
+
+	    // increment along the first column of each row
+	    var i;
+	    for(i = 0; i <= b.length; i++){
+	      matrix[i] = [i];
+	    }
+
+	    // increment each column in the first row
+	    var j;
+	    for(j = 0; j <= a.length; j++){
+	      matrix[0][j] = j;
+	    }
+
+	    // Fill in the rest of the matrix
+	    for(i = 1; i <= b.length; i++){
+	      for(j = 1; j <= a.length; j++){
+	        if(b.charAt(i-1) == a.charAt(j-1)){
+	          matrix[i][j] = matrix[i-1][j-1];
+	        } else {
+	          matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
+	                      Math.min(matrix[i][j-1] + 1, // insertion
+	                          matrix[i-1][j] + 1)); // deletion
+	        }
+	      }
+	    }
+	    return matrix[b.length][a.length];
+	  }
+	  Rematch.levenshtein = levenshtein;
+
+	  Rematch.distance = function distance(x,y) {
+	    x=x.trim();
+	    y=y.trim();
+	    var lev = levenshtein(x,y),
+	      score = lev / (x.length + y.length);
+	    return score;
+	  }
+
+	  Rematch.rematch = function rematch(distanceFunction) {
+
+	    function findBestMatch(a, b, cache) {
+	      var cachecount = 0;
+
+	      for(var key in cache) {
+	        cachecount++;
+	      }
+	      var bestMatchDist = Infinity;
+	      var bestMatch;
+	      for (var i = 0; i < a.length; ++i) {
+	        for (var j = 0; j < b.length; ++j) {
+	          var cacheKey = JSON.stringify([a[i], b[j]]);
+	          var md;
+	          if (cache.hasOwnProperty(cacheKey)) {
+	            md = cache[cacheKey];
+	          } else {
+	            md = distanceFunction(a[i], b[j]);
+	            cache[cacheKey] = md;
+	          }
+	          if (md < bestMatchDist) {
+	            bestMatchDist = md;
+	            bestMatch = { indexA: i, indexB: j, score: bestMatchDist };
+	          }
+	        }
+	      }
+	      return bestMatch;
+	    }
+	    function group(a, b, level, cache) {
+
+	      if (typeof(cache)==="undefined") {
+	        cache = {};
+	      }
+	      var minLength = Math.min(a.length, b.length);
+	      var bm = findBestMatch(a,b, cache);
+	      if (!level) {
+	        level = 0;
+	      }
+	      if (!bm || (a.length + b.length < 3)) {
+	        return [[a, b]];
+	      }
+	      var a1 = a.slice(0, bm.indexA),
+	        b1 = b.slice(0, bm.indexB),
+	        aMatch = [a[bm.indexA]],
+	        bMatch = [b[bm.indexB]],
+	        tailA = bm.indexA + 1,
+	        tailB = bm.indexB + 1,
+	        a2 = a.slice(tailA),
+	        b2 = b.slice(tailB);
+
+	      var group1 = group(a1, b1, level+1, cache);
+	      var groupMatch = group(aMatch, bMatch, level+1, cache);
+	      var group2 = group(a2, b2, level+1, cache);
+	      var result = groupMatch;
+	      if (bm.indexA > 0 || bm.indexB > 0) {
+	        result = group1.concat(result);
+	      }
+	      if (a.length > tailA || b.length > tailB ) {
+	        result = result.concat(group2);
+	      }
+	      return result;
+	    }
+	    return group;
+	  }
+
+	  module.exports['Rematch'] = Rematch;
+
+	})(this);
+
+
+/***/ },
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1859,8 +2033,8 @@
 
 	(function(ctx, undefined) {
 
-	  var lineByLinePrinter = __webpack_require__(21).LineByLinePrinter;
-	  var sideBySidePrinter = __webpack_require__(22).SideBySidePrinter;
+	  var lineByLinePrinter = __webpack_require__(22).LineByLinePrinter;
+	  var sideBySidePrinter = __webpack_require__(23).SideBySidePrinter;
 
 	  function HtmlPrinter() {
 	  }
@@ -1875,7 +2049,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1890,6 +2064,7 @@
 	  var diffParser = __webpack_require__(1).DiffParser;
 	  var printerUtils = __webpack_require__(4).PrinterUtils;
 	  var utils = __webpack_require__(2).Utils;
+	  var Rematch = __webpack_require__(20).Rematch;
 
 	  function LineByLinePrinter() {
 	  }
@@ -1931,6 +2106,12 @@
 	      '</div>\n';
 	  };
 
+	  var matcher=Rematch.rematch(function(a,b) {
+	    var amod = a.content.substr(1),
+	        bmod = b.content.substr(1);
+	    return Rematch.distance(amod, bmod);
+	  });
+
 	  function generateFileHtml(file, config) {
 	    return file.blocks.map(function(block) {
 
@@ -1943,27 +2124,30 @@
 
 	      var oldLines = [];
 	      var newLines = [];
-	      var processedOldLines = [];
-	      var processedNewLines = [];
-
-	      for (var i = 0; i < block.lines.length; i++) {
-	        var line = block.lines[i];
-	        var escapedLine = utils.escape(line.content);
-
-	        if (line.type == diffParser.LINE_TYPE.CONTEXT && !oldLines.length && !newLines.length) {
-	          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
-	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length && !newLines.length) {
-	          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
-	        } else if (line.type == diffParser.LINE_TYPE.DELETES && !newLines.length) {
-	          oldLines.push(line);
-	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && oldLines.length > newLines.length) {
-	          newLines.push(line);
+	      function processChangeBlock() {
+	        var matches;
+	        var insertType;
+	        var deleteType;
+	        var doMatching = config.matching === "lines" || config.matching === "words";
+	        if (doMatching) {
+	          matches = matcher(oldLines, newLines);
+	          insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
+	          deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
 	        } else {
+	          matches = [[oldLines,newLines]];
+	          insertType = diffParser.LINE_TYPE.INSERTS;
+	          deleteType = diffParser.LINE_TYPE.DELETES;
+	        }
+	        matches.forEach(function(match){
+	          var oldLines = match[0];
+	          var newLines = match[1];
+	          var processedOldLines = [];
+	          var processedNewLines = [];
 	          var j = 0;
-	          var oldLine, newLine;
-
-	          if (oldLines.length === newLines.length) {
-	            for (j = 0; j < oldLines.length; j++) {
+	            var oldLine, newLine,
+	              common = Math.min(oldLines.length, newLines.length),
+	              max = Math.max(oldLines.length, newLines.length);
+	            for (j = 0; j < common; j++) {
 	              oldLine = oldLines[j];
 	              newLine = newLines[j];
 
@@ -1971,27 +2155,46 @@
 	              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
 
 	              processedOldLines +=
-	                generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber,
+	                generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
 	                  diff.first.line, diff.first.prefix);
 	              processedNewLines +=
-	                generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber,
+	                generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
 	                  diff.second.line, diff.second.prefix);
 	            }
 
 	            lines += processedOldLines + processedNewLines;
-	          } else {
-	            lines += processLines(oldLines, newLines);
-	          }
+	            lines += processLines(oldLines.slice(common), newLines.slice(common));
 
-	          oldLines = [];
-	          newLines = [];
-	          processedOldLines = [];
-	          processedNewLines = [];
-	          i--;
+	            processedOldLines = [];
+	            processedNewLines = [];
+	        });
+	        oldLines = [];
+	        newLines = [];
+	      }
+
+	      for (var i = 0; i < block.lines.length; i++) {
+	        var line = block.lines[i];
+	        var escapedLine = utils.escape(line.content);
+
+	        if ( line.type !== diffParser.LINE_TYPE.INSERTS &&
+	            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
+	          processChangeBlock();
+	        }
+	        if (line.type == diffParser.LINE_TYPE.CONTEXT) {
+	          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
+	          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+	        } else if (line.type == diffParser.LINE_TYPE.DELETES) {
+	          oldLines.push(line);
+	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
+	          newLines.push(line);
+	        } else {
+	          console.error('unknown state in html line-by-line generator');
+	          processChangeBlock();
 	        }
 	      }
 
-	      lines += processLines(oldLines, newLines);
+	      processChangeBlock();
 
 	      return lines;
 	    }).join('\n');
@@ -2053,7 +2256,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2068,6 +2271,7 @@
 	  var diffParser = __webpack_require__(1).DiffParser;
 	  var printerUtils = __webpack_require__(4).PrinterUtils;
 	  var utils = __webpack_require__(2).Utils;
+	  var Rematch = __webpack_require__(20).Rematch;
 
 	  function SideBySidePrinter() {
 	  }
@@ -2120,6 +2324,12 @@
 	      '</div>\n';
 	  };
 
+	  var matcher=Rematch.rematch(function(a,b) {
+	    var amod = a.content.substr(1),
+	        bmod = b.content.substr(1);
+	    return Rematch.distance(amod, bmod);
+	  });
+
 	  function generateSideBySideFileHtml(file, config) {
 	    var fileHtml = {};
 	    fileHtml.left = '';
@@ -2145,57 +2355,80 @@
 
 	      var oldLines = [];
 	      var newLines = [];
-	      var tmpHtml = '';
+	      function processChangeBlock() {
+	        var matches;
+	        var insertType;
+	        var deleteType;
+	        var doMatching = config.matching === "lines" || config.matching === "words";
+	        if (doMatching) {
+	          matches = matcher(oldLines, newLines);
+	          insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
+	          deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
+	        } else {
+	          matches = [[oldLines,newLines]];
+	          insertType = diffParser.LINE_TYPE.INSERTS;
+	          deleteType = diffParser.LINE_TYPE.DELETES;
+	        }
+	        matches.forEach(function(match){
+	          var oldLines = match[0];
+	          var newLines = match[1];
+	          var tmpHtml;
+	          var j = 0;
+	          var oldLine, newLine,
+	              common = Math.min(oldLines.length, newLines.length),
+	              max = Math.max(oldLines.length, newLines.length);
+	          for (j = 0; j < common; j++) {
+	            oldLine = oldLines[j];
+	            newLine = newLines[j];
 
+	            config.isCombined = file.isCombined;
+
+	            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
+
+	            fileHtml.left +=
+	              generateSingleLineHtml(deleteType, oldLine.oldNumber,
+	                diff.first.line, diff.first.prefix);
+	            fileHtml.right +=
+	              generateSingleLineHtml(insertType, newLine.newNumber,
+	                diff.second.line, diff.second.prefix);
+	            }
+	            if (max > common) {
+	              var oldSlice = oldLines.slice(common),
+	                  newSlice = newLines.slice(common);
+	              tmpHtml = processLines(oldLines.slice(common), newLines.slice(common));
+	              fileHtml.left += tmpHtml.left;
+	              fileHtml.right += tmpHtml.right;
+	            }
+	        });
+	        oldLines = [];
+	        newLines = [];
+	      }
 	      for (var i = 0; i < block.lines.length; i++) {
 	        var line = block.lines[i];
-	        var escapedLine = utils.escape(line.content);
+	        var prefix = line[0];
+	        var escapedLine = utils.escape(line.content.substr(1));
 
-	        if (line.type == diffParser.LINE_TYPE.CONTEXT && !oldLines.length && !newLines.length) {
-	          fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine);
-	          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine);
-	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length && !newLines.length) {
+	        if ( line.type !== diffParser.LINE_TYPE.INSERTS &&
+	            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
+	          processChangeBlock();
+	        }
+	        if (line.type == diffParser.LINE_TYPE.CONTEXT) {
+	          fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
+	          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
 	          fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-	          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine);
-	        } else if (line.type == diffParser.LINE_TYPE.DELETES && !newLines.length) {
+	          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+	        } else if (line.type == diffParser.LINE_TYPE.DELETES) {
 	          oldLines.push(line);
-	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && oldLines.length > newLines.length) {
+	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
 	          newLines.push(line);
 	        } else {
-	          var j = 0;
-	          var oldLine, newLine;
-
-	          if (oldLines.length === newLines.length) {
-	            for (j = 0; j < oldLines.length; j++) {
-	              oldLine = oldLines[j];
-	              newLine = newLines[j];
-
-	              config.isCombined = file.isCombined;
-
-	              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
-
-	              fileHtml.left +=
-	                generateSingleLineHtml(oldLine.type, oldLine.oldNumber,
-	                  diff.first.line, diff.first.prefix);
-	              fileHtml.right +=
-	                generateSingleLineHtml(newLine.type, newLine.newNumber,
-	                  diff.second.line, diff.second.prefix);
-	            }
-	          } else {
-	            tmpHtml = processLines(oldLines, newLines);
-	            fileHtml.left += tmpHtml.left;
-	            fileHtml.right += tmpHtml.right;
-	          }
-
-	          oldLines = [];
-	          newLines = [];
-	          i--;
+	          console.error('unknown state in html side-by-side generator');
+	          processChangeBlock();
 	        }
 	      }
 
-	      tmpHtml = processLines(oldLines, newLines);
-	      fileHtml.left += tmpHtml.left;
-	      fileHtml.right += tmpHtml.right;
+	      processChangeBlock();
 	    });
 
 	    return fileHtml;
@@ -2210,16 +2443,27 @@
 	    for (j = 0; j < maxLinesNumber; j++) {
 	      var oldLine = oldLines[j];
 	      var newLine = newLines[j];
-
+	      var oldContent;
+	      var newContent;
+	      var oldPrefix;
+	      var newPrefix;
+	      if (oldLine) {
+	        oldContent = utils.escape(oldLine.content.substr(1));
+	        oldPrefix = oldLine.content[0];
+	      }
+	      if (newLine) {
+	        newContent = utils.escape(newLine.content.substr(1));
+	        newPrefix = newLine.content[0];
+	      }
 	      if (oldLine && newLine) {
-	        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, utils.escape(oldLine.content));
-	        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, utils.escape(newLine.content));
+	        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+	        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
 	      } else if (oldLine) {
-	        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, utils.escape(oldLine.content));
+	        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
 	        fileHtml.right += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
 	      } else if (newLine) {
 	        fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-	        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, utils.escape(newLine.content));
+	        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
 	      } else {
 	        console.error('How did it get here?');
 	      }
