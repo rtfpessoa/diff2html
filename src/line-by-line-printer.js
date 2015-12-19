@@ -123,7 +123,7 @@
         var escapedLine = utils.escape(line.content);
 
         if ( line.type !== diffParser.LINE_TYPE.INSERTS &&
-            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines > 0))) {
+            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
           processChangeBlock();
         }
         if (line.type == diffParser.LINE_TYPE.CONTEXT) {
