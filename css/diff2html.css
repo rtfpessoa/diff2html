@@ -149,25 +149,30 @@
 }
 
 .line-num1 {
+    box-sizing: border-box;
     float: left;
-    width: 30px;
+    width: 32px;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-left: 3px;
 }
 
 .line-num2 {
+    box-sizing: border-box;
     float: right;
-    width: 30px;
+    width: 32px;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-left: 3px;
 }
 
 .d2h-code-linenumber {
+    box-sizing: border-box;
     position: absolute;
-    min-width: 65px;
-    padding-left: 10px;
-    padding-right: 10px;
+    width: 82px;
     height: 18px;
+    padding-left: 2px;
+    padding-right: 2px;
     line-height: 18px;
     background-color: #fff;
     color: rgba(0, 0, 0, 0.3);
@@ -178,8 +183,9 @@
 }
 
 .d2h-code-side-linenumber {
+    box-sizing: border-box;
     position: absolute;
-    width: 35px;
+    width: 52px;
     padding-left: 10px;
     padding-right: 10px;
     height: 18px;

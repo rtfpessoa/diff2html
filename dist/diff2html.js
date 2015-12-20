@@ -625,7 +625,7 @@
 	        prefix: linePrefix2,
 	        line: removeDel(highlightedLine)
 	      }
-	    }
+	    };
 	  };
 
 	  function isDeletedName(name) {
