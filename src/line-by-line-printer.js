@@ -5,7 +5,7 @@
  *
  */
 
-(function(ctx, undefined) {
+(function() {
 
   var diffParser = require('./diff-parser.js').DiffParser;
   var printerUtils = require('./printer-utils.js').PrinterUtils;
@@ -23,9 +23,9 @@
 
         var diffs;
         if (file.blocks.length) {
-          diffs = that.generateFileHtml(file);
+          diffs = that._generateFileHtml(file);
         } else {
-          diffs = that.generateEmptyDiff();
+          diffs = that._generateEmptyDiff();
         }
 
         return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
@@ -54,13 +54,14 @@
       '</div>\n';
   };
 
-  var matcher=Rematch.rematch(function(a,b) {
-    var amod = a.content.substr(1),
-        bmod = b.content.substr(1);
+  var matcher = Rematch.rematch(function(a, b) {
+    var amod = a.content.substr(1);
+    var bmod = b.content.substr(1);
+
     return Rematch.distance(amod, bmod);
   });
 
-  LineByLinePrinter.prototype.generateFileHtml = function(file) {
+  LineByLinePrinter.prototype._generateFileHtml = function(file) {
     var that = this;
     return file.blocks.map(function(block) {
 
@@ -73,50 +74,53 @@
 
       var oldLines = [];
       var newLines = [];
+
       function processChangeBlock() {
         var matches;
         var insertType;
         var deleteType;
-        var doMatching = that.config.matching === "lines" || that.config.matching === "words";
+
+        var doMatching = that.config.matching === 'lines' || that.config.matching === 'words';
+
         if (doMatching) {
           matches = matcher(oldLines, newLines);
           insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
           deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
         } else {
-          matches = [[oldLines,newLines]];
+          matches = [[oldLines, newLines]];
           insertType = diffParser.LINE_TYPE.INSERTS;
           deleteType = diffParser.LINE_TYPE.DELETES;
         }
-        matches.forEach(function(match){
-          var oldLines = match[0];
-          var newLines = match[1];
+
+        matches.forEach(function(match) {
+          oldLines = match[0];
+          newLines = match[1];
+
           var processedOldLines = [];
           var processedNewLines = [];
-          var j = 0;
-            var oldLine, newLine,
-              common = Math.min(oldLines.length, newLines.length),
-              max = Math.max(oldLines.length, newLines.length);
-            for (j = 0; j < common; j++) {
-              oldLine = oldLines[j];
-              newLine = newLines[j];
 
-              that.config.isCombined = file.isCombined;
-              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
+          var common = Math.min(oldLines.length, newLines.length);
 
-              processedOldLines +=
-                that.generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
-                  diff.first.line, diff.first.prefix);
-              processedNewLines +=
-                that.generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
-                  diff.second.line, diff.second.prefix);
-            }
+          var oldLine, newLine;
+          for (var j = 0; j < common; j++) {
+            oldLine = oldLines[j];
+            newLine = newLines[j];
 
-            lines += processedOldLines + processedNewLines;
-            lines += that.processLines(oldLines.slice(common), newLines.slice(common));
+            that.config.isCombined = file.isCombined;
+            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
-            processedOldLines = [];
-            processedNewLines = [];
+            processedOldLines +=
+              that._generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
+                diff.first.line, diff.first.prefix);
+            processedNewLines +=
+              that._generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
+                diff.second.line, diff.second.prefix);
+          }
+
+          lines += processedOldLines + processedNewLines;
+          lines += that._processLines(oldLines.slice(common), newLines.slice(common));
         });
+
         oldLines = [];
         newLines = [];
       }
@@ -125,20 +129,21 @@
         var line = block.lines[i];
         var escapedLine = utils.escape(line.content);
 
-        if ( line.type !== diffParser.LINE_TYPE.INSERTS &&
-            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
+        if (line.type !== diffParser.LINE_TYPE.INSERTS &&
+          (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
           processChangeBlock();
         }
-        if (line.type == diffParser.LINE_TYPE.CONTEXT) {
-          lines += that.generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
-        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          lines += that.generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
-        } else if (line.type == diffParser.LINE_TYPE.DELETES) {
+
+        if (line.type === diffParser.LINE_TYPE.CONTEXT) {
+          lines += that._generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+        } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
+          lines += that._generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+        } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
-        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
+        } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
           newLines.push(line);
         } else {
-          console.error('unknown state in html line-by-line generator');
+          console.error('Unknown state in html line-by-line generator');
           processChangeBlock();
         }
       }
@@ -147,27 +152,27 @@
 
       return lines;
     }).join('\n');
-  }
+  };
 
-  LineByLinePrinter.prototype.processLines = function(oldLines, newLines) {
+  LineByLinePrinter.prototype._processLines = function(oldLines, newLines) {
     var lines = '';
 
-    for (j = 0; j < oldLines.length; j++) {
-      var oldLine = oldLines[j];
+    for (var i = 0; i < oldLines.length; i++) {
+      var oldLine = oldLines[i];
       var oldEscapedLine = utils.escape(oldLine.content);
-      lines += this.generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+      lines += this._generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
     }
 
-    for (j = 0; j < newLines.length; j++) {
+    for (var j = 0; j < newLines.length; j++) {
       var newLine = newLines[j];
       var newEscapedLine = utils.escape(newLine.content);
-      lines += this.generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+      lines += this._generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
     }
 
     return lines;
-  }
+  };
 
-  LineByLinePrinter.prototype.generateLineHtml = function(type, oldNumber, newNumber, content, prefix) {
+  LineByLinePrinter.prototype._generateLineHtml = function(type, oldNumber, newNumber, content, prefix) {
     var htmlPrefix = '';
     if (prefix) {
       htmlPrefix = '<span class="d2h-code-line-prefix">' + prefix + '</span>';
@@ -187,9 +192,9 @@
       '    <div class="d2h-code-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
       '  </td>\n' +
       '</tr>\n';
-  }
+  };
 
-  LineByLinePrinter.prototype.generateEmptyDiff = function() {
+  LineByLinePrinter.prototype._generateEmptyDiff = function() {
     return '<tr>\n' +
       '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
       '    <div class="d2h-code-line ' + diffParser.LINE_TYPE.INFO + '">' +
@@ -197,8 +202,8 @@
       '    </div>' +
       '  </td>\n' +
       '</tr>\n';
-  }
+  };
 
-  module.exports['LineByLinePrinter'] = LineByLinePrinter;
+  module.exports.LineByLinePrinter = LineByLinePrinter;
 
-})(this);
+})();

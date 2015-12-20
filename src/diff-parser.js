@@ -5,7 +5,7 @@
  *
  */
 
-(function(ctx, undefined) {
+(function() {
 
   var utils = require('./utils.js').Utils;
 
@@ -31,6 +31,7 @@
     var newLine = null;
 
     var saveBlock = function() {
+
       /* Add previous block(if exists) before start a new file */
       if (currentBlock) {
         currentFile.blocks.push(currentBlock);
@@ -39,6 +40,7 @@
     };
 
     var saveFile = function() {
+
       /*
        * Add previous file(if exists) before start a new one
        * if it has name (to avoid binary files errors)
@@ -216,11 +218,11 @@
     var nameSplit = filename.split('.');
     if (nameSplit.length > 1) {
       return nameSplit[nameSplit.length - 1];
-    } else {
-      return language;
     }
+
+    return language;
   }
 
-  module.exports['DiffParser'] = new DiffParser();
+  module.exports.DiffParser = new DiffParser();
 
-})(this);
+})();

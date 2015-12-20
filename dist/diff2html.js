@@ -51,7 +51,7 @@
 	 *
 	 */
 
-	(function(ctx, undefined) {
+	(function() {
 
 	  var diffParser = __webpack_require__(1).DiffParser;
 	  var fileLister = __webpack_require__(3).FileListPrinter;
@@ -63,9 +63,9 @@
 	  /*
 	   * Line diff type configuration
 	   var config = {
-	   "wordByWord": true, // (default)
+	   'wordByWord': true, // (default)
 	   // OR
-	   "charByChar": true
+	   'charByChar': true
 	   };
 	   */
 
@@ -83,23 +83,23 @@
 	    var configOrEmpty = config || {};
 
 	    var diffJson = diffInput;
-	    if(!configOrEmpty.inputFormat || configOrEmpty.inputFormat === 'diff') {
+	    if (!configOrEmpty.inputFormat || configOrEmpty.inputFormat === 'diff') {
 	      diffJson = diffParser.generateDiffJson(diffInput);
 	    }
 
-	    var fileList = "";
-	    if(configOrEmpty.showFiles === true) {
+	    var fileList = '';
+	    if (configOrEmpty.showFiles === true) {
 	      fileList = fileLister.generateFileList(diffJson, configOrEmpty);
 	    }
 
-	    var diffOutput = "";
-	    if(configOrEmpty.outputFormat === 'side-by-side') {
+	    var diffOutput = '';
+	    if (configOrEmpty.outputFormat === 'side-by-side') {
 	      diffOutput = htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
 	    } else {
 	      diffOutput = htmlPrinter.generateLineByLineJsonHtml(diffJson, configOrEmpty);
 	    }
 
-	    return fileList + diffOutput
+	    return fileList + diffOutput;
 	  };
 
 
@@ -112,9 +112,9 @@
 	   */
 	  Diff2Html.prototype.getPrettyHtmlFromDiff = function(diffInput, config) {
 	    var configOrEmpty = config || {};
-	    configOrEmpty['inputFormat'] = 'diff';
-	    configOrEmpty['outputFormat'] = 'line-by-line';
-	    return this.getPrettyHtml(diffInput, configOrEmpty)
+	    configOrEmpty.inputFormat = 'diff';
+	    configOrEmpty.outputFormat = 'line-by-line';
+	    return this.getPrettyHtml(diffInput, configOrEmpty);
 	  };
 
 	  /*
@@ -122,9 +122,9 @@
 	   */
 	  Diff2Html.prototype.getPrettyHtmlFromJson = function(diffJson, config) {
 	    var configOrEmpty = config || {};
-	    configOrEmpty['inputFormat'] = 'json';
-	    configOrEmpty['outputFormat'] = 'line-by-line';
-	    return this.getPrettyHtml(diffJson, configOrEmpty)
+	    configOrEmpty.inputFormat = 'json';
+	    configOrEmpty.outputFormat = 'line-by-line';
+	    return this.getPrettyHtml(diffJson, configOrEmpty);
 	  };
 
 	  /*
@@ -132,9 +132,9 @@
 	   */
 	  Diff2Html.prototype.getPrettySideBySideHtmlFromDiff = function(diffInput, config) {
 	    var configOrEmpty = config || {};
-	    configOrEmpty['inputFormat'] = 'diff';
-	    configOrEmpty['outputFormat'] = 'side-by-side';
-	    return this.getPrettyHtml(diffInput, configOrEmpty)
+	    configOrEmpty.inputFormat = 'diff';
+	    configOrEmpty.outputFormat = 'side-by-side';
+	    return this.getPrettyHtml(diffInput, configOrEmpty);
 	  };
 
 	  /*
@@ -142,18 +142,18 @@
 	   */
 	  Diff2Html.prototype.getPrettySideBySideHtmlFromJson = function(diffJson, config) {
 	    var configOrEmpty = config || {};
-	    configOrEmpty['inputFormat'] = 'json';
-	    configOrEmpty['outputFormat'] = 'side-by-side';
-	    return this.getPrettyHtml(diffJson, configOrEmpty)
+	    configOrEmpty.inputFormat = 'json';
+	    configOrEmpty.outputFormat = 'side-by-side';
+	    return this.getPrettyHtml(diffJson, configOrEmpty);
 	  };
 
-	  var diffName = 'Diff2Html';
 	  var diffObject = new Diff2Html();
-	  module.exports[diffName] = diffObject;
-	  // Expose diff2html in the browser
-	  global[diffName] = diffObject;
+	  module.exports.Diff2Html = diffObject;
 
-	})(this);
+	  // Expose diff2html in the browser
+	  global.Diff2Html = diffObject;
+
+	})();
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -168,7 +168,7 @@
 	 *
 	 */
 
-	(function(ctx, undefined) {
+	(function() {
 
 	  var utils = __webpack_require__(2).Utils;
 
@@ -194,6 +194,7 @@
 	    var newLine = null;
 
 	    var saveBlock = function() {
+
 	      /* Add previous block(if exists) before start a new file */
 	      if (currentBlock) {
 	        currentFile.blocks.push(currentBlock);
@@ -202,6 +203,7 @@
 	    };
 
 	    var saveFile = function() {
+
 	      /*
 	       * Add previous file(if exists) before start a new one
 	       * if it has name (to avoid binary files errors)
@@ -379,14 +381,14 @@
 	    var nameSplit = filename.split('.');
 	    if (nameSplit.length > 1) {
 	      return nameSplit[nameSplit.length - 1];
-	    } else {
-	      return language;
 	    }
+
+	    return language;
 	  }
 
-	  module.exports['DiffParser'] = new DiffParser();
+	  module.exports.DiffParser = new DiffParser();
 
-	})(this);
+	})();
 
 
 /***/ },
@@ -400,7 +402,7 @@
 	 *
 	 */
 
-	(function(ctx, undefined) {
+	(function() {
 
 	  function Utils() {
 	  }
@@ -414,7 +416,7 @@
 	  };
 
 	  Utils.prototype.getRandomId = function(prefix) {
-	      return prefix + "-" + Math.random().toString(36).slice(-3);
+	    return prefix + '-' + Math.random().toString(36).slice(-3);
 	  };
 
 	  Utils.prototype.startsWith = function(str, start) {
@@ -436,9 +438,9 @@
 	    return value ? value : '';
 	  };
 
-	  module.exports['Utils'] = new Utils();
+	  module.exports.Utils = new Utils();
 
-	})(this);
+	})();
 
 
 /***/ },
@@ -452,42 +454,42 @@
 	 *
 	 */
 
-	(function (ctx, undefined) {
+	(function() {
 
-	    var printerUtils = __webpack_require__(4).PrinterUtils;
-	    var utils = __webpack_require__(2).Utils;
+	  var printerUtils = __webpack_require__(4).PrinterUtils;
+	  var utils = __webpack_require__(2).Utils;
 
-	    function FileListPrinter() {
-	    }
+	  function FileListPrinter() {
+	  }
 
-	    FileListPrinter.prototype.generateFileList = function (diffFiles) {
-	        var hideId = utils.getRandomId("d2h-hide"); //necessary if there are 2 elements like this in the same page
-	        var showId = utils.getRandomId("d2h-show");
-	        return '<div class="d2h-file-list-wrapper">\n' +
-	            '     <div class="d2h-file-list-header">Files changed (' + diffFiles.length + ')&nbsp&nbsp</div>\n' +
-	            '     <a id="' + hideId + '" class="d2h-hide" href="#' + hideId + '">+</a>\n' +
-	            '     <a id="' + showId + 'd2h-show" class="d2h-show" href="#' + showId + '">-</a>\n' +
-	            '     <div class="d2h-clear"></div>\n' +
-	            '     <table class="d2h-file-list">\n' +
+	  FileListPrinter.prototype.generateFileList = function(diffFiles) {
+	    var hideId = utils.getRandomId('d2h-hide'); //necessary if there are 2 elements like this in the same page
+	    var showId = utils.getRandomId('d2h-show');
+	    return '<div class="d2h-file-list-wrapper">\n' +
+	      '     <div class="d2h-file-list-header">Files changed (' + diffFiles.length + ')&nbsp&nbsp</div>\n' +
+	      '     <a id="' + hideId + '" class="d2h-hide" href="#' + hideId + '">+</a>\n' +
+	      '     <a id="' + showId + 'd2h-show" class="d2h-show" href="#' + showId + '">-</a>\n' +
+	      '     <div class="d2h-clear"></div>\n' +
+	      '     <table class="d2h-file-list">\n' +
 
 
-	            diffFiles.map(function (file) {
-	                return '     <tr class="d2h-file-list-line">\n' +
-	                    '       <td class="d2h-lines-added">\n' +
-	                    '         <span>+' + file.addedLines + '</span>\n' +
-	                    '       </td>\n' +
-	                    '       <td class="d2h-lines-deleted">\n' +
-	                    '         <span>-' + file.deletedLines + '</span>\n' +
-	                    '       </td>\n' +
-	                    '       <td class="d2h-file-name"><a href="#' + printerUtils.getHtmlId(file) + '">&nbsp;' + printerUtils.getDiffName(file) + '</a></td>\n' +
-	                    '     </tr>\n'
-	            }).join('\n') +
-	            '</table></div>\n';
-	    };
+	      diffFiles.map(function(file) {
+	        return '     <tr class="d2h-file-list-line">\n' +
+	          '       <td class="d2h-lines-added">\n' +
+	          '         <span>+' + file.addedLines + '</span>\n' +
+	          '       </td>\n' +
+	          '       <td class="d2h-lines-deleted">\n' +
+	          '         <span>-' + file.deletedLines + '</span>\n' +
+	          '       </td>\n' +
+	          '       <td class="d2h-file-name"><a href="#' + printerUtils.getHtmlId(file) + '">&nbsp;' + printerUtils.getDiffName(file) + '</a></td>\n' +
+	          '     </tr>\n';
+	      }).join('\n') +
+	      '</table></div>\n';
+	  };
 
-	    module.exports['FileListPrinter'] = new FileListPrinter();
+	  module.exports.FileListPrinter = new FileListPrinter();
 
-	})(this);
+	})();
 
 
 /***/ },
@@ -501,7 +503,7 @@
 	 *
 	 */
 
-	(function(ctx, undefined) {
+	(function() {
 
 	  var jsDiff = __webpack_require__(5);
 	  var utils = __webpack_require__(2).Utils;
@@ -511,39 +513,41 @@
 	  }
 
 	  PrinterUtils.prototype.getHtmlId = function(file) {
-	    var hashCode =  function(text) {
-	      var hash = 0, i, chr, len;
-	      if (text.length == 0) return hash;
+	    var hashCode = function(text) {
+	      var i, chr, len;
+	      var hash = 0;
+
+	      if (text.length === 0) return hash;
+
 	      for (i = 0, len = text.length; i < len; i++) {
-	        chr   = text.charCodeAt(i);
-	        hash  = ((hash << 5) - hash) + chr;
+	        chr = text.charCodeAt(i);
+	        hash = ((hash << 5) - hash) + chr;
 	        hash |= 0; // Convert to 32bit integer
 	      }
+
 	      return hash;
 	    };
 
-	    return "d2h-" + hashCode(this.getDiffName(file)).toString().slice(-6);
+	    return 'd2h-' + hashCode(this.getDiffName(file)).toString().slice(-6);
 	  };
 
 	  PrinterUtils.prototype.getDiffName = function(file) {
 	    var oldFilename = file.oldName;
 	    var newFilename = file.newName;
 
-	    if (oldFilename && newFilename
-	      && oldFilename !== newFilename
-	      && !isDeletedName(newFilename)) {
+	    if (oldFilename && newFilename && oldFilename !== newFilename && !isDeletedName(newFilename)) {
 	      return oldFilename + ' -> ' + newFilename;
 	    } else if (newFilename && !isDeletedName(newFilename)) {
 	      return newFilename;
 	    } else if (oldFilename) {
 	      return oldFilename;
-	    } else {
-	      return 'Unknown filename';
 	    }
+
+	    return 'Unknown filename';
 	  };
 
 	  PrinterUtils.prototype.diffHighlight = function(diffLine1, diffLine2, config) {
-	    var lineStart1, lineStart2;
+	    var linePrefix1, linePrefix2, unprefixedLine1, unprefixedLine2;
 
 	    var prefixSize = 1;
 
@@ -551,17 +555,16 @@
 	      prefixSize = 2;
 	    }
 
-	    lineStart1 = diffLine1.substr(0, prefixSize);
-	    lineStart2 = diffLine2.substr(0, prefixSize);
-
-	    diffLine1 = diffLine1.substr(prefixSize);
-	    diffLine2 = diffLine2.substr(prefixSize);
+	    linePrefix1 = diffLine1.substr(0, prefixSize);
+	    linePrefix2 = diffLine2.substr(0, prefixSize);
+	    unprefixedLine1 = diffLine1.substr(prefixSize);
+	    unprefixedLine2 = diffLine2.substr(prefixSize);
 
 	    var diff;
 	    if (config.charByChar) {
-	      diff = jsDiff.diffChars(diffLine1, diffLine2);
+	      diff = jsDiff.diffChars(unprefixedLine1, unprefixedLine2);
 	    } else {
-	      diff = jsDiff.diffWordsWithSpace(diffLine1, diffLine2);
+	      diff = jsDiff.diffWordsWithSpace(unprefixedLine1, unprefixedLine2);
 	    }
 
 	    var highlightedLine = '';
@@ -569,25 +572,30 @@
 	    var changedWords = [];
 	    if (!config.charByChar && config.matching === 'words') {
 	      var treshold = 0.25;
-	      if (typeof(config.matchWordsThreshold) !== "undefined") {
+
+	      if (typeof(config.matchWordsThreshold) !== 'undefined') {
 	        treshold = config.matchWordsThreshold;
 	      }
+
 	      var matcher = Rematch.rematch(function(a, b) {
-	        var amod = a.value,
-	            bmod = b.value,
-	            result = Rematch.distance(amod, bmod);
-	        return result;
+	        var amod = a.value;
+	        var bmod = b.value;
+
+	        return Rematch.distance(amod, bmod);
 	      });
-	      var removed = diff.filter(function isRemoved(element){
+
+	      var removed = diff.filter(function isRemoved(element) {
 	        return element.removed;
 	      });
-	      var added = diff.filter(function isAdded(element){
+
+	      var added = diff.filter(function isAdded(element) {
 	        return element.added;
 	      });
+
 	      var chunks = matcher(added, removed);
-	      chunks = chunks.forEach(function(chunk){
-	        if(chunk[0].length === 1 && chunk[1].length === 1) {
-	          var dist = Rematch.distance(chunk[0][0].value, chunk[1][0].value)
+	      chunks.forEach(function(chunk) {
+	        if (chunk[0].length === 1 && chunk[1].length === 1) {
+	          var dist = Rematch.distance(chunk[0][0].value, chunk[1][0].value);
 	          if (dist < treshold) {
 	            changedWords.push(chunk[0][0]);
 	            changedWords.push(chunk[1][0]);
@@ -595,6 +603,7 @@
 	        }
 	      });
 	    }
+
 	    diff.forEach(function(part) {
 	      var addClass = changedWords.indexOf(part) > -1 ? ' class="d2h-change"' : '';
 	      var elemType = part.added ? 'ins' : part.removed ? 'del' : null;
@@ -609,11 +618,11 @@
 
 	    return {
 	      first: {
-	        prefix: lineStart1,
+	        prefix: linePrefix1,
 	        line: removeIns(highlightedLine)
 	      },
 	      second: {
-	        prefix: lineStart2,
+	        prefix: linePrefix2,
 	        line: removeDel(highlightedLine)
 	      }
 	    }
@@ -631,9 +640,9 @@
 	    return line.replace(/(<del[^>]*>((.|\n)*?)<\/del>)/g, '');
 	  }
 
-	  module.exports['PrinterUtils'] = new PrinterUtils();
+	  module.exports.PrinterUtils = new PrinterUtils();
 
-	})(this);
+	})();
 
 
 /***/ },
@@ -1892,72 +1901,76 @@
 	 *
 	 */
 
-	(function(ctx, undefined) {
+	(function() {
+
 	  var Rematch = {};
 	  Rematch.arrayToString = function arrayToString(a) {
-	    if (Object.prototype.toString.apply(a,[]) === "[object Array]") {
+	    if (Object.prototype.toString.apply(a, []) === "[object Array]") {
 	      return "[" + a.map(arrayToString).join(", ") + "]";
 	    } else {
 	      return a;
 	    }
-	  }
+	  };
 
 	  /*
-	  Copyright (c) 2011 Andrei Mackenzie
-	  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-	  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-	  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-	  */
-	  function levenshtein(a, b){
-	    if(a.length == 0) return b.length;
-	    if(b.length == 0) return a.length;
+	   Copyright (c) 2011 Andrei Mackenzie
+	   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+	   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+	   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	   */
+	  function levenshtein(a, b) {
+	    if (a.length == 0) return b.length;
+	    if (b.length == 0) return a.length;
 
 	    var matrix = [];
 
 	    // increment along the first column of each row
 	    var i;
-	    for(i = 0; i <= b.length; i++){
+	    for (i = 0; i <= b.length; i++) {
 	      matrix[i] = [i];
 	    }
 
 	    // increment each column in the first row
 	    var j;
-	    for(j = 0; j <= a.length; j++){
+	    for (j = 0; j <= a.length; j++) {
 	      matrix[0][j] = j;
 	    }
 
 	    // Fill in the rest of the matrix
-	    for(i = 1; i <= b.length; i++){
-	      for(j = 1; j <= a.length; j++){
-	        if(b.charAt(i-1) == a.charAt(j-1)){
-	          matrix[i][j] = matrix[i-1][j-1];
+	    for (i = 1; i <= b.length; i++) {
+	      for (j = 1; j <= a.length; j++) {
+	        if (b.charAt(i - 1) == a.charAt(j - 1)) {
+	          matrix[i][j] = matrix[i - 1][j - 1];
 	        } else {
-	          matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
-	                      Math.min(matrix[i][j-1] + 1, // insertion
-	                          matrix[i-1][j] + 1)); // deletion
+	          matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, // substitution
+	            Math.min(matrix[i][j - 1] + 1, // insertion
+	              matrix[i - 1][j] + 1)); // deletion
 	        }
 	      }
 	    }
+
 	    return matrix[b.length][a.length];
 	  }
+
 	  Rematch.levenshtein = levenshtein;
 
-	  Rematch.distance = function distance(x,y) {
-	    x=x.trim();
-	    y=y.trim();
-	    var lev = levenshtein(x,y),
-	      score = lev / (x.length + y.length);
+	  Rematch.distance = function distance(x, y) {
+	    x = x.trim();
+	    y = y.trim();
+	    var lev = levenshtein(x, y);
+	    var score = lev / (x.length + y.length);
+
 	    return score;
-	  }
+	  };
 
 	  Rematch.rematch = function rematch(distanceFunction) {
-
 	    function findBestMatch(a, b, cache) {
 	      var cachecount = 0;
 
-	      for(var key in cache) {
+	      for (var key in cache) {
 	        cachecount++;
 	      }
+
 	      var bestMatchDist = Infinity;
 	      var bestMatch;
 	      for (var i = 0; i < a.length; ++i) {
@@ -1972,25 +1985,29 @@
 	          }
 	          if (md < bestMatchDist) {
 	            bestMatchDist = md;
-	            bestMatch = { indexA: i, indexB: j, score: bestMatchDist };
+	            bestMatch = {indexA: i, indexB: j, score: bestMatchDist};
 	          }
 	        }
 	      }
+
 	      return bestMatch;
 	    }
-	    function group(a, b, level, cache) {
 
-	      if (typeof(cache)==="undefined") {
+	    function group(a, b, level, cache) {
+	      if (typeof(cache) === "undefined") {
 	        cache = {};
 	      }
-	      var minLength = Math.min(a.length, b.length);
-	      var bm = findBestMatch(a,b, cache);
+
+	      var bm = findBestMatch(a, b, cache);
+
 	      if (!level) {
 	        level = 0;
 	      }
+
 	      if (!bm || (a.length + b.length < 3)) {
 	        return [[a, b]];
 	      }
+
 	      var a1 = a.slice(0, bm.indexA),
 	        b1 = b.slice(0, bm.indexB),
 	        aMatch = [a[bm.indexA]],
@@ -2000,24 +2017,28 @@
 	        a2 = a.slice(tailA),
 	        b2 = b.slice(tailB);
 
-	      var group1 = group(a1, b1, level+1, cache);
-	      var groupMatch = group(aMatch, bMatch, level+1, cache);
-	      var group2 = group(a2, b2, level+1, cache);
+	      var group1 = group(a1, b1, level + 1, cache);
+	      var groupMatch = group(aMatch, bMatch, level + 1, cache);
+	      var group2 = group(a2, b2, level + 1, cache);
 	      var result = groupMatch;
+
 	      if (bm.indexA > 0 || bm.indexB > 0) {
 	        result = group1.concat(result);
 	      }
-	      if (a.length > tailA || b.length > tailB ) {
+
+	      if (a.length > tailA || b.length > tailB) {
 	        result = result.concat(group2);
 	      }
+
 	      return result;
 	    }
+
 	    return group;
-	  }
+	  };
 
-	  module.exports['Rematch'] = Rematch;
+	  module.exports.Rematch = Rematch;
 
-	})(this);
+	})();
 
 
 /***/ },
@@ -2031,21 +2052,24 @@
 	 *
 	 */
 
-	(function(ctx, undefined) {
+	(function() {
 
-	  var lineByLinePrinter = __webpack_require__(22).LineByLinePrinter;
+	  var LineByLinePrinter = __webpack_require__(22).LineByLinePrinter;
 	  var sideBySidePrinter = __webpack_require__(23).SideBySidePrinter;
 
 	  function HtmlPrinter() {
 	  }
 
-	  HtmlPrinter.prototype.generateLineByLineJsonHtml = lineByLinePrinter.generateLineByLineJsonHtml;
+	  HtmlPrinter.prototype.generateLineByLineJsonHtml = function(diffFiles, config) {
+	    var lineByLinePrinter = new LineByLinePrinter(config);
+	    return lineByLinePrinter.generateLineByLineJsonHtml(diffFiles);
+	  };
 
 	  HtmlPrinter.prototype.generateSideBySideJsonHtml = sideBySidePrinter.generateSideBySideJsonHtml;
 
-	  module.exports['HtmlPrinter'] = new HtmlPrinter();
+	  module.exports.HtmlPrinter = new HtmlPrinter();
 
-	})(this);
+	})();
 
 
 /***/ },
@@ -2059,25 +2083,27 @@
 	 *
 	 */
 
-	(function(ctx, undefined) {
+	(function() {
 
 	  var diffParser = __webpack_require__(1).DiffParser;
 	  var printerUtils = __webpack_require__(4).PrinterUtils;
 	  var utils = __webpack_require__(2).Utils;
 	  var Rematch = __webpack_require__(20).Rematch;
 
-	  function LineByLinePrinter() {
+	  function LineByLinePrinter(config) {
+	    this.config = config;
 	  }
 
-	  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles, config) {
+	  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
+	    var that = this;
 	    return '<div class="d2h-wrapper">\n' +
 	      diffFiles.map(function(file) {
 
 	        var diffs;
 	        if (file.blocks.length) {
-	          diffs = generateFileHtml(file, config);
+	          diffs = that._generateFileHtml(file);
 	        } else {
-	          diffs = generateEmptyDiff();
+	          diffs = that._generateEmptyDiff();
 	        }
 
 	        return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
@@ -2106,13 +2132,15 @@
 	      '</div>\n';
 	  };
 
-	  var matcher=Rematch.rematch(function(a,b) {
-	    var amod = a.content.substr(1),
-	        bmod = b.content.substr(1);
+	  var matcher = Rematch.rematch(function(a, b) {
+	    var amod = a.content.substr(1);
+	    var bmod = b.content.substr(1);
+
 	    return Rematch.distance(amod, bmod);
 	  });
 
-	  function generateFileHtml(file, config) {
+	  LineByLinePrinter.prototype._generateFileHtml = function(file) {
+	    var that = this;
 	    return file.blocks.map(function(block) {
 
 	      var lines = '<tr>\n' +
@@ -2124,50 +2152,53 @@
 
 	      var oldLines = [];
 	      var newLines = [];
+
 	      function processChangeBlock() {
 	        var matches;
 	        var insertType;
 	        var deleteType;
-	        var doMatching = config.matching === "lines" || config.matching === "words";
+
+	        var doMatching = that.config.matching === 'lines' || that.config.matching === 'words';
+
 	        if (doMatching) {
 	          matches = matcher(oldLines, newLines);
 	          insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
 	          deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
 	        } else {
-	          matches = [[oldLines,newLines]];
+	          matches = [[oldLines, newLines]];
 	          insertType = diffParser.LINE_TYPE.INSERTS;
 	          deleteType = diffParser.LINE_TYPE.DELETES;
 	        }
-	        matches.forEach(function(match){
-	          var oldLines = match[0];
-	          var newLines = match[1];
+
+	        matches.forEach(function(match) {
+	          oldLines = match[0];
+	          newLines = match[1];
+
 	          var processedOldLines = [];
 	          var processedNewLines = [];
-	          var j = 0;
-	            var oldLine, newLine,
-	              common = Math.min(oldLines.length, newLines.length),
-	              max = Math.max(oldLines.length, newLines.length);
-	            for (j = 0; j < common; j++) {
-	              oldLine = oldLines[j];
-	              newLine = newLines[j];
 
-	              config.isCombined = file.isCombined;
-	              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
+	          var common = Math.min(oldLines.length, newLines.length);
 
-	              processedOldLines +=
-	                generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
-	                  diff.first.line, diff.first.prefix);
-	              processedNewLines +=
-	                generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
-	                  diff.second.line, diff.second.prefix);
-	            }
+	          var oldLine, newLine;
+	          for (var j = 0; j < common; j++) {
+	            oldLine = oldLines[j];
+	            newLine = newLines[j];
 
-	            lines += processedOldLines + processedNewLines;
-	            lines += processLines(oldLines.slice(common), newLines.slice(common));
+	            that.config.isCombined = file.isCombined;
+	            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
-	            processedOldLines = [];
-	            processedNewLines = [];
+	            processedOldLines +=
+	              that._generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
+	                diff.first.line, diff.first.prefix);
+	            processedNewLines +=
+	              that._generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
+	                diff.second.line, diff.second.prefix);
+	          }
+
+	          lines += processedOldLines + processedNewLines;
+	          lines += that._processLines(oldLines.slice(common), newLines.slice(common));
 	        });
+
 	        oldLines = [];
 	        newLines = [];
 	      }
@@ -2176,20 +2207,21 @@
 	        var line = block.lines[i];
 	        var escapedLine = utils.escape(line.content);
 
-	        if ( line.type !== diffParser.LINE_TYPE.INSERTS &&
-	            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
+	        if (line.type !== diffParser.LINE_TYPE.INSERTS &&
+	          (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
 	          processChangeBlock();
 	        }
-	        if (line.type == diffParser.LINE_TYPE.CONTEXT) {
-	          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
-	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-	          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
-	        } else if (line.type == diffParser.LINE_TYPE.DELETES) {
+
+	        if (line.type === diffParser.LINE_TYPE.CONTEXT) {
+	          lines += that._generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+	        } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
+	          lines += that._generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+	        } else if (line.type === diffParser.LINE_TYPE.DELETES) {
 	          oldLines.push(line);
-	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
+	        } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
 	          newLines.push(line);
 	        } else {
-	          console.error('unknown state in html line-by-line generator');
+	          console.error('Unknown state in html line-by-line generator');
 	          processChangeBlock();
 	        }
 	      }
@@ -2198,27 +2230,27 @@
 
 	      return lines;
 	    }).join('\n');
-	  }
+	  };
 
-	  function processLines(oldLines, newLines) {
+	  LineByLinePrinter.prototype._processLines = function(oldLines, newLines) {
 	    var lines = '';
 
-	    for (j = 0; j < oldLines.length; j++) {
-	      var oldLine = oldLines[j];
+	    for (var i = 0; i < oldLines.length; i++) {
+	      var oldLine = oldLines[i];
 	      var oldEscapedLine = utils.escape(oldLine.content);
-	      lines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+	      lines += this._generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
 	    }
 
-	    for (j = 0; j < newLines.length; j++) {
+	    for (var j = 0; j < newLines.length; j++) {
 	      var newLine = newLines[j];
 	      var newEscapedLine = utils.escape(newLine.content);
-	      lines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+	      lines += this._generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
 	    }
 
 	    return lines;
-	  }
+	  };
 
-	  function generateLineHtml(type, oldNumber, newNumber, content, prefix) {
+	  LineByLinePrinter.prototype._generateLineHtml = function(type, oldNumber, newNumber, content, prefix) {
 	    var htmlPrefix = '';
 	    if (prefix) {
 	      htmlPrefix = '<span class="d2h-code-line-prefix">' + prefix + '</span>';
@@ -2238,9 +2270,9 @@
 	      '    <div class="d2h-code-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
 	      '  </td>\n' +
 	      '</tr>\n';
-	  }
+	  };
 
-	  function generateEmptyDiff() {
+	  LineByLinePrinter.prototype._generateEmptyDiff = function() {
 	    return '<tr>\n' +
 	      '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
 	      '    <div class="d2h-code-line ' + diffParser.LINE_TYPE.INFO + '">' +
@@ -2248,11 +2280,11 @@
 	      '    </div>' +
 	      '  </td>\n' +
 	      '</tr>\n';
-	  }
+	  };
 
-	  module.exports['LineByLinePrinter'] = new LineByLinePrinter();
+	  module.exports.LineByLinePrinter = LineByLinePrinter;
 
-	})(this);
+	})();
 
 
 /***/ },
@@ -2266,7 +2298,7 @@
 	 *
 	 */
 
-	(function(ctx, undefined) {
+	(function() {
 
 	  var diffParser = __webpack_require__(1).DiffParser;
 	  var printerUtils = __webpack_require__(4).PrinterUtils;
@@ -2324,9 +2356,9 @@
 	      '</div>\n';
 	  };
 
-	  var matcher=Rematch.rematch(function(a,b) {
+	  var matcher = Rematch.rematch(function(a, b) {
 	    var amod = a.content.substr(1),
-	        bmod = b.content.substr(1);
+	      bmod = b.content.substr(1);
 	    return Rematch.distance(amod, bmod);
 	  });
 
@@ -2355,31 +2387,33 @@
 
 	      var oldLines = [];
 	      var newLines = [];
+
 	      function processChangeBlock() {
 	        var matches;
 	        var insertType;
 	        var deleteType;
-	        var doMatching = config.matching === "lines" || config.matching === "words";
+	        var doMatching = config.matching === 'lines' || config.matching === 'words';
+
 	        if (doMatching) {
 	          matches = matcher(oldLines, newLines);
 	          insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
 	          deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
 	        } else {
-	          matches = [[oldLines,newLines]];
+	          matches = [[oldLines, newLines]];
 	          insertType = diffParser.LINE_TYPE.INSERTS;
 	          deleteType = diffParser.LINE_TYPE.DELETES;
 	        }
-	        matches.forEach(function(match){
-	          var oldLines = match[0];
-	          var newLines = match[1];
-	          var tmpHtml;
-	          var j = 0;
-	          var oldLine, newLine,
-	              common = Math.min(oldLines.length, newLines.length),
-	              max = Math.max(oldLines.length, newLines.length);
-	          for (j = 0; j < common; j++) {
-	            oldLine = oldLines[j];
-	            newLine = newLines[j];
+
+	        matches.forEach(function(match) {
+	          oldLines = match[0];
+	          newLines = match[1];
+
+	          var common = Math.min(oldLines.length, newLines.length);
+	          var max = Math.max(oldLines.length, newLines.length);
+
+	          for (var j = 0; j < common; j++) {
+	            var oldLine = oldLines[j];
+	            var newLine = newLines[j];
 
 	            config.isCombined = file.isCombined;
 
@@ -2391,36 +2425,41 @@
 	            fileHtml.right +=
 	              generateSingleLineHtml(insertType, newLine.newNumber,
 	                diff.second.line, diff.second.prefix);
-	            }
-	            if (max > common) {
-	              var oldSlice = oldLines.slice(common),
-	                  newSlice = newLines.slice(common);
-	              tmpHtml = processLines(oldLines.slice(common), newLines.slice(common));
-	              fileHtml.left += tmpHtml.left;
-	              fileHtml.right += tmpHtml.right;
-	            }
+	          }
+
+	          if (max > common) {
+	            var oldSlice = oldLines.slice(common);
+	            var newSlice = newLines.slice(common);
+
+	            var tmpHtml = processLines(oldSlice, newSlice);
+	            fileHtml.left += tmpHtml.left;
+	            fileHtml.right += tmpHtml.right;
+	          }
 	        });
+
 	        oldLines = [];
 	        newLines = [];
 	      }
+
 	      for (var i = 0; i < block.lines.length; i++) {
 	        var line = block.lines[i];
 	        var prefix = line[0];
 	        var escapedLine = utils.escape(line.content.substr(1));
 
-	        if ( line.type !== diffParser.LINE_TYPE.INSERTS &&
-	            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
+	        if (line.type !== diffParser.LINE_TYPE.INSERTS &&
+	          (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
 	          processChangeBlock();
 	        }
-	        if (line.type == diffParser.LINE_TYPE.CONTEXT) {
+
+	        if (line.type === diffParser.LINE_TYPE.CONTEXT) {
 	          fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
 	          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
-	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
+	        } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
 	          fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
 	          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
-	        } else if (line.type == diffParser.LINE_TYPE.DELETES) {
+	        } else if (line.type === diffParser.LINE_TYPE.DELETES) {
 	          oldLines.push(line);
-	        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
+	        } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
 	          newLines.push(line);
 	        } else {
 	          console.error('unknown state in html side-by-side generator');
@@ -2440,21 +2479,24 @@
 	    fileHtml.right = '';
 
 	    var maxLinesNumber = Math.max(oldLines.length, newLines.length);
-	    for (j = 0; j < maxLinesNumber; j++) {
-	      var oldLine = oldLines[j];
-	      var newLine = newLines[j];
+	    for (var i = 0; i < maxLinesNumber; i++) {
+	      var oldLine = oldLines[i];
+	      var newLine = newLines[i];
 	      var oldContent;
 	      var newContent;
 	      var oldPrefix;
 	      var newPrefix;
+
 	      if (oldLine) {
 	        oldContent = utils.escape(oldLine.content.substr(1));
 	        oldPrefix = oldLine.content[0];
 	      }
+
 	      if (newLine) {
 	        newContent = utils.escape(newLine.content.substr(1));
 	        newPrefix = newLine.content[0];
 	      }
+
 	      if (oldLine && newLine) {
 	        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
 	        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
@@ -2506,9 +2548,9 @@
 	    return fileHtml;
 	  }
 
-	  module.exports['SideBySidePrinter'] = new SideBySidePrinter();
+	  module.exports.SideBySidePrinter = new SideBySidePrinter();
 
-	})(this);
+	})();
 
 
 /***/ }

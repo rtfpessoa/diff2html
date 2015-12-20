@@ -5,7 +5,7 @@
  *
  */
 
-(function(ctx, undefined) {
+(function() {
 
   var diffParser = require('./diff-parser.js').DiffParser;
   var printerUtils = require('./printer-utils.js').PrinterUtils;
@@ -63,9 +63,9 @@
       '</div>\n';
   };
 
-  var matcher=Rematch.rematch(function(a,b) {
+  var matcher = Rematch.rematch(function(a, b) {
     var amod = a.content.substr(1),
-        bmod = b.content.substr(1);
+      bmod = b.content.substr(1);
     return Rematch.distance(amod, bmod);
   });
 
@@ -94,31 +94,33 @@
 
       var oldLines = [];
       var newLines = [];
+
       function processChangeBlock() {
         var matches;
         var insertType;
         var deleteType;
-        var doMatching = config.matching === "lines" || config.matching === "words";
+        var doMatching = config.matching === 'lines' || config.matching === 'words';
+
         if (doMatching) {
           matches = matcher(oldLines, newLines);
           insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
           deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
         } else {
-          matches = [[oldLines,newLines]];
+          matches = [[oldLines, newLines]];
           insertType = diffParser.LINE_TYPE.INSERTS;
           deleteType = diffParser.LINE_TYPE.DELETES;
         }
-        matches.forEach(function(match){
-          var oldLines = match[0];
-          var newLines = match[1];
-          var tmpHtml;
-          var j = 0;
-          var oldLine, newLine,
-              common = Math.min(oldLines.length, newLines.length),
-              max = Math.max(oldLines.length, newLines.length);
-          for (j = 0; j < common; j++) {
-            oldLine = oldLines[j];
-            newLine = newLines[j];
+
+        matches.forEach(function(match) {
+          oldLines = match[0];
+          newLines = match[1];
+
+          var common = Math.min(oldLines.length, newLines.length);
+          var max = Math.max(oldLines.length, newLines.length);
+
+          for (var j = 0; j < common; j++) {
+            var oldLine = oldLines[j];
+            var newLine = newLines[j];
 
             config.isCombined = file.isCombined;
 
@@ -130,36 +132,41 @@
             fileHtml.right +=
               generateSingleLineHtml(insertType, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
-            }
-            if (max > common) {
-              var oldSlice = oldLines.slice(common),
-                  newSlice = newLines.slice(common);
-              tmpHtml = processLines(oldLines.slice(common), newLines.slice(common));
-              fileHtml.left += tmpHtml.left;
-              fileHtml.right += tmpHtml.right;
-            }
+          }
+
+          if (max > common) {
+            var oldSlice = oldLines.slice(common);
+            var newSlice = newLines.slice(common);
+
+            var tmpHtml = processLines(oldSlice, newSlice);
+            fileHtml.left += tmpHtml.left;
+            fileHtml.right += tmpHtml.right;
+          }
         });
+
         oldLines = [];
         newLines = [];
       }
+
       for (var i = 0; i < block.lines.length; i++) {
         var line = block.lines[i];
         var prefix = line[0];
         var escapedLine = utils.escape(line.content.substr(1));
 
-        if ( line.type !== diffParser.LINE_TYPE.INSERTS &&
-            (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
+        if (line.type !== diffParser.LINE_TYPE.INSERTS &&
+          (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
           processChangeBlock();
         }
-        if (line.type == diffParser.LINE_TYPE.CONTEXT) {
+
+        if (line.type === diffParser.LINE_TYPE.CONTEXT) {
           fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
           fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
-        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
+        } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
           fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
           fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
-        } else if (line.type == diffParser.LINE_TYPE.DELETES) {
+        } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
-        } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
+        } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
           newLines.push(line);
         } else {
           console.error('unknown state in html side-by-side generator');
@@ -179,21 +186,24 @@
     fileHtml.right = '';
 
     var maxLinesNumber = Math.max(oldLines.length, newLines.length);
-    for (j = 0; j < maxLinesNumber; j++) {
-      var oldLine = oldLines[j];
-      var newLine = newLines[j];
+    for (var i = 0; i < maxLinesNumber; i++) {
+      var oldLine = oldLines[i];
+      var newLine = newLines[i];
       var oldContent;
       var newContent;
       var oldPrefix;
       var newPrefix;
+
       if (oldLine) {
         oldContent = utils.escape(oldLine.content.substr(1));
         oldPrefix = oldLine.content[0];
       }
+
       if (newLine) {
         newContent = utils.escape(newLine.content.substr(1));
         newPrefix = newLine.content[0];
       }
+
       if (oldLine && newLine) {
         fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
         fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
@@ -245,6 +255,6 @@
     return fileHtml;
   }
 
-  module.exports['SideBySidePrinter'] = new SideBySidePrinter();
+  module.exports.SideBySidePrinter = new SideBySidePrinter();
 
-})(this);
+})();
