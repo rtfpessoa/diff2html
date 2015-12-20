@@ -1,5 +1,7 @@
 # Diff to Html by [rtfpessoa](https://github.com/rtfpessoa)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/Codacy/diff2html)
+
 Diff to Html generates pretty HTML diffs from git diff output.
 
 ## Features

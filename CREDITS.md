@@ -17,3 +17,5 @@ Paulo Bu, [@pbu88](https://github.com/pbu88)
 Nuno Teixeira, [@nmatpt](https://github.com/nmatpt)
 
 Mikko Rantanen, [@Rantanen](https://github.com/Rantanen)
+
+Wolfgang Illmeyer, [@escitalopram](https://github.com/escitalopram)
