@@ -5,7 +5,7 @@
  *
  */
 
-(function(ctx, undefined) {
+(function() {
 
   var diffParser = require('./diff-parser.js').DiffParser;
   var fileLister = require('./file-list-printer.js').FileListPrinter;
@@ -17,9 +17,9 @@
   /*
    * Line diff type configuration
    var config = {
-   "wordByWord": true, // (default)
+   'wordByWord': true, // (default)
    // OR
-   "charByChar": true
+   'charByChar': true
    };
    */
 
@@ -37,23 +37,23 @@
     var configOrEmpty = config || {};
 
     var diffJson = diffInput;
-    if(!configOrEmpty.inputFormat || configOrEmpty.inputFormat === 'diff') {
+    if (!configOrEmpty.inputFormat || configOrEmpty.inputFormat === 'diff') {
       diffJson = diffParser.generateDiffJson(diffInput);
     }
 
-    var fileList = "";
-    if(configOrEmpty.showFiles === true) {
+    var fileList = '';
+    if (configOrEmpty.showFiles === true) {
       fileList = fileLister.generateFileList(diffJson, configOrEmpty);
     }
 
-    var diffOutput = "";
-    if(configOrEmpty.outputFormat === 'side-by-side') {
+    var diffOutput = '';
+    if (configOrEmpty.outputFormat === 'side-by-side') {
       diffOutput = htmlPrinter.generateSideBySideJsonHtml(diffJson, configOrEmpty);
     } else {
       diffOutput = htmlPrinter.generateLineByLineJsonHtml(diffJson, configOrEmpty);
     }
 
-    return fileList + diffOutput
+    return fileList + diffOutput;
   };
 
 
@@ -66,9 +66,9 @@
    */
   Diff2Html.prototype.getPrettyHtmlFromDiff = function(diffInput, config) {
     var configOrEmpty = config || {};
-    configOrEmpty['inputFormat'] = 'diff';
-    configOrEmpty['outputFormat'] = 'line-by-line';
-    return this.getPrettyHtml(diffInput, configOrEmpty)
+    configOrEmpty.inputFormat = 'diff';
+    configOrEmpty.outputFormat = 'line-by-line';
+    return this.getPrettyHtml(diffInput, configOrEmpty);
   };
 
   /*
@@ -76,9 +76,9 @@
    */
   Diff2Html.prototype.getPrettyHtmlFromJson = function(diffJson, config) {
     var configOrEmpty = config || {};
-    configOrEmpty['inputFormat'] = 'json';
-    configOrEmpty['outputFormat'] = 'line-by-line';
-    return this.getPrettyHtml(diffJson, configOrEmpty)
+    configOrEmpty.inputFormat = 'json';
+    configOrEmpty.outputFormat = 'line-by-line';
+    return this.getPrettyHtml(diffJson, configOrEmpty);
   };
 
   /*
@@ -86,9 +86,9 @@
    */
   Diff2Html.prototype.getPrettySideBySideHtmlFromDiff = function(diffInput, config) {
     var configOrEmpty = config || {};
-    configOrEmpty['inputFormat'] = 'diff';
-    configOrEmpty['outputFormat'] = 'side-by-side';
-    return this.getPrettyHtml(diffInput, configOrEmpty)
+    configOrEmpty.inputFormat = 'diff';
+    configOrEmpty.outputFormat = 'side-by-side';
+    return this.getPrettyHtml(diffInput, configOrEmpty);
   };
 
   /*
@@ -96,15 +96,15 @@
    */
   Diff2Html.prototype.getPrettySideBySideHtmlFromJson = function(diffJson, config) {
     var configOrEmpty = config || {};
-    configOrEmpty['inputFormat'] = 'json';
-    configOrEmpty['outputFormat'] = 'side-by-side';
-    return this.getPrettyHtml(diffJson, configOrEmpty)
+    configOrEmpty.inputFormat = 'json';
+    configOrEmpty.outputFormat = 'side-by-side';
+    return this.getPrettyHtml(diffJson, configOrEmpty);
   };
 
-  var diffName = 'Diff2Html';
   var diffObject = new Diff2Html();
-  module.exports[diffName] = diffObject;
-  // Expose diff2html in the browser
-  global[diffName] = diffObject;
+  module.exports.Diff2Html = diffObject;
 
-})(this);
+  // Expose diff2html in the browser
+  global.Diff2Html = diffObject;
+
+})();

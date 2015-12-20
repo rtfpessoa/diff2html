@@ -5,7 +5,7 @@
  *
  */
 
-(function(ctx, undefined) {
+(function() {
 
   function Utils() {
   }
@@ -19,7 +19,7 @@
   };
 
   Utils.prototype.getRandomId = function(prefix) {
-      return prefix + "-" + Math.random().toString(36).slice(-3);
+    return prefix + '-' + Math.random().toString(36).slice(-3);
   };
 
   Utils.prototype.startsWith = function(str, start) {
@@ -41,6 +41,6 @@
     return value ? value : '';
   };
 
-  module.exports['Utils'] = new Utils();
+  module.exports.Utils = new Utils();
 
-})(this);
+})();
