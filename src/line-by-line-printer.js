@@ -12,17 +12,18 @@
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
-  function LineByLinePrinter() {
+  function LineByLinePrinter(config) {
+    this.config = config;
   }
 
-  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles, config) {
+  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
     self = this;
     return '<div class="d2h-wrapper">\n' +
       diffFiles.map(function(file) {
 
         var diffs;
         if (file.blocks.length) {
-          diffs = self.generateFileHtml(file, config);
+          diffs = self.generateFileHtml(file);
         } else {
           diffs = self.generateEmptyDiff();
         }
@@ -59,7 +60,7 @@
     return Rematch.distance(amod, bmod);
   });
 
-  LineByLinePrinter.prototype.generateFileHtml = function(file, config) {
+  LineByLinePrinter.prototype.generateFileHtml = function(file) {
     self = this;
     return file.blocks.map(function(block) {
 
@@ -76,7 +77,7 @@
         var matches;
         var insertType;
         var deleteType;
-        var doMatching = config.matching === "lines" || config.matching === "words";
+        var doMatching = self.config.matching === "lines" || self.config.matching === "words";
         if (doMatching) {
           matches = matcher(oldLines, newLines);
           insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
@@ -99,8 +100,8 @@
               oldLine = oldLines[j];
               newLine = newLines[j];
 
-              config.isCombined = file.isCombined;
-              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
+              self.config.isCombined = file.isCombined;
+              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, self.config);
 
               processedOldLines +=
                 self.generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
@@ -198,6 +199,6 @@
       '</tr>\n';
   }
 
-  module.exports['LineByLinePrinter'] = new LineByLinePrinter();
+  module.exports['LineByLinePrinter'] = LineByLinePrinter;
 
 })(this);
