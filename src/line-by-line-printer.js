@@ -12,18 +12,20 @@
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
-  function LineByLinePrinter() {
+  function LineByLinePrinter(config) {
+    this.config = config;
   }
 
-  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles, config) {
+  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
+    self = this;
     return '<div class="d2h-wrapper">\n' +
       diffFiles.map(function(file) {
 
         var diffs;
         if (file.blocks.length) {
-          diffs = generateFileHtml(file, config);
+          diffs = self.generateFileHtml(file);
         } else {
-          diffs = generateEmptyDiff();
+          diffs = self.generateEmptyDiff();
         }
 
         return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
@@ -58,7 +60,8 @@
     return Rematch.distance(amod, bmod);
   });
 
-  function generateFileHtml(file, config) {
+  LineByLinePrinter.prototype.generateFileHtml = function(file) {
+    self = this;
     return file.blocks.map(function(block) {
 
       var lines = '<tr>\n' +
@@ -74,7 +77,7 @@
         var matches;
         var insertType;
         var deleteType;
-        var doMatching = config.matching === "lines" || config.matching === "words";
+        var doMatching = self.config.matching === "lines" || self.config.matching === "words";
         if (doMatching) {
           matches = matcher(oldLines, newLines);
           insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
@@ -97,19 +100,19 @@
               oldLine = oldLines[j];
               newLine = newLines[j];
 
-              config.isCombined = file.isCombined;
-              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
+              self.config.isCombined = file.isCombined;
+              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, self.config);
 
               processedOldLines +=
-                generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
+                self.generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
                   diff.first.line, diff.first.prefix);
               processedNewLines +=
-                generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
+                self.generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
                   diff.second.line, diff.second.prefix);
             }
 
             lines += processedOldLines + processedNewLines;
-            lines += processLines(oldLines.slice(common), newLines.slice(common));
+            lines += self.processLines(oldLines.slice(common), newLines.slice(common));
 
             processedOldLines = [];
             processedNewLines = [];
@@ -127,9 +130,9 @@
           processChangeBlock();
         }
         if (line.type == diffParser.LINE_TYPE.CONTEXT) {
-          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += self.generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          lines += generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += self.generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type == diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
@@ -146,25 +149,25 @@
     }).join('\n');
   }
 
-  function processLines(oldLines, newLines) {
+  LineByLinePrinter.prototype.processLines = function(oldLines, newLines) {
     var lines = '';
 
     for (j = 0; j < oldLines.length; j++) {
       var oldLine = oldLines[j];
       var oldEscapedLine = utils.escape(oldLine.content);
-      lines += generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+      lines += this.generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
     }
 
     for (j = 0; j < newLines.length; j++) {
       var newLine = newLines[j];
       var newEscapedLine = utils.escape(newLine.content);
-      lines += generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+      lines += this.generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
     }
 
     return lines;
   }
 
-  function generateLineHtml(type, oldNumber, newNumber, content, prefix) {
+  LineByLinePrinter.prototype.generateLineHtml = function(type, oldNumber, newNumber, content, prefix) {
     var htmlPrefix = '';
     if (prefix) {
       htmlPrefix = '<span class="d2h-code-line-prefix">' + prefix + '</span>';
@@ -186,7 +189,7 @@
       '</tr>\n';
   }
 
-  function generateEmptyDiff() {
+  LineByLinePrinter.prototype.generateEmptyDiff = function() {
     return '<tr>\n' +
       '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
       '    <div class="d2h-code-line ' + diffParser.LINE_TYPE.INFO + '">' +
@@ -196,6 +199,6 @@
       '</tr>\n';
   }
 
-  module.exports['LineByLinePrinter'] = new LineByLinePrinter();
+  module.exports['LineByLinePrinter'] = LineByLinePrinter;
 
 })(this);
