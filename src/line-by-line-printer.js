@@ -17,15 +17,15 @@
   }
 
   LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
-    self = this;
+    var that = this;
     return '<div class="d2h-wrapper">\n' +
       diffFiles.map(function(file) {
 
         var diffs;
         if (file.blocks.length) {
-          diffs = self.generateFileHtml(file);
+          diffs = that.generateFileHtml(file);
         } else {
-          diffs = self.generateEmptyDiff();
+          diffs = that.generateEmptyDiff();
         }
 
         return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
@@ -61,7 +61,7 @@
   });
 
   LineByLinePrinter.prototype.generateFileHtml = function(file) {
-    self = this;
+    var that = this;
     return file.blocks.map(function(block) {
 
       var lines = '<tr>\n' +
@@ -77,7 +77,7 @@
         var matches;
         var insertType;
         var deleteType;
-        var doMatching = self.config.matching === "lines" || self.config.matching === "words";
+        var doMatching = that.config.matching === "lines" || that.config.matching === "words";
         if (doMatching) {
           matches = matcher(oldLines, newLines);
           insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
@@ -100,19 +100,19 @@
               oldLine = oldLines[j];
               newLine = newLines[j];
 
-              self.config.isCombined = file.isCombined;
-              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, self.config);
+              that.config.isCombined = file.isCombined;
+              var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
               processedOldLines +=
-                self.generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
+                that.generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
                   diff.first.line, diff.first.prefix);
               processedNewLines +=
-                self.generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
+                that.generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
                   diff.second.line, diff.second.prefix);
             }
 
             lines += processedOldLines + processedNewLines;
-            lines += self.processLines(oldLines.slice(common), newLines.slice(common));
+            lines += that.processLines(oldLines.slice(common), newLines.slice(common));
 
             processedOldLines = [];
             processedNewLines = [];
@@ -130,9 +130,9 @@
           processChangeBlock();
         }
         if (line.type == diffParser.LINE_TYPE.CONTEXT) {
-          lines += self.generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += that.generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type == diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          lines += self.generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += that.generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type == diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type == diffParser.LINE_TYPE.INSERTS && !!oldLines.length) {
