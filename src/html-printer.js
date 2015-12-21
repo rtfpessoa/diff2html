@@ -18,7 +18,9 @@
     return lineByLinePrinter.generateLineByLineJsonHtml(diffFiles);
   };
 
-  HtmlPrinter.prototype.generateSideBySideJsonHtml = sideBySidePrinter.generateSideBySideJsonHtml;
+  HtmlPrinter.prototype.generateSideBySideJsonHtml = function(diffFiles, config) {
+    return sideBySidePrinter.generateSideBySideJsonHtml(diffFiles, config);
+  };
 
   module.exports.HtmlPrinter = new HtmlPrinter();
 
