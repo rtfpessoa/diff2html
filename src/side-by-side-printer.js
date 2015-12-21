@@ -12,18 +12,20 @@
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
-  function SideBySidePrinter() {
+  function SideBySidePrinter(config) {
+    this.config = config;
   }
 
-  SideBySidePrinter.prototype.generateSideBySideJsonHtml = function(diffFiles, config) {
+  SideBySidePrinter.prototype.generateSideBySideJsonHtml = function(diffFiles) {
+    var that = this;
     return '<div class="d2h-wrapper">\n' +
       diffFiles.map(function(file) {
 
         var diffs;
         if (file.blocks.length) {
-          diffs = generateSideBySideFileHtml(file, config);
+          diffs = that.generateSideBySideFileHtml(file);
         } else {
-          diffs = generateEmptyDiff();
+          diffs = that.generateEmptyDiff();
         }
 
         return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
@@ -69,7 +71,8 @@
     return Rematch.distance(amod, bmod);
   });
 
-  function generateSideBySideFileHtml(file, config) {
+  SideBySidePrinter.prototype.generateSideBySideFileHtml = function(file) {
+    var that = this;
     var fileHtml = {};
     fileHtml.left = '';
     fileHtml.right = '';
@@ -99,7 +102,7 @@
         var matches;
         var insertType;
         var deleteType;
-        var doMatching = config.matching === 'lines' || config.matching === 'words';
+        var doMatching = that.config.matching === 'lines' || that.config.matching === 'words';
 
         if (doMatching) {
           matches = matcher(oldLines, newLines);
@@ -122,15 +125,15 @@
             var oldLine = oldLines[j];
             var newLine = newLines[j];
 
-            config.isCombined = file.isCombined;
+            that.config.isCombined = file.isCombined;
 
-            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
+            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
             fileHtml.left +=
-              generateSingleLineHtml(deleteType, oldLine.oldNumber,
+              that.generateSingleLineHtml(deleteType, oldLine.oldNumber,
                 diff.first.line, diff.first.prefix);
             fileHtml.right +=
-              generateSingleLineHtml(insertType, newLine.newNumber,
+              that.generateSingleLineHtml(insertType, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
           }
 
@@ -138,7 +141,7 @@
             var oldSlice = oldLines.slice(common);
             var newSlice = newLines.slice(common);
 
-            var tmpHtml = processLines(oldSlice, newSlice);
+            var tmpHtml = that.processLines(oldSlice, newSlice);
             fileHtml.left += tmpHtml.left;
             fileHtml.right += tmpHtml.right;
           }
@@ -159,11 +162,11 @@
         }
 
         if (line.type === diffParser.LINE_TYPE.CONTEXT) {
-          fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
-          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+          fileHtml.left += that.generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
+          fileHtml.right += that.generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+          fileHtml.left += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
+          fileHtml.right += that.generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
         } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
@@ -178,9 +181,10 @@
     });
 
     return fileHtml;
-  }
+  };
 
-  function processLines(oldLines, newLines) {
+  SideBySidePrinter.prototype.processLines = function(oldLines, newLines) {
+    var that = this;
     var fileHtml = {};
     fileHtml.left = '';
     fileHtml.right = '';
@@ -205,23 +209,23 @@
       }
 
       if (oldLine && newLine) {
-        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
-        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
+        fileHtml.left += that.generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+        fileHtml.right += that.generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
       } else if (oldLine) {
-        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
-        fileHtml.right += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
+        fileHtml.left += that.generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+        fileHtml.right += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
       } else if (newLine) {
-        fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
+        fileHtml.left += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
+        fileHtml.right += that.generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
       } else {
         console.error('How did it get here?');
       }
     }
 
     return fileHtml;
-  }
+  };
 
-  function generateSingleLineHtml(type, number, content, prefix) {
+  SideBySidePrinter.prototype.generateSingleLineHtml = function(type, number, content, prefix) {
     var htmlPrefix = '';
     if (prefix) {
       htmlPrefix = '<span class="d2h-code-line-prefix">' + prefix + '</span>';
@@ -238,9 +242,9 @@
       '      <div class="d2h-code-side-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
       '    </td>\n' +
       '  </tr>\n';
-  }
+  };
 
-  function generateEmptyDiff() {
+  SideBySidePrinter.prototype.generateEmptyDiff = function() {
     var fileHtml = {};
     fileHtml.right = '';
 
@@ -253,8 +257,8 @@
       '</tr>\n';
 
     return fileHtml;
-  }
+  };
 
-  module.exports.SideBySidePrinter = new SideBySidePrinter();
+  module.exports.SideBySidePrinter = SideBySidePrinter;
 
 })();

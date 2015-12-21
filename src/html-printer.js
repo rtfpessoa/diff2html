@@ -8,7 +8,7 @@
 (function() {
 
   var LineByLinePrinter = require('./line-by-line-printer.js').LineByLinePrinter;
-  var sideBySidePrinter = require('./side-by-side-printer.js').SideBySidePrinter;
+  var SideBySidePrinter = require('./side-by-side-printer.js').SideBySidePrinter;
 
   function HtmlPrinter() {
   }
@@ -18,7 +18,10 @@
     return lineByLinePrinter.generateLineByLineJsonHtml(diffFiles);
   };
 
-  HtmlPrinter.prototype.generateSideBySideJsonHtml = sideBySidePrinter.generateSideBySideJsonHtml;
+  HtmlPrinter.prototype.generateSideBySideJsonHtml = function(diffFiles, config) {
+    var sideBySidePrinter = new SideBySidePrinter(config);
+    return sideBySidePrinter.generateSideBySideJsonHtml(diffFiles);
+  };
 
   module.exports.HtmlPrinter = new HtmlPrinter();
 
