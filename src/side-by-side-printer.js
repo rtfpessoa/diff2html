@@ -12,17 +12,18 @@
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
-  function SideBySidePrinter() {
+  function SideBySidePrinter(config) {
+    this.config = config;
   }
 
-  SideBySidePrinter.prototype.generateSideBySideJsonHtml = function(diffFiles, config) {
+  SideBySidePrinter.prototype.generateSideBySideJsonHtml = function(diffFiles) {
     var that = this;
     return '<div class="d2h-wrapper">\n' +
       diffFiles.map(function(file) {
 
         var diffs;
         if (file.blocks.length) {
-          diffs = that.generateSideBySideFileHtml(file, config);
+          diffs = that.generateSideBySideFileHtml(file);
         } else {
           diffs = that.generateEmptyDiff();
         }
@@ -70,7 +71,7 @@
     return Rematch.distance(amod, bmod);
   });
 
-  SideBySidePrinter.prototype.generateSideBySideFileHtml = function(file, config) {
+  SideBySidePrinter.prototype.generateSideBySideFileHtml = function(file) {
     var that = this;
     var fileHtml = {};
     fileHtml.left = '';
@@ -101,7 +102,7 @@
         var matches;
         var insertType;
         var deleteType;
-        var doMatching = config.matching === 'lines' || config.matching === 'words';
+        var doMatching = that.config.matching === 'lines' || that.config.matching === 'words';
 
         if (doMatching) {
           matches = matcher(oldLines, newLines);
@@ -124,9 +125,9 @@
             var oldLine = oldLines[j];
             var newLine = newLines[j];
 
-            config.isCombined = file.isCombined;
+            that.config.isCombined = file.isCombined;
 
-            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
+            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
             fileHtml.left +=
               that.generateSingleLineHtml(deleteType, oldLine.oldNumber,
@@ -258,6 +259,6 @@
     return fileHtml;
   };
 
-  module.exports.SideBySidePrinter = new SideBySidePrinter();
+  module.exports.SideBySidePrinter = SideBySidePrinter;
 
 })();
