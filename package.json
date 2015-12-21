@@ -49,6 +49,7 @@
   },
   "license": "MIT",
   "files": [
-    "src"
+    "src",
+    "css"
   ]
 }
