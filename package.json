@@ -36,17 +36,21 @@
   },
   "preferGlobal": "true",
   "scripts": {
-    "release": "bash release.sh"
+    "release": "bash release.sh",
+    "test": "mocha",
+    "codacy": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage && rm -rf ./coverage"
   },
   "main": "./src/diff2html.js",
   "dependencies": {
     "diff": "2.2.*"
   },
   "devDependencies": {
-    "webpack": "1.12.*",
-    "uglifyjs": "2.4.*",
+    "codacy-coverage": "^1.1.3",
+    "istanbul": "^0.4.1",
     "less": "2.5.*",
-    "nodeunit": "^0.9.1"
+    "mocha": "^2.3.4",
+    "uglifyjs": "2.4.*",
+    "webpack": "1.12.*"
   },
   "license": "MIT",
   "files": [
