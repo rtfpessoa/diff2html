@@ -45,7 +45,8 @@
   "devDependencies": {
     "webpack": "1.12.*",
     "uglifyjs": "2.4.*",
-    "less": "2.5.*"
+    "less": "2.5.*",
+    "nodeunit": "^0.9.1"
   },
   "license": "MIT",
   "files": [
