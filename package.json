@@ -38,6 +38,7 @@
   "scripts": {
     "release": "bash release.sh",
     "test": "mocha",
+    "style": "jscs src test",
     "codacy": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage && rm -rf ./coverage"
   },
   "main": "./src/diff2html.js",
@@ -48,10 +49,11 @@
     "codacy-coverage": "^1.1.3",
     "fast-html-parser": "^1.0.1",
     "istanbul": "^0.4.1",
-    "less": "2.5.*",
+    "jscs": "^2.7.0",
+    "less": "^2.5.3",
     "mocha": "^2.3.4",
-    "uglifyjs": "2.4.*",
-    "webpack": "1.12.*"
+    "uglifyjs": "^2.4.10",
+    "webpack": "^1.12.9"
   },
   "license": "MIT",
   "files": [
