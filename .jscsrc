@@ -6,9 +6,12 @@
     "else"
   ],
   "disallowMixedSpacesAndTabs": true,
-  "disallowMultipleVarDecl": "exceptUndefined",
+  "disallowMultipleVarDecl": {
+    "allExcept": [
+      "undefined"
+    ]
+  },
   "disallowNewlineBeforeBlockStatements": true,
-  "disallowQuotedKeysInObjects": true,
   "disallowSpaceAfterObjectKeys": true,
   "disallowSpaceAfterPrefixUnaryOperators": true,
   "disallowSpacesInFunction": {
@@ -16,7 +19,7 @@
   },
   "disallowSpacesInsideParentheses": true,
   "disallowTrailingWhitespace": true,
-  "maximumLineLength": 120,
+  "maximumLineLength": 130,
   "requireCamelCaseOrUpperCaseIdentifiers": true,
   "requireCapitalizedComments": true,
   "requireCapitalizedConstructors": true,
@@ -44,6 +47,5 @@
   },
   "requireTrailingComma": null,
   "validateIndentation": 2,
-  "validateLineBreaks": "LF",
-  "validateQuoteMarks": "'"
+  "validateLineBreaks": "LF"
 }

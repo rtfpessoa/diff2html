@@ -14,7 +14,7 @@
   }
 
   FileListPrinter.prototype.generateFileList = function(diffFiles) {
-    var hideId = utils.getRandomId('d2h-hide'); //necessary if there are 2 elements like this in the same page
+    var hideId = utils.getRandomId('d2h-hide'); // Necessary if there are 2 elements like this in the same page
     var showId = utils.getRandomId('d2h-show');
     return '<div class="d2h-file-list-wrapper">\n' +
       '     <div class="d2h-file-list-header">Files changed (' + diffFiles.length + ')&nbsp&nbsp</div>\n' +
@@ -32,7 +32,8 @@
           '       <td class="d2h-lines-deleted">\n' +
           '         <span>-' + file.deletedLines + '</span>\n' +
           '       </td>\n' +
-          '       <td class="d2h-file-name"><a href="#' + printerUtils.getHtmlId(file) + '">&nbsp;' + printerUtils.getDiffName(file) + '</a></td>\n' +
+          '       <td class="d2h-file-name"><a href="#' + printerUtils.getHtmlId(file) + '">' +
+          '&nbsp;' + printerUtils.getDiffName(file) + '</a></td>\n' +
           '     </tr>\n';
       }).join('\n') +
       '</table></div>\n';

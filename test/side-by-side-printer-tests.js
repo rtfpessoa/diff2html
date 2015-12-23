@@ -105,15 +105,19 @@ describe('SideBySidePrinter', function() {
 
       var HTMLParser = require('fast-html-parser');
 
+      var prefixTag = '.d2h-code-line-prefix';
+
       var parsedExpectedRight = HTMLParser.parse(expectedRight);
       var parsedFileRight = HTMLParser.parse(fileHtml.right);
-      assert.equal(parsedExpectedRight.querySelectorAll(".d2h-code-line-prefix").length > 0, true);
-      assert.equal(parsedExpectedRight.querySelectorAll(".d2h-code-line-prefix").length, parsedFileRight.querySelectorAll(".d2h-code-line-prefix").length);
+      assert.equal(parsedExpectedRight.querySelectorAll(prefixTag).length > 0, true);
+      assert.equal(parsedExpectedRight.querySelectorAll(prefixTag).length,
+        parsedFileRight.querySelectorAll(prefixTag).length);
 
       var parsedExpectedLeft = HTMLParser.parse(expectedLeft);
       var parsedFileLeft = HTMLParser.parse(fileHtml.left);
-      assert.equal(parsedExpectedLeft.querySelectorAll(".d2h-code-line-prefix").length > 0, true);
-      assert.equal(parsedExpectedLeft.querySelectorAll(".d2h-code-line-prefix").length, parsedFileLeft.querySelectorAll(".d2h-code-line-prefix").length);
+      assert.equal(parsedExpectedLeft.querySelectorAll(prefixTag).length > 0, true);
+      assert.equal(parsedExpectedLeft.querySelectorAll(prefixTag).length,
+        parsedFileLeft.querySelectorAll(prefixTag).length);
     });
   });
 });
