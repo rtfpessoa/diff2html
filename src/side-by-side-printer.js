@@ -153,7 +153,7 @@
 
       for (var i = 0; i < block.lines.length; i++) {
         var line = block.lines[i];
-        var prefix = line[0];
+        var prefix = line.content[0];
         var escapedLine = utils.escape(line.content.substr(1));
 
         if (line.type !== diffParser.LINE_TYPE.INSERTS &&
