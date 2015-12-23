@@ -1,6 +1,7 @@
 # Diff to Html by [rtfpessoa](https://github.com/rtfpessoa)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/Codacy/diff2html)
+[![Codacy Code Badge](https://api.codacy.com/project/badge/grade/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/Codacy/diff2html)
+[![Codacy Coverage Badge](https://api.codacy.com/project/badge/coverage/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/Codacy/diff2html)
 
 Diff to Html generates pretty HTML diffs from git diff output.
 
@@ -105,9 +106,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 ## Contributions
 
-All the contributions are welcome.
-
-To contribute just send a pull request with your changes and I will review it asap.
+This is a developer friendly project, all the contributions are welcome.
+To contribute just send a pull request with your changes following the guidelines described in `CONTRIBUTING.md`.
+I will try to review them as soon as possible.
 
 ## License
 
