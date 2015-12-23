@@ -12,6 +12,13 @@
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
+  var matcher = Rematch.rematch(function(a, b) {
+    var amod = a.content.substr(1);
+    var bmod = b.content.substr(1);
+
+    return Rematch.distance(amod, bmod);
+  });
+
   function SideBySidePrinter(config) {
     this.config = config;
   }
@@ -64,12 +71,6 @@
       }).join('\n') +
       '</div>\n';
   };
-
-  var matcher = Rematch.rematch(function(a, b) {
-    var amod = a.content.substr(1),
-      bmod = b.content.substr(1);
-    return Rematch.distance(amod, bmod);
-  });
 
   SideBySidePrinter.prototype.generateSideBySideFileHtml = function(file) {
     var that = this;

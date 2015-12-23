@@ -19,7 +19,9 @@
       var i, chr, len;
       var hash = 0;
 
-      if (text.length === 0) return hash;
+      if (text.length === 0) {
+        return hash;
+      }
 
       for (i = 0, len = text.length; i < len; i++) {
         chr = text.charCodeAt(i);
@@ -75,7 +77,7 @@
     if (!config.charByChar && config.matching === 'words') {
       var treshold = 0.25;
 
-      if (typeof(config.matchWordsThreshold) !== 'undefined') {
+      if (typeof (config.matchWordsThreshold) !== 'undefined') {
         treshold = config.matchWordsThreshold;
       }
 

@@ -6,12 +6,12 @@ describe('Diff2Html', function() {
   describe('getJsonFromDiff', function() {
     it('should parse simple diff to json', function() {
       var diff =
-        'diff --git a/sample b/sample\n'+
-        'index 0000001..0ddf2ba\n'+
-        '--- a/sample\n'+
-        '+++ b/sample\n'+
-        '@@ -1 +1 @@\n'+
-        '-test\n'+
+        'diff --git a/sample b/sample\n' +
+        'index 0000001..0ddf2ba\n' +
+        '--- a/sample\n' +
+        '+++ b/sample\n' +
+        '@@ -1 +1 @@\n' +
+        '-test\n' +
         '+test1\n';
       var result = Diff2Html.getJsonFromDiff(diff);
       var file1 = result[0];
