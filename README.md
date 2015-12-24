@@ -1,9 +1,21 @@
-# Diff to Html by [rtfpessoa](https://github.com/rtfpessoa)
+# diff2html
 
+[![Circle CI](https://circleci.com/gh/rtfpessoa/diff2html.svg?style=svg)](https://circleci.com/gh/rtfpessoa/diff2html)
 [![Codacy Code Badge](https://api.codacy.com/project/badge/grade/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/Codacy/diff2html)
 [![Codacy Coverage Badge](https://api.codacy.com/project/badge/coverage/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/Codacy/diff2html)
 
-Diff to Html generates pretty HTML diffs from git diff output.
+[![npm](https://img.shields.io/npm/v/diff2html.svg)](https://www.npmjs.com/package/diff2html)
+[![David](https://img.shields.io/david/rtfpessoa/diff2html.svg)](https://david-dm.org/rtfpessoa/diff2html)
+[![David](https://img.shields.io/david/dev/rtfpessoa/diff2html.svg)](https://david-dm.org/rtfpessoa/diff2html)
+
+[![node](https://img.shields.io/node/v/diff2html.svg)]()
+[![npm](https://img.shields.io/npm/l/diff2html.svg)]()
+[![npm](https://img.shields.io/npm/dm/diff2html.svg)](https://www.npmjs.com/package/diff2html)
+[![Gitter](https://badges.gitter.im/rtfpessoa/diff2html.svg)](https://gitter.im/rtfpessoa/diff2html?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+diff2html generates pretty HTML diffs from git diff output.
+
+[![NPM](https://nodei.co/npm/diff2html.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/diff2html/)
 
 ## Features
 
@@ -21,7 +33,7 @@ Diff to Html generates pretty HTML diffs from git diff output.
 
 ## Online Example
 
-> Go to [Diff2HTML](http://rtfpessoa.github.io/diff2html/)
+> Go to [diff2html](http://rtfpessoa.github.io/diff2html/)
 
 ## Distributions
 
