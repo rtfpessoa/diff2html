@@ -16,42 +16,44 @@
     this.config = config;
   }
 
+  LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
+    return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
+      '     <div class="d2h-file-header">\n' +
+      '       <div class="d2h-file-stats">\n' +
+      '         <span class="d2h-lines-added">' +
+      '           <span>+' + file.addedLines + '</span>\n' +
+      '         </span>\n' +
+      '         <span class="d2h-lines-deleted">' +
+      '           <span>-' + file.deletedLines + '</span>\n' +
+      '         </span>\n' +
+      '       </div>\n' +
+      '       <div class="d2h-file-name">' + printerUtils.getDiffName(file) + '</div>\n' +
+      '     </div>\n' +
+      '     <div class="d2h-file-diff">\n' +
+      '       <div class="d2h-code-wrapper">\n' +
+      '         <table class="d2h-diff-table">\n' +
+      '           <tbody class="d2h-diff-tbody">\n' +
+      '         ' + diffs +
+      '           </tbody>\n' +
+      '         </table>\n' +
+      '       </div>\n' +
+      '     </div>\n' +
+      '   </div>\n';
+  };
+
   LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
     var that = this;
-    return '<div class="d2h-wrapper">\n' +
-      diffFiles.map(function(file) {
-
+    var htmlDiffs = diffFiles.map(function(file) {
         var diffs;
         if (file.blocks.length) {
           diffs = that._generateFileHtml(file);
         } else {
           diffs = that._generateEmptyDiff();
         }
+        return that.makeFileDiffHtml(file, diffs);
+      });
 
-        return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
-          '     <div class="d2h-file-header">\n' +
-          '       <div class="d2h-file-stats">\n' +
-          '         <span class="d2h-lines-added">' +
-          '           <span>+' + file.addedLines + '</span>\n' +
-          '         </span>\n' +
-          '         <span class="d2h-lines-deleted">' +
-          '           <span>-' + file.deletedLines + '</span>\n' +
-          '         </span>\n' +
-          '       </div>\n' +
-          '       <div class="d2h-file-name">' + printerUtils.getDiffName(file) + '</div>\n' +
-          '     </div>\n' +
-          '     <div class="d2h-file-diff">\n' +
-          '       <div class="d2h-code-wrapper">\n' +
-          '         <table class="d2h-diff-table">\n' +
-          '           <tbody class="d2h-diff-tbody">\n' +
-          '         ' + diffs +
-          '           </tbody>\n' +
-          '         </table>\n' +
-          '       </div>\n' +
-          '     </div>\n' +
-          '   </div>\n';
-      }).join('\n') +
-      '</div>\n';
+    return '<div class="d2h-wrapper">\n' + htmlDiffs.join('\n') + '</div>\n';
   };
 
   var matcher = Rematch.rematch(function(a, b) {
@@ -61,17 +63,20 @@
     return Rematch.distance(amod, bmod);
   });
 
-  LineByLinePrinter.prototype._generateFileHtml = function(file) {
-    var that = this;
-    return file.blocks.map(function(block) {
-
-      var lines = '<tr>\n' +
+  LineByLinePrinter.prototype.makeColumnLineNumberHtml = function(block) {
+      return '<tr>\n' +
         '  <td class="d2h-code-linenumber ' + diffParser.LINE_TYPE.INFO + '"></td>\n' +
         '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
         '    <div class="d2h-code-line ' + diffParser.LINE_TYPE.INFO + '">' + utils.escape(block.header) + '</div>' +
         '  </td>\n' +
         '</tr>\n';
+  };
 
+  LineByLinePrinter.prototype._generateFileHtml = function(file) {
+    var that = this;
+    return file.blocks.map(function(block) {
+
+      var lines = that.makeColumnLineNumberHtml(block);
       var oldLines = [];
       var newLines = [];
 
@@ -172,6 +177,18 @@
     return lines;
   };
 
+  LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, htmlPrefix, htmlContent) {
+    return '<tr>\n' +
+      '  <td class="d2h-code-linenumber ' + type + '">' +
+      '    <div class="line-num1">' + utils.valueOrEmpty(oldNumber) + '</div>' +
+      '    <div class="line-num2">' + utils.valueOrEmpty(newNumber) + '</div>' +
+      '  </td>\n' +
+      '  <td class="' + type + '">' +
+      '    <div class="d2h-code-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
+      '  </td>\n' +
+      '</tr>\n';
+  };
+
   LineByLinePrinter.prototype._generateLineHtml = function(type, oldNumber, newNumber, content, prefix) {
     var htmlPrefix = '';
     if (prefix) {
@@ -183,15 +200,7 @@
       htmlContent = '<span class="d2h-code-line-ctn">' + content + '</span>';
     }
 
-    return '<tr>\n' +
-      '  <td class="d2h-code-linenumber ' + type + '">' +
-      '    <div class="line-num1">' + utils.valueOrEmpty(oldNumber) + '</div>' +
-      '    <div class="line-num2">' + utils.valueOrEmpty(newNumber) + '</div>' +
-      '  </td>\n' +
-      '  <td class="' + type + '">' +
-      '    <div class="d2h-code-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
-      '  </td>\n' +
-      '</tr>\n';
+    return this.makeLineHtml(type, oldNumber, newNumber, htmlPrefix, htmlContent);
   };
 
   LineByLinePrinter.prototype._generateEmptyDiff = function() {
