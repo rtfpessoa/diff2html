@@ -120,4 +120,37 @@ describe('SideBySidePrinter', function() {
         parsedFileLeft.querySelectorAll(prefixTag).length);
     });
   });
+
+  describe('generateSingleLineHtml', function() {
+    it('should work for insertions', function() {
+
+      var diffParser = require('../src/diff-parser.js').DiffParser;
+      var sideBySidePrinter = new SideBySidePrinter({});
+      var fileHtml = sideBySidePrinter.generateSingleLineHtml(
+        diffParser.LINE_TYPE.INSERTS, 30, 'test', '+');
+      var expected = '<tr>\n' +
+      '    <td class="d2h-code-side-linenumber d2h-ins">30</td>\n' +
+      '    <td class="d2h-ins">' +
+      '      <div class="d2h-code-side-line d2h-ins"><span class="d2h-code-line-prefix">+</span><span class="d2h-code-line-ctn">test</span></div>' +
+      '    </td>\n' +
+      '  </tr>\n';
+
+      assert.equal(expected, fileHtml);
+    });
+    it('should work for deletions', function() {
+
+      var diffParser = require('../src/diff-parser.js').DiffParser;
+      var sideBySidePrinter = new SideBySidePrinter({});
+      var fileHtml = sideBySidePrinter.generateSingleLineHtml(
+        diffParser.LINE_TYPE.DELETES, 30, 'test', '-');
+      var expected = '<tr>\n' +
+      '    <td class="d2h-code-side-linenumber d2h-del">30</td>\n' +
+      '    <td class="d2h-del">' +
+      '      <div class="d2h-code-side-line d2h-del"><span class="d2h-code-line-prefix">-</span><span class="d2h-code-line-ctn">test</span></div>' +
+      '    </td>\n' +
+      '  </tr>\n';
+
+      assert.equal(expected, fileHtml);
+    });
+  });
 });
