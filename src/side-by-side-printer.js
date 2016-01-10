@@ -80,7 +80,7 @@
     return '<tr>\n' +
       '  <td class="d2h-code-side-linenumber ' + diffParser.LINE_TYPE.INFO + '"></td>\n' +
       '  <td class="' + diffParser.LINE_TYPE.INFO + '">\n' +
-      '    <div class="d2h-code-side-line ' + diffParser.LINE_TYPE.INFO + '">' + blockHeader  + '</div>\n' +
+      '    <div class="d2h-code-side-line ' + diffParser.LINE_TYPE.INFO + '">' + blockHeader + '</div>\n' +
       '  </td>\n' +
       '</tr>\n';
   };
