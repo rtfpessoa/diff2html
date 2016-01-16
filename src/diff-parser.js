@@ -122,7 +122,9 @@
       }
     };
 
-    var diffLines = diffInput.split('\n');
+    var diffLines =
+      diffInput.replace(/\\ No newline at end of file/g, '')
+        .split('\n');
 
     /* Diff */
     var oldMode = /^old mode (\d{6})/;
