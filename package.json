@@ -53,7 +53,8 @@
     "less": "^2.5.3",
     "mocha": "^2.3.4",
     "uglifyjs": "^2.4.10",
-    "webpack": "^1.12.9"
+    "webpack": "^1.12.9",
+    "nunjucks": "^2.3.0"
   },
   "license": "MIT",
   "files": [
