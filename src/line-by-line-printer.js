@@ -25,6 +25,10 @@
     return nunjucksEnv.render('file-diff.html', {'file': file, 'diffs': diffs});
   };
 
+  LineByLinePrinter.prototype.makeLineByLineHtmlWrapper = function(content) {
+    return nunjucksEnv.render('wrapper.html', {'content': content});
+  };
+
   LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
     var that = this;
     var htmlDiffs = diffFiles.map(function(file) {
@@ -37,7 +41,7 @@
         return that.makeFileDiffHtml(file, diffs);
       });
 
-    return '<div class="d2h-wrapper">\n' + htmlDiffs.join('\n') + '</div>\n';
+    return this.makeLineByLineHtmlWrapper(htmlDiffs.join('\n'));
   };
 
   var matcher = Rematch.rematch(function(a, b) {
