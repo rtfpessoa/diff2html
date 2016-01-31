@@ -11,35 +11,33 @@
   var printerUtils = require('./printer-utils.js').PrinterUtils;
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
-  var nunjucks = require('nunjucks');
-  var nunjucksEnv = nunjucks.configure(__dirname + '/templates/line-by-line/')
-    .addGlobal('printerUtils', printerUtils)
-    .addGlobal('utils', utils)
-    .addGlobal('diffParser', diffParser);
+
+  var nunjucksUtils = require('./nunjucks-utils.js').NunjucksUtils;
+  var baseTemplatesPath = 'line-by-line';
 
   function LineByLinePrinter(config) {
     this.config = config;
   }
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
-    return nunjucksEnv.render('file-diff.html', {'file': file, 'diffs': diffs});
+    return nunjucksUtils.render(baseTemplatesPath, 'file-diff.html', {'file': file, 'diffs': diffs});
   };
 
   LineByLinePrinter.prototype.makeLineByLineHtmlWrapper = function(content) {
-    return nunjucksEnv.render('wrapper.html', {'content': content});
+    return nunjucksUtils.render(baseTemplatesPath, 'wrapper.html', {'content': content});
   };
 
   LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
     var that = this;
     var htmlDiffs = diffFiles.map(function(file) {
-        var diffs;
-        if (file.blocks.length) {
-          diffs = that._generateFileHtml(file);
-        } else {
-          diffs = that._generateEmptyDiff();
-        }
-        return that.makeFileDiffHtml(file, diffs);
-      });
+      var diffs;
+      if (file.blocks.length) {
+        diffs = that._generateFileHtml(file);
+      } else {
+        diffs = that._generateEmptyDiff();
+      }
+      return that.makeFileDiffHtml(file, diffs);
+    });
 
     return this.makeLineByLineHtmlWrapper(htmlDiffs.join('\n'));
   };
@@ -52,7 +50,7 @@
   });
 
   LineByLinePrinter.prototype.makeColumnLineNumberHtml = function(block) {
-    return nunjucksEnv.render('column-line-number.html', {block: block});
+    return nunjucksUtils.render(baseTemplatesPath, 'column-line-number.html', {block: block});
   };
 
   LineByLinePrinter.prototype._generateFileHtml = function(file) {
@@ -161,16 +159,18 @@
   };
 
   LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, content, prefix) {
-    return nunjucksEnv.render('line.html',
-                              {type: type,
-                               oldNumber: oldNumber,
-                               newNumber: newNumber,
-                               prefix: prefix,
-                               content: content});
+    return nunjucksUtils.render(baseTemplatesPath, 'line.html',
+      {
+        type: type,
+        oldNumber: oldNumber,
+        newNumber: newNumber,
+        prefix: prefix,
+        content: content
+      });
   };
 
   LineByLinePrinter.prototype._generateEmptyDiff = function() {
-    return nunjucksEnv.render('empty-diff.html', {});
+    return nunjucksUtils.render(baseTemplatesPath, 'empty-diff.html', {});
   };
 
   module.exports.LineByLinePrinter = LineByLinePrinter;

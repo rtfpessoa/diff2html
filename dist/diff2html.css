@@ -244,7 +244,7 @@
 }
 
 .d2h-file-list {
-    display: block;
+    display: none;
 }
 
 .d2h-clear {
@@ -268,10 +268,24 @@ ins.d2h-change, del.d2h-change {
     background-color: #ded;
 }
 
-.d2h-file-switch {
+/* CSS only show/hide */
+.d2h-show {
     display: none;
     float: left;
-    font-size: 10px;
-    cursor: pointer;
-    margin-top: 3px;
+}
+
+.d2h-hide {
+    float: left;
+}
+
+.d2h-hide:target + .d2h-show {
+    display: inline;
+}
+
+.d2h-hide:target {
+    display: none;
+}
+
+.d2h-hide:target ~ .d2h-file-list {
+    display: block;
 }

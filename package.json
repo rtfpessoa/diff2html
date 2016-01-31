@@ -43,18 +43,18 @@
   },
   "main": "./src/diff2html.js",
   "dependencies": {
-    "diff": "^2.2.1"
+    "diff": "^2.2.1",
+    "nunjucks": "^2.3.0"
   },
   "devDependencies": {
-    "codacy-coverage": "^1.1.3",
     "clean-css": "^3.4.9",
+    "codacy-coverage": "^1.1.3",
     "fast-html-parser": "^1.0.1",
-    "istanbul": "^0.4.1",
+    "istanbul": "^0.4.2",
     "jscs": "^2.9.0",
     "mocha": "^2.4.5",
     "uglifyjs": "^2.4.10",
-    "webpack": "^1.12.9",
-    "nunjucks": "^2.3.0"
+    "webpack": "^1.12.12"
   },
   "license": "MIT",
   "files": [
