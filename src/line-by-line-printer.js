@@ -11,34 +11,22 @@
   var printerUtils = require('./printer-utils.js').PrinterUtils;
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
+  var nunjucks = require('nunjucks');
+  var nunjucksEnv = nunjucks.configure(__dirname + '/templates/line-by-line/')
+    .addGlobal('printerUtils', printerUtils)
+    .addGlobal('utils', utils)
+    .addGlobal('diffParser', diffParser);
 
   function LineByLinePrinter(config) {
     this.config = config;
   }
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
-    return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
-      '     <div class="d2h-file-header">\n' +
-      '       <div class="d2h-file-stats">\n' +
-      '         <span class="d2h-lines-added">' +
-      '           <span>+' + file.addedLines + '</span>\n' +
-      '         </span>\n' +
-      '         <span class="d2h-lines-deleted">' +
-      '           <span>-' + file.deletedLines + '</span>\n' +
-      '         </span>\n' +
-      '       </div>\n' +
-      '       <div class="d2h-file-name">' + printerUtils.getDiffName(file) + '</div>\n' +
-      '     </div>\n' +
-      '     <div class="d2h-file-diff">\n' +
-      '       <div class="d2h-code-wrapper">\n' +
-      '         <table class="d2h-diff-table">\n' +
-      '           <tbody class="d2h-diff-tbody">\n' +
-      '         ' + diffs +
-      '           </tbody>\n' +
-      '         </table>\n' +
-      '       </div>\n' +
-      '     </div>\n' +
-      '   </div>\n';
+    return nunjucksEnv.render('file-diff.html', {'file': file, 'diffs': diffs});
+  };
+
+  LineByLinePrinter.prototype.makeLineByLineHtmlWrapper = function(content) {
+    return nunjucksEnv.render('wrapper.html', {'content': content});
   };
 
   LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
@@ -53,7 +41,7 @@
         return that.makeFileDiffHtml(file, diffs);
       });
 
-    return '<div class="d2h-wrapper">\n' + htmlDiffs.join('\n') + '</div>\n';
+    return this.makeLineByLineHtmlWrapper(htmlDiffs.join('\n'));
   };
 
   var matcher = Rematch.rematch(function(a, b) {
@@ -64,12 +52,7 @@
   });
 
   LineByLinePrinter.prototype.makeColumnLineNumberHtml = function(block) {
-      return '<tr>\n' +
-        '  <td class="d2h-code-linenumber ' + diffParser.LINE_TYPE.INFO + '"></td>\n' +
-        '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
-        '    <div class="d2h-code-line ' + diffParser.LINE_TYPE.INFO + '">' + utils.escape(block.header) + '</div>' +
-        '  </td>\n' +
-        '</tr>\n';
+    return nunjucksEnv.render('column-line-number.html', {block: block});
   };
 
   LineByLinePrinter.prototype._generateFileHtml = function(file) {
@@ -115,10 +98,10 @@
             var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
             processedOldLines +=
-              that._generateLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
+              that.makeLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
                 diff.first.line, diff.first.prefix);
             processedNewLines +=
-              that._generateLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
+              that.makeLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
           }
 
@@ -140,9 +123,9 @@
         }
 
         if (line.type === diffParser.LINE_TYPE.CONTEXT) {
-          lines += that._generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += that.makeLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          lines += that._generateLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += that.makeLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
@@ -165,52 +148,29 @@
     for (var i = 0; i < oldLines.length; i++) {
       var oldLine = oldLines[i];
       var oldEscapedLine = utils.escape(oldLine.content);
-      lines += this._generateLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+      lines += this.makeLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
     }
 
     for (var j = 0; j < newLines.length; j++) {
       var newLine = newLines[j];
       var newEscapedLine = utils.escape(newLine.content);
-      lines += this._generateLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+      lines += this.makeLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
     }
 
     return lines;
   };
 
-  LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, htmlPrefix, htmlContent) {
-    return '<tr>\n' +
-      '  <td class="d2h-code-linenumber ' + type + '">' +
-      '    <div class="line-num1">' + utils.valueOrEmpty(oldNumber) + '</div>' +
-      '    <div class="line-num2">' + utils.valueOrEmpty(newNumber) + '</div>' +
-      '  </td>\n' +
-      '  <td class="' + type + '">' +
-      '    <div class="d2h-code-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
-      '  </td>\n' +
-      '</tr>\n';
-  };
-
-  LineByLinePrinter.prototype._generateLineHtml = function(type, oldNumber, newNumber, content, prefix) {
-    var htmlPrefix = '';
-    if (prefix) {
-      htmlPrefix = '<span class="d2h-code-line-prefix">' + prefix + '</span>';
-    }
-
-    var htmlContent = '';
-    if (content) {
-      htmlContent = '<span class="d2h-code-line-ctn">' + content + '</span>';
-    }
-
-    return this.makeLineHtml(type, oldNumber, newNumber, htmlPrefix, htmlContent);
+  LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, content, prefix) {
+    return nunjucksEnv.render('line.html',
+                              {type: type,
+                               oldNumber: oldNumber,
+                               newNumber: newNumber,
+                               prefix: prefix,
+                               content: content});
   };
 
   LineByLinePrinter.prototype._generateEmptyDiff = function() {
-    return '<tr>\n' +
-      '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
-      '    <div class="d2h-code-line ' + diffParser.LINE_TYPE.INFO + '">' +
-      'File without changes' +
-      '    </div>' +
-      '  </td>\n' +
-      '</tr>\n';
+    return nunjucksEnv.render('empty-diff.html', {});
   };
 
   module.exports.LineByLinePrinter = LineByLinePrinter;
