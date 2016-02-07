@@ -8,18 +8,15 @@
 (function() {
 
   var printerUtils = require('./printer-utils.js').PrinterUtils;
-  var utils = require('./utils.js').Utils;
 
   function FileListPrinter() {
   }
 
   FileListPrinter.prototype.generateFileList = function(diffFiles) {
-    var hideId = utils.getRandomId('d2h-hide'); // Necessary if there are 2 elements like this in the same page
-    var showId = utils.getRandomId('d2h-show');
     return '<div class="d2h-file-list-wrapper">\n' +
       '     <div class="d2h-file-list-header">Files changed (' + diffFiles.length + ')&nbsp&nbsp</div>\n' +
-      '     <a id="' + hideId + '" class="d2h-hide" href="#' + hideId + '">+</a>\n' +
-      '     <a id="' + showId + 'd2h-show" class="d2h-show" href="#' + showId + '">-</a>\n' +
+      '     <a class="d2h-file-switch d2h-hide">hide</a>\n' +
+      '     <a class="d2h-file-switch d2h-show">show</a>\n' +
       '     <div class="d2h-clear"></div>\n' +
       '     <table class="d2h-file-list">\n' +
 

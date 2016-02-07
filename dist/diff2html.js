@@ -285,7 +285,9 @@
 	      }
 	    };
 
-	    var diffLines = diffInput.split('\n');
+	    var diffLines =
+	      diffInput.replace(/\\ No newline at end of file/g, '')
+	        .split('\n');
 
 	    /* Diff */
 	    var oldMode = /^old mode (\d{6})/;
@@ -415,10 +417,6 @@
 	      .replace(/\t/g, '    ');
 	  };
 
-	  Utils.prototype.getRandomId = function(prefix) {
-	    return prefix + '-' + Math.random().toString(36).slice(-3);
-	  };
-
 	  Utils.prototype.startsWith = function(str, start) {
 	    if (typeof start === 'object') {
 	      var result = false;
@@ -457,18 +455,15 @@
 	(function() {
 
 	  var printerUtils = __webpack_require__(4).PrinterUtils;
-	  var utils = __webpack_require__(2).Utils;
 
 	  function FileListPrinter() {
 	  }
 
 	  FileListPrinter.prototype.generateFileList = function(diffFiles) {
-	    var hideId = utils.getRandomId('d2h-hide'); //necessary if there are 2 elements like this in the same page
-	    var showId = utils.getRandomId('d2h-show');
 	    return '<div class="d2h-file-list-wrapper">\n' +
 	      '     <div class="d2h-file-list-header">Files changed (' + diffFiles.length + ')&nbsp&nbsp</div>\n' +
-	      '     <a id="' + hideId + '" class="d2h-hide" href="#' + hideId + '">+</a>\n' +
-	      '     <a id="' + showId + 'd2h-show" class="d2h-show" href="#' + showId + '">-</a>\n' +
+	      '     <a class="d2h-file-switch d2h-hide">hide</a>\n' +
+	      '     <a class="d2h-file-switch d2h-show">show</a>\n' +
 	      '     <div class="d2h-clear"></div>\n' +
 	      '     <table class="d2h-file-list">\n' +
 
@@ -481,7 +476,8 @@
 	          '       <td class="d2h-lines-deleted">\n' +
 	          '         <span>-' + file.deletedLines + '</span>\n' +
 	          '       </td>\n' +
-	          '       <td class="d2h-file-name"><a href="#' + printerUtils.getHtmlId(file) + '">&nbsp;' + printerUtils.getDiffName(file) + '</a></td>\n' +
+	          '       <td class="d2h-file-name"><a href="#' + printerUtils.getHtmlId(file) + '">' +
+	          '&nbsp;' + printerUtils.getDiffName(file) + '</a></td>\n' +
 	          '     </tr>\n';
 	      }).join('\n') +
 	      '</table></div>\n';
@@ -517,7 +513,9 @@
 	      var i, chr, len;
 	      var hash = 0;
 
-	      if (text.length === 0) return hash;
+	      if (text.length === 0) {
+	        return hash;
+	      }
 
 	      for (i = 0, len = text.length; i < len; i++) {
 	        chr = text.charCodeAt(i);
@@ -573,7 +571,7 @@
 	    if (!config.charByChar && config.matching === 'words') {
 	      var treshold = 0.25;
 
-	      if (typeof(config.matchWordsThreshold) !== 'undefined') {
+	      if (typeof (config.matchWordsThreshold) !== 'undefined') {
 	        treshold = config.matchWordsThreshold;
 	      }
 
@@ -1914,23 +1912,33 @@
 
 	  /*
 	   Copyright (c) 2011 Andrei Mackenzie
-	   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+	   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+	   documentation files (the "Software"), to deal in the Software without restriction, including without limitation
+	   the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+	   and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 	   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-	   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+	   THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+	   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	   */
 	  function levenshtein(a, b) {
-	    if (a.length == 0) return b.length;
-	    if (b.length == 0) return a.length;
+	    if (a.length == 0) {
+	      return b.length;
+	    }
+	    if (b.length == 0) {
+	      return a.length;
+	    }
 
 	    var matrix = [];
 
-	    // increment along the first column of each row
+	    // Increment along the first column of each row
 	    var i;
 	    for (i = 0; i <= b.length; i++) {
 	      matrix[i] = [i];
 	    }
 
-	    // increment each column in the first row
+	    // Increment each column in the first row
 	    var j;
 	    for (j = 0; j <= a.length; j++) {
 	      matrix[0][j] = j;
@@ -1942,9 +1950,9 @@
 	        if (b.charAt(i - 1) == a.charAt(j - 1)) {
 	          matrix[i][j] = matrix[i - 1][j - 1];
 	        } else {
-	          matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, // substitution
-	            Math.min(matrix[i][j - 1] + 1, // insertion
-	              matrix[i - 1][j] + 1)); // deletion
+	          matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, // Substitution
+	            Math.min(matrix[i][j - 1] + 1, // Insertion
+	              matrix[i - 1][j] + 1)); // Deletion
 	        }
 	      }
 	    }
@@ -1994,7 +2002,7 @@
 	    }
 
 	    function group(a, b, level, cache) {
-	      if (typeof(cache) === "undefined") {
+	      if (typeof (cache) === "undefined") {
 	        cache = {};
 	      }
 
@@ -2008,14 +2016,14 @@
 	        return [[a, b]];
 	      }
 
-	      var a1 = a.slice(0, bm.indexA),
-	        b1 = b.slice(0, bm.indexB),
-	        aMatch = [a[bm.indexA]],
-	        bMatch = [b[bm.indexB]],
-	        tailA = bm.indexA + 1,
-	        tailB = bm.indexB + 1,
-	        a2 = a.slice(tailA),
-	        b2 = b.slice(tailB);
+	      var a1 = a.slice(0, bm.indexA);
+	      var b1 = b.slice(0, bm.indexB);
+	      var aMatch = [a[bm.indexA]];
+	      var bMatch = [b[bm.indexB]];
+	      var tailA = bm.indexA + 1;
+	      var tailB = bm.indexB + 1;
+	      var a2 = a.slice(tailA);
+	      var b2 = b.slice(tailB);
 
 	      var group1 = group(a1, b1, level + 1, cache);
 	      var groupMatch = group(aMatch, bMatch, level + 1, cache);
@@ -2055,7 +2063,7 @@
 	(function() {
 
 	  var LineByLinePrinter = __webpack_require__(22).LineByLinePrinter;
-	  var sideBySidePrinter = __webpack_require__(23).SideBySidePrinter;
+	  var SideBySidePrinter = __webpack_require__(23).SideBySidePrinter;
 
 	  function HtmlPrinter() {
 	  }
@@ -2065,7 +2073,10 @@
 	    return lineByLinePrinter.generateLineByLineJsonHtml(diffFiles);
 	  };
 
-	  HtmlPrinter.prototype.generateSideBySideJsonHtml = sideBySidePrinter.generateSideBySideJsonHtml;
+	  HtmlPrinter.prototype.generateSideBySideJsonHtml = function(diffFiles, config) {
+	    var sideBySidePrinter = new SideBySidePrinter(config);
+	    return sideBySidePrinter.generateSideBySideJsonHtml(diffFiles);
+	  };
 
 	  module.exports.HtmlPrinter = new HtmlPrinter();
 
@@ -2094,42 +2105,44 @@
 	    this.config = config;
 	  }
 
+	  LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
+	    return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
+	      '     <div class="d2h-file-header">\n' +
+	      '       <div class="d2h-file-stats">\n' +
+	      '         <span class="d2h-lines-added">' +
+	      '           <span>+' + file.addedLines + '</span>\n' +
+	      '         </span>\n' +
+	      '         <span class="d2h-lines-deleted">' +
+	      '           <span>-' + file.deletedLines + '</span>\n' +
+	      '         </span>\n' +
+	      '       </div>\n' +
+	      '       <div class="d2h-file-name">' + printerUtils.getDiffName(file) + '</div>\n' +
+	      '     </div>\n' +
+	      '     <div class="d2h-file-diff">\n' +
+	      '       <div class="d2h-code-wrapper">\n' +
+	      '         <table class="d2h-diff-table">\n' +
+	      '           <tbody class="d2h-diff-tbody">\n' +
+	      '         ' + diffs +
+	      '           </tbody>\n' +
+	      '         </table>\n' +
+	      '       </div>\n' +
+	      '     </div>\n' +
+	      '   </div>\n';
+	  };
+
 	  LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
 	    var that = this;
-	    return '<div class="d2h-wrapper">\n' +
-	      diffFiles.map(function(file) {
-
+	    var htmlDiffs = diffFiles.map(function(file) {
 	        var diffs;
 	        if (file.blocks.length) {
 	          diffs = that._generateFileHtml(file);
 	        } else {
 	          diffs = that._generateEmptyDiff();
 	        }
+	        return that.makeFileDiffHtml(file, diffs);
+	      });
 
-	        return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
-	          '     <div class="d2h-file-header">\n' +
-	          '       <div class="d2h-file-stats">\n' +
-	          '         <span class="d2h-lines-added">' +
-	          '           <span>+' + file.addedLines + '</span>\n' +
-	          '         </span>\n' +
-	          '         <span class="d2h-lines-deleted">' +
-	          '           <span>-' + file.deletedLines + '</span>\n' +
-	          '         </span>\n' +
-	          '       </div>\n' +
-	          '       <div class="d2h-file-name">' + printerUtils.getDiffName(file) + '</div>\n' +
-	          '     </div>\n' +
-	          '     <div class="d2h-file-diff">\n' +
-	          '       <div class="d2h-code-wrapper">\n' +
-	          '         <table class="d2h-diff-table">\n' +
-	          '           <tbody class="d2h-diff-tbody">\n' +
-	          '         ' + diffs +
-	          '           </tbody>\n' +
-	          '         </table>\n' +
-	          '       </div>\n' +
-	          '     </div>\n' +
-	          '   </div>\n';
-	      }).join('\n') +
-	      '</div>\n';
+	    return '<div class="d2h-wrapper">\n' + htmlDiffs.join('\n') + '</div>\n';
 	  };
 
 	  var matcher = Rematch.rematch(function(a, b) {
@@ -2139,17 +2152,20 @@
 	    return Rematch.distance(amod, bmod);
 	  });
 
-	  LineByLinePrinter.prototype._generateFileHtml = function(file) {
-	    var that = this;
-	    return file.blocks.map(function(block) {
-
-	      var lines = '<tr>\n' +
+	  LineByLinePrinter.prototype.makeColumnLineNumberHtml = function(block) {
+	      return '<tr>\n' +
 	        '  <td class="d2h-code-linenumber ' + diffParser.LINE_TYPE.INFO + '"></td>\n' +
 	        '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
 	        '    <div class="d2h-code-line ' + diffParser.LINE_TYPE.INFO + '">' + utils.escape(block.header) + '</div>' +
 	        '  </td>\n' +
 	        '</tr>\n';
+	  };
 
+	  LineByLinePrinter.prototype._generateFileHtml = function(file) {
+	    var that = this;
+	    return file.blocks.map(function(block) {
+
+	      var lines = that.makeColumnLineNumberHtml(block);
 	      var oldLines = [];
 	      var newLines = [];
 
@@ -2250,6 +2266,18 @@
 	    return lines;
 	  };
 
+	  LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, htmlPrefix, htmlContent) {
+	    return '<tr>\n' +
+	      '  <td class="d2h-code-linenumber ' + type + '">' +
+	      '    <div class="line-num1">' + utils.valueOrEmpty(oldNumber) + '</div>' +
+	      '    <div class="line-num2">' + utils.valueOrEmpty(newNumber) + '</div>' +
+	      '  </td>\n' +
+	      '  <td class="' + type + '">' +
+	      '    <div class="d2h-code-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
+	      '  </td>\n' +
+	      '</tr>\n';
+	  };
+
 	  LineByLinePrinter.prototype._generateLineHtml = function(type, oldNumber, newNumber, content, prefix) {
 	    var htmlPrefix = '';
 	    if (prefix) {
@@ -2261,15 +2289,7 @@
 	      htmlContent = '<span class="d2h-code-line-ctn">' + content + '</span>';
 	    }
 
-	    return '<tr>\n' +
-	      '  <td class="d2h-code-linenumber ' + type + '">' +
-	      '    <div class="line-num1">' + utils.valueOrEmpty(oldNumber) + '</div>' +
-	      '    <div class="line-num2">' + utils.valueOrEmpty(newNumber) + '</div>' +
-	      '  </td>\n' +
-	      '  <td class="' + type + '">' +
-	      '    <div class="d2h-code-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
-	      '  </td>\n' +
-	      '</tr>\n';
+	    return this.makeLineHtml(type, oldNumber, newNumber, htmlPrefix, htmlContent);
 	  };
 
 	  LineByLinePrinter.prototype._generateEmptyDiff = function() {
@@ -2305,85 +2325,89 @@
 	  var utils = __webpack_require__(2).Utils;
 	  var Rematch = __webpack_require__(20).Rematch;
 
-	  function SideBySidePrinter() {
+	  var matcher = Rematch.rematch(function(a, b) {
+	    var amod = a.content.substr(1);
+	    var bmod = b.content.substr(1);
+
+	    return Rematch.distance(amod, bmod);
+	  });
+
+	  function SideBySidePrinter(config) {
+	    this.config = config;
 	  }
 
-	  SideBySidePrinter.prototype.generateSideBySideJsonHtml = function(diffFiles, config) {
+	  SideBySidePrinter.prototype.makeDiffHtml = function(file, diffs) {
+	    return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
+	      '     <div class="d2h-file-header">\n' +
+	      '       <div class="d2h-file-stats">\n' +
+	      '         <span class="d2h-lines-added">' +
+	      '           <span>+' + file.addedLines + '</span>\n' +
+	      '         </span>\n' +
+	      '         <span class="d2h-lines-deleted">' +
+	      '           <span>-' + file.deletedLines + '</span>\n' +
+	      '         </span>\n' +
+	      '       </div>\n' +
+	      '       <div class="d2h-file-name">' + printerUtils.getDiffName(file) + '</div>\n' +
+	      '     </div>\n' +
+	      '     <div class="d2h-files-diff">\n' +
+	      '       <div class="d2h-file-side-diff">\n' +
+	      '         <div class="d2h-code-wrapper">\n' +
+	      '           <table class="d2h-diff-table">\n' +
+	      '             <tbody class="d2h-diff-tbody">\n' +
+	      '           ' + diffs.left +
+	      '             </tbody>\n' +
+	      '           </table>\n' +
+	      '         </div>\n' +
+	      '       </div>\n' +
+	      '       <div class="d2h-file-side-diff">\n' +
+	      '         <div class="d2h-code-wrapper">\n' +
+	      '           <table class="d2h-diff-table">\n' +
+	      '             <tbody class="d2h-diff-tbody">\n' +
+	      '           ' + diffs.right +
+	      '             </tbody>\n' +
+	      '           </table>\n' +
+	      '         </div>\n' +
+	      '       </div>\n' +
+	      '     </div>\n' +
+	      '   </div>\n';
+	  };
+
+	  SideBySidePrinter.prototype.generateSideBySideJsonHtml = function(diffFiles) {
+	    var that = this;
 	    return '<div class="d2h-wrapper">\n' +
 	      diffFiles.map(function(file) {
 
 	        var diffs;
 	        if (file.blocks.length) {
-	          diffs = generateSideBySideFileHtml(file, config);
+	          diffs = that.generateSideBySideFileHtml(file);
 	        } else {
-	          diffs = generateEmptyDiff();
+	          diffs = that.generateEmptyDiff();
 	        }
 
-	        return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
-	          '     <div class="d2h-file-header">\n' +
-	          '       <div class="d2h-file-stats">\n' +
-	          '         <span class="d2h-lines-added">' +
-	          '           <span>+' + file.addedLines + '</span>\n' +
-	          '         </span>\n' +
-	          '         <span class="d2h-lines-deleted">' +
-	          '           <span>-' + file.deletedLines + '</span>\n' +
-	          '         </span>\n' +
-	          '       </div>\n' +
-	          '       <div class="d2h-file-name">' + printerUtils.getDiffName(file) + '</div>\n' +
-	          '     </div>\n' +
-	          '     <div class="d2h-files-diff">\n' +
-	          '       <div class="d2h-file-side-diff">\n' +
-	          '         <div class="d2h-code-wrapper">\n' +
-	          '           <table class="d2h-diff-table">\n' +
-	          '             <tbody class="d2h-diff-tbody">\n' +
-	          '           ' + diffs.left +
-	          '             </tbody>\n' +
-	          '           </table>\n' +
-	          '         </div>\n' +
-	          '       </div>\n' +
-	          '       <div class="d2h-file-side-diff">\n' +
-	          '         <div class="d2h-code-wrapper">\n' +
-	          '           <table class="d2h-diff-table">\n' +
-	          '             <tbody class="d2h-diff-tbody">\n' +
-	          '           ' + diffs.right +
-	          '             </tbody>\n' +
-	          '           </table>\n' +
-	          '         </div>\n' +
-	          '       </div>\n' +
-	          '     </div>\n' +
-	          '   </div>\n';
+	        return that.makeDiffHtml(file, diffs);
 	      }).join('\n') +
 	      '</div>\n';
 	  };
 
-	  var matcher = Rematch.rematch(function(a, b) {
-	    var amod = a.content.substr(1),
-	      bmod = b.content.substr(1);
-	    return Rematch.distance(amod, bmod);
-	  });
+	  SideBySidePrinter.prototype.makeSideHtml = function(blockHeader) {
+	    return '<tr>\n' +
+	      '  <td class="d2h-code-side-linenumber ' + diffParser.LINE_TYPE.INFO + '"></td>\n' +
+	      '  <td class="' + diffParser.LINE_TYPE.INFO + '">\n' +
+	      '    <div class="d2h-code-side-line ' + diffParser.LINE_TYPE.INFO + '">' + blockHeader + '</div>\n' +
+	      '  </td>\n' +
+	      '</tr>\n';
+	  };
 
-	  function generateSideBySideFileHtml(file, config) {
+	  SideBySidePrinter.prototype.generateSideBySideFileHtml = function(file) {
+	    var that = this;
 	    var fileHtml = {};
 	    fileHtml.left = '';
 	    fileHtml.right = '';
 
 	    file.blocks.forEach(function(block) {
 
-	      fileHtml.left += '<tr>\n' +
-	        '  <td class="d2h-code-side-linenumber ' + diffParser.LINE_TYPE.INFO + '"></td>\n' +
-	        '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
-	        '    <div class="d2h-code-side-line ' + diffParser.LINE_TYPE.INFO + '">' +
-	        '      ' + utils.escape(block.header) +
-	        '    </div>' +
-	        '  </td>\n' +
-	        '</tr>\n';
-
-	      fileHtml.right += '<tr>\n' +
-	        '  <td class="d2h-code-side-linenumber ' + diffParser.LINE_TYPE.INFO + '"></td>\n' +
-	        '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
-	        '    <div class="d2h-code-side-line ' + diffParser.LINE_TYPE.INFO + '"></div>' +
-	        '  </td>\n' +
-	        '</tr>\n';
+	      fileHtml.left += that.makeSideHtml(utils.escape(block.header));
+	      fileHtml.right += that.makeSideHtml('');
 
 	      var oldLines = [];
 	      var newLines = [];
@@ -2392,7 +2416,7 @@
 	        var matches;
 	        var insertType;
 	        var deleteType;
-	        var doMatching = config.matching === 'lines' || config.matching === 'words';
+	        var doMatching = that.config.matching === 'lines' || that.config.matching === 'words';
 
 	        if (doMatching) {
 	          matches = matcher(oldLines, newLines);
@@ -2415,15 +2439,15 @@
 	            var oldLine = oldLines[j];
 	            var newLine = newLines[j];
 
-	            config.isCombined = file.isCombined;
+	            that.config.isCombined = file.isCombined;
 
-	            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, config);
+	            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
 	            fileHtml.left +=
-	              generateSingleLineHtml(deleteType, oldLine.oldNumber,
+	              that.generateSingleLineHtml(deleteType, oldLine.oldNumber,
 	                diff.first.line, diff.first.prefix);
 	            fileHtml.right +=
-	              generateSingleLineHtml(insertType, newLine.newNumber,
+	              that.generateSingleLineHtml(insertType, newLine.newNumber,
 	                diff.second.line, diff.second.prefix);
 	          }
 
@@ -2431,7 +2455,7 @@
 	            var oldSlice = oldLines.slice(common);
 	            var newSlice = newLines.slice(common);
 
-	            var tmpHtml = processLines(oldSlice, newSlice);
+	            var tmpHtml = that.processLines(oldSlice, newSlice);
 	            fileHtml.left += tmpHtml.left;
 	            fileHtml.right += tmpHtml.right;
 	          }
@@ -2443,7 +2467,7 @@
 
 	      for (var i = 0; i < block.lines.length; i++) {
 	        var line = block.lines[i];
-	        var prefix = line[0];
+	        var prefix = line.content[0];
 	        var escapedLine = utils.escape(line.content.substr(1));
 
 	        if (line.type !== diffParser.LINE_TYPE.INSERTS &&
@@ -2452,11 +2476,11 @@
 	        }
 
 	        if (line.type === diffParser.LINE_TYPE.CONTEXT) {
-	          fileHtml.left += generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
-	          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+	          fileHtml.left += that.generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
+	          fileHtml.right += that.generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
 	        } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-	          fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-	          fileHtml.right += generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+	          fileHtml.left += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
+	          fileHtml.right += that.generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
 	        } else if (line.type === diffParser.LINE_TYPE.DELETES) {
 	          oldLines.push(line);
 	        } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
@@ -2471,9 +2495,10 @@
 	    });
 
 	    return fileHtml;
-	  }
+	  };
 
-	  function processLines(oldLines, newLines) {
+	  SideBySidePrinter.prototype.processLines = function(oldLines, newLines) {
+	    var that = this;
 	    var fileHtml = {};
 	    fileHtml.left = '';
 	    fileHtml.right = '';
@@ -2498,23 +2523,32 @@
 	      }
 
 	      if (oldLine && newLine) {
-	        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
-	        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
+	        fileHtml.left += that.generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+	        fileHtml.right += that.generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
 	      } else if (oldLine) {
-	        fileHtml.left += generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
-	        fileHtml.right += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
+	        fileHtml.left += that.generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+	        fileHtml.right += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
 	      } else if (newLine) {
-	        fileHtml.left += generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-	        fileHtml.right += generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
+	        fileHtml.left += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
+	        fileHtml.right += that.generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
 	      } else {
 	        console.error('How did it get here?');
 	      }
 	    }
 
 	    return fileHtml;
-	  }
+	  };
 
-	  function generateSingleLineHtml(type, number, content, prefix) {
+	  SideBySidePrinter.prototype.makeSingleLineHtml = function(type, number, htmlContent, htmlPrefix) {
+	    return '<tr>\n' +
+	      '    <td class="d2h-code-side-linenumber ' + type + '">' + number + '</td>\n' +
+	      '    <td class="' + type + '">' +
+	      '      <div class="d2h-code-side-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
+	      '    </td>\n' +
+	      '  </tr>\n';
+	  };
+
+	  SideBySidePrinter.prototype.generateSingleLineHtml = function(type, number, content, prefix) {
 	    var htmlPrefix = '';
 	    if (prefix) {
 	      htmlPrefix = '<span class="d2h-code-line-prefix">' + prefix + '</span>';
@@ -2525,15 +2559,10 @@
 	      htmlContent = '<span class="d2h-code-line-ctn">' + content + '</span>';
 	    }
 
-	    return '<tr>\n' +
-	      '    <td class="d2h-code-side-linenumber ' + type + '">' + number + '</td>\n' +
-	      '    <td class="' + type + '">' +
-	      '      <div class="d2h-code-side-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
-	      '    </td>\n' +
-	      '  </tr>\n';
-	  }
+	    return this.makeSingleLineHtml(type, number, htmlContent, htmlPrefix);
+	  };
 
-	  function generateEmptyDiff() {
+	  SideBySidePrinter.prototype.generateEmptyDiff = function() {
 	    var fileHtml = {};
 	    fileHtml.right = '';
 
@@ -2546,9 +2575,9 @@
 	      '</tr>\n';
 
 	    return fileHtml;
-	  }
+	  };
 
-	  module.exports.SideBySidePrinter = new SideBySidePrinter();
+	  module.exports.SideBySidePrinter = SideBySidePrinter;
 
 	})();
 

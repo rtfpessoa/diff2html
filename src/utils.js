@@ -18,10 +18,6 @@
       .replace(/\t/g, '    ');
   };
 
-  Utils.prototype.getRandomId = function(prefix) {
-    return prefix + '-' + Math.random().toString(36).slice(-3);
-  };
-
   Utils.prototype.startsWith = function(str, start) {
     if (typeof start === 'object') {
       var result = false;

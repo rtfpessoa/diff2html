@@ -11,13 +11,16 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
 
-    <!-- -->
-    <link rel="stylesheet" type="text/css" href="../dist/diff2html.min.css">
-    <script type="text/javascript" src="../dist/diff2html.min.js"></script>
-    <!-- -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/languages/scala.min.js"></script>
+
+    <!-- diff2html -->
+    <link rel="stylesheet" type="text/css" href="../dist/diff2html.min.css">
+    <script type="text/javascript" src="../dist/diff2html.js"></script>
+    <script type="text/javascript" src="../dist/diff2html-ui.js"></script>
+    <!-- -->
 
     <script>
         var lineDiffExample =
@@ -227,32 +230,21 @@
                 "+\n" +
                 "+\n";
 
-        document.addEventListener("DOMContentLoaded", function() {
-            // parse the diff to json
-            var diffJson = Diff2Html.getJsonFromDiff(lineDiffExample);
+        $(document).ready(function() {
+            var diff2htmlUi = new Diff2HtmlUI({diff: lineDiffExample});
 
-            // collect all the file extensions in the json
-            var allFileLanguages = diffJson.map(function(line) {
-                return line.language;
+            diff2htmlUi.draw('#line-by-line', {inputFormat: 'json', showFiles: true, matching: 'lines'});
+            diff2htmlUi.fileListCloseable('#line-by-line', false);
+            diff2htmlUi.highlightCode('#line-by-line');
+
+            diff2htmlUi.draw('#side-by-side', {
+                inputFormat: 'json',
+                showFiles: true,
+                matching: 'lines',
+                outputFormat: 'side-by-side'
             });
-
-            // remove duplicated languages
-            var distinctLanguages = allFileLanguages.filter(function(v, i) {
-                return allFileLanguages.indexOf(v) == i;
-            });
-
-            // pass the languages to the highlightjs plugin
-            hljs.configure({languages: distinctLanguages});
-
-            // generate and inject the diff HTML into the desired place
-            document.getElementById("line-by-line").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json', showFiles: true, matching: 'lines' });
-            document.getElementById("side-by-side").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json', showFiles: true, matching: 'lines', outputFormat: 'side-by-side' });
-
-            // collect all the code lines and execute the highlight on them
-            var codeLines = document.getElementsByClassName("d2h-code-line-ctn");
-            [].forEach.call(codeLines, function(line) {
-                hljs.highlightBlock(line);
-            });
+            diff2htmlUi.fileListCloseable('#side-by-side', false);
+            diff2htmlUi.highlightCode('#side-by-side');
         });
     </script>
 
