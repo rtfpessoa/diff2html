@@ -68,6 +68,37 @@ The HTML output accepts a Javascript object with configuration. Possible options
   - `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default is `none`
   - `matchWordsThreshold`: similarity threshold for word matching, default is 0.25
 
+## Diff2HtmlUI Helper
+
+> Simple wrapper to ease simple tasks in the browser such as: code highlight and js effects
+
+### How to use
+
+> Init
+
+```js
+var diff2htmlUi = new Diff2HtmlUI({diff: diffString});
+// or
+var diff2htmlUi = new Diff2HtmlUI({json: diffJson});
+```
+
+> Draw
+
+```js
+diff2htmlUi.draw('html-target-elem', {inputFormat: 'json', showFiles: true, matching: 'lines'});
+```
+
+> Highlight Code
+
+```js
+diff2htmlUi.highlightCode('html-target-elem');
+```
+
+> Collapse File Summary List
+
+```js
+diff2htmlUi.fileListCloseable('html-target-elem', false);
+```
 
 ## Syntax Highlight
 
@@ -77,42 +108,42 @@ If your favourite language is not included in the default package also add its j
 
 ```html
 <!-- Stylesheet -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/github.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
 
 <!-- Javascripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/scala.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/languages/scala.min.js"></script>
+<script type="text/javascript" src="dist/diff2html-ui.js"></script>
 ```
 
-> Invoke the highlightjs plugin
+> Invoke the Diff2HtmlUI helper
 
 ```js
-document.addEventListener("DOMContentLoaded", function () {
-    // parse the diff to json
-    var diffJson = Diff2Html.getJsonFromDiff(lineDiffExample);
+$(document).ready(function() {
+    var diff2htmlUi = new Diff2HtmlUI({diff: lineDiffExample});
+    diff2htmlUi.draw('#line-by-line', {inputFormat: 'json', showFiles: true, matching: 'lines'});
+    diff2htmlUi.highlightCode('#line-by-line');
+});
+```
 
-    // collect all the file extensions in the json
-    var allFileLanguages = diffJson.map(function (line) {
-        return line.language;
-    });
+## Collapsable File Summary List
 
-    // remove duplicated languages
-    var distinctLanguages = allFileLanguages.filter(function (v, i) {
-        return allFileLanguages.indexOf(v) == i;
-    });
+> Add the dependencies.
 
-    // pass the languages to the highlightjs plugin
-    hljs.configure({languages: distinctLanguages});
+```html
+<!-- Javascripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script type="text/javascript" src="dist/diff2html-ui.js"></script>
+```
 
-    // generate and inject the diff HTML into the desired place
-    document.getElementById("line-by-line").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json' });
-    document.getElementById("side-by-side").innerHTML = Diff2Html.getPrettyHtml(diffJson, { inputFormat: 'json', outputFormat: 'side-by-side' });
+> Invoke the Diff2HtmlUI helper
 
-    // collect all the code lines and execute the highlight on them
-    var codeLines = document.getElementsByClassName("d2h-code-line-ctn");
-    [].forEach.call(codeLines, function (line) {
-        hljs.highlightBlock(line);
-    });
+```js
+$(document).ready(function() {
+    var diff2htmlUi = new Diff2HtmlUI({diff: lineDiffExample});
+    diff2htmlUi.draw('#line-by-line', {inputFormat: 'json', showFiles: true, matching: 'lines'});
+    diff2htmlUi.fileListCloseable('#line-by-line', false);
 });
 ```
 
