@@ -5,6 +5,8 @@
 # by rtfpessoa
 #
 
+set -e
+
 INPUT_DIR=src
 INPUT_UI_DIR=${INPUT_DIR}/ui
 INPUT_JS_FILE=${INPUT_DIR}/diff2html.js
@@ -47,6 +49,6 @@ cp -f ${INPUT_CSS_FILE} ${OUTPUT_CSS_FILE}
 
 echo "Minifying ${OUTPUT_CSS_FILE} to ${OUTPUT_MIN_CSS_FILE}"
 
-lessc -x ${OUTPUT_CSS_FILE} ${OUTPUT_MIN_CSS_FILE}
+cleancss --advanced --compatibility=ie8 -o ${OUTPUT_MIN_CSS_FILE} ${OUTPUT_CSS_FILE}
 
 echo "diff2html release created successfully!"
