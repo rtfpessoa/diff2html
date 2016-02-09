@@ -59,21 +59,16 @@
   Diff2HtmlUI.prototype.highlightCode = function(targetId) {
     var that = this;
 
-    // collect all the file extensions in the json
-    var allFileLanguages = diffJson.map(function(line) {
-      return line.language;
-    });
+    var $target = that._getTarget(targetId);
 
-    // remove duplicated languages
-    var distinctLanguages = allFileLanguages.filter(function(v, i) {
-      return allFileLanguages.indexOf(v) === i;
-    });
+    var languages = that._getLanguages($target);
+
+    console.log(languages);
 
     // pass the languages to the highlightjs plugin
-    hljs.configure({languages: distinctLanguages});
+    hljs.configure({languages: languages});
 
     // collect all the code lines and execute the highlight on them
-    var $target = that._getTarget(targetId);
     var $codeLines = $target.find(".d2h-code-line-ctn");
     $codeLines.map(function(i, line) {
       hljs.highlightBlock(line);
@@ -89,6 +84,29 @@
     }
 
     return $target;
+  };
+
+  Diff2HtmlUI.prototype._getLanguages = function($target) {
+    var allFileLanguages = [];
+
+    if (diffJson) {
+      // collect all the file extensions in the json
+      allFileLanguages = diffJson.map(function(line) {
+        return line.language;
+      });
+    } else {
+      console.log($target.find(".d2h-file-wrapper"));
+      $target.find(".d2h-file-wrapper").map(function(i, file) {
+        allFileLanguages.push($(file).data("lang"));
+      });
+    }
+
+    // remove duplicated languages
+    var distinctLanguages = allFileLanguages.filter(function(v, i) {
+      return allFileLanguages.indexOf(v) === i;
+    });
+
+    return distinctLanguages;
   };
 
   module.exports.Diff2HtmlUI = Diff2HtmlUI;
