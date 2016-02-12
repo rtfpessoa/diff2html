@@ -80,11 +80,16 @@
 	  Diff2HtmlUI.prototype.fileListCloseable = function(targetId, startVisible) {
 	    var $target = this._getTarget(targetId);
 
+	    var hashTag = this._getHashTag();
+
 	    var $showBtn = $target.find(".d2h-show");
 	    var $hideBtn = $target.find(".d2h-hide");
 	    var $fileList = $target.find(".d2h-file-list");
 
-	    if (startVisible) show(); else hide();
+	    if (hashTag === 'files-summary-show') show();
+	    else if (hashTag === 'files-summary-hide') hide();
+	    else if (startVisible) show();
+	    else hide();
 
 	    $showBtn.click(show);
 	    $hideBtn.click(hide);
@@ -153,6 +158,18 @@
 	    });
 
 	    return distinctLanguages;
+	  };
+
+	  Diff2HtmlUI.prototype._getHashTag = function() {
+	    var docUrl = document.URL;
+	    var hashTagIndex = docUrl.indexOf('#');
+
+	    var hashTag = null;
+	    if (hashTagIndex != -1) {
+	      hashTag = docUrl.substr(hashTagIndex + 1);
+	    }
+
+	    return hashTag;
 	  };
 
 	  module.exports.Diff2HtmlUI = Diff2HtmlUI;
