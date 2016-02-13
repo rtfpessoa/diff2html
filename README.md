@@ -6,7 +6,7 @@
 
 [![npm](https://img.shields.io/npm/v/diff2html.svg)](https://www.npmjs.com/package/diff2html)
 [![Dependency Status](https://david-dm.org/rtfpessoa/diff2html.svg)](https://david-dm.org/rtfpessoa/diff2html)
-[![David](https://img.shields.io/david/dev/rtfpessoa/diff2html.svg)](https://david-dm.org/rtfpessoa/diff2html)
+[![devDependency Status](https://david-dm.org/rtfpessoa/diff2html/dev-status.svg)](https://david-dm.org/rtfpessoa/diff2html#info=devDependencies)
 
 [![node](https://img.shields.io/node/v/diff2html.svg)]()
 [![npm](https://img.shields.io/npm/l/diff2html.svg)]()
