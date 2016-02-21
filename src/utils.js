@@ -10,6 +10,10 @@
   function Utils() {
   }
 
+  Utils.prototype.convertWhiteSpaceToNonBreakingSpace = function(str) {
+    return str.slice(0).replace(/ /g, '&nbsp;');
+  };
+
   Utils.prototype.escape = function(str) {
     return str.slice(0)
       .replace(/&/g, '&amp;')

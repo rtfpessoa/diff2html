@@ -114,8 +114,6 @@
 
 	    var languages = that._getLanguages($target);
 
-	    console.log(languages);
-
 	    // pass the languages to the highlightjs plugin
 	    hljs.configure({languages: languages});
 
@@ -146,18 +144,13 @@
 	        return line.language;
 	      });
 	    } else {
-	      console.log($target.find(".d2h-file-wrapper"));
 	      $target.find(".d2h-file-wrapper").map(function(i, file) {
 	        allFileLanguages.push($(file).data("lang"));
 	      });
 	    }
 
-	    // remove duplicated languages
-	    var distinctLanguages = allFileLanguages.filter(function(v, i) {
-	      return allFileLanguages.indexOf(v) === i;
-	    });
-
-	    return distinctLanguages;
+	    // return only distinct languages
+	    return this._distinct(allFileLanguages);
 	  };
 
 	  Diff2HtmlUI.prototype._getHashTag = function() {
@@ -165,11 +158,17 @@
 	    var hashTagIndex = docUrl.indexOf('#');
 
 	    var hashTag = null;
-	    if (hashTagIndex != -1) {
+	    if (hashTagIndex !== -1) {
 	      hashTag = docUrl.substr(hashTagIndex + 1);
 	    }
 
 	    return hashTag;
+	  };
+
+	  Diff2HtmlUI.prototype._distinct = function(collection) {
+	    return collection.filter(function(v, i) {
+	      return collection.indexOf(v) === i;
+	    });
 	  };
 
 	  module.exports.Diff2HtmlUI = Diff2HtmlUI;

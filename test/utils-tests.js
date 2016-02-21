@@ -22,4 +22,18 @@ describe('Utils', function() {
       assert.equal(expected, result);
     });
   });
+  describe('convertWhiteSpaceToNonBreakingSpace', function() {
+    it('should escape 1 whitespaces with &nbsp;', function() {
+      var result = Utils.convertWhiteSpaceToNonBreakingSpace(' ');
+      assert.equal('&nbsp;', result);
+    });
+    it('should escape 2 whitespaces with &nbsp;', function() {
+      var result = Utils.convertWhiteSpaceToNonBreakingSpace('  ');
+      assert.equal('&nbsp;&nbsp;', result);
+    });
+    it('should escape 4 whitespaces with &nbsp;', function() {
+      var result = Utils.convertWhiteSpaceToNonBreakingSpace('    ');
+      assert.equal('&nbsp;&nbsp;&nbsp;&nbsp;', result);
+    });
+  });
 });
