@@ -98,6 +98,7 @@
     display: block;
     padding: 0 10px;
     height: 18px;
+    white-space: nowrap;
     line-height: 18px;
     margin-left: 80px;
     /* Override HighlightJS */

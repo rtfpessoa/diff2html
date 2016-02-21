@@ -158,7 +158,7 @@
 	    var hashTagIndex = docUrl.indexOf('#');
 
 	    var hashTag = null;
-	    if (hashTagIndex != -1) {
+	    if (hashTagIndex !== -1) {
 	      hashTag = docUrl.substr(hashTagIndex + 1);
 	    }
 
