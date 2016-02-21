@@ -6,16 +6,7 @@
  */
 
 .d2h-wrapper {
-    display: block;
-    margin: 0 auto;
     text-align: left;
-    width: 100%;
-}
-
-.d2h-file-wrapper {
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    margin-bottom: 1em;
 }
 
 .d2h-file-header {
@@ -29,7 +20,6 @@
     display: inline;
     font-size: 12px;
     text-align: center;
-    max-width: 15%;
 }
 
 .d2h-lines-added {
@@ -56,13 +46,22 @@
     padding: 2px;
 }
 
+.d2h-file-name-wrapper {
+    display: inline-flex;
+    width: 90%;
+}
+
 .d2h-file-name {
-    display: inline;
     line-height: 33px;
-    max-width: 80%;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.d2h-file-wrapper {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-bottom: 1em;
 }
 
 .d2h-diff-table {
@@ -96,16 +95,9 @@
 
 .d2h-code-line {
     display: block;
-    padding: 0 10px;
-    height: 18px;
     white-space: nowrap;
-    line-height: 18px;
+    padding: 0 10px;
     margin-left: 80px;
-    /* Override HighlightJS */
-    color: inherit;
-    overflow-x: inherit;
-    background: none;
-    /* ******************** */
 }
 
 .d2h-code-side-line {
@@ -154,7 +146,7 @@
 .line-num1 {
     box-sizing: border-box;
     float: left;
-    width: 32px;
+    width: 40px;
     overflow: hidden;
     text-overflow: ellipsis;
     padding-left: 3px;
@@ -163,7 +155,7 @@
 .line-num2 {
     box-sizing: border-box;
     float: right;
-    width: 32px;
+    width: 40px;
     overflow: hidden;
     text-overflow: ellipsis;
     padding-left: 3px;
@@ -172,7 +164,7 @@
 .d2h-code-linenumber {
     box-sizing: border-box;
     position: absolute;
-    width: 82px;
+    width: 86px;
     height: 18px;
     padding-left: 2px;
     padding-right: 2px;
@@ -188,9 +180,9 @@
 .d2h-code-side-linenumber {
     box-sizing: border-box;
     position: absolute;
-    width: 52px;
-    padding-left: 10px;
-    padding-right: 10px;
+    width: 56px;
+    padding-left: 5px;
+    padding-right: 5px;
     height: 18px;
     line-height: 18px;
     background-color: #fff;
@@ -202,6 +194,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/*
+ * Changes Highlight
+ */
 
 .d2h-del {
     background-color: #fee8e9;
@@ -217,43 +213,6 @@
     background-color: #f8fafd;
     color: rgba(0, 0, 0, 0.3);
     border-color: #d5e4f2;
-}
-
-.d2h-file-list-wrapper {
-    margin-bottom: 10px;
-    padding: 0 10px;
-}
-
-.d2h-file-list-wrapper a {
-    text-decoration: none;
-    color: #3572b0;
-}
-
-.d2h-file-list-wrapper a:visited {
-    color: #3572b0;
-}
-
-.d2h-file-list-header {
-    font-weight: bold;
-    float: left;
-}
-
-.d2h-file-list-line {
-    text-align: left;
-    font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-}
-
-.d2h-file-list-line .d2h-file-name {
-    line-height: 21px;
-}
-
-.d2h-file-list {
-    display: block;
-}
-
-.d2h-clear {
-    display: block;
-    clear: both;
 }
 
 .d2h-del.d2h-change, .d2h-ins.d2h-change {
@@ -272,10 +231,46 @@ ins.d2h-change, del.d2h-change {
     background-color: #ded;
 }
 
+/*
+ * File Summary List
+ */
+
+.d2h-file-list-wrapper {
+    margin-bottom: 10px;
+}
+
+.d2h-file-list-wrapper a {
+    text-decoration: none;
+    color: #3572b0;
+}
+
+.d2h-file-list-wrapper a:visited {
+    color: #3572b0;
+}
+
+.d2h-file-list-header {
+    text-align: left;
+}
+
+.d2h-file-list-title {
+    font-weight: bold;
+}
+
+.d2h-file-list-line {
+    text-align: left;
+    font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.d2h-file-list-line .d2h-file-name {
+    line-height: 21px;
+}
+
+.d2h-file-list {
+    display: block;
+}
+
 .d2h-file-switch {
     display: none;
-    float: left;
     font-size: 10px;
     cursor: pointer;
-    margin-top: 3px;
 }

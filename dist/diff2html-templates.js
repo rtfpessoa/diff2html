@@ -69,13 +69,13 @@ output += "<div id=\"";
 output += runtime.suppressValue((lineno = 0, colno = 32, runtime.callWrap(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "printerUtils")),"getHtmlId"), "printerUtils[\"getHtmlId\"]", context, [runtime.contextOrFrameLookup(context, frame, "file")])), env.opts.autoescape);
 output += "\" class=\"d2h-file-wrapper\" data-lang=\"";
 output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "file")),"language"), env.opts.autoescape);
-output += "\">\n  <div class=\"d2h-file-header\">\n    <div class=\"d2h-file-stats\">\n      <span class=\"d2h-lines-added\">\n        <span>+";
+output += "\">\n  <div class=\"d2h-file-header\">\n    <span class=\"d2h-file-stats\">\n      <span class=\"d2h-lines-added\">\n        <span>+";
 output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "file")),"addedLines"), env.opts.autoescape);
 output += "</span>\n      </span>\n      <span class=\"d2h-lines-deleted\">\n        <span>-";
 output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "file")),"deletedLines"), env.opts.autoescape);
-output += "</span>\n      </span>\n    </div>\n    <div class=\"d2h-file-name\">&nbsp;";
-output += runtime.suppressValue((lineno = 10, colno = 62, runtime.callWrap(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "printerUtils")),"getDiffName"), "printerUtils[\"getDiffNam\"]", context, [runtime.contextOrFrameLookup(context, frame, "file")])), env.opts.autoescape);
-output += "</div>\n  </div>\n  <div class=\"d2h-file-diff\">\n    <div class=\"d2h-code-wrapper\">\n      <table class=\"d2h-diff-table\">\n        <tbody class=\"d2h-diff-tbody\">\n          ";
+output += "</span>\n      </span>\n    </span>\n    <span class=\"d2h-file-name-wrapper\">\n        <span class=\"d2h-file-name\">&nbsp;";
+output += runtime.suppressValue((lineno = 11, colno = 67, runtime.callWrap(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "printerUtils")),"getDiffName"), "printerUtils[\"getDiffNam\"]", context, [runtime.contextOrFrameLookup(context, frame, "file")])), env.opts.autoescape);
+output += "</span>\n    </span>\n  </div>\n  <div class=\"d2h-file-diff\">\n    <div class=\"d2h-code-wrapper\">\n      <table class=\"d2h-diff-table\">\n        <tbody class=\"d2h-diff-tbody\">\n          ";
 output += runtime.suppressValue(env.getFilter("safe").call(context, runtime.contextOrFrameLookup(context, frame, "diffs")), env.opts.autoescape);
 output += "\n        </tbody>\n      </table>\n    </div>\n  </div>\n</div>\n";
 if(parentTemplate) {
