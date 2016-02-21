@@ -69,9 +69,12 @@
     border-collapse: collapse;
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
     font-size: 12px;
-    height: 18px;
-    line-height: 18px;
     width: 100%;
+}
+
+.d2h-diff-tbody > tr > td > div {
+    height: 16px;
+    line-height: 16px;
 }
 
 .d2h-files-diff {
@@ -93,7 +96,6 @@
 
 .d2h-code-line {
     display: block;
-    white-space: pre;
     padding: 0 10px;
     height: 18px;
     line-height: 18px;

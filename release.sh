@@ -8,6 +8,7 @@
 set -e
 
 INPUT_DIR=src
+INTPUT_TEMPLATES_DIR=${INPUT_DIR}/templates
 INPUT_UI_DIR=${INPUT_DIR}/ui
 INPUT_JS_FILE=${INPUT_DIR}/diff2html.js
 INPUT_JS_UI_FILE=${INPUT_UI_DIR}/js/diff2html-ui.js
@@ -20,10 +21,8 @@ OUTPUT_JS_UI_FILE=${OUTPUT_DIR}/diff2html-ui.js
 OUTPUT_MIN_JS_UI_FILE=${OUTPUT_DIR}/diff2html-ui.min.js
 OUTPUT_CSS_FILE=${OUTPUT_DIR}/diff2html.css
 OUTPUT_MIN_CSS_FILE=${OUTPUT_DIR}/diff2html.min.css
-OUTPUT_TEMPLATES_FILE=${OUTPUT_DIR}/templates.js
-OUTPUT_MIN_TEMPLATES_FILE=${OUTPUT_DIR}/templates.min.js
-
-TEMPLATES_DIR=src/templates
+OUTPUT_TEMPLATES_FILE=${OUTPUT_DIR}/diff2html-templates.js
+OUTPUT_MIN_TEMPLATES_FILE=${OUTPUT_DIR}/diff2html-templates.min.js
 
 echo "Creating diff2html release ..."
 
@@ -43,8 +42,8 @@ webpack ${INPUT_JS_UI_FILE} ${OUTPUT_JS_UI_FILE}
 echo "Minifying ${OUTPUT_JS_UI_FILE} to ${OUTPUT_MIN_JS_UI_FILE}"
 uglifyjs ${OUTPUT_JS_UI_FILE} -c -o ${OUTPUT_MIN_JS_UI_FILE}
 
-echo "Pre-compile nunjucks templates in ${TEMPLATES_DIR}"
-nunjucks-precompile ${TEMPLATES_DIR} > ${OUTPUT_TEMPLATES_FILE}
+echo "Pre-compile nunjucks templates in ${INTPUT_TEMPLATES_DIR}"
+nunjucks-precompile ${INTPUT_TEMPLATES_DIR} > ${OUTPUT_TEMPLATES_FILE}
 
 echo "Minifying ${OUTPUT_TEMPLATES_FILE} to ${OUTPUT_MIN_TEMPLATES_FILE}"
 uglifyjs ${OUTPUT_TEMPLATES_FILE} -c -o ${OUTPUT_MIN_TEMPLATES_FILE}
