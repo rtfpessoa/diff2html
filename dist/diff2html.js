@@ -325,10 +325,10 @@
 	      if (utils.startsWith(line, 'diff')) {
 	        startFile();
 	      } else if (currentFile && !currentFile.oldName && (values = getSrcFilename(line, config))) {
-	        currentFile.oldName = values[1];
+	        currentFile.oldName = values;
 	        currentFile.language = getExtension(currentFile.oldName, currentFile.language);
 	      } else if (currentFile && !currentFile.newName && (values = getDstFilename(line, config))) {
-	        currentFile.newName = values[1];
+	        currentFile.newName = values;
 	        currentFile.language = getExtension(currentFile.newName, currentFile.language);
 	      } else if (currentFile && utils.startsWith(line, '@@')) {
 	        startBlock(line);
@@ -391,7 +391,7 @@
 	  }
 
 	  function getSrcFilename(line, cfg) {
-	    var prefixes = ["a\\/", "i\\/", "w\\/", "c\\/", "o\\/"];
+	    var prefixes = ["a/", "i/", "w/", "c/", "o/"];
 
 	    if (cfg.srcPrefix) prefixes.push(cfg.srcPrefix);
 
@@ -399,7 +399,7 @@
 	  }
 
 	  function getDstFilename(line, cfg) {
-	    var prefixes = ["b\\/", "i\\/", "w\\/", "c\\/", "o\\/"];
+	    var prefixes = ["b/", "i/", "w/", "c/", "o/"];
 
 	    if (cfg.dstPrefix) prefixes.push(cfg.dstPrefix);
 
@@ -407,8 +407,20 @@
 	  }
 
 	  function _getFilename(linePrefix, line, prefixes) {
-	    var prefixesStr = prefixes.join("|");
-	    return new RegExp('^' + linePrefix + ' "?(?:' + prefixesStr + ')(.+?)"?$').exec(line);
+	    var FilenameRegExp = new RegExp('^' + linePrefix + ' "?(.+?)"?$');
+
+	    var filename;
+	    var values = FilenameRegExp.exec(line);
+	    if (values && values[1]) {
+	      filename = values[1];
+	      var matchingPrefixes = prefixes.filter(function(p) {
+	        return filename.indexOf(p) === 0;
+	      });
+
+	      if (matchingPrefixes[0]) filename = filename.slice(matchingPrefixes[0].length); // remove prefix if exists
+	    }
+
+	    return filename;
 	  }
 
 	  module.exports.DiffParser = new DiffParser();
