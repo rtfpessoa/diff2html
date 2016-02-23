@@ -64,5 +64,47 @@ describe('DiffParser', function() {
       assert.equal(1, file1.blocks.length);
     }
 
+    it('should parse diff with special characters', function() {
+      var diff =
+        'diff --git "a/bla with \ttab.scala" "b/bla with \ttab.scala"\n' +
+        'index 4c679d7..e9bd385 100644\n' +
+        '--- "a/bla with \ttab.scala"\n' +
+        '+++ "b/bla with \ttab.scala"\n' +
+        '@@ -1 +1,2 @@\n' +
+        '-cenas\n' +
+        '+cenas com ananas\n' +
+        '+bananas';
+
+      var result = Diff2Html.getJsonFromDiff(diff);
+      var file1 = result[0];
+      assert.equal(1, result.length);
+      assert.equal(2, file1.addedLines);
+      assert.equal(1, file1.deletedLines);
+      assert.equal('bla with \ttab.scala', file1.oldName);
+      assert.equal('bla with \ttab.scala', file1.newName);
+      assert.equal(1, file1.blocks.length);
+    });
+
+    it('should parse diff with prefix', function() {
+      var diff =
+        'diff --git "\tbla with \ttab.scala" "\tbla with \ttab.scala"\n' +
+        'index 4c679d7..e9bd385 100644\n' +
+        '--- "\tbla with \ttab.scala"\n' +
+        '+++ "\tbla with \ttab.scala"\n' +
+        '@@ -1 +1,2 @@\n' +
+        '-cenas\n' +
+        '+cenas com ananas\n' +
+        '+bananas';
+
+      var result = Diff2Html.getJsonFromDiff(diff, {"srcPrefix": "\t", "dstPrefix": "\t"});
+      var file1 = result[0];
+      assert.equal(1, result.length);
+      assert.equal(2, file1.addedLines);
+      assert.equal(1, file1.deletedLines);
+      assert.equal('bla with \ttab.scala', file1.oldName);
+      assert.equal('bla with \ttab.scala', file1.newName);
+      assert.equal(1, file1.blocks.length);
+    });
+
   });
 });
