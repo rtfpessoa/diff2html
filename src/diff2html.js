@@ -26,8 +26,9 @@
   /*
    * Generates json object from string diff input
    */
-  Diff2Html.prototype.getJsonFromDiff = function(diffInput) {
-    return diffParser.generateDiffJson(diffInput);
+  Diff2Html.prototype.getJsonFromDiff = function(diffInput, config) {
+    var configOrEmpty = config || {};
+    return diffParser.generateDiffJson(diffInput, configOrEmpty);
   };
 
   /*
@@ -38,7 +39,7 @@
 
     var diffJson = diffInput;
     if (!configOrEmpty.inputFormat || configOrEmpty.inputFormat === 'diff') {
-      diffJson = diffParser.generateDiffJson(diffInput);
+      diffJson = diffParser.generateDiffJson(diffInput, configOrEmpty);
     }
 
     var fileList = '';
