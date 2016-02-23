@@ -72,8 +72,9 @@
 	  /*
 	   * Generates json object from string diff input
 	   */
-	  Diff2Html.prototype.getJsonFromDiff = function(diffInput) {
-	    return diffParser.generateDiffJson(diffInput);
+	  Diff2Html.prototype.getJsonFromDiff = function(diffInput, config) {
+	    var configOrEmpty = config || {};
+	    return diffParser.generateDiffJson(diffInput, configOrEmpty);
 	  };
 
 	  /*
@@ -84,7 +85,7 @@
 
 	    var diffJson = diffInput;
 	    if (!configOrEmpty.inputFormat || configOrEmpty.inputFormat === 'diff') {
-	      diffJson = diffParser.generateDiffJson(diffInput);
+	      diffJson = diffParser.generateDiffJson(diffInput, configOrEmpty);
 	    }
 
 	    var fileList = '';
@@ -186,7 +187,7 @@
 
 	  DiffParser.prototype.LINE_TYPE = LINE_TYPE;
 
-	  DiffParser.prototype.generateDiffJson = function(diffInput) {
+	  DiffParser.prototype.generateDiffJson = function(diffInput, config) {
 	    var files = [];
 	    var currentFile = null;
 	    var currentBlock = null;
@@ -296,11 +297,11 @@
 	    var deletedFileMode = /^deleted file mode (\d{6})/;
 	    var newFileMode = /^new file mode (\d{6})/;
 
-	    var copyFrom = /^copy from (.+)/;
-	    var copyTo = /^copy to (.+)/;
+	    var copyFrom = /^copy from "?(.+?)"?/;
+	    var copyTo = /^copy to "?(.+?)"?/;
 
-	    var renameFrom = /^rename from (.+)/;
-	    var renameTo = /^rename to (.+)/;
+	    var renameFrom = /^rename from "?(.+?)"?/;
+	    var renameTo = /^rename to "?(.+?)"?/;
 
 	    var similarityIndex = /^similarity index (\d+)%/;
 	    var dissimilarityIndex = /^dissimilarity index (\d+)%/;
@@ -323,10 +324,10 @@
 	      var values = [];
 	      if (utils.startsWith(line, 'diff')) {
 	        startFile();
-	      } else if (currentFile && !currentFile.oldName && (values = /^--- [aiwco]\/(.+)$/.exec(line))) {
+	      } else if (currentFile && !currentFile.oldName && (values = getSrcFilename(line, config))) {
 	        currentFile.oldName = values[1];
 	        currentFile.language = getExtension(currentFile.oldName, currentFile.language);
-	      } else if (currentFile && !currentFile.newName && (values = /^\+\+\+ [biwco]?\/(.+)$/.exec(line))) {
+	      } else if (currentFile && !currentFile.newName && (values = getDstFilename(line, config))) {
 	        currentFile.newName = values[1];
 	        currentFile.language = getExtension(currentFile.newName, currentFile.language);
 	      } else if (currentFile && utils.startsWith(line, '@@')) {
@@ -387,6 +388,27 @@
 	    }
 
 	    return language;
+	  }
+
+	  function getSrcFilename(line, cfg) {
+	    var prefixes = ["a\\/", "i\\/", "w\\/", "c\\/", "o\\/"];
+
+	    if (cfg.srcPrefix) prefixes.push(cfg.srcPrefix);
+
+	    return _getFilename('---', line, prefixes);
+	  }
+
+	  function getDstFilename(line, cfg) {
+	    var prefixes = ["b\\/", "i\\/", "w\\/", "c\\/", "o\\/"];
+
+	    if (cfg.dstPrefix) prefixes.push(cfg.dstPrefix);
+
+	    return _getFilename('\\+\\+\\+', line, prefixes);
+	  }
+
+	  function _getFilename(linePrefix, line, prefixes) {
+	    var prefixesStr = prefixes.join("|");
+	    return new RegExp('^' + linePrefix + ' "?(?:' + prefixesStr + ')(.+?)"?$').exec(line);
 	  }
 
 	  module.exports.DiffParser = new DiffParser();
