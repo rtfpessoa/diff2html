@@ -129,11 +129,11 @@ describe('SideBySidePrinter', function() {
       var fileHtml = sideBySidePrinter.generateSingleLineHtml(
         diffParser.LINE_TYPE.INSERTS, 30, 'test', '+');
       var expected = '<tr>\n' +
-      '    <td class="d2h-code-side-linenumber d2h-ins">30</td>\n' +
-      '    <td class="d2h-ins">' +
-      '      <div class="d2h-code-side-line d2h-ins"><span class="d2h-code-line-prefix">+</span><span class="d2h-code-line-ctn">test</span></div>' +
-      '    </td>\n' +
-      '  </tr>\n';
+        '    <td class="d2h-code-side-linenumber d2h-ins">30</td>\n' +
+        '    <td class="d2h-ins">' +
+        '      <div class="d2h-code-side-line d2h-ins"><span class="d2h-code-line-prefix">+</span><span class="d2h-code-line-ctn">test</span></div>' +
+        '    </td>\n' +
+        '  </tr>\n';
 
       assert.equal(expected, fileHtml);
     });
@@ -144,11 +144,11 @@ describe('SideBySidePrinter', function() {
       var fileHtml = sideBySidePrinter.generateSingleLineHtml(
         diffParser.LINE_TYPE.DELETES, 30, 'test', '-');
       var expected = '<tr>\n' +
-      '    <td class="d2h-code-side-linenumber d2h-del">30</td>\n' +
-      '    <td class="d2h-del">' +
-      '      <div class="d2h-code-side-line d2h-del"><span class="d2h-code-line-prefix">-</span><span class="d2h-code-line-ctn">test</span></div>' +
-      '    </td>\n' +
-      '  </tr>\n';
+        '    <td class="d2h-code-side-linenumber d2h-del">30</td>\n' +
+        '    <td class="d2h-del">' +
+        '      <div class="d2h-code-side-line d2h-del"><span class="d2h-code-line-prefix">-</span><span class="d2h-code-line-ctn">test</span></div>' +
+        '    </td>\n' +
+        '  </tr>\n';
 
       assert.equal(expected, fileHtml);
     });

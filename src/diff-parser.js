@@ -249,11 +249,11 @@
     var values = FilenameRegExp.exec(line);
     if (values && values[1]) {
       filename = values[1];
-      var prefix = prefixes.find(function(prefix) {
-        return filename.startsWith(prefix);
+      var matchingPrefixes = prefixes.filter(function(p) {
+        return filename.indexOf(p) === 0;
       });
 
-      if (prefix) filename = filename.slice(prefix.length); // remove prefix if exists
+      if (matchingPrefixes[0]) filename = filename.slice(matchingPrefixes[0].length); // remove prefix if exists
     }
 
     return filename;

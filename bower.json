@@ -1,6 +1,6 @@
 {
   "name": "diff2html",
-  "version": "2.0.0-beta3",
+  "version": "2.0.0-beta6",
   "homepage": "http://rtfpessoa.github.io/diff2html/",
   "description": "Fast Diff to colorized HTML",
   "keywords": [
@@ -40,6 +40,7 @@
   ],
   "ignore": [
     "**/.*",
+    "webpack.config.js",
     "package.json",
     "release.sh",
     "circle.yml",

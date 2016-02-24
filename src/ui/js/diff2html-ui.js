@@ -80,9 +80,14 @@
 
   Diff2HtmlUI.prototype._getTarget = function(targetId) {
     var $target;
-    if (targetId) {
+
+    if (typeof(targetId) === 'object' && targetId instanceof jQuery) {
+      $target = targetId;
+    } else if (typeof(targetId) === 'string') {
       $target = $(targetId);
     } else {
+      console.error("Wrong target provided! Falling back to default value 'body'.");
+      console.log("Please provide a jQuery object or a valid DOM query string.");
       $target = $(defaultTarget);
     }
 
