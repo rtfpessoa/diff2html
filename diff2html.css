@@ -6,16 +6,7 @@
  */
 
 .d2h-wrapper {
-    display: block;
-    margin: 0 auto;
     text-align: left;
-    width: 100%;
-}
-
-.d2h-file-wrapper {
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    margin-bottom: 1em;
 }
 
 .d2h-file-header {
@@ -29,7 +20,6 @@
     display: inline;
     font-size: 12px;
     text-align: center;
-    max-width: 15%;
 }
 
 .d2h-lines-added {
@@ -42,7 +32,6 @@
     color: #399839;
     border-radius: 5px 0 0 5px;
     padding: 2px;
-    width: 25px;
 }
 
 .d2h-lines-deleted {
@@ -55,26 +44,36 @@
     color: #c33;
     border-radius: 0 5px 5px 0;
     padding: 2px;
-    width: 25px;
+}
+
+.d2h-file-name-wrapper {
+    display: inline-flex;
+    width: 90%;
 }
 
 .d2h-file-name {
-    display: inline;
-    height: 33px;
     line-height: 33px;
-    max-width: 80%;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.d2h-file-wrapper {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-bottom: 1em;
 }
 
 .d2h-diff-table {
     border-collapse: collapse;
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
     font-size: 12px;
-    height: 18px;
-    line-height: 18px;
     width: 100%;
+}
+
+.d2h-diff-tbody > tr > td > div {
+    height: 16px;
+    line-height: 16px;
 }
 
 .d2h-files-diff {
@@ -96,16 +95,9 @@
 
 .d2h-code-line {
     display: block;
-    white-space: pre;
+    white-space: nowrap;
     padding: 0 10px;
-    height: 18px;
-    line-height: 18px;
     margin-left: 80px;
-    /* Override HighlightJS */
-    color: inherit;
-    overflow-x: inherit;
-    background: none;
-    /* ******************** */
 }
 
 .d2h-code-side-line {
@@ -152,28 +144,30 @@
 }
 
 .line-num1 {
-    display: inline-block;
+    box-sizing: border-box;
     float: left;
-    width: 30px;
+    width: 40px;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-left: 3px;
 }
 
 .line-num2 {
-    display: inline-block;
+    box-sizing: border-box;
     float: right;
-    width: 30px;
+    width: 40px;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-left: 3px;
 }
 
 .d2h-code-linenumber {
+    box-sizing: border-box;
     position: absolute;
-    width: 2%;
-    min-width: 65px;
-    padding-left: 10px;
-    padding-right: 10px;
+    width: 86px;
     height: 18px;
+    padding-left: 2px;
+    padding-right: 2px;
     line-height: 18px;
     background-color: #fff;
     color: rgba(0, 0, 0, 0.3);
@@ -184,10 +178,11 @@
 }
 
 .d2h-code-side-linenumber {
+    box-sizing: border-box;
     position: absolute;
-    width: 35px;
-    padding-left: 10px;
-    padding-right: 10px;
+    width: 56px;
+    padding-left: 5px;
+    padding-right: 5px;
     height: 18px;
     line-height: 18px;
     background-color: #fff;
@@ -199,6 +194,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/*
+ * Changes Highlight
+ */
 
 .d2h-del {
     background-color: #fee8e9;
@@ -216,9 +215,28 @@
     border-color: #d5e4f2;
 }
 
+.d2h-del.d2h-change, .d2h-ins.d2h-change {
+    background-color: #ffc;
+}
+
+ins.d2h-change, del.d2h-change {
+    background-color: #fad771;
+}
+
+.d2h-file-diff .d2h-del.d2h-change {
+    background-color: #fae1af;
+}
+
+.d2h-file-diff .d2h-ins.d2h-change {
+    background-color: #ded;
+}
+
+/*
+ * File Summary List
+ */
+
 .d2h-file-list-wrapper {
     margin-bottom: 10px;
-    padding: 0 10px;
 }
 
 .d2h-file-list-wrapper a {
@@ -231,11 +249,11 @@
 }
 
 .d2h-file-list-header {
-    font-weight: bold;
-    margin-bottom: 5px;
     text-align: left;
-    display: inline;
-    float:left;
+}
+
+.d2h-file-list-title {
+    font-weight: bold;
 }
 
 .d2h-file-list-line {
@@ -243,46 +261,16 @@
     font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-.d2h-file-list-line .d2h-file-name  {
+.d2h-file-list-line .d2h-file-name {
     line-height: 21px;
 }
 
 .d2h-file-list {
-    display:none;
+    display: block;
 }
 
-.d2h-clear {
-    display:block;
-    clear: both;
-}
-
-.d2h-del.d2h-change, .d2h-ins.d2h-change {
-    background-color: #ffc;
-}
-ins.d2h-change, del.d2h-change {
-    background-color: #fad771;
-}
-.d2h-file-diff .d2h-del.d2h-change {
-    background-color: #fae1af;
-}
-.d2h-file-diff .d2h-ins.d2h-change {
-    background-color: #ded;
-}
-
-/* CSS only show/hide */
-.d2h-show {
+.d2h-file-switch {
     display: none;
-    float:left;
-}
-.d2h-hide {
-    float:left;
-}
-.d2h-hide:target + .d2h-show {
-    display: inline;
-}
-.d2h-hide:target {
-    display: none;
-}
-.d2h-hide:target ~ .d2h-file-list {
-    display:block;
+    font-size: 10px;
+    cursor: pointer;
 }
