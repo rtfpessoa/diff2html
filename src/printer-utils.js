@@ -39,9 +39,10 @@
     var oldFilename = file.oldName;
     var newFilename = file.newName;
 
-    if (oldFilename && newFilename && oldFilename !== newFilename && !isDeletedName(newFilename)) {
+    if (oldFilename && newFilename && oldFilename !== newFilename
+      && !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
       return oldFilename + ' -> ' + newFilename;
-    } else if (newFilename && !isDeletedName(newFilename)) {
+    } else if (newFilename && !isDevNullName(newFilename)) {
       return newFilename;
     } else if (oldFilename) {
       return oldFilename;
@@ -132,8 +133,8 @@
     };
   };
 
-  function isDeletedName(name) {
-    return name === 'dev/null';
+  function isDevNullName(name) {
+    return name.indexOf('dev/null') !== -1;
   }
 
   function removeIns(line) {
