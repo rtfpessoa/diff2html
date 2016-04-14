@@ -66,7 +66,10 @@
         var insertType;
         var deleteType;
 
-        var doMatching = that.config.matching === 'lines' || that.config.matching === 'words';
+        var comparisons = oldLines.length * newLines.length;
+        var maxComparisons = that.config.matchingMaxComparisons || 2500;
+        var doMatching = comparisons < maxComparisons && (that.config.matching === 'lines' ||
+            that.config.matching === 'words');
 
         if (doMatching) {
           matches = matcher(oldLines, newLines);
