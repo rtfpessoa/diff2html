@@ -75,6 +75,18 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
 ### How to use
 
+> HTML resource imports
+
+```html
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="dist/diff2html.css">
+
+<!-- Javascripts -->
+<script type="text/javascript" src="dist/diff2html-templates.js"></script>
+<script type="text/javascript" src="dist/diff2html.js"></script>
+<script type="text/javascript" src="dist/diff2html-ui.js"></script>
+```
+
 > Init
 
 ```js
