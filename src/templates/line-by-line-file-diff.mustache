@@ -1,22 +1,22 @@
-<div id="{{ printerUtils.getHtmlId(file) }}" class="d2h-file-wrapper" data-lang="{{ file.language }}">
+<div id="{{fileHtmlId}}" class="d2h-file-wrapper" data-lang="{{file.language}}">
     <div class="d2h-file-header">
     <span class="d2h-file-stats">
       <span class="d2h-lines-added">
-        <span>+{{ file.addedLines }}</span>
+        <span>+{{file.addedLines}}</span>
       </span>
       <span class="d2h-lines-deleted">
-        <span>-{{ file.deletedLines }}</span>
+        <span>-{{file.deletedLines}}</span>
       </span>
     </span>
     <span class="d2h-file-name-wrapper">
-        <span class="d2h-file-name">&nbsp;{{ printerUtils.getDiffName(file) }}</span>
+        <span class="d2h-file-name">&nbsp;{{fileDiffName}}</span>
     </span>
     </div>
     <div class="d2h-file-diff">
         <div class="d2h-code-wrapper">
             <table class="d2h-diff-table">
                 <tbody class="d2h-diff-tbody">
-                {{ diffs | safe}}
+                {{{diffs}}}
                 </tbody>
             </table>
         </div>
