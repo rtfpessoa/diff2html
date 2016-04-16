@@ -12,10 +12,17 @@
 
   var hogan = require('hogan.js');
 
+  var hoganTemplates;
+
   var templatesPath = path.resolve(__dirname, 'templates');
   var templatesCache = {};
 
   function HoganJsUtils() {
+    try {
+      hoganTemplates = require('./templates/diff2html-templates.js');
+    } catch (_ignore) {
+      hoganTemplates = {};
+    }
   }
 
   HoganJsUtils.prototype.render = function(namespace, view, params) {
@@ -32,22 +39,29 @@
   HoganJsUtils.prototype._getTemplate = function(templateKey) {
     var template = this._readFromCache(templateKey);
 
-    if (!template && fs) {
-      var templatePath = path.join(templatesPath, templateKey);
-      var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
-      template = hogan.compile(templateContent);
-      this._addToCache(templateKey, template);
+    if (!template) {
+      template = this._loadTemplate(templateKey);
     }
 
     return template;
   };
 
-  HoganJsUtils.prototype._addToCache = function(templateKey, template) {
-    templatesCache[templateKey] = template;
+  HoganJsUtils.prototype._loadTemplate = function(templateKey) {
+    var template;
+    if (fs.readFileSync) {
+      var templatePath = path.join(templatesPath, templateKey);
+      var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
+      template = hogan.compile(templateContent);
+      templatesCache[templateKey] = template;
+    }
+
+    return template;
   };
 
   HoganJsUtils.prototype._readFromCache = function(templateKey) {
-    return global.browserTemplates && global.browserTemplates[templateKey] || templatesCache[templateKey];
+    return global.browserTemplates && global.browserTemplates[templateKey] ||
+      hoganTemplates[templateKey] ||
+      templatesCache[templateKey];
   };
 
   HoganJsUtils.prototype._templateKey = function(namespace, view) {

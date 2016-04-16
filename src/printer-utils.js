@@ -39,8 +39,8 @@
     var oldFilename = file.oldName;
     var newFilename = file.newName;
 
-    if (oldFilename && newFilename && oldFilename !== newFilename
-      && !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
+    if (oldFilename && newFilename && oldFilename !== newFilename &&
+      !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
       return oldFilename + ' -> ' + newFilename;
     } else if (newFilename && !isDevNullName(newFilename)) {
       return newFilename;

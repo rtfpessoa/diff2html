@@ -21,9 +21,7 @@
   "disallowTrailingWhitespace": true,
   "maximumLineLength": 130,
   "requireCamelCaseOrUpperCaseIdentifiers": true,
-  "requireCapitalizedComments": true,
   "requireCapitalizedConstructors": true,
-  "requireCurlyBraces": true,
   "requireSpaceAfterKeywords": [
     "if",
     "else",

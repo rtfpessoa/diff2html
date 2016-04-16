@@ -5,6 +5,5 @@ test:
     - nvm install 5 && npm test
   post:
     - npm install
-    - istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec
+    - npm test
     - cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage
-    - rm -rf ./coverage
