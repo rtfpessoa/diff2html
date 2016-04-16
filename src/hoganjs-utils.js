@@ -47,7 +47,7 @@
   };
 
   HoganJsUtils.prototype._readFromCache = function(templateKey) {
-    return browserTemplates && browserTemplates[templateKey] || templatesCache[templateKey];
+    return global.browserTemplates && global.browserTemplates[templateKey] || templatesCache[templateKey];
   };
 
   HoganJsUtils.prototype._templateKey = function(namespace, view) {
