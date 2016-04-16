@@ -19,7 +19,9 @@
   }
 
   HoganJsUtils.prototype.render = function(namespace, view, params) {
-    var template = this._getTemplate(namespace, view);
+    var templateKey = this._templateKey(namespace, view);
+
+    var template = this._getTemplate(templateKey);
     if (template) {
       return template.render(params);
     }
@@ -27,12 +29,11 @@
     return null;
   };
 
-  HoganJsUtils.prototype._getTemplate = function(namespace, view) {
-    var templateKey = this._templateKey(namespace, view);
+  HoganJsUtils.prototype._getTemplate = function(templateKey) {
     var template = this._readFromCache(templateKey);
 
     if (!template && fs) {
-      var templatePath = path.join(templatesPath, namespace, view);
+      var templatePath = path.join(templatesPath, templateKey);
       var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
       template = hogan.compile(templateContent);
       this._addToCache(templateKey, template);
