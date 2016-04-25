@@ -28,6 +28,7 @@
     var currentFile = null;
     var currentBlock = null;
     var oldLine = null;
+    var oldLine2 = null; // Used for combined diff
     var newLine = null;
 
     var saveBlock = function() {
@@ -67,22 +68,41 @@
 
       var values;
 
-      if (values = /^@@ -(\d+),\d+ \+(\d+),\d+ @@.*/.exec(line)) {
+      /**
+       * From Range:
+       * -<start line>[,<number of lines>]
+       *
+       * To Range:
+       * +<start line>[,<number of lines>]
+       *
+       * @@ from-file-range to-file-range @@
+       *
+       * @@@ from-file-range from-file-range to-file-range @@@
+       *
+       * number of lines is optional, if omited consider 0
+       */
+
+      if (values = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@.*/.exec(line)) {
         currentFile.isCombined = false;
-      } else if (values = /^@@@ -(\d+),\d+ -\d+,\d+ \+(\d+),\d+ @@@.*/.exec(line)) {
+        oldLine = values[1];
+        newLine = values[2];
+      } else if (values = /^@@@ -(\d+)(?:,\d+)? -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@@.*/.exec(line)) {
         currentFile.isCombined = true;
+        oldLine = values[1];
+        oldLine2 = values[2];
+        newLine = values[3];
       } else {
-        values = [0, 0];
+        console.error("Failed to parse lines, starting in 0!");
+        oldLine = 0;
+        newLine = 0;
         currentFile.isCombined = false;
       }
-
-      oldLine = values[1];
-      newLine = values[2];
 
       /* Create block metadata */
       currentBlock = {};
       currentBlock.lines = [];
       currentBlock.oldStartLine = oldLine;
+      currentBlock.oldStartLine2 = oldLine2;
       currentBlock.newStartLine = newLine;
       currentBlock.header = line;
     };

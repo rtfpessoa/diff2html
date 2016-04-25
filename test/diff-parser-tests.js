@@ -374,5 +374,31 @@ describe('DiffParser', function() {
       assert.equal(86, file1.unchangedPercentage);
     });
 
+    it('should parse diffs correct line numbers', function() {
+      var diff =
+        'diff --git a/sample b/sample\n' +
+        'index 0000001..0ddf2ba\n' +
+        '--- a/sample\n' +
+        '+++ b/sample\n' +
+        '@@ -1 +1,2 @@\n' +
+        '-test\n' +
+        '+test1r\n';
+
+      var result = Diff2Html.getJsonFromDiff(diff);
+      assert.equal(1, result.length);
+
+      var file1 = result[0];
+      assert.equal(1, file1.addedLines);
+      assert.equal(1, file1.deletedLines);
+      assert.equal('sample', file1.oldName);
+      assert.equal('sample', file1.newName);
+      assert.equal(1, file1.blocks.length);
+      assert.equal(2, file1.blocks[0].lines.length);
+      assert.equal(1, file1.blocks[0].lines[0].oldNumber);
+      assert.equal(null, file1.blocks[0].lines[0].newNumber);
+      assert.equal(null, file1.blocks[0].lines[1].oldNumber);
+      assert.equal(1, file1.blocks[0].lines[1].newNumber);
+    });
+
   });
 });
