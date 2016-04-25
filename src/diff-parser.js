@@ -133,19 +133,19 @@
     var deletedFileMode = /^deleted file mode (\d{6})/;
     var newFileMode = /^new file mode (\d{6})/;
 
-    var copyFrom = /^copy from "?(.+?)"?/;
-    var copyTo = /^copy to "?(.+?)"?/;
+    var copyFrom = /^copy from "?(.+)"?/;
+    var copyTo = /^copy to "?(.+)"?/;
 
-    var renameFrom = /^rename from "?(.+?)"?/;
-    var renameTo = /^rename to "?(.+?)"?/;
+    var renameFrom = /^rename from "?(.+)"?/;
+    var renameTo = /^rename to "?(.+)"?/;
 
     var similarityIndex = /^similarity index (\d+)%/;
     var dissimilarityIndex = /^dissimilarity index (\d+)%/;
-    var index = /^index ([0-9a-z]+)..([0-9a-z]+) (\d{6})?/;
+    var index = /^index ([0-9a-z]+)\.\.([0-9a-z]+)\s*(\d{6})?/;
 
     /* Combined Diff */
-    var combinedIndex = /^index ([0-9a-z]+),([0-9a-z]+)..([0-9a-z]+)/;
-    var combinedMode = /^mode (\d{6}),(\d{6})..(\d{6})/;
+    var combinedIndex = /^index ([0-9a-z]+),([0-9a-z]+)\.\.([0-9a-z]+)/;
+    var combinedMode = /^mode (\d{6}),(\d{6})\.\.(\d{6})/;
     var combinedNewFile = /^new file mode (\d{6})/;
     var combinedDeletedFile = /^deleted file mode (\d{6}),(\d{6})/;
 
@@ -174,8 +174,10 @@
         currentFile.newMode = values[1];
       } else if ((values = deletedFileMode.exec(line))) {
         currentFile.deletedFileMode = values[1];
+        currentFile.isDeleted = true;
       } else if ((values = newFileMode.exec(line))) {
         currentFile.newFileMode = values[1];
+        currentFile.isNew = true;
       } else if ((values = copyFrom.exec(line))) {
         currentFile.oldName = values[1];
         currentFile.isCopy = true;
@@ -195,7 +197,7 @@
       } else if ((values = index.exec(line))) {
         currentFile.checksumBefore = values[1];
         currentFile.checksumAfter = values[2];
-        values[2] && (currentFile.mode = values[3]);
+        values[3] && (currentFile.mode = values[3]);
       } else if ((values = combinedIndex.exec(line))) {
         currentFile.checksumBefore = [values[2], values[3]];
         currentFile.checksumAfter = values[1];
@@ -204,8 +206,10 @@
         currentFile.newMode = values[1];
       } else if ((values = combinedNewFile.exec(line))) {
         currentFile.newFileMode = values[1];
+        currentFile.isNew = true;
       } else if ((values = combinedDeletedFile.exec(line))) {
         currentFile.deletedFileMode = values[1];
+        currentFile.isDeleted = true;
       } else if (currentBlock) {
         createLine(line);
       }
@@ -229,7 +233,9 @@
   function getSrcFilename(line, cfg) {
     var prefixes = ["a/", "i/", "w/", "c/", "o/"];
 
-    if (cfg.srcPrefix) prefixes.push(cfg.srcPrefix);
+    if (cfg.srcPrefix) {
+      prefixes.push(cfg.srcPrefix);
+    }
 
     return _getFilename('---', line, prefixes);
   }
@@ -237,7 +243,9 @@
   function getDstFilename(line, cfg) {
     var prefixes = ["b/", "i/", "w/", "c/", "o/"];
 
-    if (cfg.dstPrefix) prefixes.push(cfg.dstPrefix);
+    if (cfg.dstPrefix) {
+      prefixes.push(cfg.dstPrefix);
+    }
 
     return _getFilename('\\+\\+\\+', line, prefixes);
   }
@@ -253,7 +261,10 @@
         return filename.indexOf(p) === 0;
       });
 
-      if (matchingPrefixes[0]) filename = filename.slice(matchingPrefixes[0].length); // remove prefix if exists
+      if (matchingPrefixes[0]) {
+        // Remove prefix if exists
+        filename = filename.slice(matchingPrefixes[0].length);
+      }
     }
 
     return filename;
