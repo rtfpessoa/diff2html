@@ -23,7 +23,9 @@
 
   DiffParser.prototype.LINE_TYPE = LINE_TYPE;
 
-  DiffParser.prototype.generateDiffJson = function(diffInput, config) {
+  DiffParser.prototype.generateDiffJson = function(diffInput, configuration) {
+    var config = configuration || {};
+
     var files = [];
     var currentFile = null;
     var currentBlock = null;

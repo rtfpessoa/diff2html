@@ -38,9 +38,9 @@
   "scripts": {
     "release": "./scripts/release.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
-    "test": "istanbul cover -x '**/templates/**' -x 'rematch.js' _mocha -- -u exports -R spec ./test/**/*",
+    "test": "istanbul cover _mocha -- -u exports -R spec ./test/**/*",
     "style": "jscs src test",
-    "codacy": "istanbul cover -x '**/templates/**' -x 'rematch.js' _mocha -- -u exports -R spec ./test/**/* && cat ./coverage/lcov.info | codacy-coverage"
+    "codacy": "istanbul cover _mocha -- -u exports -R spec ./test/**/* && cat ./coverage/lcov.info | codacy-coverage"
   },
   "main": "./src/diff2html.js",
   "browser": {
