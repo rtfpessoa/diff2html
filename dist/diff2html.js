@@ -2809,11 +2809,16 @@ process.umask = function() { return 0; };
 
   HoganJsUtils.prototype._loadTemplate = function(templateKey) {
     var template;
-    if (fs.readFileSync) {
-      var templatePath = path.join(templatesPath, templateKey);
-      var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
-      template = hogan.compile(templateContent);
-      templatesCache[templateKey] = template;
+
+    try {
+      if (fs.readFileSync) {
+        var templatePath = path.join(templatesPath, templateKey);
+        var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
+        template = hogan.compile(templateContent);
+        templatesCache[templateKey] = template;
+      }
+    } catch (e) {
+      console.error('Failed to read (template: ' + templateKey + ') from fs: ' + e.message);
     }
 
     return template;
