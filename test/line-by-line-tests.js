@@ -15,7 +15,7 @@ describe('LineByLinePrinter', function() {
         '            File without changes\n' +
         '        </div>\n' +
         '    </td>\n' +
-        '</tr>\n';
+        '</tr>';
 
       assert.equal(expected, fileHtml);
     });
@@ -39,7 +39,7 @@ describe('LineByLinePrinter', function() {
         '            <span class="d2h-code-line-ctn">+</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
-        '</tr>\n';
+        '</tr>';
 
       assert.equal(expected, fileHtml);
     });
@@ -61,7 +61,7 @@ describe('LineByLinePrinter', function() {
         '            <span class="d2h-code-line-ctn">-</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
-        '</tr>\n';
+        '</tr>';
 
       assert.equal(expected, fileHtml);
     });
@@ -83,7 +83,7 @@ describe('LineByLinePrinter', function() {
         '            <span class="d2h-code-line-ctn">+</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
-        '</tr>\n';
+        '</tr>';
 
       assert.equal(expected, fileHtml);
     });
@@ -105,7 +105,7 @@ describe('LineByLinePrinter', function() {
         '            <span class="d2h-code-line-ctn">+</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
-        '</tr>\n';
+        '</tr>';
 
       assert.equal(expected, fileHtml);
     });
@@ -127,7 +127,7 @@ describe('LineByLinePrinter', function() {
         '            <span class="d2h-code-line-ctn">+</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
-        '</tr>\n';
+        '</tr>';
 
       assert.equal(expected, fileHtml);
     });
