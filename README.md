@@ -82,7 +82,6 @@ The HTML output accepts a Javascript object with configuration. Possible options
 <link rel="stylesheet" type="text/css" href="dist/diff2html.css">
 
 <!-- Javascripts -->
-<script type="text/javascript" src="dist/diff2html-templates.js"></script>
 <script type="text/javascript" src="dist/diff2html.js"></script>
 <script type="text/javascript" src="dist/diff2html-ui.js"></script>
 ```
@@ -121,12 +120,12 @@ If your favourite language is not included in the default package also add its j
 
 ```html
 <!-- Stylesheet -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
 
 <!-- Javascripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/languages/scala.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/languages/scala.min.js"></script>
 <script type="text/javascript" src="dist/diff2html-ui.js"></script>
 ```
 
@@ -146,7 +145,7 @@ $(document).ready(function() {
 
 ```html
 <!-- Javascripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.js"></script>
 <script type="text/javascript" src="dist/diff2html-ui.js"></script>
 ```
 
@@ -168,7 +167,7 @@ I will try to review them as soon as possible.
 
 ## License
 
-Copyright 2014 Rodrigo Fernandes. Released under the terms of the MIT license.
+Copyright 2014-2016 Rodrigo Fernandes. Released under the terms of the MIT license.
 
 ## Thanks
 
