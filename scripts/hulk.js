@@ -161,6 +161,7 @@ function prepareOutput(content) {
 
       return '(function() {\n' +
         'if (!!!global.' + variableName + ') global.' + variableName + ' = {};\n' +
+        'var Hogan = require("hogan.js");' +
         content + '\n' +
         nodeExport +
         '})();';
