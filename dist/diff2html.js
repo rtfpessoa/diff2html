@@ -2758,7 +2758,7 @@ process.umask = function() { return 0; };
 })();
 
 },{"./printer-utils.js":28}],25:[function(require,module,exports){
-(function (global,__dirname){
+(function (__dirname){
 /*
  *
  * Utils (hoganjs-utils.js)
@@ -2776,7 +2776,6 @@ process.umask = function() { return 0; };
   var hoganTemplates = require('./templates/diff2html-templates.js');
 
   var templatesPath = path.resolve(__dirname, 'templates');
-  var templatesCache = {};
 
   function HoganJsUtils() {
   }
@@ -2815,7 +2814,7 @@ process.umask = function() { return 0; };
         var templatePath = path.join(templatesPath, templateKey);
         var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
         template = hogan.compile(templateContent);
-        templatesCache[templateKey] = template;
+        hoganTemplates[templateKey] = template;
       }
     } catch (e) {
       console.error('Failed to read (template: ' + templateKey + ') from fs: ' + e.message);
@@ -2825,9 +2824,7 @@ process.umask = function() { return 0; };
   };
 
   HoganJsUtils.prototype._readFromCache = function(templateKey) {
-    return global.browserTemplates && global.browserTemplates[templateKey] ||
-      hoganTemplates[templateKey] ||
-      templatesCache[templateKey];
+    return hoganTemplates[templateKey];
   };
 
   HoganJsUtils.prototype._templateKey = function(namespace, view) {
@@ -2838,7 +2835,7 @@ process.umask = function() { return 0; };
 
 })();
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},"/src")
+}).call(this,"/src")
 },{"./templates/diff2html-templates.js":31,"fs":1,"hogan.js":18,"path":20}],26:[function(require,module,exports){
 /*
  *
@@ -3084,10 +3081,6 @@ process.umask = function() { return 0; };
       var i, chr, len;
       var hash = 0;
 
-      if (text.length === 0) {
-        return hash;
-      }
-
       for (i = 0, len = text.length; i < len; i++) {
         chr = text.charCodeAt(i);
         hash = ((hash << 5) - hash) + chr;
@@ -3104,8 +3097,7 @@ process.umask = function() { return 0; };
     var oldFilename = file.oldName;
     var newFilename = file.newName;
 
-    if (oldFilename && newFilename && oldFilename !== newFilename &&
-      !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
+    if (oldFilename && newFilename && oldFilename !== newFilename && !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
       return oldFilename + ' -> ' + newFilename;
     } else if (newFilename && !isDevNullName(newFilename)) {
       return newFilename;
@@ -3226,13 +3218,6 @@ process.umask = function() { return 0; };
 (function() {
 
   var Rematch = {};
-  Rematch.arrayToString = function arrayToString(a) {
-    if (Object.prototype.toString.apply(a, []) === "[object Array]") {
-      return "[" + a.map(arrayToString).join(", ") + "]";
-    } else {
-      return a;
-    }
-  };
 
   /*
    Copyright (c) 2011 Andrei Mackenzie

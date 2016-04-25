@@ -15,7 +15,6 @@
   var hoganTemplates = require('./templates/diff2html-templates.js');
 
   var templatesPath = path.resolve(__dirname, 'templates');
-  var templatesCache = {};
 
   function HoganJsUtils() {
   }
@@ -54,7 +53,7 @@
         var templatePath = path.join(templatesPath, templateKey);
         var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
         template = hogan.compile(templateContent);
-        templatesCache[templateKey] = template;
+        hoganTemplates[templateKey] = template;
       }
     } catch (e) {
       console.error('Failed to read (template: ' + templateKey + ') from fs: ' + e.message);
@@ -64,9 +63,7 @@
   };
 
   HoganJsUtils.prototype._readFromCache = function(templateKey) {
-    return global.browserTemplates && global.browserTemplates[templateKey] ||
-      hoganTemplates[templateKey] ||
-      templatesCache[templateKey];
+    return hoganTemplates[templateKey];
   };
 
   HoganJsUtils.prototype._templateKey = function(namespace, view) {

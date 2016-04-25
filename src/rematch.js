@@ -9,13 +9,6 @@
 (function() {
 
   var Rematch = {};
-  Rematch.arrayToString = function arrayToString(a) {
-    if (Object.prototype.toString.apply(a, []) === "[object Array]") {
-      return "[" + a.map(arrayToString).join(", ") + "]";
-    } else {
-      return a;
-    }
-  };
 
   /*
    Copyright (c) 2011 Andrei Mackenzie

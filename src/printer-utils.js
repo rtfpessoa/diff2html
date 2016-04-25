@@ -19,10 +19,6 @@
       var i, chr, len;
       var hash = 0;
 
-      if (text.length === 0) {
-        return hash;
-      }
-
       for (i = 0, len = text.length; i < len; i++) {
         chr = text.charCodeAt(i);
         hash = ((hash << 5) - hash) + chr;
@@ -39,8 +35,7 @@
     var oldFilename = file.oldName;
     var newFilename = file.newName;
 
-    if (oldFilename && newFilename && oldFilename !== newFilename &&
-      !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
+    if (oldFilename && newFilename && oldFilename !== newFilename && !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
       return oldFilename + ' -> ' + newFilename;
     } else if (newFilename && !isDevNullName(newFilename)) {
       return newFilename;
