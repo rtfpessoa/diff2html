@@ -23,8 +23,6 @@ OUTPUT_JS_UI_FILE=${OUTPUT_DIR}/diff2html-ui.js
 OUTPUT_MIN_JS_UI_FILE=${OUTPUT_DIR}/diff2html-ui.min.js
 OUTPUT_CSS_FILE=${OUTPUT_DIR}/diff2html.css
 OUTPUT_MIN_CSS_FILE=${OUTPUT_DIR}/diff2html.min.css
-OUTPUT_TEMPLATES_FILE=${OUTPUT_DIR}/diff2html-templates.js
-OUTPUT_MIN_TEMPLATES_FILE=${OUTPUT_DIR}/diff2html-templates.min.js
 
 echo "Creating diff2html release ..."
 
@@ -38,10 +36,6 @@ cleancss --advanced --compatibility=ie8 -o ${OUTPUT_MIN_CSS_FILE} ${OUTPUT_CSS_F
 
 echo "Pre-compile hogan.js templates"
 npm run templates
-
-echo "Minifying ${OUTPUT_TEMPLATES_FILE} to ${OUTPUT_MIN_TEMPLATES_FILE}"
-browserify -e ${GENERATED_TEMPLATES_FILE} -o ${OUTPUT_TEMPLATES_FILE}
-uglifyjs ${OUTPUT_TEMPLATES_FILE} -c -o ${OUTPUT_MIN_TEMPLATES_FILE}
 
 echo "Generating js aggregation file in ${OUTPUT_JS_FILE}"
 browserify -e ${INPUT_JS_FILE} -o ${OUTPUT_JS_FILE}
