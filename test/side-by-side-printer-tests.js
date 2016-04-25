@@ -153,4 +153,98 @@ describe('SideBySidePrinter', function() {
       assert.equal(expected, fileHtml);
     });
   });
+
+  describe('generateSideBySideJsonHtml', function() {
+    it('should work for list of files', function() {
+      var exampleJson = [{
+        blocks: [{
+          lines: [{
+            content: '-test',
+            type: 'd2h-del',
+            oldNumber: 1,
+            newNumber: null
+          },
+            {
+              content: '+test1r',
+              type: 'd2h-ins',
+              oldNumber: null,
+              newNumber: 1
+            }],
+          oldStartLine: '1',
+          oldStartLine2: null,
+          newStartLine: '1',
+          header: '@@ -1 +1 @@'
+        }],
+        deletedLines: 1,
+        addedLines: 1,
+        checksumBefore: '0000001',
+        checksumAfter: '0ddf2ba',
+        oldName: 'sample',
+        language: undefined,
+        newName: 'sample',
+        isCombined: false
+      }];
+
+      var sideBySidePrinter = new SideBySidePrinter({matching: 'lines'});
+      var html = sideBySidePrinter.generateSideBySideJsonHtml(exampleJson);
+      var expected =
+        '<div class="d2h-wrapper">\n' +
+        '<div id="d2h-675094" class="d2h-file-wrapper" data-lang="undefined">\n' +
+        '     <div class="d2h-file-header">\n' +
+        '       <span class="d2h-file-stats">\n' +
+        '         <span class="d2h-lines-added">\n' +
+        '           <span>+1</span>\n' +
+        '         </span>\n' +
+        '         <span class="d2h-lines-deleted">\n' +
+        '           <span>-1</span>\n' +
+        '         </span>\n' +
+        '       </span>\n' +
+        '       <span class="d2h-file-name-wrapper">\n' +
+        '         <span class="d2h-file-name">sample</span>\n' +
+        '       </span>\n' +
+        '     </div>\n' +
+        '     <div class="d2h-files-diff">\n' +
+        '       <div class="d2h-file-side-diff">\n' +
+        '         <div class="d2h-code-wrapper">\n' +
+        '           <table class="d2h-diff-table">\n' +
+        '             <tbody class="d2h-diff-tbody">\n' +
+        '           <tr>\n' +
+        '  <td class="d2h-code-side-linenumber d2h-info"></td>\n' +
+        '  <td class="d2h-info">\n' +
+        '    <div class="d2h-code-side-line d2h-info">@@ -1 +1 @@</div>\n' +
+        '  </td>\n' +
+        '</tr>\n' +
+        '<tr>\n' +
+        '    <td class="d2h-code-side-linenumber d2h-del d2h-change">1</td>\n' +
+        '    <td class="d2h-del d2h-change">      <div class="d2h-code-side-line d2h-del d2h-change"><span class="d2h-code-line-prefix">-</span><span class="d2h-code-line-ctn"><del>test</del></span></div>    </td>\n' +
+        '  </tr>\n' +
+        '             </tbody>\n' +
+        '           </table>\n' +
+        '         </div>\n' +
+        '       </div>\n' +
+        '       <div class="d2h-file-side-diff">\n' +
+        '         <div class="d2h-code-wrapper">\n' +
+        '           <table class="d2h-diff-table">\n' +
+        '             <tbody class="d2h-diff-tbody">\n' +
+        '           <tr>\n' +
+        '  <td class="d2h-code-side-linenumber d2h-info"></td>\n' +
+        '  <td class="d2h-info">\n' +
+        '    <div class="d2h-code-side-line d2h-info"></div>\n' +
+        '  </td>\n' +
+        '</tr>\n' +
+        '<tr>\n' +
+        '    <td class="d2h-code-side-linenumber d2h-ins d2h-change">1</td>\n' +
+        '    <td class="d2h-ins d2h-change">      <div class="d2h-code-side-line d2h-ins d2h-change"><span class="d2h-code-line-prefix">+</span><span class="d2h-code-line-ctn"><ins>test1r</ins></span></div>    </td>\n' +
+        '  </tr>\n' +
+        '             </tbody>\n' +
+        '           </table>\n' +
+        '         </div>\n' +
+        '       </div>\n' +
+        '     </div>\n' +
+        '   </div>\n' +
+        '</div>\n';
+
+      assert.equal(expected, html);
+    });
+  });
 });
