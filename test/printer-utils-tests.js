@@ -11,6 +11,13 @@ describe('Utils', function() {
       });
       assert.equal('d2h-960013', result);
     });
+    it('should generate file unique id for empty hashes', function() {
+      var result = PrinterUtils.getHtmlId({
+        oldName: 'sample.js',
+        newName: 'sample.js'
+      });
+      assert.equal('d2h-960013', result);
+    });
   });
 
   describe('getDiffName', function() {
@@ -42,36 +49,68 @@ describe('Utils', function() {
       });
       assert.equal('src/my/file.js', result);
     });
+    it('should generate handle undefined filenames', function() {
+      var result = PrinterUtils.getDiffName({});
+      assert.equal('Unknown filename', result);
+    });
   });
 
   describe('diffHighlight', function() {
     it('should highlight two lines', function() {
       var result = PrinterUtils.diffHighlight(
-        'var myVar = 2;',
-        'var myVariable = 3;',
+        '-var myVar = 2;',
+        '+var myVariable = 3;',
         {matching: 'words'}
       );
 
       assert.deepEqual({
-        first: {prefix: 'v', line: 'ar <del>myVar</del> = <del>2</del>;'},
+        first: {
+          prefix: '-',
+          line: 'var <del>myVar</del> = <del>2</del>;'
+        },
         second: {
-          prefix: 'v',
-          line: 'ar <ins>myVariable</ins> = <ins>3</ins>;'
+          prefix: '+',
+          line: 'var <ins>myVariable</ins> = <ins>3</ins>;'
         }
       }, result);
     });
     it('should highlight two lines char by char', function() {
       var result = PrinterUtils.diffHighlight(
-        'var myVar = 2;',
-        'var myVariable = 3;',
+        '-var myVar = 2;',
+        '+var myVariable = 3;',
         {charByChar: true}
       );
 
       assert.deepEqual({
-        first: {prefix: 'v', line: 'ar myVar = <del>2</del>;'},
+        first: {
+          prefix: '-',
+          line: 'var myVar = <del>2</del>;'
+        },
         second: {
-          prefix: 'v',
-          line: 'ar myVar<ins>iable</ins> = <ins>3</ins>;'
+          prefix: '+',
+          line: 'var myVar<ins>iable</ins> = <ins>3</ins>;'
+        }
+      }, result);
+    });
+    it('should highlight combined diff lines', function() {
+      var result = PrinterUtils.diffHighlight(
+        ' -var myVar = 2;',
+        ' +var myVariable = 3;',
+        {
+          isCombined: true,
+          matching: 'words',
+          matchWordsThreshold: 1.00
+        }
+      );
+
+      assert.deepEqual({
+        first: {
+          prefix: ' -',
+          line: 'var <del class="d2h-change">myVar</del> = <del class="d2h-change">2</del>;'
+        },
+        second: {
+          prefix: ' +',
+          line: 'var <ins class="d2h-change">myVariable</ins> = <ins class="d2h-change">3</ins>;'
         }
       }, result);
     });

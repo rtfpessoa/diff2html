@@ -15,7 +15,7 @@ describe('LineByLinePrinter', function() {
         '            File without changes\n' +
         '        </div>\n' +
         '    </td>\n' +
-        '</tr>';
+        '</tr>\n';
 
       assert.equal(expected, fileHtml);
     });
@@ -282,21 +282,54 @@ describe('LineByLinePrinter', function() {
 
       assert.equal(expected, html);
     });
-  });
 
-  describe('makeColumnLineNumberHtml', function() {
-    it('should work for simple block header', function() {
-      var lineByLinePrinter = new LineByLinePrinter({});
-      var html = lineByLinePrinter.makeColumnLineNumberHtml({
-        header: '<span>So much html</span>'
-      });
+    it('should work for empty blocks', function() {
+      var exampleJson = [{
+        blocks: [],
+        deletedLines: 0,
+        addedLines: 0,
+        oldName: 'sample',
+        language: 'js',
+        newName: 'sample',
+        isCombined: false
+      }];
+
+      var lineByLinePrinter = new LineByLinePrinter();
+      var html = lineByLinePrinter.generateLineByLineJsonHtml(exampleJson);
       var expected =
-        '<tr>\n' +
-        '    <td class="d2h-code-linenumber d2h-info"></td>\n' +
+        '<div class="d2h-wrapper">\n' +
+        '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="js">\n' +
+        '    <div class="d2h-file-header">\n' +
+        '    <span class="d2h-file-stats">\n' +
+        '      <span class="d2h-lines-added">\n' +
+        '        <span>+0</span>\n' +
+        '      </span>\n' +
+        '      <span class="d2h-lines-deleted">\n' +
+        '        <span>-0</span>\n' +
+        '      </span>\n' +
+        '    </span>\n' +
+        '    <span class="d2h-file-name-wrapper">\n' +
+        '        <span class="d2h-file-name">&nbsp;sample</span>\n' +
+        '    </span>\n' +
+        '    </div>\n' +
+        '    <div class="d2h-file-diff">\n' +
+        '        <div class="d2h-code-wrapper">\n' +
+        '            <table class="d2h-diff-table">\n' +
+        '                <tbody class="d2h-diff-tbody">\n' +
+        '                <tr>\n' +
         '    <td class="d2h-info">\n' +
-        '        <div class="d2h-code-line d2h-info"></div>\n' +
+        '        <div class="d2h-code-line d2h-info">\n' +
+        '            File without changes\n' +
+        '        </div>\n' +
         '    </td>\n' +
-        '</tr>';
+        '</tr>\n' +
+        '\n' +
+        '                </tbody>\n' +
+        '            </table>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>\n' +
+        '</div>';
 
       assert.equal(expected, html);
     });
@@ -353,16 +386,28 @@ describe('LineByLinePrinter', function() {
       var file = {
         blocks: [{
           lines: [{
-            content: '-test',
-            type: 'd2h-del',
+            content: ' one context line',
+            type: 'd2h-cntx',
             oldNumber: 1,
-            newNumber: null
+            newNumber: 1
           },
+            {
+              content: '-test',
+              type: 'd2h-del',
+              oldNumber: 2,
+              newNumber: null
+            },
             {
               content: '+test1r',
               type: 'd2h-ins',
               oldNumber: null,
-              newNumber: 1
+              newNumber: 2
+            },
+            {
+              content: '+test2r',
+              type: 'd2h-ins',
+              oldNumber: null,
+              newNumber: 3
             }],
           oldStartLine: '1',
           oldStartLine2: null,
@@ -388,8 +433,18 @@ describe('LineByLinePrinter', function() {
         '        <div class="d2h-code-line d2h-info"></div>\n' +
         '    </td>\n' +
         '</tr><tr>\n' +
-        '    <td class="d2h-code-linenumber d2h-del">\n' +
+        '    <td class="d2h-code-linenumber d2h-cntx">\n' +
         '        <div class="line-num1">1</div>\n' +
+        '        <div class="line-num2">1</div>\n' +
+        '    </td>\n' +
+        '    <td class="d2h-cntx">\n' +
+        '        <div class="d2h-code-line d2h-cntx">\n' +
+        '            <span class="d2h-code-line-ctn">&nbsp;one&nbsp;context&nbsp;line</span>\n' +
+        '        </div>\n' +
+        '    </td>\n' +
+        '</tr><tr>\n' +
+        '    <td class="d2h-code-linenumber d2h-del">\n' +
+        '        <div class="line-num1">2</div>\n' +
         '        <div class="line-num2"></div>\n' +
         '    </td>\n' +
         '    <td class="d2h-del">\n' +
@@ -401,12 +456,22 @@ describe('LineByLinePrinter', function() {
         '</tr><tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
         '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">1</div>\n' +
+        '        <div class="line-num2">2</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
         '            <span class="d2h-code-line-prefix">+</span>\n' +
         '            <span class="d2h-code-line-ctn"><ins>test1r</ins></span>\n' +
+        '        </div>\n' +
+        '    </td>\n' +
+        '</tr><tr>\n' +
+        '    <td class="d2h-code-linenumber d2h-ins">\n' +
+        '        <div class="line-num1"></div>\n' +
+        '        <div class="line-num2">3</div>\n' +
+        '    </td>\n' +
+        '    <td class="d2h-ins">\n' +
+        '        <div class="d2h-code-line d2h-ins">\n' +
+        '            <span class="d2h-code-line-ctn">+test2r</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';

@@ -1,6 +1,6 @@
 {
   "name": "diff2html",
-  "version": "2.0.0-beta13",
+  "version": "2.0.0-beta14",
   "homepage": "http://rtfpessoa.github.io/diff2html/",
   "description": "Fast Diff to colorized HTML",
   "keywords": [
@@ -38,7 +38,7 @@
   "scripts": {
     "release": "./scripts/release.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
-    "test": "istanbul cover _mocha -- -u exports -R spec ./test/**/*",
+    "test": "jscs src/*.js src/ui/js/*.js && istanbul cover _mocha -- -u exports -R spec ./test/**/* && istanbul check-coverage --statements 90 --functions 90 --branches 85 --lines 90 ./coverage/coverage.json",
     "style": "jscs src/*.js src/ui/js/*.js",
     "codacy": "istanbul cover _mocha -- -u exports -R spec ./test/**/* && cat ./coverage/lcov.info | codacy-coverage"
   },
