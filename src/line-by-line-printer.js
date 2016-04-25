@@ -12,7 +12,7 @@
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
-  var nunjucksUtils = require('./nunjucks-utils.js').NunjucksUtils;
+  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
   var baseTemplatesPath = 'line-by-line';
 
   function LineByLinePrinter(config) {
@@ -20,11 +20,16 @@
   }
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
-    return nunjucksUtils.render(baseTemplatesPath, 'file-diff.html', {'file': file, 'diffs': diffs});
+    return hoganUtils.render(baseTemplatesPath, 'file-diff', {
+      file: file,
+      fileDiffName: printerUtils.getDiffName(file),
+      fileHtmlId: printerUtils.getHtmlId(file),
+      diffs: diffs
+    });
   };
 
   LineByLinePrinter.prototype.makeLineByLineHtmlWrapper = function(content) {
-    return nunjucksUtils.render(baseTemplatesPath, 'wrapper.html', {'content': content});
+    return hoganUtils.render(baseTemplatesPath, 'wrapper', {'content': content});
   };
 
   LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
@@ -50,7 +55,10 @@
   });
 
   LineByLinePrinter.prototype.makeColumnLineNumberHtml = function(block) {
-    return nunjucksUtils.render(baseTemplatesPath, 'column-line-number.html', {block: block});
+    return hoganUtils.render(baseTemplatesPath, 'column-line-number', {
+      diffParser: diffParser,
+      block: utils.escape(block.header)
+    });
   };
 
   LineByLinePrinter.prototype._generateFileHtml = function(file) {
@@ -69,7 +77,7 @@
         var comparisons = oldLines.length * newLines.length;
         var maxComparisons = that.config.matchingMaxComparisons || 2500;
         var doMatching = comparisons < maxComparisons && (that.config.matching === 'lines' ||
-            that.config.matching === 'words');
+          that.config.matching === 'words');
 
         if (doMatching) {
           matches = matcher(oldLines, newLines);
@@ -162,18 +170,20 @@
   };
 
   LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, content, prefix) {
-    return nunjucksUtils.render(baseTemplatesPath, 'line.html',
+    return hoganUtils.render(baseTemplatesPath, 'line',
       {
         type: type,
-        oldNumber: oldNumber,
-        newNumber: newNumber,
-        prefix: prefix,
-        content: content
+        oldNumber: utils.valueOrEmpty(oldNumber),
+        newNumber: utils.valueOrEmpty(newNumber),
+        prefix: prefix && utils.convertWhiteSpaceToNonBreakingSpace(prefix),
+        content: content && utils.convertWhiteSpaceToNonBreakingSpace(content)
       });
   };
 
   LineByLinePrinter.prototype._generateEmptyDiff = function() {
-    return nunjucksUtils.render(baseTemplatesPath, 'empty-diff.html', {});
+    return hoganUtils.render(baseTemplatesPath, 'empty-diff', {
+      diffParser: diffParser
+    });
   };
 
   module.exports.LineByLinePrinter = LineByLinePrinter;
