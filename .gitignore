@@ -19,5 +19,8 @@ target/
 node_modules/
 npm-debug.log
 
+# Istanbul
+coverage/
+
 # Bower
 bower_components/

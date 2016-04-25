@@ -1,189 +1,143 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (global){
+/*
+ *
+ * Diff to HTML (diff2html-ui.js)
+ * Author: rtfpessoa
+ *
+ * Depends on: [ jQuery ]
+ * Optional dependencies on: [ highlight.js ]
+ *
+ */
 
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+/*global $, hljs*/
 
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+(function() {
 
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
+  var diffJson = null;
+  var defaultTarget = "body";
 
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+  function Diff2HtmlUI(config) {
+    var cfg = config || {};
 
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+    if (cfg.diff) {
+      diffJson = Diff2Html.getJsonFromDiff(cfg.diff);
+    } else if (cfg.json) {
+      diffJson = cfg.json;
+    }
+  }
 
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
+  Diff2HtmlUI.prototype.draw = function(targetId, config) {
+    var cfg = config || {};
+    var $target = this._getTarget(targetId);
+    $target.html(Diff2Html.getPrettyHtml(diffJson, cfg));
+  };
 
+  Diff2HtmlUI.prototype.fileListCloseable = function(targetId, startVisible) {
+    var $target = this._getTarget(targetId);
 
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
+    var hashTag = this._getHashTag();
 
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
+    var $showBtn = $target.find(".d2h-show");
+    var $hideBtn = $target.find(".d2h-hide");
+    var $fileList = $target.find(".d2h-file-list");
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+    if (hashTag === 'files-summary-show') show();
+    else if (hashTag === 'files-summary-hide') hide();
+    else if (startVisible) show();
+    else hide();
 
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports) {
+    $showBtn.click(show);
+    $hideBtn.click(hide);
 
-	/* WEBPACK VAR INJECTION */(function(global) {/*
-	 *
-	 * Diff to HTML (diff2html-ui.js)
-	 * Author: rtfpessoa
-	 *
-	 * Depends on: [ jQuery ]
-	 * Optional dependencies on: [ highlight.js ]
-	 *
-	 */
+    function show() {
+      $showBtn.hide();
+      $hideBtn.show();
+      $fileList.show();
+    }
 
-	/*global $, hljs*/
+    function hide() {
+      $hideBtn.hide();
+      $showBtn.show();
+      $fileList.hide();
+    }
+  };
 
-	(function() {
+  Diff2HtmlUI.prototype.highlightCode = function(targetId) {
+    var that = this;
 
-	  var diffJson = null;
-	  var defaultTarget = "body";
+    var $target = that._getTarget(targetId);
 
-	  function Diff2HtmlUI(config) {
-	    var cfg = config || {};
+    var languages = that._getLanguages($target);
 
-	    if (cfg.diff) {
-	      diffJson = Diff2Html.getJsonFromDiff(cfg.diff);
-	    } else if (cfg.json) {
-	      diffJson = cfg.json;
-	    }
-	  }
+    // pass the languages to the highlightjs plugin
+    hljs.configure({languages: languages});
 
-	  Diff2HtmlUI.prototype.draw = function(targetId, config) {
-	    var cfg = config || {};
-	    var $target = this._getTarget(targetId);
-	    $target.html(Diff2Html.getPrettyHtml(diffJson, cfg));
-	  };
+    // collect all the code lines and execute the highlight on them
+    var $codeLines = $target.find(".d2h-code-line-ctn");
+    $codeLines.map(function(i, line) {
+      hljs.highlightBlock(line);
+    });
+  };
 
-	  Diff2HtmlUI.prototype.fileListCloseable = function(targetId, startVisible) {
-	    var $target = this._getTarget(targetId);
+  Diff2HtmlUI.prototype._getTarget = function(targetId) {
+    var $target;
 
-	    var hashTag = this._getHashTag();
+    if (typeof targetId === 'object' && targetId instanceof jQuery) {
+      $target = targetId;
+    } else if (typeof targetId === 'string') {
+      $target = $(targetId);
+    } else {
+      console.error("Wrong target provided! Falling back to default value 'body'.");
+      console.log("Please provide a jQuery object or a valid DOM query string.");
+      $target = $(defaultTarget);
+    }
 
-	    var $showBtn = $target.find(".d2h-show");
-	    var $hideBtn = $target.find(".d2h-hide");
-	    var $fileList = $target.find(".d2h-file-list");
+    return $target;
+  };
 
-	    if (hashTag === 'files-summary-show') show();
-	    else if (hashTag === 'files-summary-hide') hide();
-	    else if (startVisible) show();
-	    else hide();
+  Diff2HtmlUI.prototype._getLanguages = function($target) {
+    var allFileLanguages = [];
 
-	    $showBtn.click(show);
-	    $hideBtn.click(hide);
+    if (diffJson) {
+      // collect all the file extensions in the json
+      allFileLanguages = diffJson.map(function(line) {
+        return line.language;
+      });
+    } else {
+      $target.find(".d2h-file-wrapper").map(function(i, file) {
+        allFileLanguages.push($(file).data("lang"));
+      });
+    }
 
-	    function show() {
-	      $showBtn.hide();
-	      $hideBtn.show();
-	      $fileList.show();
-	    }
+    // return only distinct languages
+    return this._distinct(allFileLanguages);
+  };
 
-	    function hide() {
-	      $hideBtn.hide();
-	      $showBtn.show();
-	      $fileList.hide();
-	    }
-	  };
+  Diff2HtmlUI.prototype._getHashTag = function() {
+    var docUrl = document.URL;
+    var hashTagIndex = docUrl.indexOf('#');
 
-	  Diff2HtmlUI.prototype.highlightCode = function(targetId) {
-	    var that = this;
+    var hashTag = null;
+    if (hashTagIndex !== -1) {
+      hashTag = docUrl.substr(hashTagIndex + 1);
+    }
 
-	    var $target = that._getTarget(targetId);
+    return hashTag;
+  };
 
-	    var languages = that._getLanguages($target);
+  Diff2HtmlUI.prototype._distinct = function(collection) {
+    return collection.filter(function(v, i) {
+      return collection.indexOf(v) === i;
+    });
+  };
 
-	    // pass the languages to the highlightjs plugin
-	    hljs.configure({languages: languages});
+  module.exports.Diff2HtmlUI = Diff2HtmlUI;
 
-	    // collect all the code lines and execute the highlight on them
-	    var $codeLines = $target.find(".d2h-code-line-ctn");
-	    $codeLines.map(function(i, line) {
-	      hljs.highlightBlock(line);
-	    });
-	  };
+  // Expose diff2html in the browser
+  global.Diff2HtmlUI = Diff2HtmlUI;
 
-	  Diff2HtmlUI.prototype._getTarget = function(targetId) {
-	    var $target;
+})();
 
-	    if (typeof(targetId) === 'object' && targetId instanceof jQuery) {
-	      $target = targetId;
-	    } else if (typeof(targetId) === 'string') {
-	      $target = $(targetId);
-	    } else {
-	      console.error("Wrong target provided! Falling back to default value 'body'.");
-	      console.log("Please provide a jQuery object or a valid DOM query string.");
-	      $target = $(defaultTarget);
-	    }
-
-	    return $target;
-	  };
-
-	  Diff2HtmlUI.prototype._getLanguages = function($target) {
-	    var allFileLanguages = [];
-
-	    if (diffJson) {
-	      // collect all the file extensions in the json
-	      allFileLanguages = diffJson.map(function(line) {
-	        return line.language;
-	      });
-	    } else {
-	      $target.find(".d2h-file-wrapper").map(function(i, file) {
-	        allFileLanguages.push($(file).data("lang"));
-	      });
-	    }
-
-	    // return only distinct languages
-	    return this._distinct(allFileLanguages);
-	  };
-
-	  Diff2HtmlUI.prototype._getHashTag = function() {
-	    var docUrl = document.URL;
-	    var hashTagIndex = docUrl.indexOf('#');
-
-	    var hashTag = null;
-	    if (hashTagIndex !== -1) {
-	      hashTag = docUrl.substr(hashTagIndex + 1);
-	    }
-
-	    return hashTag;
-	  };
-
-	  Diff2HtmlUI.prototype._distinct = function(collection) {
-	    return collection.filter(function(v, i) {
-	      return collection.indexOf(v) === i;
-	    });
-	  };
-
-	  module.exports.Diff2HtmlUI = Diff2HtmlUI;
-
-	  // Expose diff2html in the browser
-	  global.Diff2HtmlUI = Diff2HtmlUI;
-
-	})();
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ }
-/******/ ]);
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}]},{},[1]);
