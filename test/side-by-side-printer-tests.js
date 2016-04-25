@@ -247,4 +247,48 @@ describe('SideBySidePrinter', function() {
       assert.equal(expected, html);
     });
   });
+
+  describe('processLines', function() {
+    it('should process file lines', function() {
+      var oldLines = [{
+        content: '-test',
+        type: 'd2h-del',
+        oldNumber: 1,
+        newNumber: null
+      }];
+
+      var newLines = [{
+        content: '+test1r',
+        type: 'd2h-ins',
+        oldNumber: null,
+        newNumber: 1
+      }];
+
+      var sideBySidePrinter = new SideBySidePrinter({matching: 'lines'});
+      var html = sideBySidePrinter.processLines(oldLines, newLines);
+      var expectedLeft =
+        '<tr>\n' +
+        '    <td class="d2h-code-side-linenumber d2h-del">1</td>\n' +
+        '    <td class="d2h-del">' +
+        '      <div class="d2h-code-side-line d2h-del">' +
+        '<span class="d2h-code-line-prefix">-</span>' +
+        '<span class="d2h-code-line-ctn">test</span></div>' +
+        '    </td>\n' +
+        '  </tr>\n';
+
+      var expectedRight =
+        '<tr>\n' +
+        '    <td class="d2h-code-side-linenumber d2h-ins">1</td>\n' +
+        '    <td class="d2h-ins">' +
+        '      <div class="d2h-code-side-line d2h-ins">' +
+        '<span class="d2h-code-line-prefix">+</span>' +
+        '<span class="d2h-code-line-ctn">test1r</span>' +
+        '</div>' +
+        '    </td>\n' +
+        '  </tr>\n';
+
+      assert.equal(expectedLeft, html.left);
+      assert.equal(expectedRight, html.right);
+    });
+  });
 });
