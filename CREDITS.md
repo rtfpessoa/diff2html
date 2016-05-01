@@ -21,3 +21,7 @@ Mikko Rantanen, [@Rantanen](https://github.com/Rantanen)
 Wolfgang Illmeyer, [@escitalopram](https://github.com/escitalopram)
 
 Jameskmonger, [@Jameskmonger](https://github.com/Jameskmonger)
+
+Rafael Cortês, [@mrfyda](https://github.com/mrfyda)
+
+Ivan Vorontsov, [@lantian](https://github.com/lantian)

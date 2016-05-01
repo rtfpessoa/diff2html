@@ -19,17 +19,19 @@ diff2html generates pretty HTML diffs from git diff output.
 
 ## Features
 
-* `line-by-line` and `side-by-side` diff
+* Line by line and Side by side diff
 
-* new and old line numbers
+* New and old line numbers
 
-* inserted and removed lines
+* Inserted and removed lines
 
 * GitHub like style
 
 * Code syntax highlight
 
 * Line similarity matching
+
+* Easy code selection
 
 ## Online Example
 
