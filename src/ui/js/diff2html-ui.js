@@ -162,7 +162,6 @@
 
 
   Diff2HtmlUI.prototype._getSelectedText = function() {
-    var table = $('.d2h-diff-table');
     var sel = window.getSelection();
     var range = sel.getRangeAt(0);
     var doc = range.cloneContents();
@@ -174,7 +173,7 @@
       text = doc.textContent;
     } else {
       [].forEach.call(nodes, function(tr, i) {
-        var td = tr.cells[tr.cells.length == 1 ? 0 : idx];
+        var td = tr.cells[tr.cells.length === 1 ? 0 : idx];
         text += (i ? '\n' : '') + td.textContent.replace(/(?:\r\n|\r|\n)/g, '');
       });
     }
