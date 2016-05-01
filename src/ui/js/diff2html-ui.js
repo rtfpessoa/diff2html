@@ -14,6 +14,7 @@
 
   var diffJson = null;
   var defaultTarget = "body";
+  var currentSelectionColumnId = -1;
 
   function Diff2HtmlUI(config) {
     var cfg = config || {};
@@ -23,6 +24,8 @@
     } else if (cfg.json) {
       diffJson = cfg.json;
     }
+
+    this._initSelection();
   }
 
   Diff2HtmlUI.prototype.draw = function(targetId, config) {
@@ -128,6 +131,54 @@
     return collection.filter(function(v, i) {
       return collection.indexOf(v) === i;
     });
+  };
+
+  Diff2HtmlUI.prototype._initSelection = function() {
+    var body = $('body');
+    var that = this;
+
+    body.on('mousedown', '.d2h-diff-table', function(event) {
+      var target = $(event.target);
+      var table = target.closest('.d2h-diff-table');
+
+      if (target.closest('.d2h-code-line,.d2h-code-side-line').length) {
+        table.removeClass('selecting-left');
+        table.addClass('selecting-right');
+        currentSelectionColumnId = 1;
+      } else if (target.closest('.d2h-code-linenumber,.d2h-code-side-linenumber').length) {
+        table.removeClass('selecting-right');
+        table.addClass('selecting-left');
+        currentSelectionColumnId = 0;
+      }
+    });
+
+    body.on('copy', '.d2h-diff-table', function(event) {
+      var clipboardData = event.originalEvent.clipboardData;
+      var text = that._getSelectedText();
+      clipboardData.setData('text', text);
+      event.preventDefault();
+    });
+  };
+
+
+  Diff2HtmlUI.prototype._getSelectedText = function() {
+    var sel = window.getSelection();
+    var range = sel.getRangeAt(0);
+    var doc = range.cloneContents();
+    var nodes = doc.querySelectorAll('tr');
+    var text = '';
+    var idx = currentSelectionColumnId;
+
+    if (nodes.length === 0) {
+      text = doc.textContent;
+    } else {
+      [].forEach.call(nodes, function(tr, i) {
+        var td = tr.cells[tr.cells.length === 1 ? 0 : idx];
+        text += (i ? '\n' : '') + td.textContent.replace(/(?:\r\n|\r|\n)/g, '');
+      });
+    }
+
+    return text;
   };
 
   module.exports.Diff2HtmlUI = Diff2HtmlUI;

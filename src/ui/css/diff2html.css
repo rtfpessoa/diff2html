@@ -274,3 +274,33 @@ ins.d2h-change, del.d2h-change {
     font-size: 10px;
     cursor: pointer;
 }
+
+/*
+ * Selection util.
+ */
+
+.selecting-left .d2h-code-line,
+.selecting-left .d2h-code-line *,
+.selecting-right td.d2h-code-linenumber,
+.selecting-right td.d2h-code-linenumber *,
+.selecting-left .d2h-code-side-line,
+.selecting-left .d2h-code-side-line *,
+.selecting-right td.d2h-code-side-linenumber,
+.selecting-right td.d2h-code-side-linenumber *{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.selecting-left .d2h-code-line::selection,
+.selecting-left .d2h-code-line *::selection
+.selecting-right td.d2h-code-linenumber::selection,
+.selecting-left .d2h-code-side-line::selection,
+.selecting-left .d2h-code-side-line *::selection,
+.selecting-right td.d2h-code-side-linenumber::selection,
+.selecting-right td.d2h-code-side-linenumber *::selection {
+  background: transparent;
+}
