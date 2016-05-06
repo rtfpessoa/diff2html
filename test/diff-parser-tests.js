@@ -54,7 +54,7 @@ describe('DiffParser', function() {
     });
 
     function checkDiffSample(diff) {
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       var file1 = result[0];
       assert.equal(1, result.length);
       assert.equal(1, file1.addedLines);
@@ -75,7 +75,7 @@ describe('DiffParser', function() {
         '+cenas com ananas\n' +
         '+bananas';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       var file1 = result[0];
       assert.equal(1, result.length);
       assert.equal(2, file1.addedLines);
@@ -96,7 +96,7 @@ describe('DiffParser', function() {
         '+cenas com ananas\n' +
         '+bananas';
 
-      var result = Diff2Html.getJsonFromDiff(diff, {"srcPrefix": "\t", "dstPrefix": "\t"});
+      var result = DiffParser.generateDiffJson(diff, {"srcPrefix": "\t", "dstPrefix": "\t"});
       var file1 = result[0];
       assert.equal(1, result.length);
       assert.equal(2, file1.addedLines);
@@ -118,7 +118,7 @@ describe('DiffParser', function() {
         '-  return typeof undefined;\n' +
         '-});\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -147,7 +147,7 @@ describe('DiffParser', function() {
         '+\n' +
         '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -177,7 +177,7 @@ describe('DiffParser', function() {
         '+\n' +
         '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -220,7 +220,7 @@ describe('DiffParser', function() {
         '           // store className if set\n' +
         '           dataPriv.set( this, "__className__", this.className );\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -263,7 +263,7 @@ describe('DiffParser', function() {
         '   "./var/hasOwn",\n' +
         '   "./var/slice",\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(2, result.length);
 
       var file1 = result[0];
@@ -319,7 +319,7 @@ describe('DiffParser', function() {
         '       initialized = 1;\n' +
         '       for_each_ref(get_name);\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -341,7 +341,7 @@ describe('DiffParser', function() {
         'copy from index.js\n' +
         'copy to more-index.js\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -361,7 +361,7 @@ describe('DiffParser', function() {
         'rename from more-index.js\n' +
         'rename to other-index.js\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -384,7 +384,7 @@ describe('DiffParser', function() {
         '-test\n' +
         '+test1r\n';
 
-      var result = Diff2Html.getJsonFromDiff(diff);
+      var result = DiffParser.generateDiffJson(diff);
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -398,6 +398,30 @@ describe('DiffParser', function() {
       assert.equal(null, file1.blocks[0].lines[0].newNumber);
       assert.equal(null, file1.blocks[0].lines[1].oldNumber);
       assert.equal(1, file1.blocks[0].lines[1].newNumber);
+    });
+
+    it('should parse unified non git diff', function() {
+      var diff =
+        '--- a/sample.js\n' +
+        '+++ b/sample.js\n' +
+        '@@ -1 +1,2 @@\n' +
+        '-test\n' +
+        '+test1r\n' +
+        '+test2r\n';
+
+      var result = DiffParser.generateDiffJson(diff);
+      var file1 = result[0];
+      assert.equal(1, result.length);
+      assert.equal(2, file1.addedLines);
+      assert.equal(1, file1.deletedLines);
+      assert.equal('sample.js', file1.oldName);
+      assert.equal('sample.js', file1.newName);
+      assert.equal(1, file1.blocks.length);
+
+      var linesContent = file1.blocks[0].lines.map(function(line) {
+        return line.content;
+      });
+      assert.deepEqual(linesContent, ['-test', '+test1r', '+test2r']);
     });
 
   });
