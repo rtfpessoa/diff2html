@@ -191,7 +191,6 @@ describe('Diff2Html', function() {
         '+test1\n';
       var result = Diff2Html.getJsonFromDiff(diff);
 
-      console.log(result);
       var file1 = result[0];
       assert.equal(1, result.length);
       assert.equal(1, file1.addedLines);
