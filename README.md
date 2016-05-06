@@ -13,11 +13,13 @@
 [![npm](https://img.shields.io/npm/dm/diff2html.svg)](https://www.npmjs.com/package/diff2html)
 [![Gitter](https://badges.gitter.im/rtfpessoa/diff2html.svg)](https://gitter.im/rtfpessoa/diff2html?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-diff2html generates pretty HTML diffs from git diff output.
+diff2html generates pretty HTML diffs from git or unified diff output.
 
 [![NPM](https://nodei.co/npm/diff2html.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/diff2html/)
 
 ## Features
+
+* Supports git and unified diffs
 
 * Line by line and Side by side diff
 
