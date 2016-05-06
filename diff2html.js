@@ -2333,32 +2333,30 @@ process.umask = function() { return 0; };
     var oldLine2 = null; // Used for combined diff
     var newLine = null;
 
+    /* Add previous block(if exists) before start a new file */
     var saveBlock = function() {
-
-      /* Add previous block(if exists) before start a new file */
       if (currentBlock) {
         currentFile.blocks.push(currentBlock);
         currentBlock = null;
       }
     };
 
+    /*
+     * Add previous file(if exists) before start a new one
+     * if it has name (to avoid binary files errors)
+     */
     var saveFile = function() {
-
-      /*
-       * Add previous file(if exists) before start a new one
-       * if it has name (to avoid binary files errors)
-       */
       if (currentFile && currentFile.newName) {
         files.push(currentFile);
         currentFile = null;
       }
     };
 
+    /* Create file structure */
     var startFile = function() {
       saveBlock();
       saveFile();
 
-      /* Create file structure */
       currentFile = {};
       currentFile.blocks = [];
       currentFile.deletedLines = 0;
@@ -2479,18 +2477,72 @@ process.umask = function() { return 0; };
         return;
       }
 
-      var values = [];
-      if (utils.startsWith(line, 'diff')) {
+      if (
+        utils.startsWith(line, 'diff') || // Git diffs always start with diff
+        !currentFile || // If we do not have a file yet, we should crete one
+        (
+          currentFile && // If we already have some file in progress and
+          (
+            currentFile.oldName && utils.startsWith(line, '---') || // Either we reached a old file identification line
+            currentFile.newName && utils.startsWith(line, '+++')  // Or we reached a new file identification line
+          )
+        )
+      ) {
         startFile();
-      } else if (currentFile && !currentFile.oldName && (values = getSrcFilename(line, config))) {
+      }
+
+      var values;
+
+      /*
+       * --- Date Timestamp[FractionalSeconds] TimeZone
+       * --- 2002-02-21 23:30:39.942229878 -0800
+       */
+      if (currentFile && !currentFile.oldName &&
+        utils.startsWith(line, '---') && (values = getSrcFilename(line, config))) {
         currentFile.oldName = values;
         currentFile.language = getExtension(currentFile.oldName, currentFile.language);
-      } else if (currentFile && !currentFile.newName && (values = getDstFilename(line, config))) {
+        return;
+      }
+
+      /*
+       * +++ Date Timestamp[FractionalSeconds] TimeZone
+       * +++ 2002-02-21 23:30:39.942229878 -0800
+       */
+      if (currentFile && !currentFile.newName &&
+        utils.startsWith(line, '+++') && (values = getDstFilename(line, config))) {
         currentFile.newName = values;
         currentFile.language = getExtension(currentFile.newName, currentFile.language);
-      } else if (currentFile && utils.startsWith(line, '@@')) {
+        return;
+      }
+
+      if (currentFile && utils.startsWith(line, '@')) {
         startBlock(line);
-      } else if ((values = oldMode.exec(line))) {
+        return;
+      }
+
+      /*
+       * There are three types of diff lines. These lines are defined by the way they start.
+       * 1. New line     starts with: +
+       * 2. Old line     starts with: -
+       * 3. Context line starts with: <SPACE>
+       */
+      if (currentBlock && (utils.startsWith(line, '+') || utils.startsWith(line, '-') || utils.startsWith(line, ' '))) {
+        createLine(line);
+        return;
+      }
+
+      if (
+        (currentFile && currentFile.blocks.length) ||
+        (currentBlock && currentBlock.lines.length)
+      ) {
+        startFile();
+      }
+
+      /*
+       * Git diffs provide more information regarding files modes, renames, copies,
+       * commits between changes and similarity indexes
+       */
+      if ((values = oldMode.exec(line))) {
         currentFile.oldMode = values[1];
       } else if ((values = newMode.exec(line))) {
         currentFile.newMode = values[1];
@@ -2532,8 +2584,6 @@ process.umask = function() { return 0; };
       } else if ((values = combinedDeletedFile.exec(line))) {
         currentFile.deletedFileMode = values[1];
         currentFile.isDeleted = true;
-      } else if (currentBlock) {
-        createLine(line);
       }
     });
 
@@ -2758,7 +2808,7 @@ process.umask = function() { return 0; };
 })();
 
 },{"./printer-utils.js":28}],25:[function(require,module,exports){
-(function (global,__dirname){
+(function (__dirname){
 /*
  *
  * Utils (hoganjs-utils.js)
@@ -2776,7 +2826,6 @@ process.umask = function() { return 0; };
   var hoganTemplates = require('./templates/diff2html-templates.js');
 
   var templatesPath = path.resolve(__dirname, 'templates');
-  var templatesCache = {};
 
   function HoganJsUtils() {
   }
@@ -2815,7 +2864,7 @@ process.umask = function() { return 0; };
         var templatePath = path.join(templatesPath, templateKey);
         var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
         template = hogan.compile(templateContent);
-        templatesCache[templateKey] = template;
+        hoganTemplates[templateKey] = template;
       }
     } catch (e) {
       console.error('Failed to read (template: ' + templateKey + ') from fs: ' + e.message);
@@ -2825,9 +2874,7 @@ process.umask = function() { return 0; };
   };
 
   HoganJsUtils.prototype._readFromCache = function(templateKey) {
-    return global.browserTemplates && global.browserTemplates[templateKey] ||
-      hoganTemplates[templateKey] ||
-      templatesCache[templateKey];
+    return hoganTemplates[templateKey];
   };
 
   HoganJsUtils.prototype._templateKey = function(namespace, view) {
@@ -2838,7 +2885,7 @@ process.umask = function() { return 0; };
 
 })();
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},"/src")
+}).call(this,"/src")
 },{"./templates/diff2html-templates.js":31,"fs":1,"hogan.js":18,"path":20}],26:[function(require,module,exports){
 /*
  *
@@ -3084,10 +3131,6 @@ process.umask = function() { return 0; };
       var i, chr, len;
       var hash = 0;
 
-      if (text.length === 0) {
-        return hash;
-      }
-
       for (i = 0, len = text.length; i < len; i++) {
         chr = text.charCodeAt(i);
         hash = ((hash << 5) - hash) + chr;
@@ -3104,8 +3147,7 @@ process.umask = function() { return 0; };
     var oldFilename = file.oldName;
     var newFilename = file.newName;
 
-    if (oldFilename && newFilename && oldFilename !== newFilename &&
-      !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
+    if (oldFilename && newFilename && oldFilename !== newFilename && !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
       return oldFilename + ' -> ' + newFilename;
     } else if (newFilename && !isDevNullName(newFilename)) {
       return newFilename;
@@ -3226,13 +3268,6 @@ process.umask = function() { return 0; };
 (function() {
 
   var Rematch = {};
-  Rematch.arrayToString = function arrayToString(a) {
-    if (Object.prototype.toString.apply(a, []) === "[object Array]") {
-      return "[" + a.map(arrayToString).join(", ") + "]";
-    } else {
-      return a;
-    }
-  };
 
   /*
    Copyright (c) 2011 Andrei Mackenzie
