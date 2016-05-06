@@ -198,7 +198,7 @@
        * --- 2002-02-21 23:30:39.942229878 -0800
        */
       if (currentFile && !currentFile.oldName &&
-        line.startsWith('---') && (values = getSrcFilename(line, config))) {
+        utils.startsWith(line, '---') && (values = getSrcFilename(line, config))) {
         currentFile.oldName = values;
         currentFile.language = getExtension(currentFile.oldName, currentFile.language);
         return;
@@ -209,7 +209,7 @@
        * +++ 2002-02-21 23:30:39.942229878 -0800
        */
       if (currentFile && !currentFile.newName &&
-        line.startsWith('+++') && (values = getDstFilename(line, config))) {
+        utils.startsWith(line, '+++') && (values = getDstFilename(line, config))) {
         currentFile.newName = values;
         currentFile.language = getExtension(currentFile.newName, currentFile.language);
         return;
@@ -226,7 +226,7 @@
        * 2. Old line     starts with: -
        * 3. Context line starts with: <SPACE>
        */
-      if (currentBlock && (line.startsWith('+') || line.startsWith('-') || line.startsWith(' '))) {
+      if (currentBlock && (utils.startsWith(line, '+') || utils.startsWith(line, '-') || utils.startsWith(line, ' '))) {
         createLine(line);
         return;
       }
