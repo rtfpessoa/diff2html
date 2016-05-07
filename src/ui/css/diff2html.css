@@ -13,12 +13,10 @@
   padding: 5px 10px;
   border-bottom: 1px solid #d8d8d8;
   background-color: #f7f7f7;
-  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 .d2h-file-stats {
   display: inline;
-  font-size: 12px;
   text-align: center;
 }
 
@@ -49,6 +47,8 @@
 .d2h-file-name-wrapper {
   display: inline-flex;
   width: 90%;
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
 }
 
 .d2h-file-name {
@@ -65,10 +65,10 @@
 }
 
 .d2h-diff-table {
-  border-collapse: collapse;
-  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-size: 12px;
   width: 100%;
+  border-collapse: collapse;
+  font-family: "Menlo", "Consolas", monospace;
+  font-size: 13px;
 }
 
 .d2h-diff-tbody > tr > td > div {
@@ -258,7 +258,6 @@ ins.d2h-change, del.d2h-change {
 
 .d2h-file-list-line {
   text-align: left;
-  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 .d2h-file-list-line .d2h-file-name {
