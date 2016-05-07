@@ -38,9 +38,14 @@
   "scripts": {
     "release": "./scripts/release.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
-    "test": "jscs src/*.js src/ui/js/*.js && istanbul cover _mocha -- -u exports -R spec ./test/**/* && istanbul check-coverage --statements 90 --functions 90 --branches 85 --lines 90 ./coverage/coverage.json",
     "style": "jscs src/*.js src/ui/js/*.js",
-    "codacy": "istanbul cover _mocha -- -u exports -R spec ./test/**/* && cat ./coverage/lcov.info | codacy-coverage"
+    "coverage": "istanbul cover _mocha -- -u exports -R spec ./test/**/*",
+    "check-coverage": "istanbul check-coverage --statements 90 --functions 90 --branches 85 --lines 90 ./coverage/coverage.json",
+    "test": "npm run style && npm run coverage && npm run check-coverage",
+    "codacy": "npm run coverage && cat ./coverage/lcov.info | codacy-coverage",
+    "preversion": "npm run release && npm test",
+    "version": "git add -A src dist",
+    "postversion": "git push && git push --tags"
   },
   "main": "./src/diff2html.js",
   "browser": {
