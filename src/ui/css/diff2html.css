@@ -16,32 +16,32 @@
 }
 
 .d2h-file-stats {
-  display: inline;
+  display: block;
   text-align: center;
+  float: right;
+  font-size: 14px;
+  top: 2px;
+  position: relative;
 }
 
 .d2h-lines-added {
   text-align: right;
-}
-
-.d2h-lines-added > * {
-  background-color: #ceffce;
+  /*background-color: #ceffce;*/
   border: 1px solid #b4e2b4;
-  color: #399839;
   border-radius: 5px 0 0 5px;
+  color: #399839;
   padding: 2px;
+  vertical-align: middle;
 }
 
 .d2h-lines-deleted {
   text-align: left;
-}
-
-.d2h-lines-deleted > * {
-  background-color: #f7c8c8;
+  /*background-color: #f7c8c8;*/
   border: 1px solid #e9aeae;
-  color: #c33;
   border-radius: 0 5px 5px 0;
+  color: #c33;
   padding: 2px;
+  vertical-align: middle;
 }
 
 .d2h-file-name-wrapper {
@@ -258,12 +258,34 @@
 
 .d2h-file-list {
   display: block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.d2h-file-list > li {
+  border-bottom: #ddd solid 1px;
+  padding: 5px 10px;
+  margin: 0;
+}
+
+.d2h-file-list > li:last-child {
+  border-bottom: none;
 }
 
 .d2h-file-switch {
   display: none;
   font-size: 10px;
   cursor: pointer;
+}
+
+.d2h-icon-wrapper {
+  line-height: 31px;
+}
+
+.d2h-icon {
+  vertical-align: middle;
+  margin-right: 10px;
 }
 
 /*
