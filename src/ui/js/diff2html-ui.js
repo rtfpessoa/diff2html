@@ -72,16 +72,35 @@
     // collect all the diff files and execute the highlight on their lines
     var $files = $target.find(".d2h-file-wrapper");
     $files.map(function(i, file) {
-      var state;
+      var oldLinesState;
+      var newLinesState;
       var $file = $(file);
       var language = $file.data("lang");
 
       // collect all the code lines and execute the highlight on them
       var $codeLines = $file.find(".d2h-code-line-ctn");
       $codeLines.map(function(i, line) {
+        var $line = $(line);
         var text = line.textContent;
-        var result = hljs.getLanguage(language) ? hljs.highlight(language, text, true, state) : hljs.highlightAuto(text);
-        state = result.top;
+        var lineParent = line.parentNode;
+
+        var lineState;
+        if (lineParent.className.indexOf("d2h-del") !== -1) {
+          lineState = oldLinesState;
+        } else {
+          lineState = newLinesState;
+        }
+
+        var result = hljs.getLanguage(language) ? hljs.highlight(language, text, true, lineState) : hljs.highlightAuto(text);
+
+        if (lineParent.className.indexOf("d2h-del") !== -1) {
+          oldLinesState = result.top;
+        } else if (lineParent.className.indexOf("d2h-ins") !== -1) {
+          newLinesState = result.top;
+        } else {
+          oldLinesState = result.top;
+          newLinesState = result.top;
+        }
 
         var originalStream = nodeStream(line);
         if (originalStream.length) {
@@ -90,13 +109,13 @@
           result.value = mergeStreams(originalStream, nodeStream(resultNode), text);
         }
 
-        var $line = $(line);
         buildClassName(line.className, result.language)
           .split(" ")
           .map(function(className) {
             $line.addClass(className);
           });
         $line.html(result.value);
+
       });
     });
   };
