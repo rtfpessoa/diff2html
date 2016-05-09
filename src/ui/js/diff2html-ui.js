@@ -89,7 +89,14 @@
           resultNode.innerHTML = result.value;
           result.value = mergeStreams(originalStream, nodeStream(resultNode), text);
         }
-        $(line).html(result.value);
+
+        var $line = $(line);
+        buildClassName(line.className, result.language)
+          .split(" ")
+          .map(function(className) {
+            $line.addClass(className);
+          });
+        $line.html(result.value);
       });
     });
   };
@@ -180,6 +187,20 @@
    * Copied from Highlight.js Private API
    * Will be removed when this part of the API is exposed
    */
+
+  function buildClassName(prevClassName, language) {
+    var result = [prevClassName.trim()];
+
+    if (!prevClassName.match(/\bhljs\b/)) {
+      result.push('hljs');
+    }
+
+    if (prevClassName.indexOf(language) === -1) {
+      result.push(language);
+    }
+
+    return result.join(' ').trim();
+  }
 
   /* Utility functions */
 
