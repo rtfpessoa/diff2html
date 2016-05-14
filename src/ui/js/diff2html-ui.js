@@ -8,9 +8,11 @@
  *
  */
 
-/*global $, hljs*/
+/*global $, hljs, Diff2Html*/
 
 (function() {
+
+  var highlightJS = require('./highlight.js-internals.js').HighlightJS;
 
   var diffJson = null;
   var defaultTarget = "body";
@@ -69,15 +71,50 @@
 
     var $target = that._getTarget(targetId);
 
-    var languages = that._getLanguages($target);
+    // collect all the diff files and execute the highlight on their lines
+    var $files = $target.find(".d2h-file-wrapper");
+    $files.map(function(_i, file) {
+      var oldLinesState;
+      var newLinesState;
+      var $file = $(file);
+      var language = $file.data("lang");
 
-    // pass the languages to the highlightjs plugin
-    hljs.configure({languages: languages});
+      // collect all the code lines and execute the highlight on them
+      var $codeLines = $file.find(".d2h-code-line-ctn");
+      $codeLines.map(function(_j, line) {
+        var $line = $(line);
+        var text = line.textContent;
+        var lineParent = line.parentNode;
 
-    // collect all the code lines and execute the highlight on them
-    var $codeLines = $target.find(".d2h-code-line-ctn");
-    $codeLines.map(function(i, line) {
-      hljs.highlightBlock(line);
+        var lineState;
+        if (lineParent.className.indexOf("d2h-del") !== -1) {
+          lineState = oldLinesState;
+        } else {
+          lineState = newLinesState;
+        }
+
+        var result = hljs.getLanguage(language) ? hljs.highlight(language, text, true, lineState) : hljs.highlightAuto(text);
+
+        if (lineParent.className.indexOf("d2h-del") !== -1) {
+          oldLinesState = result.top;
+        } else if (lineParent.className.indexOf("d2h-ins") !== -1) {
+          newLinesState = result.top;
+        } else {
+          oldLinesState = result.top;
+          newLinesState = result.top;
+        }
+
+        var originalStream = highlightJS.nodeStream(line);
+        if (originalStream.length) {
+          var resultNode = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+          resultNode.innerHTML = result.value;
+          result.value = highlightJS.mergeStreams(originalStream, highlightJS.nodeStream(resultNode), text);
+        }
+
+        $line.addClass("hljs");
+        $line.addClass(result.language);
+        $line.html(result.value);
+      });
     });
   };
 
@@ -95,24 +132,6 @@
     }
 
     return $target;
-  };
-
-  Diff2HtmlUI.prototype._getLanguages = function($target) {
-    var allFileLanguages = [];
-
-    if (diffJson) {
-      // collect all the file extensions in the json
-      allFileLanguages = diffJson.map(function(line) {
-        return line.language;
-      });
-    } else {
-      $target.find(".d2h-file-wrapper").map(function(i, file) {
-        allFileLanguages.push($(file).data("lang"));
-      });
-    }
-
-    // return only distinct languages
-    return this._distinct(allFileLanguages);
   };
 
   Diff2HtmlUI.prototype._getHashTag = function() {
