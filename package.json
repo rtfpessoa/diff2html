@@ -37,6 +37,7 @@
   "preferGlobal": true,
   "scripts": {
     "release": "./scripts/release.sh",
+    "release-bower": "./scripts/update-bower-version.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
     "style": "jscs src/*.js src/ui/js/*.js",
     "coverage": "istanbul cover _mocha -- -u exports -R spec ./test/**/*",
@@ -44,7 +45,7 @@
     "test": "npm run style && npm run coverage && npm run check-coverage",
     "codacy": "npm run coverage && cat ./coverage/lcov.info | codacy-coverage",
     "preversion": "npm run release && npm test",
-    "version": "git add -A src dist",
+    "version": "npm run release-bower && git add -A src dist package.json bower.json",
     "postversion": "git push && git push --tags"
   },
   "main": "./src/diff2html.js",
