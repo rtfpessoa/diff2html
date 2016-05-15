@@ -11,17 +11,25 @@
 
   var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
   var baseTemplatesPath = 'file-summary';
+  var iconsBaseTemplatesPath = 'icon';
 
   function FileListPrinter() {
   }
 
   FileListPrinter.prototype.generateFileList = function(diffFiles) {
+    var lineTemplate = hoganUtils.template(baseTemplatesPath, 'line');
+
     var files = diffFiles.map(function(file) {
-      return hoganUtils.render(baseTemplatesPath, 'line', {
+      var fileTypeName = printerUtils.getFileTypeIcon(file);
+      var iconTemplate = hoganUtils.template(iconsBaseTemplatesPath, fileTypeName);
+
+      return lineTemplate.render({
         fileHtmlId: printerUtils.getHtmlId(file),
         fileName: printerUtils.getDiffName(file),
         deletedLines: '-' + file.deletedLines,
         addedLines: '+' + file.addedLines
+      }, {
+        fileIcon: iconTemplate
       });
     }).join('\n');
 

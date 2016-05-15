@@ -14,18 +14,27 @@
 
   var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
   var baseTemplatesPath = 'line-by-line';
+  var iconsBaseTemplatesPath = 'icon';
+  var tagsBaseTemplatesPath = 'tag';
 
   function LineByLinePrinter(config) {
     this.config = config;
   }
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
-    return hoganUtils.render(baseTemplatesPath, 'file-diff', {
+    var fileDiffTemplate = hoganUtils.template(baseTemplatesPath, 'file-diff');
+    var fileIconTemplate = hoganUtils.template(iconsBaseTemplatesPath, 'file');
+    var fileTagTemplate = hoganUtils.template(tagsBaseTemplatesPath, printerUtils.getFileTypeIcon(file));
+
+    return fileDiffTemplate.render({
       file: file,
       fileDiffName: printerUtils.getDiffName(file),
       fileHtmlId: printerUtils.getHtmlId(file),
       diffs: diffs
-    });
+    }, {
+      fileIcon: fileIconTemplate,
+      fileTag: fileTagTemplate
+    })
   };
 
   LineByLinePrinter.prototype.makeLineByLineHtmlWrapper = function(content) {

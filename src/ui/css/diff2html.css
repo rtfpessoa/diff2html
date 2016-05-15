@@ -16,17 +16,13 @@
 }
 
 .d2h-file-stats {
-  display: block;
-  text-align: center;
-  float: right;
+  display: flex;
+  margin-left: auto;
   font-size: 14px;
-  top: 2px;
-  position: relative;
 }
 
 .d2h-lines-added {
   text-align: right;
-  /*background-color: #ceffce;*/
   border: 1px solid #b4e2b4;
   border-radius: 5px 0 0 5px;
   color: #399839;
@@ -36,19 +32,21 @@
 
 .d2h-lines-deleted {
   text-align: left;
-  /*background-color: #f7c8c8;*/
   border: 1px solid #e9aeae;
   border-radius: 0 5px 5px 0;
   color: #c33;
   padding: 2px;
   vertical-align: middle;
+  margin-left: 1px;
 }
 
 .d2h-file-name-wrapper {
-  display: inline-flex;
+  display: flex;
+  align-items: center;
   width: 90%;
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
+  line-height: 15px;
 }
 
 .d2h-file-name {
@@ -249,6 +247,7 @@
 }
 
 .d2h-file-list-line {
+  display: flex;
   text-align: left;
 }
 
@@ -286,6 +285,46 @@
 .d2h-icon {
   vertical-align: middle;
   margin-right: 10px;
+  fill: currentColor;
+}
+
+.d2h-deleted {
+  color: #c33;
+}
+
+.d2h-added {
+  color: #399839;
+}
+
+.d2h-changed {
+  color: #d0b44c;
+}
+
+.d2h-moved {
+  color: #3572b0;
+}
+
+.d2h-tag {
+  display: flex;
+  font-size: 10px;
+  margin-left: 5px;
+  padding: 0 2px;
+}
+
+.d2h-deleted-tag {
+  border: #c33 1px solid;
+}
+
+.d2h-added-tag {
+  border: #399839 1px solid;
+}
+
+.d2h-changed-tag {
+  border: #d0b44c 1px solid;
+}
+
+.d2h-moved-tag {
+  border: #3572b0 1px solid;
 }
 
 /*

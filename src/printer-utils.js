@@ -95,6 +95,25 @@
     return 'unknown/file/path';
   };
 
+  PrinterUtils.prototype.getFileTypeIcon = function(file) {
+    var templateName = 'file-changed';
+
+    if (file.isRename) {
+      templateName = 'file-renamed';
+    } else if (file.isCopy) {
+      templateName = 'file-renamed';
+    } else if (file.isNew) {
+      templateName = 'file-added';
+    } else if (file.isDeleted) {
+      templateName = 'file-deleted';
+    } else if (file.newName !== file.oldName) {
+      // If file is not Added, not Deleted and the names changed it must be a rename :)
+      templateName = 'file-renamed';
+    }
+
+    return templateName;
+  };
+
   PrinterUtils.prototype.diffHighlight = function(diffLine1, diffLine2, config) {
     var linePrefix1, linePrefix2, unprefixedLine1, unprefixedLine2;
 
