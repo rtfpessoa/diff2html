@@ -23,17 +23,20 @@
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
     var fileDiffTemplate = hoganUtils.template(baseTemplatesPath, 'file-diff');
+    var filePathTemplate = hoganUtils.template(baseTemplatesPath, 'file-path');
     var fileIconTemplate = hoganUtils.template(iconsBaseTemplatesPath, 'file');
     var fileTagTemplate = hoganUtils.template(tagsBaseTemplatesPath, printerUtils.getFileTypeIcon(file));
 
     return fileDiffTemplate.render({
       file: file,
-      fileDiffName: printerUtils.getDiffName(file),
       fileHtmlId: printerUtils.getHtmlId(file),
-      diffs: diffs
-    }, {
-      fileIcon: fileIconTemplate,
-      fileTag: fileTagTemplate
+      diffs: diffs,
+      filePath: filePathTemplate.render({
+        fileDiffName: printerUtils.getDiffName(file)
+      }, {
+        fileIcon: fileIconTemplate,
+        fileTag: fileTagTemplate
+      })
     })
   };
 
