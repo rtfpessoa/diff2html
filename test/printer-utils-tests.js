@@ -28,12 +28,33 @@ describe('Utils', function() {
       });
       assert.equal('sample.js', result);
     });
-    it('should generate the file name for a changed file and renamed', function() {
+    it('should generate the file name for a changed file and full rename', function() {
       var result = PrinterUtils.getDiffName({
         oldName: 'sample1.js',
         newName: 'sample2.js'
       });
-      assert.equal('sample1.js -> sample2.js', result);
+      assert.equal('sample1.js → sample2.js', result);
+    });
+    it('should generate the file name for a changed file and prefix rename', function() {
+      var result = PrinterUtils.getDiffName({
+        oldName: 'src/path/sample.js',
+        newName: 'source/path/sample.js'
+      });
+      assert.equal('{src → source}/path/sample.js', result);
+    });
+    it('should generate the file name for a changed file and suffix rename', function() {
+      var result = PrinterUtils.getDiffName({
+        oldName: 'src/path/sample1.js',
+        newName: 'src/path/sample2.js'
+      });
+      assert.equal('src/path/{sample1.js → sample2.js}', result);
+    });
+    it('should generate the file name for a changed file and middle rename', function() {
+      var result = PrinterUtils.getDiffName({
+        oldName: 'src/really/big/path/sample.js',
+        newName: 'src/small/path/sample.js'
+      });
+      assert.equal('src/{really/big → small}/path/sample.js', result);
     });
     it('should generate the file name for a deleted file', function() {
       var result = PrinterUtils.getDiffName({
@@ -49,9 +70,9 @@ describe('Utils', function() {
       });
       assert.equal('src/my/file.js', result);
     });
-    it('should generate handle undefined filenames', function() {
+    it('should generate handle undefined filename', function() {
       var result = PrinterUtils.getDiffName({});
-      assert.equal('Unknown filename', result);
+      assert.equal('unknown/file/path', result);
     });
   });
 
