@@ -43,7 +43,7 @@
 .d2h-file-name-wrapper {
   display: flex;
   align-items: center;
-  width: 90%;
+  width: 100%;
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 15px;
@@ -100,16 +100,11 @@
 
 .d2h-code-side-line {
   display: block;
-  white-space: pre;
+  white-space: nowrap;
   padding: 0 10px;
   height: 18px;
   line-height: 18px;
   margin-left: 50px;
-  /* Override HighlightJS */
-  /*color: inherit;*/
-  /*overflow-x: inherit;*/
-  /*background: none;*/
-  /* ******************** */
 }
 
 .d2h-code-line del,
