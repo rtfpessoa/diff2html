@@ -54,7 +54,7 @@
       while (i < j && i < k) {
         if (oldFilenameParts[i] === newFilenameParts[i]) {
           prefixPaths.push(newFilenameParts[i]);
-          i = i + 1;
+          i += 1;
         } else {
           break;
         }
@@ -63,8 +63,8 @@
       while (j > i && k > i) {
         if (oldFilenameParts[j] === newFilenameParts[k]) {
           suffixPaths.unshift(newFilenameParts[k]);
-          j = j - 1;
-          k = k - 1;
+          j -= 1;
+          k -= 1;
         } else {
           break;
         }
@@ -82,9 +82,9 @@
         return finalPrefix + separator + '{' + oldRemainingPath + ' → ' + newRemainingPath + '}';
       } else if (finalSuffix.length) {
         return '{' + oldRemainingPath + ' → ' + newRemainingPath + '}' + separator + finalSuffix;
-      } else {
-        return oldFilename + ' → ' + newFilename;
       }
+
+      return oldFilename + ' → ' + newFilename;
 
     } else if (newFilename && !isDevNullName(newFilename)) {
       return newFilename;
@@ -180,9 +180,9 @@
   function unifyPath(path) {
     if (path) {
       return path.replace('\\', '/');
-    } else {
-      return path;
     }
+
+    return path;
   }
 
   function isDevNullName(name) {
