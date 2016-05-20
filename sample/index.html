@@ -9,12 +9,12 @@
       Author: rtfpessoa
   -->
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/github.min.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/languages/scala.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/scala.min.js"></script>
 
   <!-- diff2html -->
   <link rel="stylesheet" type="text/css" href="../dist/diff2html.css">
@@ -24,6 +24,12 @@
 
   <script>
     var lineDiffExample =
+      "--- a/src/my/really/big/path/sample.js\n" +
+      "+++ b/src/my/small/path/sample.js\n" +
+      "@@ -1 +1,2 @@\n" +
+      "-test\n" +
+      "+test1r\n" +
+      "+test2r\n" +
       'diff --git a/src/core/init.java b/src/core/init.java\n' +
       'index e49196a..50f310c 100644\n' +
       '--- a/src/core/init.java\n' +
