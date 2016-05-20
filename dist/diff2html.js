@@ -3123,6 +3123,8 @@ process.umask = function() { return 0; };
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
+  var separator = '/';
+
   function PrinterUtils() {
   }
 
@@ -3144,18 +3146,65 @@ process.umask = function() { return 0; };
   };
 
   PrinterUtils.prototype.getDiffName = function(file) {
-    var oldFilename = file.oldName;
-    var newFilename = file.newName;
+    var oldFilename = unifyPath(file.oldName);
+    var newFilename = unifyPath(file.newName);
 
     if (oldFilename && newFilename && oldFilename !== newFilename && !isDevNullName(oldFilename) && !isDevNullName(newFilename)) {
-      return oldFilename + ' -> ' + newFilename;
+      var prefixPaths = [];
+      var suffixPaths = [];
+
+      var oldFilenameParts = oldFilename.split(separator);
+      var newFilenameParts = newFilename.split(separator);
+
+      var oldFilenamePartsSize = oldFilenameParts.length;
+      var newFilenamePartsSize = newFilenameParts.length;
+
+      var i = 0;
+      var j = oldFilenamePartsSize - 1;
+      var k = newFilenamePartsSize - 1;
+
+      while (i < j && i < k) {
+        if (oldFilenameParts[i] === newFilenameParts[i]) {
+          prefixPaths.push(newFilenameParts[i]);
+          i += 1;
+        } else {
+          break;
+        }
+      }
+
+      while (j > i && k > i) {
+        if (oldFilenameParts[j] === newFilenameParts[k]) {
+          suffixPaths.unshift(newFilenameParts[k]);
+          j -= 1;
+          k -= 1;
+        } else {
+          break;
+        }
+      }
+
+      var finalPrefix = prefixPaths.join(separator);
+      var finalSuffix = suffixPaths.join(separator);
+
+      var oldRemainingPath = oldFilenameParts.slice(i, j + 1).join(separator);
+      var newRemainingPath = newFilenameParts.slice(i, k + 1).join(separator);
+
+      if (finalPrefix.length && finalSuffix.length) {
+        return finalPrefix + separator + '{' + oldRemainingPath + ' → ' + newRemainingPath + '}' + separator + finalSuffix;
+      } else if (finalPrefix.length) {
+        return finalPrefix + separator + '{' + oldRemainingPath + ' → ' + newRemainingPath + '}';
+      } else if (finalSuffix.length) {
+        return '{' + oldRemainingPath + ' → ' + newRemainingPath + '}' + separator + finalSuffix;
+      }
+
+      return oldFilename + ' → ' + newFilename;
+
     } else if (newFilename && !isDevNullName(newFilename)) {
       return newFilename;
     } else if (oldFilename) {
       return oldFilename;
     }
 
-    return 'Unknown filename';
+    return 'unknown/file/path';
   };
 
   PrinterUtils.prototype.diffHighlight = function(diffLine1, diffLine2, config) {
@@ -3239,6 +3288,14 @@ process.umask = function() { return 0; };
       }
     };
   };
+
+  function unifyPath(path) {
+    if (path) {
+      return path.replace('\\', '/');
+    }
+
+    return path;
+  }
 
   function isDevNullName(name) {
     return name.indexOf('dev/null') !== -1;
