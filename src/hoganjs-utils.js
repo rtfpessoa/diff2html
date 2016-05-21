@@ -20,15 +20,19 @@
   }
 
   HoganJsUtils.prototype.render = function(namespace, view, params, configuration) {
-    var config = configuration || {};
-    var templateKey = this._templateKey(namespace, view);
-
-    var template = this._getTemplate(templateKey, config);
+    var template = this.template(namespace, view, configuration);
     if (template) {
       return template.render(params);
     }
 
     return null;
+  };
+
+  HoganJsUtils.prototype.template = function(namespace, view, configuration) {
+    var config = configuration || {};
+    var templateKey = this._templateKey(namespace, view);
+
+    return this._getTemplate(templateKey, config);
   };
 
   HoganJsUtils.prototype._getTemplate = function(templateKey, config) {

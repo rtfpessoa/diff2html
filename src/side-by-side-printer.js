@@ -12,6 +12,12 @@
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
+  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
+  var genericTemplatesPath = 'generic';
+  var baseTemplatesPath = 'side-by-side';
+  var iconsBaseTemplatesPath = 'icon';
+  var tagsBaseTemplatesPath = 'tag';
+
   var matcher = Rematch.rematch(function(a, b) {
     var amod = a.content.substr(1);
     var bmod = b.content.substr(1);
@@ -24,67 +30,48 @@
   }
 
   SideBySidePrinter.prototype.makeDiffHtml = function(file, diffs) {
-    return '<div id="' + printerUtils.getHtmlId(file) + '" class="d2h-file-wrapper" data-lang="' + file.language + '">\n' +
-      '     <div class="d2h-file-header">\n' +
-      '       <span class="d2h-file-stats">\n' +
-      '         <span class="d2h-lines-added">\n' +
-      '           <span>+' + file.addedLines + '</span>\n' +
-      '         </span>\n' +
-      '         <span class="d2h-lines-deleted">\n' +
-      '           <span>-' + file.deletedLines + '</span>\n' +
-      '         </span>\n' +
-      '       </span>\n' +
-      '       <span class="d2h-file-name-wrapper">\n' +
-      '         <span class="d2h-file-name">' + printerUtils.getDiffName(file) + '</span>\n' +
-      '       </span>\n' +
-      '     </div>\n' +
-      '     <div class="d2h-files-diff">\n' +
-      '       <div class="d2h-file-side-diff">\n' +
-      '         <div class="d2h-code-wrapper">\n' +
-      '           <table class="d2h-diff-table">\n' +
-      '             <tbody class="d2h-diff-tbody">\n' +
-      '           ' + diffs.left +
-      '             </tbody>\n' +
-      '           </table>\n' +
-      '         </div>\n' +
-      '       </div>\n' +
-      '       <div class="d2h-file-side-diff">\n' +
-      '         <div class="d2h-code-wrapper">\n' +
-      '           <table class="d2h-diff-table">\n' +
-      '             <tbody class="d2h-diff-tbody">\n' +
-      '           ' + diffs.right +
-      '             </tbody>\n' +
-      '           </table>\n' +
-      '         </div>\n' +
-      '       </div>\n' +
-      '     </div>\n' +
-      '   </div>\n';
+    var fileDiffTemplate = hoganUtils.template(baseTemplatesPath, 'file-diff');
+    var filePathTemplate = hoganUtils.template(genericTemplatesPath, 'file-path');
+    var fileIconTemplate = hoganUtils.template(iconsBaseTemplatesPath, 'file');
+    var fileTagTemplate = hoganUtils.template(tagsBaseTemplatesPath, printerUtils.getFileTypeIcon(file));
+
+    return fileDiffTemplate.render({
+      file: file,
+      fileHtmlId: printerUtils.getHtmlId(file),
+      diffs: diffs,
+      filePath: filePathTemplate.render({
+        fileDiffName: printerUtils.getDiffName(file)
+      }, {
+        fileIcon: fileIconTemplate,
+        fileTag: fileTagTemplate
+      })
+    });
   };
 
   SideBySidePrinter.prototype.generateSideBySideJsonHtml = function(diffFiles) {
     var that = this;
-    return '<div class="d2h-wrapper">\n' +
-      diffFiles.map(function(file) {
 
-        var diffs;
-        if (file.blocks.length) {
-          diffs = that.generateSideBySideFileHtml(file);
-        } else {
-          diffs = that.generateEmptyDiff();
-        }
+    var content = diffFiles.map(function(file) {
+      var diffs;
+      if (file.blocks.length) {
+        diffs = that.generateSideBySideFileHtml(file);
+      } else {
+        diffs = that.generateEmptyDiff();
+      }
 
-        return that.makeDiffHtml(file, diffs);
-      }).join('\n') +
-      '</div>\n';
+      return that.makeDiffHtml(file, diffs);
+    }).join('\n');
+
+    return hoganUtils.render(genericTemplatesPath, 'wrapper', {'content': content});
   };
 
   SideBySidePrinter.prototype.makeSideHtml = function(blockHeader) {
-    return '<tr>\n' +
-      '  <td class="d2h-code-side-linenumber ' + diffParser.LINE_TYPE.INFO + '"></td>\n' +
-      '  <td class="' + diffParser.LINE_TYPE.INFO + '">\n' +
-      '    <div class="d2h-code-side-line ' + diffParser.LINE_TYPE.INFO + '">' + blockHeader + '</div>\n' +
-      '  </td>\n' +
-      '</tr>\n';
+    return hoganUtils.render(genericTemplatesPath, 'column-line-number', {
+      diffParser: diffParser,
+      blockHeader: blockHeader,
+      lineClass: 'd2h-code-side-linenumber',
+      contentClass: 'd2h-code-side-line'
+    });
   };
 
   SideBySidePrinter.prototype.generateSideBySideFileHtml = function(file) {
@@ -95,7 +82,7 @@
 
     file.blocks.forEach(function(block) {
 
-      fileHtml.left += that.makeSideHtml(utils.escape(block.header));
+      fileHtml.left += that.makeSideHtml(block.header);
       fileHtml.right += that.makeSideHtml('');
 
       var oldLines = [];
@@ -109,7 +96,7 @@
         var comparisons = oldLines.length * newLines.length;
         var maxComparisons = that.config.matchingMaxComparisons || 2500;
         var doMatching = comparisons < maxComparisons && (that.config.matching === 'lines' ||
-            that.config.matching === 'words');
+          that.config.matching === 'words');
 
         if (doMatching) {
           matches = matcher(oldLines, newLines);
@@ -232,40 +219,26 @@
     return fileHtml;
   };
 
-  SideBySidePrinter.prototype.makeSingleLineHtml = function(type, number, htmlContent, htmlPrefix) {
-    return '<tr>\n' +
-      '    <td class="d2h-code-side-linenumber ' + type + '">' + number + '</td>\n' +
-      '    <td class="' + type + '">' +
-      '      <div class="d2h-code-side-line ' + type + '">' + htmlPrefix + htmlContent + '</div>' +
-      '    </td>\n' +
-      '  </tr>\n';
-  };
-
   SideBySidePrinter.prototype.generateSingleLineHtml = function(type, number, content, prefix) {
-    var htmlPrefix = '';
-    if (prefix) {
-      htmlPrefix = '<span class="d2h-code-line-prefix">' + prefix + '</span>';
-    }
-
-    var htmlContent = '';
-    if (content) {
-      htmlContent = '<span class="d2h-code-line-ctn">' + content + '</span>';
-    }
-
-    return this.makeSingleLineHtml(type, number, htmlContent, htmlPrefix);
+    return hoganUtils.render(genericTemplatesPath, 'line',
+      {
+        type: type,
+        lineClass: 'd2h-code-side-linenumber',
+        contentClass: 'd2h-code-side-line',
+        prefix: prefix && utils.convertWhiteSpaceToNonBreakingSpace(prefix),
+        content: content && utils.convertWhiteSpaceToNonBreakingSpace(content),
+        lineNumber: number
+      });
   };
 
   SideBySidePrinter.prototype.generateEmptyDiff = function() {
     var fileHtml = {};
     fileHtml.right = '';
 
-    fileHtml.left = '<tr>\n' +
-      '  <td class="' + diffParser.LINE_TYPE.INFO + '">' +
-      '    <div class="d2h-code-side-line ' + diffParser.LINE_TYPE.INFO + '">' +
-      'File without changes' +
-      '    </div>' +
-      '  </td>\n' +
-      '</tr>\n';
+    fileHtml.left = hoganUtils.render(genericTemplatesPath, 'empty-diff', {
+      contentClass: 'd2h-code-side-line',
+      diffParser: diffParser
+    });
 
     return fileHtml;
   };

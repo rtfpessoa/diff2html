@@ -1,0 +1,25 @@
+<div id="{{fileHtmlId}}" class="d2h-file-wrapper" data-lang="{{file.language}}">
+    <div class="d2h-file-header">
+      {{{filePath}}}
+    </div>
+    <div class="d2h-files-diff">
+        <div class="d2h-file-side-diff">
+            <div class="d2h-code-wrapper">
+                <table class="d2h-diff-table">
+                    <tbody class="d2h-diff-tbody">
+                    {{{diffs.left}}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="d2h-file-side-diff">
+            <div class="d2h-code-wrapper">
+                <table class="d2h-diff-table">
+                    <tbody class="d2h-diff-tbody">
+                    {{{diffs.right}}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,23 +13,36 @@
   var Rematch = require('./rematch.js').Rematch;
 
   var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
+  var genericTemplatesPath = 'generic';
   var baseTemplatesPath = 'line-by-line';
+  var iconsBaseTemplatesPath = 'icon';
+  var tagsBaseTemplatesPath = 'tag';
 
   function LineByLinePrinter(config) {
     this.config = config;
   }
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
-    return hoganUtils.render(baseTemplatesPath, 'file-diff', {
+    var fileDiffTemplate = hoganUtils.template(baseTemplatesPath, 'file-diff');
+    var filePathTemplate = hoganUtils.template(genericTemplatesPath, 'file-path');
+    var fileIconTemplate = hoganUtils.template(iconsBaseTemplatesPath, 'file');
+    var fileTagTemplate = hoganUtils.template(tagsBaseTemplatesPath, printerUtils.getFileTypeIcon(file));
+
+    return fileDiffTemplate.render({
       file: file,
-      fileDiffName: printerUtils.getDiffName(file),
       fileHtmlId: printerUtils.getHtmlId(file),
-      diffs: diffs
+      diffs: diffs,
+      filePath: filePathTemplate.render({
+        fileDiffName: printerUtils.getDiffName(file)
+      }, {
+        fileIcon: fileIconTemplate,
+        fileTag: fileTagTemplate
+      })
     });
   };
 
   LineByLinePrinter.prototype.makeLineByLineHtmlWrapper = function(content) {
-    return hoganUtils.render(baseTemplatesPath, 'wrapper', {'content': content});
+    return hoganUtils.render(genericTemplatesPath, 'wrapper', {'content': content});
   };
 
   LineByLinePrinter.prototype.generateLineByLineJsonHtml = function(diffFiles) {
@@ -55,9 +68,11 @@
   });
 
   LineByLinePrinter.prototype.makeColumnLineNumberHtml = function(block) {
-    return hoganUtils.render(baseTemplatesPath, 'column-line-number', {
+    return hoganUtils.render(genericTemplatesPath, 'column-line-number', {
       diffParser: diffParser,
-      block: utils.escape(block.header)
+      blockHeader: block.header,
+      lineClass: 'd2h-code-linenumber',
+      contentClass: 'd2h-code-line'
     });
   };
 
@@ -170,18 +185,25 @@
   };
 
   LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, content, prefix) {
-    return hoganUtils.render(baseTemplatesPath, 'line',
+    var lineNumberTemplate = hoganUtils.render(baseTemplatesPath, 'numbers', {
+      oldNumber: utils.valueOrEmpty(oldNumber),
+      newNumber: utils.valueOrEmpty(newNumber)
+    });
+
+    return hoganUtils.render(genericTemplatesPath, 'line',
       {
         type: type,
-        oldNumber: utils.valueOrEmpty(oldNumber),
-        newNumber: utils.valueOrEmpty(newNumber),
+        lineClass: 'd2h-code-linenumber',
+        contentClass: 'd2h-code-line',
         prefix: prefix && utils.convertWhiteSpaceToNonBreakingSpace(prefix),
-        content: content && utils.convertWhiteSpaceToNonBreakingSpace(content)
+        content: content && utils.convertWhiteSpaceToNonBreakingSpace(content),
+        lineNumber: lineNumberTemplate
       });
   };
 
   LineByLinePrinter.prototype._generateEmptyDiff = function() {
-    return hoganUtils.render(baseTemplatesPath, 'empty-diff', {
+    return hoganUtils.render(genericTemplatesPath, 'empty-diff', {
+      contentClass: 'd2h-code-line',
       diffParser: diffParser
     });
   };

@@ -43,40 +43,39 @@ var jsonExample1 =
 
 var filesExample1 =
   '<div class="d2h-file-list-wrapper">\n' +
-  '     <div class="d2h-file-list-header">\n' +
-  '         <span class="d2h-file-list-title">Files changed (1)&nbsp&nbsp</span>\n' +
-  '         <a class="d2h-file-switch d2h-hide">hide</a>\n' +
-  '         <a class="d2h-file-switch d2h-show">show</a>\n' +
-  '     </div>\n' +
-  '     <table class="d2h-file-list">\n' +
-  '     <tr class="d2h-file-list-line">\n' +
-  '       <td class="d2h-lines-added">\n' +
-  '         <span>+1</span>\n' +
-  '       </td>\n' +
-  '       <td class="d2h-lines-deleted">\n' +
-  '         <span>-1</span>\n' +
-  '       </td>\n' +
-  '       <td class="d2h-file-name-wrapper">\n' +
-  '         <a href="#d2h-675094" class="d2h-file-name">&nbsp;sample         </a>\n' +
-  '       </td>\n' +
-  '     </tr>\n' +
-  '</table></div>\n';
+  '    <div class="d2h-file-list-header">\n' +
+  '        <span class="d2h-file-list-title">Files changed (1)</span>\n' +
+  '        <a class="d2h-file-switch d2h-hide">hide</a>\n' +
+  '        <a class="d2h-file-switch d2h-show">show</a>\n' +
+  '    </div>\n' +
+  '    <ol class="d2h-file-list">\n' +
+  '    <li class="d2h-file-list-line">\n' +
+  '    <span class="d2h-file-name-wrapper">\n' +
+  '      <span><svg aria-hidden="true" class="d2h-icon d2h-changed" height="16" title="modified" version="1.1"\n' +
+  '     viewBox="0 0 14 16" width="14">\n' +
+  '    <path d="M13 1H1C0.45 1 0 1.45 0 2v12c0 0.55 0.45 1 1 1h12c0.55 0 1-0.45 1-1V2c0-0.55-0.45-1-1-1z m0 13H1V2h12v12zM4 8c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3z"></path>\n' +
+  '</svg></span>\n' +
+  '      <a href="#d2h-675094" class="d2h-file-name">sample</a>\n' +
+  '      <span class="d2h-file-stats">\n' +
+  '          <span class="d2h-lines-added">+1</span>\n' +
+  '          <span class="d2h-lines-deleted">-1</span>\n' +
+  '      </span>\n' +
+  '    </span>\n' +
+  '</li>\n' +
+  '    </ol>\n' +
+  '</div>';
+
 
 var htmlLineExample1 =
   '<div class="d2h-wrapper">\n' +
   '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
   '    <div class="d2h-file-header">\n' +
-  '    <span class="d2h-file-stats">\n' +
-  '      <span class="d2h-lines-added">\n' +
-  '        <span>+1</span>\n' +
-  '      </span>\n' +
-  '      <span class="d2h-lines-deleted">\n' +
-  '        <span>-1</span>\n' +
-  '      </span>\n' +
-  '    </span>\n' +
   '    <span class="d2h-file-name-wrapper">\n' +
-  '        <span class="d2h-file-name">&nbsp;sample</span>\n' +
-  '    </span>\n' +
+  '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
+  '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
+  '</svg></span>\n' +
+  '    <span class="d2h-file-name">sample</span>\n' +
+  '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
   '    </div>\n' +
   '    <div class="d2h-file-diff">\n' +
   '        <div class="d2h-code-wrapper">\n' +
@@ -85,12 +84,12 @@ var htmlLineExample1 =
   '                <tr>\n' +
   '    <td class="d2h-code-linenumber d2h-info"></td>\n' +
   '    <td class="d2h-info">\n' +
-  '        <div class="d2h-code-line d2h-info"></div>\n' +
+  '        <div class="d2h-code-line d2h-info">@@ -1 +1 @@</div>\n' +
   '    </td>\n' +
   '</tr><tr>\n' +
   '    <td class="d2h-code-linenumber d2h-del">\n' +
-  '        <div class="line-num1">1</div>\n' +
-  '        <div class="line-num2"></div>\n' +
+  '      <div class="line-num1">1</div>\n' +
+  '<div class="line-num2"></div>\n' +
   '    </td>\n' +
   '    <td class="d2h-del">\n' +
   '        <div class="d2h-code-line d2h-del">\n' +
@@ -100,8 +99,8 @@ var htmlLineExample1 =
   '    </td>\n' +
   '</tr><tr>\n' +
   '    <td class="d2h-code-linenumber d2h-ins">\n' +
-  '        <div class="line-num1"></div>\n' +
-  '        <div class="line-num2">1</div>\n' +
+  '      <div class="line-num1"></div>\n' +
+  '<div class="line-num2">1</div>\n' +
   '    </td>\n' +
   '    <td class="d2h-ins">\n' +
   '        <div class="d2h-code-line d2h-ins">\n' +
@@ -121,60 +120,67 @@ var htmlLineExample1WithFilesSummary = filesExample1 + htmlLineExample1;
 
 var htmlSideExample1 =
   '<div class="d2h-wrapper">\n' +
-  '<div id="d2h-675094" class="d2h-file-wrapper" data-lang="undefined">\n' +
-  '     <div class="d2h-file-header">\n' +
-  '       <span class="d2h-file-stats">\n' +
-  '         <span class="d2h-lines-added">\n' +
-  '           <span>+1</span>\n' +
-  '         </span>\n' +
-  '         <span class="d2h-lines-deleted">\n' +
-  '           <span>-1</span>\n' +
-  '         </span>\n' +
-  '       </span>\n' +
-  '       <span class="d2h-file-name-wrapper">\n' +
-  '         <span class="d2h-file-name">sample</span>\n' +
-  '       </span>\n' +
-  '     </div>\n' +
-  '     <div class="d2h-files-diff">\n' +
-  '       <div class="d2h-file-side-diff">\n' +
-  '         <div class="d2h-code-wrapper">\n' +
-  '           <table class="d2h-diff-table">\n' +
-  '             <tbody class="d2h-diff-tbody">\n' +
-  '           <tr>\n' +
-  '  <td class="d2h-code-side-linenumber d2h-info"></td>\n' +
-  '  <td class="d2h-info">\n' +
-  '    <div class="d2h-code-side-line d2h-info">@@ -1 +1 @@</div>\n' +
-  '  </td>\n' +
+  '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
+  '    <div class="d2h-file-header">\n' +
+  '      <span class="d2h-file-name-wrapper">\n' +
+  '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
+  '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
+  '</svg></span>\n' +
+  '    <span class="d2h-file-name">sample</span>\n' +
+  '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
+  '    </div>\n' +
+  '    <div class="d2h-files-diff">\n' +
+  '        <div class="d2h-file-side-diff">\n' +
+  '            <div class="d2h-code-wrapper">\n' +
+  '                <table class="d2h-diff-table">\n' +
+  '                    <tbody class="d2h-diff-tbody">\n' +
+  '                    <tr>\n' +
+  '    <td class="d2h-code-side-linenumber d2h-info"></td>\n' +
+  '    <td class="d2h-info">\n' +
+  '        <div class="d2h-code-side-line d2h-info">@@ -1 +1 @@</div>\n' +
+  '    </td>\n' +
+  '</tr><tr>\n' +
+  '    <td class="d2h-code-side-linenumber d2h-del">\n' +
+  '      1\n' +
+  '    </td>\n' +
+  '    <td class="d2h-del">\n' +
+  '        <div class="d2h-code-side-line d2h-del">\n' +
+  '            <span class="d2h-code-line-prefix">-</span>\n' +
+  '            <span class="d2h-code-line-ctn"><del>test</del></span>\n' +
+  '        </div>\n' +
+  '    </td>\n' +
   '</tr>\n' +
-  '<tr>\n' +
-  '    <td class="d2h-code-side-linenumber d2h-del">1</td>\n' +
-  '    <td class="d2h-del">      <div class="d2h-code-side-line d2h-del"><span class="d2h-code-line-prefix">-</span><span class="d2h-code-line-ctn"><del>test</del></span></div>    </td>\n' +
-  '  </tr>\n' +
-  '             </tbody>\n' +
-  '           </table>\n' +
-  '         </div>\n' +
-  '       </div>\n' +
-  '       <div class="d2h-file-side-diff">\n' +
-  '         <div class="d2h-code-wrapper">\n' +
-  '           <table class="d2h-diff-table">\n' +
-  '             <tbody class="d2h-diff-tbody">\n' +
-  '           <tr>\n' +
-  '  <td class="d2h-code-side-linenumber d2h-info"></td>\n' +
-  '  <td class="d2h-info">\n' +
-  '    <div class="d2h-code-side-line d2h-info"></div>\n' +
-  '  </td>\n' +
+  '                    </tbody>\n' +
+  '                </table>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '        <div class="d2h-file-side-diff">\n' +
+  '            <div class="d2h-code-wrapper">\n' +
+  '                <table class="d2h-diff-table">\n' +
+  '                    <tbody class="d2h-diff-tbody">\n' +
+  '                    <tr>\n' +
+  '    <td class="d2h-code-side-linenumber d2h-info"></td>\n' +
+  '    <td class="d2h-info">\n' +
+  '        <div class="d2h-code-side-line d2h-info"></div>\n' +
+  '    </td>\n' +
+  '</tr><tr>\n' +
+  '    <td class="d2h-code-side-linenumber d2h-ins">\n' +
+  '      1\n' +
+  '    </td>\n' +
+  '    <td class="d2h-ins">\n' +
+  '        <div class="d2h-code-side-line d2h-ins">\n' +
+  '            <span class="d2h-code-line-prefix">+</span>\n' +
+  '            <span class="d2h-code-line-ctn"><ins>test1</ins></span>\n' +
+  '        </div>\n' +
+  '    </td>\n' +
   '</tr>\n' +
-  '<tr>\n' +
-  '    <td class="d2h-code-side-linenumber d2h-ins">1</td>\n' +
-  '    <td class="d2h-ins">      <div class="d2h-code-side-line d2h-ins"><span class="d2h-code-line-prefix">+</span><span class="d2h-code-line-ctn"><ins>test1</ins></span></div>    </td>\n' +
-  '  </tr>\n' +
-  '             </tbody>\n' +
-  '           </table>\n' +
-  '         </div>\n' +
-  '       </div>\n' +
-  '     </div>\n' +
-  '   </div>\n' +
-  '</div>\n';
+  '                    </tbody>\n' +
+  '                </table>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '</div>\n' +
+  '</div>';
 
 var htmlSideExample1WithFilesSummary = filesExample1 + htmlSideExample1;
 

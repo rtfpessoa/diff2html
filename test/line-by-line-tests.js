@@ -31,8 +31,8 @@ describe('LineByLinePrinter', function() {
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
-        '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">30</div>\n' +
+        '      <div class="line-num1"></div>\n' +
+        '<div class="line-num2">30</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
@@ -53,8 +53,8 @@ describe('LineByLinePrinter', function() {
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-del">\n' +
-        '        <div class="line-num1">30</div>\n' +
-        '        <div class="line-num2"></div>\n' +
+        '      <div class="line-num1">30</div>\n' +
+        '<div class="line-num2"></div>\n' +
         '    </td>\n' +
         '    <td class="d2h-del">\n' +
         '        <div class="d2h-code-line d2h-del">\n' +
@@ -75,8 +75,8 @@ describe('LineByLinePrinter', function() {
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
-        '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">30</div>\n' +
+        '      <div class="line-num1"></div>\n' +
+        '<div class="line-num2">30</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
@@ -97,8 +97,8 @@ describe('LineByLinePrinter', function() {
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
-        '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">30</div>\n' +
+        '      <div class="line-num1"></div>\n' +
+        '<div class="line-num2">30</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
@@ -119,8 +119,9 @@ describe('LineByLinePrinter', function() {
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
-        '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">30</div>\n' +
+        '      <div class="line-num1"></div>\n' +
+        '' +
+        '<div class="line-num2">30</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
@@ -149,19 +150,129 @@ describe('LineByLinePrinter', function() {
 
       var fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
 
-      var expected = '<div id="d2h-781444" class="d2h-file-wrapper" data-lang="js">\n' +
+      var expected =
+        '<div id="d2h-781444" class="d2h-file-wrapper" data-lang="js">\n' +
         '    <div class="d2h-file-header">\n' +
-        '    <span class="d2h-file-stats">\n' +
-        '      <span class="d2h-lines-added">\n' +
-        '        <span>+12</span>\n' +
-        '      </span>\n' +
-        '      <span class="d2h-lines-deleted">\n' +
-        '        <span>-41</span>\n' +
-        '      </span>\n' +
-        '    </span>\n' +
         '    <span class="d2h-file-name-wrapper">\n' +
-        '        <span class="d2h-file-name">&nbsp;my/file/name.js</span>\n' +
-        '    </span>\n' +
+        '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
+        '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
+        '</svg></span>\n' +
+        '    <span class="d2h-file-name">my/file/name.js</span>\n' +
+        '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
+        '    </div>\n' +
+        '    <div class="d2h-file-diff">\n' +
+        '        <div class="d2h-code-wrapper">\n' +
+        '            <table class="d2h-diff-table">\n' +
+        '                <tbody class="d2h-diff-tbody">\n' +
+        '                <span>Random Html</span>\n' +
+        '                </tbody>\n' +
+        '            </table>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>';
+
+      assert.equal(expected, fileHtml);
+    });
+    it('should work for simple added file', function() {
+      var lineByLinePrinter = new LineByLinePrinter({});
+
+      var file = {
+        addedLines: 12,
+        deletedLines: 0,
+        language: 'js',
+        oldName: 'dev/null',
+        newName: 'my/file/name.js',
+        isNew: true
+      };
+      var diffs = '<span>Random Html</span>';
+
+      var fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+
+      var expected =
+        '<div id="d2h-781444" class="d2h-file-wrapper" data-lang="js">\n' +
+        '    <div class="d2h-file-header">\n' +
+        '    <span class="d2h-file-name-wrapper">\n' +
+        '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
+        '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
+        '</svg></span>\n' +
+        '    <span class="d2h-file-name">my/file/name.js</span>\n' +
+        '    <span class="d2h-tag d2h-added d2h-added-tag">ADDED</span></span>\n' +
+        '    </div>\n' +
+        '    <div class="d2h-file-diff">\n' +
+        '        <div class="d2h-code-wrapper">\n' +
+        '            <table class="d2h-diff-table">\n' +
+        '                <tbody class="d2h-diff-tbody">\n' +
+        '                <span>Random Html</span>\n' +
+        '                </tbody>\n' +
+        '            </table>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>';
+
+      assert.equal(expected, fileHtml);
+    });
+    it('should work for simple deleted file', function() {
+      var lineByLinePrinter = new LineByLinePrinter({});
+
+      var file = {
+        addedLines: 0,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'dev/null',
+        isDeleted: true
+      };
+      var diffs = '<span>Random Html</span>';
+
+      var fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+
+      var expected =
+        '<div id="d2h-781444" class="d2h-file-wrapper" data-lang="js">\n' +
+        '    <div class="d2h-file-header">\n' +
+        '    <span class="d2h-file-name-wrapper">\n' +
+        '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
+        '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
+        '</svg></span>\n' +
+        '    <span class="d2h-file-name">my/file/name.js</span>\n' +
+        '    <span class="d2h-tag d2h-deleted d2h-deleted-tag">DELETED</span></span>\n' +
+        '    </div>\n' +
+        '    <div class="d2h-file-diff">\n' +
+        '        <div class="d2h-code-wrapper">\n' +
+        '            <table class="d2h-diff-table">\n' +
+        '                <tbody class="d2h-diff-tbody">\n' +
+        '                <span>Random Html</span>\n' +
+        '                </tbody>\n' +
+        '            </table>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>';
+
+      assert.equal(expected, fileHtml);
+    });
+    it('should work for simple renamed file', function() {
+      var lineByLinePrinter = new LineByLinePrinter({});
+
+      var file = {
+        addedLines: 12,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name1.js',
+        newName: 'my/file/name2.js',
+        isRename: true
+      };
+      var diffs = '<span>Random Html</span>';
+
+      var fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+
+      var expected =
+        '<div id="d2h-662683" class="d2h-file-wrapper" data-lang="js">\n' +
+        '    <div class="d2h-file-header">\n' +
+        '    <span class="d2h-file-name-wrapper">\n' +
+        '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
+        '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
+        '</svg></span>\n' +
+        '    <span class="d2h-file-name">my/file/{name1.js → name2.js}</span>\n' +
+        '    <span class="d2h-tag d2h-moved d2h-moved-tag">RENAMED</span></span>\n' +
         '    </div>\n' +
         '    <div class="d2h-file-diff">\n' +
         '        <div class="d2h-code-wrapper">\n' +
@@ -229,17 +340,12 @@ describe('LineByLinePrinter', function() {
         '<div class="d2h-wrapper">\n' +
         '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
         '    <div class="d2h-file-header">\n' +
-        '    <span class="d2h-file-stats">\n' +
-        '      <span class="d2h-lines-added">\n' +
-        '        <span>+1</span>\n' +
-        '      </span>\n' +
-        '      <span class="d2h-lines-deleted">\n' +
-        '        <span>-1</span>\n' +
-        '      </span>\n' +
-        '    </span>\n' +
         '    <span class="d2h-file-name-wrapper">\n' +
-        '        <span class="d2h-file-name">&nbsp;sample</span>\n' +
-        '    </span>\n' +
+        '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
+        '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
+        '</svg></span>\n' +
+        '    <span class="d2h-file-name">sample</span>\n' +
+        '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
         '    </div>\n' +
         '    <div class="d2h-file-diff">\n' +
         '        <div class="d2h-code-wrapper">\n' +
@@ -248,12 +354,12 @@ describe('LineByLinePrinter', function() {
         '                <tr>\n' +
         '    <td class="d2h-code-linenumber d2h-info"></td>\n' +
         '    <td class="d2h-info">\n' +
-        '        <div class="d2h-code-line d2h-info"></div>\n' +
+        '        <div class="d2h-code-line d2h-info">@@ -1 +1 @@</div>\n' +
         '    </td>\n' +
         '</tr><tr>\n' +
         '    <td class="d2h-code-linenumber d2h-del d2h-change">\n' +
-        '        <div class="line-num1">1</div>\n' +
-        '        <div class="line-num2"></div>\n' +
+        '      <div class="line-num1">1</div>\n' +
+        '<div class="line-num2"></div>\n' +
         '    </td>\n' +
         '    <td class="d2h-del d2h-change">\n' +
         '        <div class="d2h-code-line d2h-del d2h-change">\n' +
@@ -263,8 +369,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '</tr><tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins d2h-change">\n' +
-        '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">1</div>\n' +
+        '      <div class="line-num1"></div>\n' +
+        '<div class="line-num2">1</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins d2h-change">\n' +
         '        <div class="d2h-code-line d2h-ins d2h-change">\n' +
@@ -300,17 +406,12 @@ describe('LineByLinePrinter', function() {
         '<div class="d2h-wrapper">\n' +
         '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="js">\n' +
         '    <div class="d2h-file-header">\n' +
-        '    <span class="d2h-file-stats">\n' +
-        '      <span class="d2h-lines-added">\n' +
-        '        <span>+0</span>\n' +
-        '      </span>\n' +
-        '      <span class="d2h-lines-deleted">\n' +
-        '        <span>-0</span>\n' +
-        '      </span>\n' +
-        '    </span>\n' +
         '    <span class="d2h-file-name-wrapper">\n' +
-        '        <span class="d2h-file-name">&nbsp;sample</span>\n' +
-        '    </span>\n' +
+        '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
+        '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
+        '</svg></span>\n' +
+        '    <span class="d2h-file-name">sample</span>\n' +
+        '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
         '    </div>\n' +
         '    <div class="d2h-file-diff">\n' +
         '        <div class="d2h-code-wrapper">\n' +
@@ -356,8 +457,8 @@ describe('LineByLinePrinter', function() {
       var expected =
         '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-del">\n' +
-        '        <div class="line-num1">1</div>\n' +
-        '        <div class="line-num2"></div>\n' +
+        '      <div class="line-num1">1</div>\n' +
+        '<div class="line-num2"></div>\n' +
         '    </td>\n' +
         '    <td class="d2h-del">\n' +
         '        <div class="d2h-code-line d2h-del">\n' +
@@ -366,8 +467,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '</tr><tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
-        '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">1</div>\n' +
+        '      <div class="line-num1"></div>\n' +
+        '<div class="line-num2">1</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
@@ -430,12 +531,12 @@ describe('LineByLinePrinter', function() {
         '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-info"></td>\n' +
         '    <td class="d2h-info">\n' +
-        '        <div class="d2h-code-line d2h-info"></div>\n' +
+        '        <div class="d2h-code-line d2h-info">@@ -1 +1 @@</div>\n' +
         '    </td>\n' +
         '</tr><tr>\n' +
         '    <td class="d2h-code-linenumber d2h-cntx">\n' +
-        '        <div class="line-num1">1</div>\n' +
-        '        <div class="line-num2">1</div>\n' +
+        '      <div class="line-num1">1</div>\n' +
+        '<div class="line-num2">1</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
@@ -444,8 +545,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '</tr><tr>\n' +
         '    <td class="d2h-code-linenumber d2h-del">\n' +
-        '        <div class="line-num1">2</div>\n' +
-        '        <div class="line-num2"></div>\n' +
+        '      <div class="line-num1">2</div>\n' +
+        '<div class="line-num2"></div>\n' +
         '    </td>\n' +
         '    <td class="d2h-del">\n' +
         '        <div class="d2h-code-line d2h-del">\n' +
@@ -455,8 +556,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '</tr><tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
-        '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">2</div>\n' +
+        '      <div class="line-num1"></div>\n' +
+        '<div class="line-num2">2</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
@@ -466,8 +567,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '</tr><tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
-        '        <div class="line-num1"></div>\n' +
-        '        <div class="line-num2">3</div>\n' +
+        '      <div class="line-num1"></div>\n' +
+        '<div class="line-num2">3</div>\n' +
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
