@@ -1,0 +1,44 @@
+{
+  "name": "diff2html-web",
+  "version": "1.0.0",
+  "homepage": "http://rtfpessoa.github.io/diff2html/",
+  "description": "Fast Diff to colorized HTML",
+  "keywords": [
+    "git",
+    "diff",
+    "pretty",
+    "side",
+    "line",
+    "side-by-side",
+    "line-by-line",
+    "character",
+    "highlight",
+    "pretty",
+    "color",
+    "html",
+    "diff2html",
+    "difftohtml",
+    "colorized"
+  ],
+  "author": {
+    "name": "Rodrigo Fernandes",
+    "email": "rtfrodrigo@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/rtfpessoa/diff2html.git"
+  },
+  "bugs": {
+    "url": "https://www.github.com/rtfpessoa/diff2html/issues"
+  },
+  "engines": {
+    "node": ">=0.12"
+  },
+  "scripts": {
+    "release": "node src/main.js"
+  },
+  "devDependencies": {
+    "hogan.js": "^3.0.2"
+  },
+  "license": "MIT"
+}
