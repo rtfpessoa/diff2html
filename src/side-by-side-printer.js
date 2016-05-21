@@ -236,6 +236,7 @@
     fileHtml.right = '';
 
     fileHtml.left = hoganUtils.render(genericTemplatesPath, 'empty-diff', {
+      contentClass: 'd2h-code-side-line',
       diffParser: diffParser
     });
 

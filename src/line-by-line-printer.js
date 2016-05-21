@@ -38,7 +38,7 @@
         fileIcon: fileIconTemplate,
         fileTag: fileTagTemplate
       })
-    })
+    });
   };
 
   LineByLinePrinter.prototype.makeLineByLineHtmlWrapper = function(content) {
@@ -203,6 +203,7 @@
 
   LineByLinePrinter.prototype._generateEmptyDiff = function() {
     return hoganUtils.render(genericTemplatesPath, 'empty-diff', {
+      contentClass: 'd2h-code-line',
       diffParser: diffParser
     });
   };
