@@ -16,39 +16,37 @@
 }
 
 .d2h-file-stats {
-  display: inline;
-  text-align: center;
+  display: flex;
+  margin-left: auto;
+  font-size: 14px;
 }
 
 .d2h-lines-added {
   text-align: right;
-}
-
-.d2h-lines-added > * {
-  background-color: #ceffce;
   border: 1px solid #b4e2b4;
-  color: #399839;
   border-radius: 5px 0 0 5px;
+  color: #399839;
   padding: 2px;
+  vertical-align: middle;
 }
 
 .d2h-lines-deleted {
   text-align: left;
-}
-
-.d2h-lines-deleted > * {
-  background-color: #f7c8c8;
   border: 1px solid #e9aeae;
-  color: #c33;
   border-radius: 0 5px 5px 0;
+  color: #c33;
   padding: 2px;
+  vertical-align: middle;
+  margin-left: 1px;
 }
 
 .d2h-file-name-wrapper {
-  display: inline-flex;
-  width: 90%;
+  display: flex;
+  align-items: center;
+  width: 100%;
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
+  line-height: 15px;
 }
 
 .d2h-file-name {
@@ -102,16 +100,11 @@
 
 .d2h-code-side-line {
   display: block;
-  white-space: pre;
+  white-space: nowrap;
   padding: 0 10px;
   height: 18px;
   line-height: 18px;
   margin-left: 50px;
-  /* Override HighlightJS */
-  /*color: inherit;*/
-  /*overflow-x: inherit;*/
-  /*background: none;*/
-  /* ******************** */
 }
 
 .d2h-code-line del,
@@ -249,6 +242,7 @@
 }
 
 .d2h-file-list-line {
+  display: flex;
   text-align: left;
 }
 
@@ -258,12 +252,75 @@
 
 .d2h-file-list {
   display: block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.d2h-file-list > li {
+  border-bottom: #ddd solid 1px;
+  padding: 5px 10px;
+  margin: 0;
+}
+
+.d2h-file-list > li:last-child {
+  border-bottom: none;
 }
 
 .d2h-file-switch {
   display: none;
   font-size: 10px;
   cursor: pointer;
+}
+
+.d2h-icon-wrapper {
+  line-height: 31px;
+}
+
+.d2h-icon {
+  vertical-align: middle;
+  margin-right: 10px;
+  fill: currentColor;
+}
+
+.d2h-deleted {
+  color: #c33;
+}
+
+.d2h-added {
+  color: #399839;
+}
+
+.d2h-changed {
+  color: #d0b44c;
+}
+
+.d2h-moved {
+  color: #3572b0;
+}
+
+.d2h-tag {
+  display: flex;
+  font-size: 10px;
+  margin-left: 5px;
+  padding: 0 2px;
+  background-color: #fff;
+}
+
+.d2h-deleted-tag {
+  border: #c33 1px solid;
+}
+
+.d2h-added-tag {
+  border: #399839 1px solid;
+}
+
+.d2h-changed-tag {
+  border: #d0b44c 1px solid;
+}
+
+.d2h-moved-tag {
+  border: #3572b0 1px solid;
 }
 
 /*

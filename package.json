@@ -1,6 +1,6 @@
 {
   "name": "diff2html",
-  "version": "2.0.0-rc.4",
+  "version": "2.0.0-rc.5",
   "homepage": "http://rtfpessoa.github.io/diff2html/",
   "description": "Fast Diff to colorized HTML",
   "keywords": [
