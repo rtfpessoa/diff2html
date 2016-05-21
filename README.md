@@ -70,6 +70,7 @@ The HTML output accepts a Javascript object with configuration. Possible options
   - `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
   - `showFiles`: show a file list before the diff: `true` or `false`, default is `false`
   - `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default is `none`
+  - `synchronisedScroll`: scroll both panes in side-by-side mode: `true` or `false`, default is `false`
   - `matchWordsThreshold`: similarity threshold for word matching, default is 0.25
   - `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is `2500`
 
