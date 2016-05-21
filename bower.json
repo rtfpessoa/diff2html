@@ -28,9 +28,7 @@
     "url": "git://github.com/rtfpessoa/diff2html.git"
   },
   "main": [
-    "./dist/diff2html-templates.js",
     "./dist/diff2html.js",
-    "./dist/diff2html-ui.js",
     "./dist/diff2html.css"
   ],
   "license": "MIT",
