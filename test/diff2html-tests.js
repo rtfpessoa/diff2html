@@ -50,12 +50,12 @@ var filesExample1 =
   '    </div>\n' +
   '    <ol class="d2h-file-list">\n' +
   '    <li class="d2h-file-list-line">\n' +
-  '    <span class="d2h-file-name-wrapper">\n' +
+  '    <span class="d2h-file-path-wrapper">\n' +
   '      <span><svg aria-hidden="true" class="d2h-icon d2h-changed" height="16" title="modified" version="1.1"\n' +
   '     viewBox="0 0 14 16" width="14">\n' +
   '    <path d="M13 1H1C0.45 1 0 1.45 0 2v12c0 0.55 0.45 1 1 1h12c0.55 0 1-0.45 1-1V2c0-0.55-0.45-1-1-1z m0 13H1V2h12v12zM4 8c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3z"></path>\n' +
   '</svg></span>\n' +
-  '      <a href="#d2h-675094" class="d2h-file-name">sample</a>\n' +
+  '      <a href="#d2h-675094" class="d2h-file-path">sample</a>\n' +
   '      <span class="d2h-file-stats">\n' +
   '          <span class="d2h-lines-added">+1</span>\n' +
   '          <span class="d2h-lines-deleted">-1</span>\n' +
@@ -70,10 +70,11 @@ var htmlLineExample1 =
   '<div class="d2h-wrapper">\n' +
   '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
   '    <div class="d2h-file-header">\n' +
-  '    <span class="d2h-file-name-wrapper">\n' +
+  '    <span class="d2h-file-path-wrapper">\n' +
   '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
   '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
   '</svg></span>\n' +
+  '    <span class="d2h-file-path"></span>\n' +
   '    <span class="d2h-file-name">sample</span>\n' +
   '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
   '    </div>\n' +
@@ -122,10 +123,11 @@ var htmlSideExample1 =
   '<div class="d2h-wrapper">\n' +
   '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
   '    <div class="d2h-file-header">\n' +
-  '      <span class="d2h-file-name-wrapper">\n' +
+  '      <span class="d2h-file-path-wrapper">\n' +
   '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
   '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
   '</svg></span>\n' +
+  '    <span class="d2h-file-path"></span>\n' +
   '    <span class="d2h-file-name">sample</span>\n' +
   '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
   '    </div>\n' +
