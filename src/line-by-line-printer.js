@@ -33,7 +33,8 @@
       fileHtmlId: printerUtils.getHtmlId(file),
       diffs: diffs,
       filePath: filePathTemplate.render({
-        fileDiffName: printerUtils.getDiffName(file)
+        fileDiffPath: printerUtils.getDiffPath(file),
+        fileDiffFilename: printerUtils.getDiffFilename(file)
       }, {
         fileIcon: fileIconTemplate,
         fileTag: fileTagTemplate

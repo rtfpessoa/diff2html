@@ -40,7 +40,7 @@
   margin-left: 1px;
 }
 
-.d2h-file-name-wrapper {
+.d2h-file-path-wrapper {
   display: flex;
   align-items: center;
   width: 100%;
@@ -49,7 +49,7 @@
   line-height: 15px;
 }
 
-.d2h-file-name {
+.d2h-file-path {
   line-height: 33px;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -246,7 +246,7 @@
   text-align: left;
 }
 
-.d2h-file-list-line .d2h-file-name {
+.d2h-file-list-line .d2h-file-path {
   line-height: 21px;
 }
 

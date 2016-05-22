@@ -95,6 +95,18 @@
     return 'unknown/file/path';
   };
 
+  PrinterUtils.prototype.getDiffPath = function(file) {
+    var path = this.getDiffName(file);
+    var parts = path.split(separator);
+    var lastPart = parts[parts.length - 1];
+    return path.slice(0, -lastPart.length);
+  };
+
+  PrinterUtils.prototype.getDiffFilename = function(file) {
+    var parts = this.getDiffName(file).split(separator);
+    return parts[parts.length - 1];
+  };
+
   PrinterUtils.prototype.getFileTypeIcon = function(file) {
     var templateName = 'file-changed';
 

@@ -231,10 +231,11 @@ describe('SideBySidePrinter', function() {
         '<div class="d2h-wrapper">\n' +
         '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
         '    <div class="d2h-file-header">\n' +
-        '      <span class="d2h-file-name-wrapper">\n' +
+        '      <span class="d2h-file-path-wrapper">\n' +
         '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
         '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
         '</svg></span>\n' +
+        '    <span class="d2h-file-path"></span>\n' +
         '    <span class="d2h-file-name">sample</span>\n' +
         '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
         '    </div>\n' +
@@ -308,10 +309,11 @@ describe('SideBySidePrinter', function() {
         '<div class="d2h-wrapper">\n' +
         '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="js">\n' +
         '    <div class="d2h-file-header">\n' +
-        '      <span class="d2h-file-name-wrapper">\n' +
+        '      <span class="d2h-file-path-wrapper">\n' +
         '    <span class="d2h-icon-wrapper"><svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
         '    <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
         '</svg></span>\n' +
+        '    <span class="d2h-file-path"></span>\n' +
         '    <span class="d2h-file-name">sample</span>\n' +
         '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
         '    </div>\n' +
