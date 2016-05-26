@@ -11,6 +11,12 @@
     padding-top: 15px !important
 }
 
+@media (min-width: 768px) {
+    p.m-b {
+        height: 75px;
+    }
+}
+
 .errors ul {
     list-style: none;
     margin: 0;
@@ -19,9 +25,6 @@
 
 .btn {
     display: inline-block;
-    font-size: 14px;
-    padding: 7px 24px;
-    border-radius: 4px;
     color: #fff;
     background: #26A65B;
     font-weight: 400
@@ -30,6 +33,25 @@
 .btn:hover {
     color: #fff;
     background: #5dbe5d;
+}
+
+.btn-clipboard {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    display: block;
+    padding: 5px 8px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #767676;
+    border-radius: 0 4px 0 4px;
+    cursor: pointer;
+}
+
+.btn-clipboard:hover {
+    color: #000;
+    background-color: #dcdfe4;
 }
 
 .footer {
@@ -101,13 +123,11 @@ label, legend {
 
     .row-centered {
         display: -webkit-box;
-        display: -webkit-flex;
         display: -ms-flexbox;
         display: flex;
         -webkit-box-align: center;
-        -webkit-align-items: center;
         -ms-flex-align: center;
-        align-items: center
+        align-items: center;
     }
 }
 
@@ -142,6 +162,7 @@ label, legend {
     margin-left: -40%;
     height: 1px;
     background: -webkit-radial-gradient(center, ellipse, rgba(0, 0, 0, 0.2) 0, rgba(255, 255, 255, 0) 75%);
+    background: -webkit-radial-gradient(center ellipse, rgba(0, 0, 0, 0.2) 0, rgba(255, 255, 255, 0) 75%);
     background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.2) 0, rgba(255, 255, 255, 0) 75%)
 }
 
@@ -328,7 +349,7 @@ hr {
 
     .navbar-nav > li > a {
         display: inline-block;
-        margin-left: 50px
+        margin-left: 13px
     }
 
     .navbar-nav > li:first-child > a {
@@ -599,6 +620,7 @@ a:hover, a:focus {
 }
 
 .homepage-terminal-example, .homepage-code-example {
+    position: relative;
     font-family: monospace;
     background: #272b38;
     color: #48d8a0;
@@ -606,7 +628,8 @@ a:hover, a:focus {
     padding: 30px
 }
 
-.homepage-terminal-example .text-muted {
+.homepage-terminal-example .text-muted,
+.homepage-code-example .text-muted {
     color: #6a7490
 }
 
@@ -660,3 +683,12 @@ a:hover, a:focus {
 .row-padded-small {
     padding: 40px 0;
 }
+
+*.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+

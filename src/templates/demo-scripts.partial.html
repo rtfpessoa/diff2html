@@ -243,7 +243,11 @@
     $(document).ready(function() {
         var diff2htmlUi = new Diff2HtmlUI({diff: lineDiffExample});
 
-        diff2htmlUi.draw('#line-by-line', {inputFormat: 'json', showFiles: true, matching: 'lines'});
+        diff2htmlUi.draw('#line-by-line', {
+            inputFormat: 'json',
+            showFiles: true,
+            matching: 'lines'
+        });
         diff2htmlUi.fileListCloseable('#line-by-line', false);
         diff2htmlUi.highlightCode('#line-by-line');
 
@@ -251,7 +255,8 @@
             inputFormat: 'json',
             showFiles: true,
             matching: 'lines',
-            outputFormat: 'side-by-side'
+            outputFormat: 'side-by-side',
+            synchronisedScroll: true
         });
         diff2htmlUi.fileListCloseable('#side-by-side', false);
         diff2htmlUi.highlightCode('#side-by-side');

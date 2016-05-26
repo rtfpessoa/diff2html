@@ -33,10 +33,6 @@
     <!-- Custom styles for this template -->
     <link href="main.css" rel="stylesheet">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]-->
-
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/github.min.css">
 
     <!-- diff2html -->
@@ -374,7 +370,11 @@
     $(document).ready(function() {
         var diff2htmlUi = new Diff2HtmlUI({diff: lineDiffExample});
 
-        diff2htmlUi.draw('#line-by-line', {inputFormat: 'json', showFiles: true, matching: 'lines'});
+        diff2htmlUi.draw('#line-by-line', {
+            inputFormat: 'json',
+            showFiles: true,
+            matching: 'lines'
+        });
         diff2htmlUi.fileListCloseable('#line-by-line', false);
         diff2htmlUi.highlightCode('#line-by-line');
 
@@ -382,7 +382,8 @@
             inputFormat: 'json',
             showFiles: true,
             matching: 'lines',
-            outputFormat: 'side-by-side'
+            outputFormat: 'side-by-side',
+            synchronisedScroll: true
         });
         diff2htmlUi.fileListCloseable('#side-by-side', false);
         diff2htmlUi.highlightCode('#side-by-side');

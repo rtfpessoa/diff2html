@@ -36,7 +36,21 @@
     var cfg = config || {};
     var $target = this._getTarget(targetId);
     $target.html(Diff2Html.getPrettyHtml(diffJson, cfg));
+
+    synchronisedScroll($target, config);
   };
+
+  function synchronisedScroll($target, config) {
+    if (config.synchronisedScroll) {
+
+      $target.find(".d2h-file-side-diff").scroll(function() {
+        var $this = $(this);
+        $this.closest(".d2h-file-wrapper").find(".d2h-file-side-diff")
+          .scrollLeft($this.scrollLeft());
+      });
+
+    }
+  }
 
   Diff2HtmlUI.prototype.fileListCloseable = function(targetId, startVisible) {
     var $target = this._getTarget(targetId);
