@@ -31,7 +31,7 @@ rm -rf ${OUTPUT_DIR}
 mkdir -p ${OUTPUT_DIR}
 
 echo "Minifying ${OUTPUT_CSS_FILE} to ${OUTPUT_MIN_CSS_FILE}"
-cp -f ${INPUT_CSS_FILE} ${OUTPUT_CSS_FILE}
+postcss --use autoprefixer ${INPUT_CSS_FILE} -d ${OUTPUT_DIR}
 cleancss --advanced --compatibility=ie8 -o ${OUTPUT_MIN_CSS_FILE} ${OUTPUT_CSS_FILE}
 
 echo "Pre-compile hogan.js templates"

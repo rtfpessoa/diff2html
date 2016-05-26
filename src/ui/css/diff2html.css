@@ -16,6 +16,8 @@
 }
 
 .d2h-file-stats {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   margin-left: auto;
   font-size: 14px;
@@ -41,8 +43,12 @@
 }
 
 .d2h-file-name-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   width: 100%;
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
@@ -242,6 +248,8 @@
 }
 
 .d2h-file-list-line {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   text-align: left;
 }
@@ -300,6 +308,8 @@
 }
 
 .d2h-tag {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   font-size: 10px;
   margin-left: 5px;
@@ -337,10 +347,19 @@
 .selecting-right td.d2h-code-side-linenumber * {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.selecting-left .d2h-code-line::-moz-selection,
+.selecting-left .d2h-code-line *::-moz-selection
+.selecting-right td.d2h-code-linenumber::-moz-selection,
+.selecting-left .d2h-code-side-line::-moz-selection,
+.selecting-left .d2h-code-side-line *::-moz-selection,
+.selecting-right td.d2h-code-side-linenumber::-moz-selection,
+.selecting-right td.d2h-code-side-linenumber *::-moz-selection {
+  background: transparent;
 }
 
 .selecting-left .d2h-code-line::selection,
