@@ -183,8 +183,8 @@
         (
           currentFile && // If we already have some file in progress and
           (
-            currentFile.oldName && utils.startsWith(line, '---') || // Either we reached a old file identification line
-            currentFile.newName && utils.startsWith(line, '+++')  // Or we reached a new file identification line
+            currentFile.oldName && utils.startsWith(line, '--- ') || // Either we reached a old file identification line
+            currentFile.newName && utils.startsWith(line, '+++ ')  // Or we reached a new file identification line
           )
         )
       ) {
@@ -198,7 +198,7 @@
        * --- 2002-02-21 23:30:39.942229878 -0800
        */
       if (currentFile && !currentFile.oldName &&
-        utils.startsWith(line, '---') && (values = getSrcFilename(line, config))) {
+        utils.startsWith(line, '--- ') && (values = getSrcFilename(line, config))) {
         currentFile.oldName = values;
         currentFile.language = getExtension(currentFile.oldName, currentFile.language);
         return;
@@ -209,7 +209,7 @@
        * +++ 2002-02-21 23:30:39.942229878 -0800
        */
       if (currentFile && !currentFile.newName &&
-        utils.startsWith(line, '+++') && (values = getDstFilename(line, config))) {
+        utils.startsWith(line, '+++ ') && (values = getDstFilename(line, config))) {
         currentFile.newName = values;
         currentFile.language = getExtension(currentFile.newName, currentFile.language);
         return;

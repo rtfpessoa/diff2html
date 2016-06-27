@@ -424,5 +424,34 @@ describe('DiffParser', function() {
       assert.deepEqual(linesContent, ['-test', '+test1r', '+test2r']);
     });
 
+    it('should parse diff with --- and +++ in the context lines', function() {
+      var diff =
+        '--- sample.js\n' +
+        '+++ sample.js\n' +
+        '@@ -1,15 +1,12 @@\n' +
+        ' test\n' +
+        ' \n' +
+        '----\n' +
+        '+test\n' +
+        ' \n' +
+        ' test\n' +
+        '----\n' +
+        '\\ No newline at end of file';
+
+      var result = DiffParser.generateDiffJson(diff);
+      var file1 = result[0];
+      assert.equal(1, result.length);
+      assert.equal(1, file1.addedLines);
+      assert.equal(2, file1.deletedLines);
+      assert.equal('sample.js', file1.oldName);
+      assert.equal('sample.js', file1.newName);
+      assert.equal(1, file1.blocks.length);
+
+      var linesContent = file1.blocks[0].lines.map(function(line) {
+        return line.content;
+      });
+      assert.deepEqual(linesContent, [' test', ' ', '----', '+test', ' ', ' test', '----']);
+    });
+
   });
 });
