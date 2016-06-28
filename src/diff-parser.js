@@ -147,6 +147,11 @@
         .replace(/\r\n?/g, '\n')
         .split('\n');
 
+    /* Diff Header */
+    var oldFileNameHeader = '--- ';
+    var newFileNameHeader = '+++ ';
+    var hunkHeaderPrefix = '@@';
+
     /* Diff */
     var oldMode = /^old mode (\d{6})/;
     var newMode = /^new mode (\d{6})/;
@@ -169,7 +174,7 @@
     var combinedNewFile = /^new file mode (\d{6})/;
     var combinedDeletedFile = /^deleted file mode (\d{6}),(\d{6})/;
 
-    diffLines.forEach(function(line) {
+    diffLines.forEach(function(line, lineIndex) {
       // Unmerged paths, and possibly other non-diffable files
       // https://github.com/scottgonzalez/pretty-diff/issues/11
       // Also, remove some useless lines
@@ -177,14 +182,23 @@
         return;
       }
 
-      if (
-        utils.startsWith(line, 'diff') || // Git diffs always start with diff
-        !currentFile || // If we do not have a file yet, we should crete one
+      var prevLine = diffLines[lineIndex - 1];
+      var nxtLine = diffLines[lineIndex + 1];
+      var afterNxtLine = diffLines[lineIndex + 2];
+
+      if (utils.startsWith(line, 'diff')) {
+        startFile();
+        currentFile.isGitDiff = true;
+        return;
+      }
+
+      if (!currentFile || // If we do not have a file yet, we should crete one
         (
-          currentFile && // If we already have some file in progress and
+          !currentFile.isGitDiff && currentFile && // If we already have some file in progress and
           (
-            currentFile.oldName && utils.startsWith(line, '--- ') || // Either we reached a old file identification line
-            currentFile.newName && utils.startsWith(line, '+++ ')  // Or we reached a new file identification line
+            utils.startsWith(line, oldFileNameHeader) && // If we get to an old file path header line
+            // And is followed by the new file path header line and the hunk header line
+            utils.startsWith(nxtLine, newFileNameHeader) && utils.startsWith(afterNxtLine, hunkHeaderPrefix)
           )
         )
       ) {
@@ -194,28 +208,43 @@
       var values;
 
       /*
-       * --- Date Timestamp[FractionalSeconds] TimeZone
-       * --- 2002-02-21 23:30:39.942229878 -0800
+       * We need to make sure that we have the three lines of the header.
+       * This avoids cases like the ones described in:
+       *   - https://github.com/rtfpessoa/diff2html/issues/87
        */
-      if (currentFile && !currentFile.oldName &&
-        utils.startsWith(line, '--- ') && (values = getSrcFilename(line, config))) {
-        currentFile.oldName = values;
-        currentFile.language = getExtension(currentFile.oldName, currentFile.language);
-        return;
+      if (
+        (utils.startsWith(line, oldFileNameHeader) &&
+        utils.startsWith(nxtLine, newFileNameHeader) && utils.startsWith(afterNxtLine, hunkHeaderPrefix)) ||
+
+        (utils.startsWith(line, newFileNameHeader) &&
+        utils.startsWith(prevLine, oldFileNameHeader) && utils.startsWith(nxtLine, hunkHeaderPrefix))
+      ) {
+
+        /*
+         * --- Date Timestamp[FractionalSeconds] TimeZone
+         * --- 2002-02-21 23:30:39.942229878 -0800
+         */
+        if (currentFile && !currentFile.oldName &&
+          utils.startsWith(line, '--- ') && (values = getSrcFilename(line, config))) {
+          currentFile.oldName = values;
+          currentFile.language = getExtension(currentFile.oldName, currentFile.language);
+          return;
+        }
+
+        /*
+         * +++ Date Timestamp[FractionalSeconds] TimeZone
+         * +++ 2002-02-21 23:30:39.942229878 -0800
+         */
+        if (currentFile && !currentFile.newName &&
+          utils.startsWith(line, '+++ ') && (values = getDstFilename(line, config))) {
+          currentFile.newName = values;
+          currentFile.language = getExtension(currentFile.newName, currentFile.language);
+          return;
+        }
+
       }
 
-      /*
-       * +++ Date Timestamp[FractionalSeconds] TimeZone
-       * +++ 2002-02-21 23:30:39.942229878 -0800
-       */
-      if (currentFile && !currentFile.newName &&
-        utils.startsWith(line, '+++ ') && (values = getDstFilename(line, config))) {
-        currentFile.newName = values;
-        currentFile.language = getExtension(currentFile.newName, currentFile.language);
-        return;
-      }
-
-      if (currentFile && utils.startsWith(line, '@')) {
+      if (currentFile && utils.startsWith(line, hunkHeaderPrefix)) {
         startBlock(line);
         return;
       }
@@ -229,13 +258,6 @@
       if (currentBlock && (utils.startsWith(line, '+') || utils.startsWith(line, '-') || utils.startsWith(line, ' '))) {
         createLine(line);
         return;
-      }
-
-      if (
-        (currentFile && currentFile.blocks.length) ||
-        (currentBlock && currentBlock.lines.length)
-      ) {
-        startFile();
       }
 
       /*

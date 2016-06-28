@@ -34,7 +34,7 @@
       return result;
     }
 
-    return str.indexOf(start) === 0;
+    return str && str.indexOf(start) === 0;
   };
 
   Utils.prototype.valueOrEmpty = function(value) {
