@@ -424,25 +424,72 @@ describe('DiffParser', function() {
       assert.deepEqual(linesContent, ['-test', '+test1r', '+test2r']);
     });
 
+    it('should parse unified diff with multiple hunks and files', function() {
+      var diff =
+        '--- sample.js\n' +
+        '+++ sample.js\n' +
+        '@@ -1 +1,2 @@\n' +
+        '-test\n' +
+        '@@ -10 +20,2 @@\n' +
+        '+test\n' +
+        '--- sample1.js\n' +
+        '+++ sample1.js\n' +
+        '@@ -1 +1,2 @@\n' +
+        '+test1';
+
+      var result = DiffParser.generateDiffJson(diff);
+      assert.equal(2, result.length);
+
+      var file1 = result[0];
+      assert.equal(1, file1.addedLines);
+      assert.equal(1, file1.deletedLines);
+      assert.equal('sample.js', file1.oldName);
+      assert.equal('sample.js', file1.newName);
+      assert.equal(2, file1.blocks.length);
+
+      var linesContent1 = file1.blocks[0].lines.map(function(line) {
+        return line.content;
+      });
+      assert.deepEqual(linesContent1, ['-test']);
+
+      var linesContent2 = file1.blocks[1].lines.map(function(line) {
+        return line.content;
+      });
+      assert.deepEqual(linesContent2, ['+test']);
+
+      var file2 = result[1];
+      assert.equal(1, file2.addedLines);
+      assert.equal(0, file2.deletedLines);
+      assert.equal('sample1.js', file2.oldName);
+      assert.equal('sample1.js', file2.newName);
+      assert.equal(1, file2.blocks.length);
+
+      var linesContent = file2.blocks[0].lines.map(function(line) {
+        return line.content;
+      });
+      assert.deepEqual(linesContent, ['+test1']);
+    });
+
     it('should parse diff with --- and +++ in the context lines', function() {
       var diff =
         '--- sample.js\n' +
         '+++ sample.js\n' +
-        '@@ -1,15 +1,12 @@\n' +
+        '@@ -1,8 +1,8 @@\n' +
         ' test\n' +
         ' \n' +
-        '----\n' +
-        '+test\n' +
+        '-- 1\n' +
+        '--- 1\n' +
+        '---- 1\n' +
         ' \n' +
-        ' test\n' +
-        '----\n' +
-        '\\ No newline at end of file';
+        '++ 2\n' +
+        '+++ 2\n' +
+        '++++ 2';
 
       var result = DiffParser.generateDiffJson(diff);
       var file1 = result[0];
       assert.equal(1, result.length);
-      assert.equal(1, file1.addedLines);
-      assert.equal(2, file1.deletedLines);
+      assert.equal(3, file1.addedLines);
+      assert.equal(3, file1.deletedLines);
       assert.equal('sample.js', file1.oldName);
       assert.equal('sample.js', file1.newName);
       assert.equal(1, file1.blocks.length);
@@ -450,7 +497,30 @@ describe('DiffParser', function() {
       var linesContent = file1.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      assert.deepEqual(linesContent, [' test', ' ', '----', '+test', ' ', ' test', '----']);
+      assert.deepEqual(linesContent,
+        [' test', ' ', '-- 1', '--- 1', '---- 1', ' ', '++ 2', '+++ 2', '++++ 2']);
+    });
+
+    it('should parse diff without proper hunk headers', function() {
+      var diff =
+        '--- sample.js\n' +
+        '+++ sample.js\n' +
+        '@@ @@\n' +
+        ' test';
+
+      var result = DiffParser.generateDiffJson(diff);
+      var file1 = result[0];
+      assert.equal(1, result.length);
+      assert.equal(0, file1.addedLines);
+      assert.equal(0, file1.deletedLines);
+      assert.equal('sample.js', file1.oldName);
+      assert.equal('sample.js', file1.newName);
+      assert.equal(1, file1.blocks.length);
+
+      var linesContent = file1.blocks[0].lines.map(function(line) {
+        return line.content;
+      });
+      assert.deepEqual(linesContent, [' test']);
     });
 
   });
