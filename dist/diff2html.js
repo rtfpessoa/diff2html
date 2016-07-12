@@ -2363,6 +2363,11 @@ process.umask = function() { return 0; };
     var oldLine2 = null; // Used for combined diff
     var newLine = null;
 
+    /* Diff Header */
+    var oldFileNameHeader = '--- ';
+    var newFileNameHeader = '+++ ';
+    var hunkHeaderPrefix = '@@';
+
     /* Add previous block(if exists) before start a new file */
     var saveBlock = function() {
       if (currentBlock) {
@@ -2422,7 +2427,10 @@ process.umask = function() { return 0; };
         oldLine2 = values[2];
         newLine = values[3];
       } else {
-        console.error('Failed to parse lines, starting in 0!');
+        if (utils.startsWith(line, hunkHeaderPrefix)) {
+          console.error('Failed to parse lines, starting in 0!');
+        }
+
         oldLine = 0;
         newLine = 0;
         currentFile.isCombined = false;
@@ -2474,11 +2482,6 @@ process.umask = function() { return 0; };
       diffInput.replace(/\\ No newline at end of file/g, '')
         .replace(/\r\n?/g, '\n')
         .split('\n');
-
-    /* Diff Header */
-    var oldFileNameHeader = '--- ';
-    var newFileNameHeader = '+++ ';
-    var hunkHeaderPrefix = '@@';
 
     /* Diff */
     var oldMode = /^old mode (\d{6})/;
