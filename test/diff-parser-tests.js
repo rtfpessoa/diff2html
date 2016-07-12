@@ -523,5 +523,25 @@ describe('DiffParser', function() {
       assert.deepEqual(linesContent, [' test']);
     });
 
+    it('should parse binary file diff', function() {
+      var diff =
+        'diff --git a/last-changes-config.png b/last-changes-config.png\n' +
+        'index 322248b..56fc1f2 100644\n' +
+        '--- a/last-changes-config.png\n' +
+        '+++ b/last-changes-config.png\n' +
+        'Binary files differ';
+
+      var result = DiffParser.generateDiffJson(diff);
+      var file1 = result[0];
+      assert.equal(1, result.length);
+      assert.equal(0, file1.addedLines);
+      assert.equal(0, file1.deletedLines);
+      assert.equal('last-changes-config.png', file1.oldName);
+      assert.equal('last-changes-config.png', file1.newName);
+      assert.equal(1, file1.blocks.length);
+      assert.equal(0, file1.blocks[0].lines.length);
+      assert.equal('Binary files differ', file1.blocks[0].header);
+    });
+
   });
 });

@@ -211,10 +211,10 @@
        */
       if (
         (utils.startsWith(line, oldFileNameHeader) &&
-        utils.startsWith(nxtLine, newFileNameHeader) && utils.startsWith(afterNxtLine, hunkHeaderPrefix)) ||
+        utils.startsWith(nxtLine, newFileNameHeader)) ||
 
         (utils.startsWith(line, newFileNameHeader) &&
-        utils.startsWith(prevLine, oldFileNameHeader) && utils.startsWith(nxtLine, hunkHeaderPrefix))
+        utils.startsWith(prevLine, oldFileNameHeader))
       ) {
         /*
          * --- Date Timestamp[FractionalSeconds] TimeZone
@@ -239,7 +239,10 @@
         }
       }
 
-      if (currentFile && utils.startsWith(line, hunkHeaderPrefix)) {
+      if (
+        (currentFile && utils.startsWith(line, hunkHeaderPrefix)) ||
+        (currentFile.isGitDiff && currentFile && currentFile.oldName && currentFile.newName && !currentBlock)
+      ) {
         startBlock(line);
         return;
       }
