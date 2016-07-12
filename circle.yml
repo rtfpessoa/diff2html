@@ -1,9 +1,8 @@
 test:
   override:
     - nvm install 0.12 && npm test
-    - nvm install 4 && npm test
-    - nvm install 5 && npm test
+    - nvm install 4 && npm run style && npm test
+    - nvm install 5 && npm run style && npm test
   post:
-    - npm install
-    - npm test
+    - nvm install 6 && npm install && npm run style && npm test
     - cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage
