@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   function Utils() {
   }
 
@@ -38,9 +37,8 @@
   };
 
   Utils.prototype.valueOrEmpty = function(value) {
-    return value ? value : '';
+    return value || '';
   };
 
   module.exports.Utils = new Utils();
-
 })();

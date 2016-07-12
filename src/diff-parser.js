@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   var utils = require('./utils.js').Utils;
 
   var LINE_TYPE = {
@@ -82,17 +81,17 @@
        * number of lines is optional, if omited consider 0
        */
 
-      if (values = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@.*/.exec(line)) {
+      if ((values = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@.*/.exec(line))) {
         currentFile.isCombined = false;
         oldLine = values[1];
         newLine = values[2];
-      } else if (values = /^@@@ -(\d+)(?:,\d+)? -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@@.*/.exec(line)) {
+      } else if ((values = /^@@@ -(\d+)(?:,\d+)? -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@@.*/.exec(line))) {
         currentFile.isCombined = true;
         oldLine = values[1];
         oldLine2 = values[2];
         newLine = values[3];
       } else {
-        console.error("Failed to parse lines, starting in 0!");
+        console.error('Failed to parse lines, starting in 0!');
         oldLine = 0;
         newLine = 0;
         currentFile.isCombined = false;
@@ -123,7 +122,6 @@
         currentLine.newNumber = newLine++;
 
         currentBlock.lines.push(currentLine);
-
       } else if (utils.startsWith(line, delLinePrefixes)) {
         currentFile.deletedLines++;
 
@@ -132,7 +130,6 @@
         currentLine.newNumber = null;
 
         currentBlock.lines.push(currentLine);
-
       } else {
         currentLine.type = LINE_TYPE.CONTEXT;
         currentLine.oldNumber = oldLine++;
@@ -219,7 +216,6 @@
         (utils.startsWith(line, newFileNameHeader) &&
         utils.startsWith(prevLine, oldFileNameHeader) && utils.startsWith(nxtLine, hunkHeaderPrefix))
       ) {
-
         /*
          * --- Date Timestamp[FractionalSeconds] TimeZone
          * --- 2002-02-21 23:30:39.942229878 -0800
@@ -241,7 +237,6 @@
           currentFile.language = getExtension(currentFile.newName, currentFile.language);
           return;
         }
-
       }
 
       if (currentFile && utils.startsWith(line, hunkHeaderPrefix)) {
@@ -325,7 +320,7 @@
   }
 
   function getSrcFilename(line, cfg) {
-    var prefixes = ["a/", "i/", "w/", "c/", "o/"];
+    var prefixes = ['a/', 'i/', 'w/', 'c/', 'o/'];
 
     if (cfg.srcPrefix) {
       prefixes.push(cfg.srcPrefix);
@@ -335,7 +330,7 @@
   }
 
   function getDstFilename(line, cfg) {
-    var prefixes = ["b/", "i/", "w/", "c/", "o/"];
+    var prefixes = ['b/', 'i/', 'w/', 'c/', 'o/'];
 
     if (cfg.dstPrefix) {
       prefixes.push(cfg.dstPrefix);
@@ -365,5 +360,4 @@
   }
 
   module.exports.DiffParser = new DiffParser();
-
 })();

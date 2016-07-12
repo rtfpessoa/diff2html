@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   var printerUtils = require('./printer-utils.js').PrinterUtils;
 
   var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
@@ -40,5 +39,4 @@
   };
 
   module.exports.FileListPrinter = new FileListPrinter();
-
 })();

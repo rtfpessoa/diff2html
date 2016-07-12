@@ -7,7 +7,6 @@
  */
 
 (function() {
-
   var Rematch = {};
 
   /*
@@ -23,10 +22,10 @@
    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    */
   function levenshtein(a, b) {
-    if (a.length == 0) {
+    if (a.length === 0) {
       return b.length;
     }
-    if (b.length == 0) {
+    if (b.length === 0) {
       return a.length;
     }
 
@@ -47,7 +46,7 @@
     // Fill in the rest of the matrix
     for (i = 1; i <= b.length; i++) {
       for (j = 1; j <= a.length; j++) {
-        if (b.charAt(i - 1) == a.charAt(j - 1)) {
+        if (b.charAt(i - 1) === a.charAt(j - 1)) {
           matrix[i][j] = matrix[i - 1][j - 1];
         } else {
           matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, // Substitution
@@ -73,12 +72,6 @@
 
   Rematch.rematch = function rematch(distanceFunction) {
     function findBestMatch(a, b, cache) {
-      var cachecount = 0;
-
-      for (var key in cache) {
-        cachecount++;
-      }
-
       var bestMatchDist = Infinity;
       var bestMatch;
       for (var i = 0; i < a.length; ++i) {
@@ -102,7 +95,7 @@
     }
 
     function group(a, b, level, cache) {
-      if (typeof (cache) === "undefined") {
+      if (typeof (cache) === 'undefined') {
         cache = {};
       }
 
@@ -145,5 +138,4 @@
   };
 
   module.exports.Rematch = Rematch;
-
 })();

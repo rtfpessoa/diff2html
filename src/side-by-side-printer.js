@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   var diffParser = require('./diff-parser.js').DiffParser;
   var printerUtils = require('./printer-utils.js').PrinterUtils;
   var utils = require('./utils.js').Utils;
@@ -81,7 +80,6 @@
     fileHtml.right = '';
 
     file.blocks.forEach(function(block) {
-
       fileHtml.left += that.makeSideHtml(block.header);
       fileHtml.right += that.makeSideHtml('');
 
@@ -244,5 +242,4 @@
   };
 
   module.exports.SideBySidePrinter = SideBySidePrinter;
-
 })();

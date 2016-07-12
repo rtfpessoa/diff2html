@@ -11,11 +11,10 @@
 /*global $, hljs, Diff2Html*/
 
 (function() {
-
   var highlightJS = require('./highlight.js-internals.js').HighlightJS;
 
   var diffJson = null;
-  var defaultTarget = "body";
+  var defaultTarget = 'body';
   var currentSelectionColumnId = -1;
 
   function Diff2HtmlUI(config) {
@@ -40,13 +39,11 @@
 
   function synchronisedScroll($target, config) {
     if (config.synchronisedScroll) {
-
-      $target.find(".d2h-file-side-diff").scroll(function() {
+      $target.find('.d2h-file-side-diff').scroll(function() {
         var $this = $(this);
-        $this.closest(".d2h-file-wrapper").find(".d2h-file-side-diff")
+        $this.closest('.d2h-file-wrapper').find('.d2h-file-side-diff')
           .scrollLeft($this.scrollLeft());
       });
-
     }
   }
 
@@ -55,9 +52,9 @@
 
     var hashTag = this._getHashTag();
 
-    var $showBtn = $target.find(".d2h-show");
-    var $hideBtn = $target.find(".d2h-hide");
-    var $fileList = $target.find(".d2h-file-list");
+    var $showBtn = $target.find('.d2h-show');
+    var $hideBtn = $target.find('.d2h-hide');
+    var $fileList = $target.find('.d2h-file-list');
 
     if (hashTag === 'files-summary-show') show();
     else if (hashTag === 'files-summary-hide') hide();
@@ -86,22 +83,22 @@
     var $target = that._getTarget(targetId);
 
     // collect all the diff files and execute the highlight on their lines
-    var $files = $target.find(".d2h-file-wrapper");
+    var $files = $target.find('.d2h-file-wrapper');
     $files.map(function(_i, file) {
       var oldLinesState;
       var newLinesState;
       var $file = $(file);
-      var language = $file.data("lang");
+      var language = $file.data('lang');
 
       // collect all the code lines and execute the highlight on them
-      var $codeLines = $file.find(".d2h-code-line-ctn");
+      var $codeLines = $file.find('.d2h-code-line-ctn');
       $codeLines.map(function(_j, line) {
         var $line = $(line);
         var text = line.textContent;
         var lineParent = line.parentNode;
 
         var lineState;
-        if (lineParent.className.indexOf("d2h-del") !== -1) {
+        if (lineParent.className.indexOf('d2h-del') !== -1) {
           lineState = oldLinesState;
         } else {
           lineState = newLinesState;
@@ -109,9 +106,9 @@
 
         var result = hljs.getLanguage(language) ? hljs.highlight(language, text, true, lineState) : hljs.highlightAuto(text);
 
-        if (lineParent.className.indexOf("d2h-del") !== -1) {
+        if (lineParent.className.indexOf('d2h-del') !== -1) {
           oldLinesState = result.top;
-        } else if (lineParent.className.indexOf("d2h-ins") !== -1) {
+        } else if (lineParent.className.indexOf('d2h-ins') !== -1) {
           newLinesState = result.top;
         } else {
           oldLinesState = result.top;
@@ -125,7 +122,7 @@
           result.value = highlightJS.mergeStreams(originalStream, highlightJS.nodeStream(resultNode), text);
         }
 
-        $line.addClass("hljs");
+        $line.addClass('hljs');
         $line.addClass(result.language);
         $line.html(result.value);
       });
@@ -141,7 +138,7 @@
       $target = $(targetId);
     } else {
       console.error("Wrong target provided! Falling back to default value 'body'.");
-      console.log("Please provide a jQuery object or a valid DOM query string.");
+      console.log('Please provide a jQuery object or a valid DOM query string.');
       $target = $(defaultTarget);
     }
 
@@ -193,7 +190,6 @@
     });
   };
 
-
   Diff2HtmlUI.prototype._getSelectedText = function() {
     var sel = window.getSelection();
     var range = sel.getRangeAt(0);
@@ -218,5 +214,4 @@
 
   // Expose diff2html in the browser
   global.Diff2HtmlUI = Diff2HtmlUI;
-
 })();

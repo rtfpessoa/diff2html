@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   var LineByLinePrinter = require('./line-by-line-printer.js').LineByLinePrinter;
   var SideBySidePrinter = require('./side-by-side-printer.js').SideBySidePrinter;
 
@@ -24,5 +23,4 @@
   };
 
   module.exports.HtmlPrinter = new HtmlPrinter();
-
 })();

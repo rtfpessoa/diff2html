@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   var jsDiff = require('diff');
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
@@ -85,7 +84,6 @@
       }
 
       return oldFilename + ' → ' + newFilename;
-
     } else if (newFilename && !isDevNullName(newFilename)) {
       return newFilename;
     } else if (oldFilename) {
@@ -217,5 +215,4 @@
   }
 
   module.exports.PrinterUtils = new PrinterUtils();
-
 })();

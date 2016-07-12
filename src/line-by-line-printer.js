@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   var diffParser = require('./diff-parser.js').DiffParser;
   var printerUtils = require('./printer-utils.js').PrinterUtils;
   var utils = require('./utils.js').Utils;
@@ -79,7 +78,6 @@
   LineByLinePrinter.prototype._generateFileHtml = function(file) {
     var that = this;
     return file.blocks.map(function(block) {
-
       var lines = that.makeColumnLineNumberHtml(block);
       var oldLines = [];
       var newLines = [];
@@ -209,5 +207,4 @@
   };
 
   module.exports.LineByLinePrinter = LineByLinePrinter;
-
 })();

@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   function HighlightJS() {
   }
 
@@ -31,9 +30,9 @@
     var result = [];
     (function _nodeStream(node, offset) {
       for (var child = node.firstChild; child; child = child.nextSibling) {
-        if (child.nodeType == 3)
+        if (child.nodeType === 3) {
           offset += child.nodeValue.length;
-        else if (child.nodeType == 1) {
+        } else if (child.nodeType === 1) {
           result.push({
             event: 'start',
             offset: offset,
@@ -66,7 +65,7 @@
       if (!original.length || !highlighted.length) {
         return original.length ? original : highlighted;
       }
-      if (original[0].offset != highlighted[0].offset) {
+      if (original[0].offset !== highlighted[0].offset) {
         return (original[0].offset < highlighted[0].offset) ? original : highlighted;
       }
 
@@ -83,7 +82,7 @@
        return highlighted;
        ... which is collapsed to:
        */
-      return highlighted[0].event == 'start' ? original : highlighted;
+      return highlighted[0].event === 'start' ? original : highlighted;
     }
 
     function open(node) {
@@ -99,15 +98,14 @@
     }
 
     function render(event) {
-      (event.event == 'start' ? open : close)(event.node);
+      (event.event === 'start' ? open : close)(event.node);
     }
 
     while (original.length || highlighted.length) {
       var stream = selectStream();
       result += escape(value.substr(processed, stream[0].offset - processed));
       processed = stream[0].offset;
-      if (stream == original) {
-
+      if (stream === original) {
         /*
          On any opening or closing tag of the original markup we first close
          the entire highlighted node stack, then render the original tag along
@@ -118,10 +116,10 @@
         do {
           render(stream.splice(0, 1)[0]);
           stream = selectStream();
-        } while (stream == original && stream.length && stream[0].offset == processed);
+        } while (stream === original && stream.length && stream[0].offset === processed);
         nodeStack.reverse().forEach(open);
       } else {
-        if (stream[0].event == 'start') {
+        if (stream[0].event === 'start') {
           nodeStack.push(stream[0].node);
         } else {
           nodeStack.pop();
@@ -135,5 +133,4 @@
   /* **** Highlight.js Private API **** */
 
   module.exports.HighlightJS = new HighlightJS();
-
 })();

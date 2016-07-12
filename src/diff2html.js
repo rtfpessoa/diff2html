@@ -6,7 +6,6 @@
  */
 
 (function() {
-
   var diffParser = require('./diff-parser.js').DiffParser;
   var fileLister = require('./file-list-printer.js').FileListPrinter;
   var htmlPrinter = require('./html-printer.js').HtmlPrinter;
@@ -57,7 +56,6 @@
     return fileList + diffOutput;
   };
 
-
   /*
    * Deprecated methods - The following methods exist only to maintain compatibility with previous versions
    */
@@ -107,5 +105,4 @@
 
   // Expose diff2html in the browser
   global.Diff2Html = diffObject;
-
 })();
