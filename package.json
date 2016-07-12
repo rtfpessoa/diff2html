@@ -53,19 +53,19 @@
     "fs": false
   },
   "dependencies": {
-    "diff": "^2.2.2",
+    "diff": "^2.2.3",
     "hogan.js": "^3.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
-    "browserify": "^13.0.0",
-    "clean-css": "^3.4.10",
+    "browserify": "^13.0.1",
+    "clean-css": "^3.4.18",
     "codacy-coverage": "^1.1.3",
     "fast-html-parser": "^1.0.1",
-    "istanbul": "^0.4.2",
-    "jscs": "^3.0.3",
+    "istanbul": "^0.4.4",
+    "jscs": "^3.0.6",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.4.5",
+    "mocha": "^2.5.3",
     "nopt": "^3.0.6",
     "postcss-cli": "^2.5.2",
     "uglifyjs": "^2.4.10"
