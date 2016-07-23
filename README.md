@@ -38,7 +38,7 @@ diff2html generates pretty HTML diffs from git or unified diff output.
 
 ## Online Example
 
-> Go to [diff2html](http://rtfpessoa.github.io/diff2html/)
+> Go to [diff2html](https://diff2html.xyz/)
 
 ## Distributions
 
