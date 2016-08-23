@@ -1,7 +1,7 @@
 {
   "name": "diff2html",
   "version": "2.0.2",
-  "homepage": "http://rtfpessoa.github.io/diff2html/",
+  "homepage": "https://diff2html.xyz",
   "description": "Fast Diff to colorized HTML",
   "keywords": [
     "git",
@@ -38,12 +38,15 @@
   ],
   "ignore": [
     "**/.*",
-    "webpack.config.js",
-    "package.json",
-    "release.sh",
-    "circle.yml",
-    "css",
+    "docs",
+    "scripts",
     "src",
-    "test"
+    "test",
+    "typescript",
+    "circle.yml",
+    "CONTRIBUTING.md",
+    "CREDITS.md",
+    "npm-shrinkwrap.json",
+    "package.json"
   ]
 }

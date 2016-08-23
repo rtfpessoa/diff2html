@@ -86,7 +86,7 @@ let dif2html = require("diff2html").Diff2Html
 
 > Check out the `docs/diff2html.d.ts` for a complete API definition in TypeScript.
 
-> Check out the `docs/index.html` for a demo example.
+> Check out the `docs/demo.html` for a demo example.
 
 ## Configuration
 The HTML output accepts a Javascript object with configuration. Possible options:

@@ -37,6 +37,7 @@
   "preferGlobal": true,
   "scripts": {
     "release": "./scripts/release.sh",
+    "release-website": "node ./scripts/release-website.js",
     "release-bower": "./scripts/update-bower-version.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
     "style": "eslint src/*.js src/ui/js/*.js",
@@ -44,7 +45,7 @@
     "check-coverage": "istanbul check-coverage --statements 90 --functions 90 --branches 85 --lines 90 ./coverage/coverage.json",
     "test": "npm run coverage && npm run check-coverage",
     "codacy": "npm run coverage && cat ./coverage/lcov.info | codacy-coverage",
-    "preversion": "npm run release && npm test",
+    "preversion": "npm run release && npm run release-website && npm test",
     "version": "npm run release-bower && git add -A src dist package.json bower.json",
     "postversion": "git push && git push --tags"
   },
