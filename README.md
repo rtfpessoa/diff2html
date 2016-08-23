@@ -54,15 +54,39 @@ diff2html generates pretty HTML diffs from git or unified diff output.
 
 ## How to use
 
+### Browser Library
+
+Import the stylesheet and the library code
+
+```html
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="dist/diff2html.css">
+
+<!-- Javascripts -->
+<script type="text/javascript" src="dist/diff2html.js"></script>
+```
+
+It will now be available as a global variable named `Diff2Html`.
+
+### Node Module
+
+```js
+let dif2html = require("diff2html").Diff2Html
+```
+
+## API
+
 > Pretty HTML diff
 
-    Diff2Html.getPrettyHtml(exInput, configuration)
+    getJsonFromDiff(input: string, configuration?: Options): Result
 
 > Intermediate Json From Git Word Diff Output
 
-    Diff2Html.getJsonFromDiff(exInput)
+    getPrettyHtml(input: any, configuration?: Options): string
 
-> Check out the `index.html` for a complete example.
+> Check out the `docs/diff2html.d.ts` for a complete API definition in TypeScript.
+
+> Check out the `docs/index.html` for a demo example.
 
 ## Configuration
 The HTML output accepts a Javascript object with configuration. Possible options:
@@ -79,9 +103,14 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
 > Simple wrapper to ease simple tasks in the browser such as: code highlight and js effects
 
+* Invoke Diff2html
+* Inject output in DOM element
+* Enable collapsible file summary list
+* Enable syntax highlight of the code in the diffs
+
 ### How to use
 
-> HTML resource imports
+#### Mandatory HTML resource imports
 
 ```html
 <!-- CSS -->
@@ -92,7 +121,7 @@ The HTML output accepts a Javascript object with configuration. Possible options
 <script type="text/javascript" src="dist/diff2html-ui.js"></script>
 ```
 
-> Init
+#### Init
 
 ```js
 var diff2htmlUi = new Diff2HtmlUI({diff: diffString});
@@ -100,25 +129,13 @@ var diff2htmlUi = new Diff2HtmlUI({diff: diffString});
 var diff2htmlUi = new Diff2HtmlUI({json: diffJson});
 ```
 
-> Draw
+#### Draw
 
 ```js
 diff2htmlUi.draw('html-target-elem', {inputFormat: 'json', showFiles: true, matching: 'lines'});
 ```
 
-> Highlight Code
-
-```js
-diff2htmlUi.highlightCode('html-target-elem');
-```
-
-> Collapse File Summary List
-
-```js
-diff2htmlUi.fileListCloseable('html-target-elem', false);
-```
-
-## Syntax Highlight
+#### Syntax Highlight
 
 > Add the dependencies.
 Choose one color scheme, and add the main highlight code.
@@ -126,12 +143,12 @@ If your favourite language is not included in the default package also add its j
 
 ```html
 <!-- Stylesheet -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/github.min.css">
 
 <!-- Javascripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/languages/scala.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/scala.min.js"></script>
 <script type="text/javascript" src="dist/diff2html-ui.js"></script>
 ```
 
@@ -145,7 +162,7 @@ $(document).ready(function() {
 });
 ```
 
-## Collapsable File Summary List
+#### Collapsable File Summary List
 
 > Add the dependencies.
 
