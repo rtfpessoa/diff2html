@@ -44,7 +44,7 @@
     "coverage": "istanbul cover _mocha -- -u exports -R spec ./test/**/*",
     "check-coverage": "istanbul check-coverage --statements 90 --functions 90 --branches 85 --lines 90 ./coverage/coverage.json",
     "test": "npm run coverage && npm run check-coverage",
-    "codacy": "npm run coverage && cat ./coverage/lcov.info | codacy-coverage",
+    "codacy": "cat ./coverage/lcov.info | codacy-coverage",
     "preversion": "npm run release && npm run release-website && npm test",
     "version": "npm run release-bower && git add -A src dist package.json bower.json",
     "postversion": "git push && git push --tags"

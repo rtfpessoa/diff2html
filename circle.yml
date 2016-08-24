@@ -1,8 +1,28 @@
+machine:
+  node:
+    version: 6
+dependencies:
+  cache_directories:
+    - ~/nvm
+    - ~/.npm
+  override:
+    - git clean -dfx
+    - nvm use 0.12 && nvm alias default 0.12
+    - npm install
+    - npm run test
+    - git clean -dfx
+    - nvm use 4 && nvm alias default 4
+    - npm install
+    - npm run test
+    - git clean -dfx
+    - nvm use 5 && nvm alias default 5
+    - npm install
+    - npm run test
+    - git clean -dfx
+    - nvm use 6 && nvm alias default 6
+    - npm install
 test:
   override:
-    - nvm install 0.12 && npm test
-    - nvm install 4 && npm run style && npm test
-    - nvm install 5 && npm run style && npm test
-  post:
-    - nvm install 6 && npm install && npm run style && npm test
-    - cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage
+    - npm run style
+    - npm run test
+    - npm run codacy
