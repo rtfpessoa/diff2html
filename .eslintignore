@@ -1,0 +1,6 @@
+src/**
+!src/*.js
+!src/ui/js/*.js
+coverage/**
+dist/**
+test/**

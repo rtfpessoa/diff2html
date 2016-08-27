@@ -40,7 +40,7 @@
     "release-website": "node ./scripts/release-website.js",
     "release-bower": "./scripts/update-bower-version.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
-    "style": "eslint src/*.js src/ui/js/*.js",
+    "style": "eslint .",
     "coverage": "istanbul cover _mocha -- -u exports -R spec ./test/**/*",
     "check-coverage": "istanbul check-coverage --statements 90 --functions 90 --branches 85 --lines 90 ./coverage/coverage.json",
     "test": "npm run coverage && npm run check-coverage",

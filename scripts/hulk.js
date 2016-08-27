@@ -15,14 +15,12 @@
  *  limitations under the License.
  */
 
-
 // dependencies
 var hogan = require('hogan.js');
 var path = require('path');
 var nopt = require('nopt');
 var mkderp = require('mkdirp');
 var fs = require('fs');
-
 
 // locals
 var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
@@ -45,22 +43,18 @@ var shortHand = {
 };
 var templates;
 
-
 // options
 options = nopt(options, shortHand);
-
 
 // escape special regexp characters
 function esc(text) {
   return text.replace(specialsRegExp, '\\$1');
 }
 
-
 // cyan function for rob
 function cyan(text) {
-  return '\033[36m' + text + '\033[39m';
+  return '\x1B[36m' + text + '\x1B[39m';
 }
-
 
 // check for dirs and correct ext (<3 for windows)
 function extractFiles(args) {
@@ -86,10 +80,9 @@ function extractFiles(args) {
   }
 
   args.forEach(function(arg) {
-
     if (/\*/.test(arg)) {
       arg = arg.split('*');
-      return files = files.concat(
+      files = files.concat(
         fs.readdirSync(arg[0] || '.')
           .map(function(f) {
             var file = path.join(arg[0], f);
@@ -99,15 +92,14 @@ function extractFiles(args) {
             return f;
           })
       );
+      return files;
     }
 
     if (fs.statSync(arg).isFile()) files.push(arg);
-
   });
 
   return files;
 }
-
 
 // remove utf-8 byte order mark, http://en.wikipedia.org/wiki/Byte_order_mark
 function removeByteOrderMark(text) {
@@ -117,16 +109,15 @@ function removeByteOrderMark(text) {
   return text;
 }
 
-
 // wrap templates
 function wrap(file, name, openedFile) {
   switch (options.wrapper) {
-    case "amd":
+    case 'amd':
       return 'define(' + (!options.outputdir ? '"' + path.join(path.dirname(file), name) + '", ' : '') +
         '[ "hogan.js" ], function(Hogan){ return new Hogan.Template(' +
         hogan.compile(openedFile, {asString: 1}) +
         ');});';
-    case "node":
+    case 'node':
       var globalObj = 'global.' + (options.variable || 'templates') + '["' + name + '"]';
       var globalStmt = globalObj + ' = new Hogan.Template(' + hogan.compile(openedFile, {asString: 1}) + ');';
       var nodeOutput = globalStmt;
@@ -145,13 +136,12 @@ function wrap(file, name, openedFile) {
   }
 }
 
-
 function prepareOutput(content) {
   var variableName = options.variable || 'templates';
   switch (options.wrapper) {
-    case "amd":
+    case 'amd':
       return content;
-    case "node":
+    case 'node':
       var nodeExport = '';
 
       // if we have aggregated templates the export will expose the template map
@@ -170,18 +160,15 @@ function prepareOutput(content) {
   }
 }
 
-
 // write the directory
 if (options.outputdir) {
   mkderp.sync(options.outputdir);
 }
 
-
 // Prepend namespace to template name
 function namespace(name) {
   return (options.namespace || '') + name;
 }
-
 
 // write a template foreach file that matches template extension
 templates = extractFiles(options.argv.remain)
@@ -199,7 +186,6 @@ templates = extractFiles(options.argv.remain)
   .filter(function(t) {
     return t;
   });
-
 
 // output templates
 if (!templates.length || options.outputdir) process.exit(0);
