@@ -543,5 +543,37 @@ describe('DiffParser', function() {
       assert.equal('Binary files differ', file1.blocks[0].header);
     });
 
+    it('should parse diff with --find-renames', function() {
+      var diff =
+        'diff --git a/src/test-bar.js b/src/test-baz.js\n' +
+        'similarity index 98%\n' +
+        'rename from src/test-bar.js\n' +
+        'rename to src/test-baz.js\n' +
+        'index e01513b..f14a870 100644\n' +
+        '--- a/src/test-bar.js\n' +
+        '+++ b/src/test-baz.js\n' +
+        '@@ -1,4 +1,32 @@\n' +
+        ' function foo() {\n' +
+        '-var bar = "Whoops!";\n' +
+        '+var baz = "Whoops!";\n' +
+        ' }\n' +
+        ' ';
+
+      var result = DiffParser.generateDiffJson(diff);
+      var file1 = result[0];
+      assert.equal(1, result.length);
+      assert.equal(1, file1.addedLines);
+      assert.equal(1, file1.deletedLines);
+      assert.equal('src/test-bar.js', file1.oldName);
+      assert.equal('src/test-baz.js', file1.newName);
+      assert.equal(1, file1.blocks.length);
+      assert.equal(5, file1.blocks[0].lines.length);
+      var linesContent = file1.blocks[0].lines.map(function(line) {
+        return line.content;
+      });
+      assert.deepEqual(linesContent,
+        [' function foo() {', '-var bar = "Whoops!";', '+var baz = "Whoops!";', ' }', ' ']);
+    });
+
   });
 });
