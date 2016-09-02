@@ -38,26 +38,26 @@
     var hunkHeaderPrefix = '@@';
 
     /* Add previous block(if exists) before start a new file */
-    var saveBlock = function() {
+    function saveBlock() {
       if (currentBlock) {
         currentFile.blocks.push(currentBlock);
         currentBlock = null;
       }
-    };
+    }
 
     /*
      * Add previous file(if exists) before start a new one
      * if it has name (to avoid binary files errors)
      */
-    var saveFile = function() {
+    function saveFile() {
       if (currentFile && currentFile.newName) {
         files.push(currentFile);
         currentFile = null;
       }
-    };
+    }
 
     /* Create file structure */
-    var startFile = function() {
+    function startFile() {
       saveBlock();
       saveFile();
 
@@ -65,9 +65,9 @@
       currentFile.blocks = [];
       currentFile.deletedLines = 0;
       currentFile.addedLines = 0;
-    };
+    }
 
-    var startBlock = function(line) {
+    function startBlock(line) {
       saveBlock();
 
       var values;
@@ -112,9 +112,9 @@
       currentBlock.oldStartLine2 = oldLine2;
       currentBlock.newStartLine = newLine;
       currentBlock.header = line;
-    };
+    }
 
-    var createLine = function(line) {
+    function createLine(line) {
       var currentLine = {};
       currentLine.content = line;
 
@@ -145,7 +145,34 @@
 
         currentBlock.lines.push(currentLine);
       }
-    };
+    }
+
+    /*
+     * Checks if there is a hunk header coming before a new file starts
+     *
+     * Hunk header is a group of three lines started by ( `--- ` , `+++ ` , `@@` )
+     */
+    function existHunkHeader(line, lineIdx) {
+      var idx = lineIdx;
+
+      while (idx < diffLines.length - 3) {
+        if (utils.startsWith(line, 'diff')) {
+          return false;
+        }
+
+        if (
+          utils.startsWith(diffLines[idx], oldFileNameHeader) &&
+          utils.startsWith(diffLines[idx + 1], newFileNameHeader) &&
+          utils.startsWith(diffLines[idx + 2], hunkHeaderPrefix)
+        ) {
+          return true;
+        }
+
+        idx++;
+      }
+
+      return false;
+    }
 
     var diffLines =
       diffInput.replace(/\\ No newline at end of file/g, '')
@@ -261,6 +288,8 @@
         return;
       }
 
+      var doesNotExistHunkHeader = !existHunkHeader(line, lineIndex);
+
       /*
        * Git diffs provide more information regarding files modes, renames, copies,
        * commits between changes and similarity indexes
@@ -276,16 +305,24 @@
         currentFile.newFileMode = values[1];
         currentFile.isNew = true;
       } else if ((values = copyFrom.exec(line))) {
-        currentFile.oldName = values[1];
+        if (doesNotExistHunkHeader) {
+          currentFile.oldName = values[1];
+        }
         currentFile.isCopy = true;
       } else if ((values = copyTo.exec(line))) {
-        currentFile.newName = values[1];
+        if (doesNotExistHunkHeader) {
+          currentFile.newName = values[1];
+        }
         currentFile.isCopy = true;
       } else if ((values = renameFrom.exec(line))) {
-        currentFile.oldName = values[1];
+        if (doesNotExistHunkHeader) {
+          currentFile.oldName = values[1];
+        }
         currentFile.isRename = true;
       } else if ((values = renameTo.exec(line))) {
-        currentFile.newName = values[1];
+        if (doesNotExistHunkHeader) {
+          currentFile.newName = values[1];
+        }
         currentFile.isRename = true;
       } else if ((values = similarityIndex.exec(line))) {
         currentFile.unchangedPercentage = values[1];
