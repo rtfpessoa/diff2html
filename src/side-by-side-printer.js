@@ -122,10 +122,10 @@
             var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
             fileHtml.left +=
-              that.generateSingleLineHtml(deleteType, oldLine.oldNumber,
+              that.generateSingleLineHtml(file.isCombined, deleteType, oldLine.oldNumber,
                 diff.first.line, diff.first.prefix);
             fileHtml.right +=
-              that.generateSingleLineHtml(insertType, newLine.newNumber,
+              that.generateSingleLineHtml(file.isCombined, insertType, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
           }
 
@@ -133,7 +133,7 @@
             var oldSlice = oldLines.slice(common);
             var newSlice = newLines.slice(common);
 
-            var tmpHtml = that.processLines(oldSlice, newSlice);
+            var tmpHtml = that.processLines(file.isCombined, oldSlice, newSlice);
             fileHtml.left += tmpHtml.left;
             fileHtml.right += tmpHtml.right;
           }
@@ -154,11 +154,11 @@
         }
 
         if (line.type === diffParser.LINE_TYPE.CONTEXT) {
-          fileHtml.left += that.generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
-          fileHtml.right += that.generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+          fileHtml.left += that.generateSingleLineHtml(file.isCombined, line.type, line.oldNumber, escapedLine, prefix);
+          fileHtml.right += that.generateSingleLineHtml(file.isCombined, line.type, line.newNumber, escapedLine, prefix);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          fileHtml.left += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-          fileHtml.right += that.generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+          fileHtml.left += that.generateSingleLineHtml(file.isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
+          fileHtml.right += that.generateSingleLineHtml(file.isCombined, line.type, line.newNumber, escapedLine, prefix);
         } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
@@ -175,7 +175,7 @@
     return fileHtml;
   };
 
-  SideBySidePrinter.prototype.processLines = function(oldLines, newLines) {
+  SideBySidePrinter.prototype.processLines = function(isCombined, oldLines, newLines) {
     var that = this;
     var fileHtml = {};
     fileHtml.left = '';
@@ -201,14 +201,14 @@
       }
 
       if (oldLine && newLine) {
-        fileHtml.left += that.generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
-        fileHtml.right += that.generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
+        fileHtml.left += that.generateSingleLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+        fileHtml.right += that.generateSingleLineHtml(isCombined, newLine.type, newLine.newNumber, newContent, newPrefix);
       } else if (oldLine) {
-        fileHtml.left += that.generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
-        fileHtml.right += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
+        fileHtml.left += that.generateSingleLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+        fileHtml.right += that.generateSingleLineHtml(isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
       } else if (newLine) {
-        fileHtml.left += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-        fileHtml.right += that.generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
+        fileHtml.left += that.generateSingleLineHtml(isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
+        fileHtml.right += that.generateSingleLineHtml(isCombined, newLine.type, newLine.newNumber, newContent, newPrefix);
       } else {
         console.error('How did it get here?');
       }
@@ -217,14 +217,23 @@
     return fileHtml;
   };
 
-  SideBySidePrinter.prototype.generateSingleLineHtml = function(type, number, content, prefix) {
+  SideBySidePrinter.prototype.generateSingleLineHtml = function(isCombined, type, number, content, possiblePrefix) {
+    var lineWithoutPrefix = content;
+    var prefix = possiblePrefix;
+
+    if (!prefix) {
+      var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
+      prefix = lineWithPrefix.prefix;
+      lineWithoutPrefix = lineWithPrefix.line;
+    }
+
     return hoganUtils.render(genericTemplatesPath, 'line',
       {
         type: type,
         lineClass: 'd2h-code-side-linenumber',
         contentClass: 'd2h-code-side-line',
-        prefix: prefix && utils.convertWhiteSpaceToNonBreakingSpace(prefix),
-        content: content && utils.convertWhiteSpaceToNonBreakingSpace(content),
+        prefix: prefix,
+        content: lineWithoutPrefix,
         lineNumber: number
       });
   };
