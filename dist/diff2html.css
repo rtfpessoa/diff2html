@@ -52,13 +52,14 @@
   width: 100%;
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
+  line-height: 15px;
 }
 
 .d2h-file-name {
+  line-height: 33px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow-x: hidden;
-  line-height: 21px;
+  overflow: hidden;
 }
 
 .d2h-file-wrapper {
@@ -74,15 +75,13 @@
   font-size: 13px;
 }
 
-.d2h-diff-tbody > tr > td {
-  height: 20px;
-  line-height: 20px;
+.d2h-diff-tbody > tr > td > div {
+  height: 16px;
+  line-height: 16px;
 }
 
 .d2h-files-diff {
-  display: block;
   width: 100%;
-  height: 100%;
 }
 
 .d2h-file-diff {
@@ -96,7 +95,6 @@
   overflow-y: hidden;
   width: 50%;
   margin-right: -4px;
-  margin-bottom: -8px;
 }
 
 .d2h-code-line {
@@ -104,12 +102,16 @@
   white-space: nowrap;
   padding: 0 10px;
   margin-left: 80px;
+  height: 20px;
+  line-height: 20px;
 }
 
 .d2h-code-side-line {
   display: inline-block;
   white-space: nowrap;
   padding: 0 10px;
+  height: 20px;
+  line-height: 20px;
   margin-left: 50px;
 }
 
@@ -170,8 +172,10 @@
   box-sizing: border-box;
   position: absolute;
   width: 86px;
+  height: 18px;
   padding-left: 2px;
   padding-right: 2px;
+  line-height: 18px;
   background-color: #fff;
   color: rgba(0, 0, 0, 0.3);
   text-align: right;
@@ -186,6 +190,8 @@
   width: 56px;
   padding-left: 5px;
   padding-right: 5px;
+  height: 18px;
+  line-height: 18px;
   background-color: #fff;
   color: rgba(0, 0, 0, 0.3);
   text-align: right;
@@ -254,6 +260,10 @@
   display: -ms-flexbox;
   display: flex;
   text-align: left;
+}
+
+.d2h-file-list-line .d2h-file-name {
+  line-height: 21px;
 }
 
 .d2h-file-list {
