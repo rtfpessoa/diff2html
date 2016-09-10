@@ -46,7 +46,7 @@
     "test": "npm run coverage && npm run check-coverage",
     "codacy": "cat ./coverage/lcov.info | codacy-coverage",
     "preversion": "npm run release && npm run release-website && npm test",
-    "version": "npm run release-bower && git add -A src dist package.json bower.json",
+    "version": "npm run release-bower && git add -A src dist docs package.json bower.json",
     "postversion": "git push && git push --tags"
   },
   "main": "./src/diff2html.js",
@@ -58,11 +58,11 @@
     "hogan.js": "^3.0.2"
   },
   "devDependencies": {
-    "autoprefixer": "^6.4.0",
+    "autoprefixer": "^6.4.1",
     "browserify": "^13.1.0",
     "clean-css": "^3.4.19",
     "codacy-coverage": "^2.0.0",
-    "eslint": "^3.3.1",
+    "eslint": "^3.5.0",
     "eslint-plugin-promise": "^2.0.1",
     "eslint-plugin-standard": "^2.0.0",
     "fast-html-parser": "^1.0.1",
@@ -70,7 +70,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "nopt": "^3.0.6",
-    "postcss-cli": "^2.5.2",
+    "postcss-cli": "^2.6.0",
     "uglifyjs": "^2.4.10"
   },
   "license": "MIT",
