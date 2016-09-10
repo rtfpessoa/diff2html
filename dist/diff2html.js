@@ -3170,15 +3170,15 @@ process.umask = function() { return 0; };
             var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
             processedOldLines +=
-              that.makeLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
+              that.makeLineHtml(file.isCombined, deleteType, oldLine.oldNumber, oldLine.newNumber,
                 diff.first.line, diff.first.prefix);
             processedNewLines +=
-              that.makeLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
+              that.makeLineHtml(file.isCombined, insertType, newLine.oldNumber, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
           }
 
           lines += processedOldLines + processedNewLines;
-          lines += that._processLines(oldLines.slice(common), newLines.slice(common));
+          lines += that._processLines(file.isCombined, oldLines.slice(common), newLines.slice(common));
         });
 
         oldLines = [];
@@ -3195,9 +3195,9 @@ process.umask = function() { return 0; };
         }
 
         if (line.type === diffParser.LINE_TYPE.CONTEXT) {
-          lines += that.makeLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += that.makeLineHtml(file.isCombined, line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          lines += that.makeLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += that.makeLineHtml(file.isCombined, line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
@@ -3214,37 +3214,46 @@ process.umask = function() { return 0; };
     }).join('\n');
   };
 
-  LineByLinePrinter.prototype._processLines = function(oldLines, newLines) {
+  LineByLinePrinter.prototype._processLines = function(isCombined, oldLines, newLines) {
     var lines = '';
 
     for (var i = 0; i < oldLines.length; i++) {
       var oldLine = oldLines[i];
       var oldEscapedLine = utils.escape(oldLine.content);
-      lines += this.makeLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+      lines += this.makeLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
     }
 
     for (var j = 0; j < newLines.length; j++) {
       var newLine = newLines[j];
       var newEscapedLine = utils.escape(newLine.content);
-      lines += this.makeLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+      lines += this.makeLineHtml(isCombined, newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
     }
 
     return lines;
   };
 
-  LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, content, prefix) {
+  LineByLinePrinter.prototype.makeLineHtml = function(isCombined, type, oldNumber, newNumber, content, possiblePrefix) {
     var lineNumberTemplate = hoganUtils.render(baseTemplatesPath, 'numbers', {
       oldNumber: utils.valueOrEmpty(oldNumber),
       newNumber: utils.valueOrEmpty(newNumber)
     });
+
+    var lineWithoutPrefix = content;
+    var prefix = possiblePrefix;
+
+    if (!prefix) {
+      var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
+      prefix = lineWithPrefix.prefix;
+      lineWithoutPrefix = lineWithPrefix.line;
+    }
 
     return hoganUtils.render(genericTemplatesPath, 'line',
       {
         type: type,
         lineClass: 'd2h-code-linenumber',
         contentClass: 'd2h-code-line',
-        prefix: prefix && utils.convertWhiteSpaceToNonBreakingSpace(prefix),
-        content: content && utils.convertWhiteSpaceToNonBreakingSpace(content),
+        prefix: prefix,
+        content: lineWithoutPrefix,
         lineNumber: lineNumberTemplate
       });
   };
@@ -3276,6 +3285,24 @@ process.umask = function() { return 0; };
 
   function PrinterUtils() {
   }
+
+  PrinterUtils.prototype.separatePrefix = function(isCombined, line) {
+    var prefix;
+    var lineWithoutPrefix;
+
+    if (isCombined) {
+      prefix = line.substring(0, 2);
+      lineWithoutPrefix = line.substring(2);
+    } else {
+      prefix = line.substring(0, 1);
+      lineWithoutPrefix = line.substring(1);
+    }
+
+    return {
+      'prefix': prefix,
+      'line': lineWithoutPrefix
+    };
+  };
 
   PrinterUtils.prototype.getHtmlId = function(file) {
     var hashCode = function(text) {
@@ -3747,10 +3774,10 @@ process.umask = function() { return 0; };
             var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
             fileHtml.left +=
-              that.generateSingleLineHtml(deleteType, oldLine.oldNumber,
+              that.generateSingleLineHtml(file.isCombined, deleteType, oldLine.oldNumber,
                 diff.first.line, diff.first.prefix);
             fileHtml.right +=
-              that.generateSingleLineHtml(insertType, newLine.newNumber,
+              that.generateSingleLineHtml(file.isCombined, insertType, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
           }
 
@@ -3758,7 +3785,7 @@ process.umask = function() { return 0; };
             var oldSlice = oldLines.slice(common);
             var newSlice = newLines.slice(common);
 
-            var tmpHtml = that.processLines(oldSlice, newSlice);
+            var tmpHtml = that.processLines(file.isCombined, oldSlice, newSlice);
             fileHtml.left += tmpHtml.left;
             fileHtml.right += tmpHtml.right;
           }
@@ -3779,11 +3806,11 @@ process.umask = function() { return 0; };
         }
 
         if (line.type === diffParser.LINE_TYPE.CONTEXT) {
-          fileHtml.left += that.generateSingleLineHtml(line.type, line.oldNumber, escapedLine, prefix);
-          fileHtml.right += that.generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+          fileHtml.left += that.generateSingleLineHtml(file.isCombined, line.type, line.oldNumber, escapedLine, prefix);
+          fileHtml.right += that.generateSingleLineHtml(file.isCombined, line.type, line.newNumber, escapedLine, prefix);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          fileHtml.left += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-          fileHtml.right += that.generateSingleLineHtml(line.type, line.newNumber, escapedLine, prefix);
+          fileHtml.left += that.generateSingleLineHtml(file.isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
+          fileHtml.right += that.generateSingleLineHtml(file.isCombined, line.type, line.newNumber, escapedLine, prefix);
         } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
@@ -3800,7 +3827,7 @@ process.umask = function() { return 0; };
     return fileHtml;
   };
 
-  SideBySidePrinter.prototype.processLines = function(oldLines, newLines) {
+  SideBySidePrinter.prototype.processLines = function(isCombined, oldLines, newLines) {
     var that = this;
     var fileHtml = {};
     fileHtml.left = '';
@@ -3826,14 +3853,14 @@ process.umask = function() { return 0; };
       }
 
       if (oldLine && newLine) {
-        fileHtml.left += that.generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
-        fileHtml.right += that.generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
+        fileHtml.left += that.generateSingleLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+        fileHtml.right += that.generateSingleLineHtml(isCombined, newLine.type, newLine.newNumber, newContent, newPrefix);
       } else if (oldLine) {
-        fileHtml.left += that.generateSingleLineHtml(oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
-        fileHtml.right += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
+        fileHtml.left += that.generateSingleLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+        fileHtml.right += that.generateSingleLineHtml(isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
       } else if (newLine) {
-        fileHtml.left += that.generateSingleLineHtml(diffParser.LINE_TYPE.CONTEXT, '', '', '');
-        fileHtml.right += that.generateSingleLineHtml(newLine.type, newLine.newNumber, newContent, newPrefix);
+        fileHtml.left += that.generateSingleLineHtml(isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
+        fileHtml.right += that.generateSingleLineHtml(isCombined, newLine.type, newLine.newNumber, newContent, newPrefix);
       } else {
         console.error('How did it get here?');
       }
@@ -3842,14 +3869,23 @@ process.umask = function() { return 0; };
     return fileHtml;
   };
 
-  SideBySidePrinter.prototype.generateSingleLineHtml = function(type, number, content, prefix) {
+  SideBySidePrinter.prototype.generateSingleLineHtml = function(isCombined, type, number, content, possiblePrefix) {
+    var lineWithoutPrefix = content;
+    var prefix = possiblePrefix;
+
+    if (!prefix) {
+      var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
+      prefix = lineWithPrefix.prefix;
+      lineWithoutPrefix = lineWithPrefix.line;
+    }
+
     return hoganUtils.render(genericTemplatesPath, 'line',
       {
         type: type,
         lineClass: 'd2h-code-side-linenumber',
         contentClass: 'd2h-code-side-line',
-        prefix: prefix && utils.convertWhiteSpaceToNonBreakingSpace(prefix),
-        content: content && utils.convertWhiteSpaceToNonBreakingSpace(content),
+        prefix: prefix,
+        content: lineWithoutPrefix,
         lineNumber: number
       });
   };
@@ -3907,10 +3943,6 @@ module.exports = global.browserTemplates;
 (function() {
   function Utils() {
   }
-
-  Utils.prototype.convertWhiteSpaceToNonBreakingSpace = function(str) {
-    return str.slice(0).replace(/ /g, '&nbsp;');
-  };
 
   Utils.prototype.escape = function(str) {
     return str.slice(0)
