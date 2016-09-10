@@ -5,7 +5,6 @@ var SideBySidePrinter = require('../src/side-by-side-printer.js').SideBySidePrin
 describe('SideBySidePrinter', function() {
   describe('generateEmptyDiff', function() {
     it('should return an empty diff', function() {
-
       var sideBySidePrinter = new SideBySidePrinter({});
       var fileHtml = sideBySidePrinter.generateEmptyDiff();
       var expectedRight = '';
@@ -27,46 +26,46 @@ describe('SideBySidePrinter', function() {
       var sideBySidePrinter = new SideBySidePrinter({});
 
       var file = {
-        "blocks": [{
-          "lines": [
+        'blocks': [{
+          'lines': [
             {
-              "content": " context",
-              "type": "d2h-cntx",
-              "oldNumber": 19,
-              "newNumber": 19
+              'content': ' context',
+              'type': 'd2h-cntx',
+              'oldNumber': 19,
+              'newNumber': 19
             },
             {
-              "content": "-removed",
-              "type": "d2h-del",
-              "oldNumber": 20,
-              "newNumber": null
+              'content': '-removed',
+              'type': 'd2h-del',
+              'oldNumber': 20,
+              'newNumber': null
             },
             {
-              "content": "+added",
-              "type": "d2h-ins",
-              "oldNumber": null,
-              "newNumber": 20
+              'content': '+added',
+              'type': 'd2h-ins',
+              'oldNumber': null,
+              'newNumber': 20
             },
             {
-              "content": "+another added",
-              "type": "d2h-ins",
-              "oldNumber": null,
-              "newNumber": 21
+              'content': '+another added',
+              'type': 'd2h-ins',
+              'oldNumber': null,
+              'newNumber': 21
             }
           ],
-          "oldStartLine": "19",
-          "newStartLine": "19",
-          "header": "@@ -19,7 +19,7 @@"
+          'oldStartLine': '19',
+          'newStartLine': '19',
+          'header': '@@ -19,7 +19,7 @@'
         }],
-        "deletedLines": 1,
-        "addedLines": 1,
-        "checksumBefore": "fc56817",
-        "checksumAfter": "e8e7e49",
-        "mode": "100644",
-        "oldName": "coverage.init",
-        "language": "init",
-        "newName": "coverage.init",
-        "isCombined": false
+        'deletedLines': 1,
+        'addedLines': 1,
+        'checksumBefore': 'fc56817',
+        'checksumAfter': 'e8e7e49',
+        'mode': '100644',
+        'oldName': 'coverage.init',
+        'language': 'init',
+        'newName': 'coverage.init',
+        'isCombined': false
       };
 
       var fileHtml = sideBySidePrinter.generateSideBySideFileHtml(file);
@@ -153,7 +152,6 @@ describe('SideBySidePrinter', function() {
 
   describe('generateSingleLineHtml', function() {
     it('should work for insertions', function() {
-
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var sideBySidePrinter = new SideBySidePrinter({});
       var fileHtml = sideBySidePrinter.generateSingleLineHtml(false,
@@ -173,7 +171,6 @@ describe('SideBySidePrinter', function() {
       assert.equal(expected, fileHtml);
     });
     it('should work for deletions', function() {
-
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var sideBySidePrinter = new SideBySidePrinter({});
       var fileHtml = sideBySidePrinter.generateSingleLineHtml(false,

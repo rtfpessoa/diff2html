@@ -1,6 +1,11 @@
+# Skip coverage and build folders
+coverage/**
+dist/**
+
+# Ignore symlink to build folder
+docs/assets/**
+
+# Ignore HTML templates generated code
 src/**
 !src/*.js
 !src/ui/js/*.js
-coverage/**
-dist/**
-test/**

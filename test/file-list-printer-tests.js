@@ -5,7 +5,6 @@ var fileListPrinter = require('../src/file-list-printer.js').FileListPrinter;
 describe('FileListPrinter', function() {
   describe('generateFileList', function() {
     it('should work for all kinds of files', function() {
-
       var files = [{
         addedLines: 12,
         deletedLines: 41,

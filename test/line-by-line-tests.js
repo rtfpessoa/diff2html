@@ -6,7 +6,6 @@ var LineByLinePrinter = require('../src/line-by-line-printer.js').LineByLinePrin
 describe('LineByLinePrinter', function() {
   describe('_generateEmptyDiff', function() {
     it('should return an empty diff', function() {
-
       var lineByLinePrinter = new LineByLinePrinter({});
       var fileHtml = lineByLinePrinter._generateEmptyDiff();
       var expected = '<tr>\n' +
@@ -23,7 +22,6 @@ describe('LineByLinePrinter', function() {
 
   describe('makeLineHtml', function() {
     it('should work for insertions', function() {
-
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var lineByLinePrinter = new LineByLinePrinter({});
       var fileHtml = lineByLinePrinter.makeLineHtml(false,

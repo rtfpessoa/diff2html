@@ -65,7 +65,6 @@ var filesExample1 =
   '    </ol>\n' +
   '</div>';
 
-
 var htmlLineExample1 =
   '<div class="d2h-wrapper">\n' +
   '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
@@ -246,7 +245,6 @@ describe('Diff2Html', function() {
 
       assert.equal(null, result[0].blocks[0].lines[6].oldNumber);
       assert.equal(54, result[0].blocks[0].lines[6].newNumber);
-
 
       assert.equal(null, result[0].blocks[0].lines[7].oldNumber);
       assert.equal(55, result[0].blocks[0].lines[7].newNumber);

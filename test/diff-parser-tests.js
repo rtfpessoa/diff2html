@@ -4,7 +4,6 @@ var DiffParser = require('../src/diff-parser.js').DiffParser;
 
 describe('DiffParser', function() {
   describe('generateDiffJson', function() {
-
     it('should parse unix with \n diff', function() {
       var diff =
         'diff --git a/sample b/sample\n' +
@@ -14,7 +13,7 @@ describe('DiffParser', function() {
         '@@ -1 +1 @@\n' +
         '-test\n' +
         '+test1r\n';
-      checkDiffSample(diff)
+      checkDiffSample(diff);
     });
 
     it('should parse windows with \r\n diff', function() {
@@ -26,7 +25,7 @@ describe('DiffParser', function() {
         '@@ -1 +1 @@\r\n' +
         '-test\r\n' +
         '+test1r\r\n';
-      checkDiffSample(diff)
+      checkDiffSample(diff);
     });
 
     it('should parse old os x with \r diff', function() {
@@ -38,7 +37,7 @@ describe('DiffParser', function() {
         '@@ -1 +1 @@\r' +
         '-test\r' +
         '+test1r\r';
-      checkDiffSample(diff)
+      checkDiffSample(diff);
     });
 
     it('should parse mixed eols diff', function() {
@@ -50,7 +49,7 @@ describe('DiffParser', function() {
         '@@ -1 +1 @@\n' +
         '-test\r' +
         '+test1r\n';
-      checkDiffSample(diff)
+      checkDiffSample(diff);
     });
 
     function checkDiffSample(diff) {
@@ -96,7 +95,7 @@ describe('DiffParser', function() {
         '+cenas com ananas\n' +
         '+bananas';
 
-      var result = DiffParser.generateDiffJson(diff, {"srcPrefix": "\t", "dstPrefix": "\t"});
+      var result = DiffParser.generateDiffJson(diff, {'srcPrefix': '\t', 'dstPrefix': '\t'});
       var file1 = result[0];
       assert.equal(1, result.length);
       assert.equal(2, file1.addedLines);
@@ -574,6 +573,5 @@ describe('DiffParser', function() {
       assert.deepEqual(linesContent,
         [' function foo() {', '-var bar = "Whoops!";', '+var baz = "Whoops!";', ' }', ' ']);
     });
-
   });
 });
