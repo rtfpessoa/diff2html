@@ -120,15 +120,15 @@
             var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
 
             processedOldLines +=
-              that.makeLineHtml(deleteType, oldLine.oldNumber, oldLine.newNumber,
+              that.makeLineHtml(file.isCombined, deleteType, oldLine.oldNumber, oldLine.newNumber,
                 diff.first.line, diff.first.prefix);
             processedNewLines +=
-              that.makeLineHtml(insertType, newLine.oldNumber, newLine.newNumber,
+              that.makeLineHtml(file.isCombined, insertType, newLine.oldNumber, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
           }
 
           lines += processedOldLines + processedNewLines;
-          lines += that._processLines(oldLines.slice(common), newLines.slice(common));
+          lines += that._processLines(file.isCombined, oldLines.slice(common), newLines.slice(common));
         });
 
         oldLines = [];
@@ -145,9 +145,9 @@
         }
 
         if (line.type === diffParser.LINE_TYPE.CONTEXT) {
-          lines += that.makeLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += that.makeLineHtml(file.isCombined, line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          lines += that.makeLineHtml(line.type, line.oldNumber, line.newNumber, escapedLine);
+          lines += that.makeLineHtml(file.isCombined, line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
@@ -164,37 +164,46 @@
     }).join('\n');
   };
 
-  LineByLinePrinter.prototype._processLines = function(oldLines, newLines) {
+  LineByLinePrinter.prototype._processLines = function(isCombined, oldLines, newLines) {
     var lines = '';
 
     for (var i = 0; i < oldLines.length; i++) {
       var oldLine = oldLines[i];
       var oldEscapedLine = utils.escape(oldLine.content);
-      lines += this.makeLineHtml(oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+      lines += this.makeLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
     }
 
     for (var j = 0; j < newLines.length; j++) {
       var newLine = newLines[j];
       var newEscapedLine = utils.escape(newLine.content);
-      lines += this.makeLineHtml(newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+      lines += this.makeLineHtml(isCombined, newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
     }
 
     return lines;
   };
 
-  LineByLinePrinter.prototype.makeLineHtml = function(type, oldNumber, newNumber, content, prefix) {
+  LineByLinePrinter.prototype.makeLineHtml = function(isCombined, type, oldNumber, newNumber, content, possiblePrefix) {
     var lineNumberTemplate = hoganUtils.render(baseTemplatesPath, 'numbers', {
       oldNumber: utils.valueOrEmpty(oldNumber),
       newNumber: utils.valueOrEmpty(newNumber)
     });
+
+    var lineWithoutPrefix = content;
+    var prefix = possiblePrefix;
+
+    if (!prefix) {
+      var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
+      prefix = lineWithPrefix.prefix;
+      lineWithoutPrefix = lineWithPrefix.line;
+    }
 
     return hoganUtils.render(genericTemplatesPath, 'line',
       {
         type: type,
         lineClass: 'd2h-code-linenumber',
         contentClass: 'd2h-code-line',
-        prefix: prefix && utils.convertWhiteSpaceToNonBreakingSpace(prefix),
-        content: content && utils.convertWhiteSpaceToNonBreakingSpace(content),
+        prefix: prefix,
+        content: lineWithoutPrefix,
         lineNumber: lineNumberTemplate
       });
   };

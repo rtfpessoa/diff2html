@@ -15,6 +15,24 @@
   function PrinterUtils() {
   }
 
+  PrinterUtils.prototype.separatePrefix = function(isCombined, line) {
+    var prefix;
+    var lineWithoutPrefix;
+
+    if (isCombined) {
+      prefix = line.substring(0, 2);
+      lineWithoutPrefix = line.substring(2);
+    } else {
+      prefix = line.substring(0, 1);
+      lineWithoutPrefix = line.substring(1);
+    }
+
+    return {
+      'prefix': prefix,
+      'line': lineWithoutPrefix
+    };
+  };
+
   PrinterUtils.prototype.getHtmlId = function(file) {
     var hashCode = function(text) {
       var i, chr, len;

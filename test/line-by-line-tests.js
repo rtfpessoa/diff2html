@@ -26,8 +26,8 @@ describe('LineByLinePrinter', function() {
 
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var lineByLinePrinter = new LineByLinePrinter({});
-      var fileHtml = lineByLinePrinter.makeLineHtml(
-        diffParser.LINE_TYPE.INSERTS, '', 30, '+', 'test');
+      var fileHtml = lineByLinePrinter.makeLineHtml(false,
+        diffParser.LINE_TYPE.INSERTS, '', 30, 'test', '+');
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
@@ -36,8 +36,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
-        '            <span class="d2h-code-line-prefix">test</span>\n' +
-        '            <span class="d2h-code-line-ctn">+</span>\n' +
+        '            <span class="d2h-code-line-prefix">+</span>\n' +
+        '            <span class="d2h-code-line-ctn">test</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
@@ -48,8 +48,8 @@ describe('LineByLinePrinter', function() {
     it('should work for deletions', function() {
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var lineByLinePrinter = new LineByLinePrinter({});
-      var fileHtml = lineByLinePrinter.makeLineHtml(
-        diffParser.LINE_TYPE.DELETES, 30, '', '-', 'test');
+      var fileHtml = lineByLinePrinter.makeLineHtml(false,
+        diffParser.LINE_TYPE.DELETES, 30, '', 'test', '-');
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-del">\n' +
@@ -58,8 +58,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-del">\n' +
         '        <div class="d2h-code-line d2h-del">\n' +
-        '            <span class="d2h-code-line-prefix">test</span>\n' +
-        '            <span class="d2h-code-line-ctn">-</span>\n' +
+        '            <span class="d2h-code-line-prefix">-</span>\n' +
+        '            <span class="d2h-code-line-ctn">test</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
@@ -70,8 +70,8 @@ describe('LineByLinePrinter', function() {
     it('should convert indents into non breakin spaces (2 white spaces)', function() {
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var lineByLinePrinter = new LineByLinePrinter({});
-      var fileHtml = lineByLinePrinter.makeLineHtml(
-        diffParser.LINE_TYPE.INSERTS, '', 30, '+', '  test');
+      var fileHtml = lineByLinePrinter.makeLineHtml(false,
+        diffParser.LINE_TYPE.INSERTS, '', 30, '  test', '+');
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
@@ -80,8 +80,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
-        '            <span class="d2h-code-line-prefix">&nbsp;&nbsp;test</span>\n' +
-        '            <span class="d2h-code-line-ctn">+</span>\n' +
+        '            <span class="d2h-code-line-prefix">+</span>\n' +
+        '            <span class="d2h-code-line-ctn">  test</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
@@ -92,8 +92,8 @@ describe('LineByLinePrinter', function() {
     it('should convert indents into non breakin spaces (4 white spaces)', function() {
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var lineByLinePrinter = new LineByLinePrinter({});
-      var fileHtml = lineByLinePrinter.makeLineHtml(
-        diffParser.LINE_TYPE.INSERTS, '', 30, '+', '    test');
+      var fileHtml = lineByLinePrinter.makeLineHtml(false,
+        diffParser.LINE_TYPE.INSERTS, '', 30, '    test', '+');
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
@@ -102,8 +102,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
-        '            <span class="d2h-code-line-prefix">&nbsp;&nbsp;&nbsp;&nbsp;test</span>\n' +
-        '            <span class="d2h-code-line-ctn">+</span>\n' +
+        '            <span class="d2h-code-line-prefix">+</span>\n' +
+        '            <span class="d2h-code-line-ctn">    test</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
@@ -114,8 +114,8 @@ describe('LineByLinePrinter', function() {
     it('should convert indents into non breakin spaces (one tab)', function() {
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var lineByLinePrinter = new LineByLinePrinter({});
-      var fileHtml = lineByLinePrinter.makeLineHtml(
-        diffParser.LINE_TYPE.INSERTS, '', 30, '+', Utils.escape('\ttest'));
+      var fileHtml = lineByLinePrinter.makeLineHtml(false,
+        diffParser.LINE_TYPE.INSERTS, '', 30, Utils.escape('\ttest'), '+');
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
@@ -125,8 +125,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
-        '            <span class="d2h-code-line-prefix">&nbsp;&nbsp;&nbsp;&nbsp;test</span>\n' +
-        '            <span class="d2h-code-line-ctn">+</span>\n' +
+        '            <span class="d2h-code-line-prefix">+</span>\n' +
+        '            <span class="d2h-code-line-ctn">    test</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
@@ -452,7 +452,7 @@ describe('LineByLinePrinter', function() {
         newNumber: 1
       }];
 
-      var html = lineByLinePrinter._processLines(oldLines, newLines);
+      var html = lineByLinePrinter._processLines(false, oldLines, newLines);
 
       var expected =
         '<tr>\n' +
@@ -462,7 +462,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-del">\n' +
         '        <div class="d2h-code-line d2h-del">\n' +
-        '            <span class="d2h-code-line-ctn">-test</span>\n' +
+        '            <span class="d2h-code-line-prefix">-</span>\n' +
+        '            <span class="d2h-code-line-ctn">test</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr><tr>\n' +
@@ -472,7 +473,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
-        '            <span class="d2h-code-line-ctn">+test1r</span>\n' +
+        '            <span class="d2h-code-line-prefix">+</span>\n' +
+        '            <span class="d2h-code-line-ctn">test1r</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
@@ -540,7 +542,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-ctn">&nbsp;one&nbsp;context&nbsp;line</span>\n' +
+        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-ctn">one context line</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr><tr>\n' +
@@ -572,7 +575,8 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
-        '            <span class="d2h-code-line-ctn">+test2r</span>\n' +
+        '            <span class="d2h-code-line-prefix">+</span>\n' +
+        '            <span class="d2h-code-line-ctn">test2r</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';

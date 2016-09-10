@@ -83,7 +83,7 @@ describe('SideBySidePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-side-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
+        '            <span class="d2h-code-line-prefix"> </span>\n' +
         '            <span class="d2h-code-line-ctn">context</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -120,7 +120,7 @@ describe('SideBySidePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-side-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
+        '            <span class="d2h-code-line-prefix"> </span>\n' +
         '            <span class="d2h-code-line-ctn">context</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -141,7 +141,7 @@ describe('SideBySidePrinter', function() {
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-side-line d2h-ins">\n' +
         '            <span class="d2h-code-line-prefix">+</span>\n' +
-        '            <span class="d2h-code-line-ctn">another&nbsp;added</span>\n' +
+        '            <span class="d2h-code-line-ctn">another added</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
@@ -156,7 +156,7 @@ describe('SideBySidePrinter', function() {
 
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var sideBySidePrinter = new SideBySidePrinter({});
-      var fileHtml = sideBySidePrinter.generateSingleLineHtml(
+      var fileHtml = sideBySidePrinter.generateSingleLineHtml(false,
         diffParser.LINE_TYPE.INSERTS, 30, 'test', '+');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-side-linenumber d2h-ins">\n' +
@@ -176,7 +176,7 @@ describe('SideBySidePrinter', function() {
 
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var sideBySidePrinter = new SideBySidePrinter({});
-      var fileHtml = sideBySidePrinter.generateSingleLineHtml(
+      var fileHtml = sideBySidePrinter.generateSingleLineHtml(false,
         diffParser.LINE_TYPE.DELETES, 30, 'test', '-');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-side-linenumber d2h-del">\n' +
@@ -366,7 +366,7 @@ describe('SideBySidePrinter', function() {
       }];
 
       var sideBySidePrinter = new SideBySidePrinter({matching: 'lines'});
-      var html = sideBySidePrinter.processLines(oldLines, newLines);
+      var html = sideBySidePrinter.processLines(false, oldLines, newLines);
       var expectedLeft =
         '<tr>\n' +
         '    <td class="d2h-code-side-linenumber d2h-del">\n' +
