@@ -195,6 +195,8 @@
     var dissimilarityIndex = /^dissimilarity index (\d+)%/;
     var index = /^index ([0-9a-z]+)\.\.([0-9a-z]+)\s*(\d{6})?/;
 
+    var binaryFiles = /^Binary files (.*) and (.*) differ/;
+
     /* Combined Diff */
     var combinedIndex = /^index ([0-9a-z]+),([0-9a-z]+)\.\.([0-9a-z]+)/;
     var combinedMode = /^mode (\d{6}),(\d{6})\.\.(\d{6})/;
@@ -324,6 +326,10 @@
           currentFile.newName = values[1];
         }
         currentFile.isRename = true;
+      } else if ((values = binaryFiles.exec(line))) {
+        currentFile.isBinary = true;
+        currentFile.oldName = _getFilename(null, values[1], [config.srcPrefix]);
+        currentFile.newName = _getFilename(null, values[2], [config.dstPrefix]);
       } else if ((values = similarityIndex.exec(line))) {
         currentFile.unchangedPercentage = values[1];
       } else if ((values = dissimilarityIndex.exec(line))) {
@@ -383,7 +389,12 @@
   }
 
   function _getFilename(linePrefix, line, prefixes) {
-    var FilenameRegExp = new RegExp('^' + linePrefix + ' "?(.+?)"?$');
+    var FilenameRegExp;
+    if (linePrefix) {
+      FilenameRegExp = new RegExp('^' + linePrefix + ' "?(.+?)"?$');
+    } else {
+      FilenameRegExp = new RegExp('^"?(.+?)"?$');
+    }
 
     var filename;
     var values = FilenameRegExp.exec(line);

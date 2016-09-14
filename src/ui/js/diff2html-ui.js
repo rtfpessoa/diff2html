@@ -33,7 +33,7 @@
     var cfg = config || {};
     cfg.inputFormat = 'json';
     var $target = this._getTarget(targetId);
-    $target.html(Diff2Html.getPrettyHtml(diffJson, cfg.inputFormat));
+    $target.html(Diff2Html.getPrettyHtml(diffJson, cfg));
 
     synchronisedScroll($target, cfg);
   };
