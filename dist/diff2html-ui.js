@@ -33,10 +33,11 @@
 
   Diff2HtmlUI.prototype.draw = function(targetId, config) {
     var cfg = config || {};
+    cfg.inputFormat = 'json';
     var $target = this._getTarget(targetId);
     $target.html(Diff2Html.getPrettyHtml(diffJson, cfg));
 
-    synchronisedScroll($target, config);
+    synchronisedScroll($target, cfg);
   };
 
   function synchronisedScroll($target, config) {
