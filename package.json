@@ -58,17 +58,17 @@
     "hogan.js": "^3.0.2"
   },
   "devDependencies": {
-    "autoprefixer": "^6.4.1",
+    "autoprefixer": "^6.5.0",
     "browserify": "^13.1.0",
-    "clean-css": "^3.4.19",
+    "clean-css": "^3.4.20",
     "codacy-coverage": "^2.0.0",
-    "eslint": "^3.5.0",
-    "eslint-plugin-promise": "^2.0.1",
-    "eslint-plugin-standard": "^2.0.0",
+    "eslint": "^3.7.1",
+    "eslint-plugin-promise": "^3.0.0",
+    "eslint-plugin-standard": "^2.0.1",
     "fast-html-parser": "^1.0.1",
     "istanbul": "^0.4.4",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.0.2",
+    "mocha": "^3.1.0",
     "nopt": "^3.0.6",
     "postcss-cli": "^2.6.0",
     "uglifyjs": "^2.4.10"
@@ -76,6 +76,7 @@
   "license": "MIT",
   "files": [
     "src",
-    "dist"
+    "dist",
+    "typescript"
   ]
 }

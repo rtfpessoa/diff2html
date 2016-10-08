@@ -7,7 +7,16 @@ dependencies:
     - ~/.npm
   override:
     - git clean -dfx
-    - nvm use 0.12 && nvm alias default 0.12
+test:
+  override:
+    - git clean -dfx
+    - nvm use 6 && nvm alias default 6
+    - npm install
+    - npm run style
+    - npm run test
+    - npm run codacy
+    - git clean -dfx
+    - nvm use 5 && nvm alias default 5
     - npm install
     - npm run test
     - git clean -dfx
@@ -15,14 +24,6 @@ dependencies:
     - npm install
     - npm run test
     - git clean -dfx
-    - nvm use 5 && nvm alias default 5
+    - nvm use 0.12 && nvm alias default 0.12
     - npm install
     - npm run test
-    - git clean -dfx
-    - nvm use 6 && nvm alias default 6
-    - npm install
-test:
-  override:
-    - npm run style
-    - npm run test
-    - npm run codacy
