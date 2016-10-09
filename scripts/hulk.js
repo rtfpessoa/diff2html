@@ -173,11 +173,11 @@ function namespace(name) {
 // write a template foreach file that matches template extension
 templates = extractFiles(options.argv.remain)
   .map(function(file) {
-    var openedFile = fs.readFileSync(file, 'utf-8');
+    var openedFile = fs.readFileSync(file, 'utf-8').trim();
     var name;
     if (!openedFile) return;
     name = namespace(path.basename(file).replace(/\..*$/, ''));
-    openedFile = removeByteOrderMark(openedFile.trim());
+    openedFile = removeByteOrderMark(openedFile);
     openedFile = wrap(file, name, openedFile);
     if (!options.outputdir) return openedFile;
     fs.writeFileSync(path.join(options.outputdir, name + '.js')
