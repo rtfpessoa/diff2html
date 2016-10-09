@@ -1,0 +1,51 @@
+        <h1>Diff Prettifier <a href="#help">?</a></h1>
+        <p>GitHub, Bitbucket and GitLab commit and pull request compatible</p>
+        <p>Just paste the GitHub, Bitbucket or GitLab commit, pull request or merge request url
+          or any other git or unified compatible diff and we will render a pretty html representation of it
+          with code syntax highlight and line similarity matching for better code reviews.
+        </p>
+        <br>
+        <div class="diff-url-wrapper">
+          <a id="url-btn" class="diff-url-btn btn btn-sm" href="#">Load</a>
+          <input id="url" class="diff-url-input" type="text" name="url" placeholder="URL"/>
+        </div>
+        <br>
+        <h2>Line by Line</h2>
+
+        <div id="line-by-line" style="margin: 0 auto;">
+        </div>
+        <br>
+        <h3 id="help">Help:</h3>
+        <ul>
+          <li>
+            <b>Why should I use this instead of GitHub, Bitbucket or GitLab?</b>
+            <p>Code Syntax Highlight</p>
+            <p>Line similarity match (similar lines are together)</p>
+            <p>Line by Line and Side by Side (SOON) diffs</p>
+            <p>Supports any git and unified compatible diffs</p>
+            <p>Easy code selection</p>
+          </li>
+          <li>
+            <b>What urls are supported?</b>
+            <p>Any GitHub, Bitbucket or GitLab Commit, Pull Request or Merge Request urls.</p>
+            <p>Any Git or Unified Raw Diff or Patch urls.</p>
+          </li>
+          <li>
+            <b>Can I send a custom url for a friend, colleague or co-worker?</b>
+            <p>Just add a url parameter called diff to current url using as value your Commit, Pull Request, Merge Request, Diff or Patch url.</p>
+            <p>ex: <a href="url.html?diff=https://github.com/rtfpessoa/diff2html/pull/106">https://diff2html.xyz/url?diff=https://github.com/rtfpessoa/diff2html/pull/106</a></p>
+            <p>You can also use an hashtag (# or #! or #!/) in the end of the url.
+              This will be overridden if you click any href id and for that reason not advised.</p>
+          </li>
+          <li>
+            <b>Why can't I paste a diff?</b>
+            <p><a href="https://diffy.org/">diffy.org</a> is an amazing tool created by <a href="https://github.com/pbu88">pbu88</a>
+              to share your diffs and uses diff2html under the hood.</p>
+            <p>Also, diff2html cli can directly publish diffs to <a href="https://diffy.org/">diffy.org</a></p>
+          </li>
+        </ul>
+        <br>
+        <h3>Thank you</h3>
+        <p>I want to thank <a href="https://github.com/kevinsimper">kevinsimper</a> for this great idea,
+          providing better diff support for existing online services.
+        </p>

@@ -536,3 +536,21 @@ a:hover, a:focus {
   -ms-user-select: none;
   user-select: none;
 }
+
+.diff-url-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.diff-url-input {
+  display: inline-block;
+  margin-left: 10px;
+  flex-grow: 1;
+  height: 31px;
+}
+
+.diff-url-btn {
+  display: inline-block;
+  float: left;
+  width: 48px;
+}
