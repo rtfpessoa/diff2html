@@ -2,25 +2,28 @@ var fs = require('fs');
 
 var hogan = require('hogan.js');
 
-var template = hogan.compile(readFile('website/templates/template.mustache'));
+var root = 'website/templates';
+var pagesRoot = root + '/pages';
 
-var index = readFile('website/templates/index.partial.html');
-var indexScripts = readFile('website/templates/index-scripts.partial.html');
+var websitePages = fs.readdirSync(root + '/pages');
 
-var demo = readFile('website/templates/demo.partial.html');
-var demoAssets = readFile('website/templates/demo-assets.partial.html');
-var demoScripts = readFile('website/templates/demo-scripts.partial.html');
+var template = hogan.compile(readFile(root + '/template.mustache'));
 
-var indexHtml = template.render({assets: '', scripts: indexScripts, content: index});
-
-writeFile('docs/index.html', indexHtml);
-
-var demoHtml = template.render({assets: demoAssets, scripts: demoScripts, content: demo});
-
-writeFile('docs/demo.html', demoHtml);
+websitePages.map(function(page) {
+  var pagePartial = readFile(pagesRoot + '/' + page + '/' + page + '.partial.html');
+  var pageAssets = readFile(pagesRoot + '/' + page + '/' + page + '-assets.partial.html');
+  var pageScripts = readFile(pagesRoot + '/' + page + '/' + page + '-scripts.partial.html');
+  var pageHtml = template.render({assets: pageAssets, scripts: pageScripts, content: pagePartial});
+  writeFile('docs/' + page + '.html', pageHtml);
+});
 
 function readFile(filePath) {
-  return fs.readFileSync(filePath, 'utf8');
+  try {
+    return fs.readFileSync(filePath, 'utf8');
+  } catch (_ignore) {
+  }
+
+  return '';
 }
 
 function writeFile(filePath, content) {
