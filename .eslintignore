@@ -3,7 +3,7 @@ coverage/**
 dist/**
 
 # Ignore symlink to build folder
-docs/assets/**
+docs/**
 
 # Ignore HTML templates generated code
 src/**
