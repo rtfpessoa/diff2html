@@ -132,7 +132,6 @@
   margin-left: -40%;
   height: 1px;
   background: -webkit-radial-gradient(ellipse at center, rgba(0, 0, 0, 0.2) 0, rgba(255, 255, 255, 0) 75%);
-  background: -webkit-radial-gradient(center ellipse, rgba(0, 0, 0, 0.2) 0, rgba(255, 255, 255, 0) 75%);
   background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.2) 0, rgba(255, 255, 255, 0) 75%)
 }
 
@@ -539,8 +538,6 @@ a:hover, a:focus {
 }
 
 .diff-url-wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   width: 100%;
 }
@@ -548,9 +545,7 @@ a:hover, a:focus {
 .diff-url-input {
   display: inline-block;
   margin-right: 10px;
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  flex-grow: 1;
   height: 31px;
 }
 
@@ -565,15 +560,11 @@ a:hover, a:focus {
 }
 
 .diff-url-options-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
 
 .diff-url-options-container label {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  flex: 1;
 }
 
 .diff-url-options-container label select,
