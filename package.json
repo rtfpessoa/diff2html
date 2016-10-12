@@ -37,7 +37,7 @@
   "preferGlobal": true,
   "scripts": {
     "release": "./scripts/release.sh",
-    "release-website": "node ./scripts/release-website.js",
+    "release-website": "./scripts/release-website.sh",
     "release-bower": "./scripts/update-bower-version.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
     "style": "eslint .",
@@ -55,7 +55,8 @@
   },
   "dependencies": {
     "diff": "^3.0.0",
-    "hogan.js": "^3.0.2"
+    "hogan.js": "^3.0.2",
+    "whatwg-fetch": "0.11.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.0",
