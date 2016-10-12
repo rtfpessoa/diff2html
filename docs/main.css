@@ -544,13 +544,30 @@ a:hover, a:focus {
 
 .diff-url-input {
   display: inline-block;
-  margin-left: 10px;
+  margin-right: 10px;
   flex-grow: 1;
   height: 31px;
 }
 
 .diff-url-btn {
   display: inline-block;
-  float: left;
+  float: right;
   width: 48px;
+}
+
+.options-label-value {
+  font-weight: normal;
+}
+
+.diff-url-options-container {
+  display: flex;
+}
+
+.diff-url-options-container label {
+  flex: 1;
+}
+
+.diff-url-options-container label select,
+.diff-url-options-container label input {
+  display: block;
 }

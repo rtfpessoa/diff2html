@@ -68,6 +68,10 @@ $(document).ready(function () {
       e.preventDefault();
       fastDraw();
     });
+
+    $url.on("paste", function(e) {
+      fastDraw();
+    });
   }
 
   function prepareUrl(url) {
@@ -154,7 +158,8 @@ $(document).ready(function () {
           showFiles: showFiles,
           matching: matching,
           matchWordsThreshold: wordThreshold,
-          matchingMaxComparisons: matchingMaxComparisons
+          matchingMaxComparisons: matchingMaxComparisons,
+          synchronisedScroll: true
         });
         diff2htmlUi.fileListCloseable(container, false);
         diff2htmlUi.highlightCode(container);
