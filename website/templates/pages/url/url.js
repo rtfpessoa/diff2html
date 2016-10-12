@@ -1,3 +1,5 @@
+/* global Diff2HtmlUI */
+
 /*
  * Example URLs:
  *
@@ -14,20 +16,20 @@
  * https://bitbucket.org/atlassian/amps/pull-requests/236
  */
 
-$(document).ready(function () {
+$(document).ready(function() {
   // Improves browser compatibility
   require('whatwg-fetch');
 
   var $container = $('.container');
-  var $url = $("#url");
-  var $outputFormat = $("#diff-url-options-output-format");
-  var $showFiles = $("#diff-url-options-show-files");
-  var $matching = $("#diff-url-options-matching");
-  var $wordThreshold = $("#diff-url-options-match-words-threshold");
-  var $matchingMaxComparisons = $("#diff-url-options-matching-max-comparisons");
+  var $url = $('#url');
+  var $outputFormat = $('#diff-url-options-output-format');
+  var $showFiles = $('#diff-url-options-show-files');
+  var $matching = $('#diff-url-options-matching');
+  var $wordThreshold = $('#diff-url-options-match-words-threshold');
+  var $matchingMaxComparisons = $('#diff-url-options-matching-max-comparisons');
 
   var hash = window.location.hash
-    .replace(/^(#!?\/?)/, "");
+    .replace(/^(#!?\/?)/, '');
 
   var search = window.location.search;
 
@@ -37,9 +39,9 @@ $(document).ready(function () {
   } else if (search) {
     try {
       var url = search
-        .split("?")[1]
-        .split("diff=")[1]
-        .split("&")[0];
+        .split('?')[1]
+        .split('diff=')[1]
+        .split('&')[0];
       $url.val(url);
       draw(prepareUrl(url));
     } catch (_ignore) {
@@ -53,7 +55,7 @@ $(document).ready(function () {
     .add($matching)
     .add($wordThreshold)
     .add($matchingMaxComparisons)
-    .change(function () {
+    .change(function() {
       fastDraw();
     });
 
@@ -64,12 +66,12 @@ $(document).ready(function () {
   }
 
   function bind() {
-    $("#url-btn").click(function (e) {
+    $('#url-btn').click(function(e) {
       e.preventDefault();
       fastDraw();
     });
 
-    $url.on("paste", function(e) {
+    $url.on('paste', function(e) {
       fastDraw();
     });
   }
@@ -88,43 +90,41 @@ $(document).ready(function () {
     var bitbucketPrUrl = /^https?:\/\/(?:www\.)?bitbucket\.org\/(.*?)\/(.*?)\/pull-requests\/(.*?)(?:\/.*)?$/;
 
     function genericUrlGen(provider, userName, projectName, type, value) {
-      return "https://" + provider + ".com/" + userName + "/" + projectName + "/" + type + "/" + value + ".diff";
+      return 'https://' + provider + '.com/' + userName + '/' + projectName + '/' + type + '/' + value + '.diff';
     }
 
     function bitbucketUrlGen(userName, projectName, type, value) {
-      var baseUrl = "https://bitbucket.org/api/2.0/repositories/";
+      var baseUrl = 'https://bitbucket.org/api/2.0/repositories/';
 
-      if (type == "pullrequests") {
-        return baseUrl + userName + "/" + projectName + "/pullrequests/" + value + "/diff";
+      if (type === 'pullrequests') {
+        return baseUrl + userName + '/' + projectName + '/pullrequests/' + value + '/diff';
       }
 
-      return baseUrl + userName + "/" + projectName + "/diff/" + value;
+      return baseUrl + userName + '/' + projectName + '/diff/' + value;
     }
 
     var values;
     var finalUrl;
     if ((values = githubPath.exec(url))) {
-      finalUrl = genericUrlGen("github", values[1], values[2], "commit", values[3]);
+      finalUrl = genericUrlGen('github', values[1], values[2], 'commit', values[3]);
     } else if ((values = githubCommitUrl.exec(url))) {
-      finalUrl = genericUrlGen("github", values[1], values[2], "commit", values[3]);
+      finalUrl = genericUrlGen('github', values[1], values[2], 'commit', values[3]);
     } else if ((values = githubPrUrl.exec(url))) {
-      finalUrl = genericUrlGen("github", values[1], values[2], "pull", values[3]);
-
+      finalUrl = genericUrlGen('github', values[1], values[2], 'pull', values[3]);
     } else if ((values = gitlabPath.exec(url))) {
-      finalUrl = genericUrlGen("gitlab", values[1], values[2], "commit", values[3]);
+      finalUrl = genericUrlGen('gitlab', values[1], values[2], 'commit', values[3]);
     } else if ((values = gitlabCommitUrl.exec(url))) {
-      finalUrl = genericUrlGen("gitlab", values[1], values[2], "commit", values[3]);
+      finalUrl = genericUrlGen('gitlab', values[1], values[2], 'commit', values[3]);
     } else if ((values = gitlabPrUrl.exec(url))) {
-      finalUrl = genericUrlGen("gitlab", values[1], values[2], "merge_requests", values[3]);
-
+      finalUrl = genericUrlGen('gitlab', values[1], values[2], 'merge_requests', values[3]);
     } else if ((values = bitbucketPath.exec(url))) {
-      finalUrl = bitbucketUrlGen(values[1], values[2], "commit", values[3]);
+      finalUrl = bitbucketUrlGen(values[1], values[2], 'commit', values[3]);
     } else if ((values = bitbucketCommitUrl.exec(url))) {
-      finalUrl = bitbucketUrlGen(values[1], values[2], "commit", values[3]);
+      finalUrl = bitbucketUrlGen(values[1], values[2], 'commit', values[3]);
     } else if ((values = bitbucketPrUrl.exec(url))) {
-      finalUrl = bitbucketUrlGen(values[1], values[2], "pullrequests", values[3]);
+      finalUrl = bitbucketUrlGen(values[1], values[2], 'pullrequests', values[3]);
     } else {
-      console.info("Could not parse url, using the provided url.");
+      console.info('Could not parse url, using the provided url.');
       finalUrl = url;
     }
 
@@ -133,24 +133,24 @@ $(document).ready(function () {
 
   function draw(url) {
     var outputFormat = $outputFormat.val();
-    var showFiles = $showFiles.is(":checked");
+    var showFiles = $showFiles.is(':checked');
     var matching = $matching.val();
     var wordThreshold = $wordThreshold.val();
     var matchingMaxComparisons = $matchingMaxComparisons.val();
 
     var fullUrl = 'https://crossorigin.me/' + url;
     fetch(fullUrl)
-      .then(function (res) {
-        return res.text()
+      .then(function(res) {
+        return res.text();
       })
-      .then(function (data) {
+      .then(function(data) {
         var container = '#url-diff-container';
         var diff2htmlUi = new Diff2HtmlUI({diff: data});
 
-        if (outputFormat == 'side-by-side') {
-          $container.css({"width": "1400px"});
+        if (outputFormat === 'side-by-side') {
+          $container.css({'width': '1400px'});
         } else {
-          $container.css({"width": ""});
+          $container.css({'width': ''});
         }
 
         diff2htmlUi.draw(container, {
