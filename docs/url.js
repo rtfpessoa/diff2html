@@ -399,15 +399,12 @@
 /*
  * Example URLs:
  *
- * github/rtfpessoa/diff2html/7d02e67f3b3386ac5d804f974d025cd7a1165839
  * https://github.com/rtfpessoa/diff2html/commit/7d02e67f3b3386ac5d804f974d025cd7a1165839
  * https://github.com/rtfpessoa/diff2html/pull/106
  *
- * gitlab/gitlab-org/gitlab-ce/4e963fed42ad518caa7353d361a38a1250c99c41
  * https://gitlab.com/gitlab-org/gitlab-ce/commit/4e963fed42ad518caa7353d361a38a1250c99c41
  * https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/6763
  *
- * bitbucket/atlassian/amps/52c38116f12475f75af4a147b7a7685478b83eca
  * https://bitbucket.org/atlassian/amps/commits/52c38116f12475f75af4a147b7a7685478b83eca
  * https://bitbucket.org/atlassian/amps/pull-requests/236
  */
@@ -431,7 +428,7 @@ $(document).ready(function() {
 
   if (hash) {
     $url.val(hash);
-    draw(prepareUrl(hash));
+    smartDraw(hash);
   } else if (search) {
     try {
       var url = search
@@ -439,12 +436,12 @@ $(document).ready(function() {
         .split('diff=')[1]
         .split('&')[0];
       $url.val(url);
-      draw(prepareUrl(url));
+      smartDraw(url);
     } catch (_ignore) {
     }
   }
 
-  bind(prepareUrl);
+  bind();
 
   $outputFormat
     .add($showFiles)
@@ -452,90 +449,102 @@ $(document).ready(function() {
     .add($wordThreshold)
     .add($matchingMaxComparisons)
     .change(function() {
-      fastDraw();
+      smartDraw();
     });
 
-  function fastDraw() {
-    var url = $url.val();
-    var preparedUrl = prepareUrl(url);
-    draw(preparedUrl);
+  function smartDraw(urlOpt) {
+    var url = urlOpt | $url.val();
+    var req = prepareUrl(url);
+    draw(req);
+  }
+
+  function updateHash(url) {
+    window.location.hash = '#!' + url;
   }
 
   function bind() {
     $('#url-btn').click(function(e) {
       e.preventDefault();
-      fastDraw();
+      var url = $url.val();
+      smartDraw(url);
+      updateHash(url);
     });
 
     $url.on('paste', function(e) {
-      fastDraw();
+      var url = e.originalEvent.clipboardData.getData('Text');
+      smartDraw(url);
+      updateHash(url);
     });
   }
 
   function prepareUrl(url) {
-    var githubPath = /^github\/(.*?)\/(.*?)\/(.*?)$/;
+    var fetchUrl;
+    var headers = new Headers();
+
     var githubCommitUrl = /^https?:\/\/(?:www\.)?github\.com\/(.*?)\/(.*?)\/commit\/(.*?)(?:\.diff)?(?:\.patch)?(?:\/.*)?$/;
     var githubPrUrl = /^https?:\/\/(?:www\.)?github\.com\/(.*?)\/(.*?)\/pull\/(.*?)(?:\.diff)?(?:\.patch)?(?:\/.*)?$/;
 
-    var gitlabPath = /^gitlab\/(.*?)\/(.*?)\/(.*?)$/;
     var gitlabCommitUrl = /^https?:\/\/(?:www\.)?gitlab\.com\/(.*?)\/(.*?)\/commit\/(.*?)(?:\.diff)?(?:\.patch)?(?:\/.*)?$/;
     var gitlabPrUrl = /^https?:\/\/(?:www\.)?gitlab\.com\/(.*?)\/(.*?)\/merge_requests\/(.*?)(?:\.diff)?(?:\.patch)?(?:\/.*)?$/;
 
-    var bitbucketPath = /^bitbucket\/(.*?)\/(.*?)\/(.*?)$/;
     var bitbucketCommitUrl = /^https?:\/\/(?:www\.)?bitbucket\.org\/(.*?)\/(.*?)\/commits\/(.*?)(?:\/raw)?(?:\/.*)?$/;
     var bitbucketPrUrl = /^https?:\/\/(?:www\.)?bitbucket\.org\/(.*?)\/(.*?)\/pull-requests\/(.*?)(?:\/.*)?$/;
 
-    function genericUrlGen(provider, userName, projectName, type, value) {
-      return 'https://' + provider + '.com/' + userName + '/' + projectName + '/' + type + '/' + value + '.diff';
+
+    function gitLabUrlGen(userName, projectName, type, value) {
+      return 'https://crossorigin.me/https://gitlab.com/' + userName + '/' + projectName + '/' + type + '/' + value + '.diff';
+    }
+
+    function gitHubUrlGen(userName, projectName, type, value) {
+      headers.append('Accept', 'application/vnd.github.v3.diff');
+      return 'https://api.github.com/repos/' + userName + '/' + projectName + '/' + type + '/' + value;
     }
 
     function bitbucketUrlGen(userName, projectName, type, value) {
       var baseUrl = 'https://bitbucket.org/api/2.0/repositories/';
-
       if (type === 'pullrequests') {
         return baseUrl + userName + '/' + projectName + '/pullrequests/' + value + '/diff';
       }
-
       return baseUrl + userName + '/' + projectName + '/diff/' + value;
     }
 
     var values;
-    var finalUrl;
-    if ((values = githubPath.exec(url))) {
-      finalUrl = genericUrlGen('github', values[1], values[2], 'commit', values[3]);
-    } else if ((values = githubCommitUrl.exec(url))) {
-      finalUrl = genericUrlGen('github', values[1], values[2], 'commit', values[3]);
+    if ((values = githubCommitUrl.exec(url))) {
+      fetchUrl = gitHubUrlGen(values[1], values[2], 'commits', values[3]);
     } else if ((values = githubPrUrl.exec(url))) {
-      finalUrl = genericUrlGen('github', values[1], values[2], 'pull', values[3]);
-    } else if ((values = gitlabPath.exec(url))) {
-      finalUrl = genericUrlGen('gitlab', values[1], values[2], 'commit', values[3]);
+      fetchUrl = gitHubUrlGen(values[1], values[2], 'pulls', values[3]);
     } else if ((values = gitlabCommitUrl.exec(url))) {
-      finalUrl = genericUrlGen('gitlab', values[1], values[2], 'commit', values[3]);
+      fetchUrl = gitLabUrlGen(values[1], values[2], 'commit', values[3]);
     } else if ((values = gitlabPrUrl.exec(url))) {
-      finalUrl = genericUrlGen('gitlab', values[1], values[2], 'merge_requests', values[3]);
-    } else if ((values = bitbucketPath.exec(url))) {
-      finalUrl = bitbucketUrlGen(values[1], values[2], 'commit', values[3]);
+      fetchUrl = gitLabUrlGen(values[1], values[2], 'merge_requests', values[3]);
     } else if ((values = bitbucketCommitUrl.exec(url))) {
-      finalUrl = bitbucketUrlGen(values[1], values[2], 'commit', values[3]);
+      fetchUrl = bitbucketUrlGen(values[1], values[2], 'commit', values[3]);
     } else if ((values = bitbucketPrUrl.exec(url))) {
-      finalUrl = bitbucketUrlGen(values[1], values[2], 'pullrequests', values[3]);
+      fetchUrl = bitbucketUrlGen(values[1], values[2], 'pullrequests', values[3]);
     } else {
       console.info('Could not parse url, using the provided url.');
-      finalUrl = url;
+      fetchUrl = url;
     }
 
-    return finalUrl;
+    return {
+      url: fetchUrl,
+      headers: headers
+    };
   }
 
-  function draw(url) {
+  function draw(req) {
     var outputFormat = $outputFormat.val();
     var showFiles = $showFiles.is(':checked');
     var matching = $matching.val();
     var wordThreshold = $wordThreshold.val();
     var matchingMaxComparisons = $matchingMaxComparisons.val();
 
-    var fullUrl = 'https://crossorigin.me/' + url;
-    fetch(fullUrl)
+    fetch(req.url, {
+      method: 'GET',
+      headers: req.headers,
+      mode: 'cors',
+      cache: 'default'
+    })
       .then(function(res) {
         return res.text();
       })
