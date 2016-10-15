@@ -135,10 +135,6 @@
   background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.2) 0, rgba(255, 255, 255, 0) 75%)
 }
 
-.container-overflow-wrap {
-  overflow: hidden
-}
-
 .hero {
   position: relative;
   text-align: center;
@@ -537,6 +533,10 @@ a:hover, a:focus {
   user-select: none;
 }
 
+.url-diff-container {
+  width: 980px;
+}
+
 .diff-url-wrapper {
   display: flex;
   width: 100%;
@@ -559,15 +559,13 @@ a:hover, a:focus {
   font-weight: normal;
 }
 
-.diff-url-options-container {
-  display: flex;
-}
-
-.diff-url-options-container label {
-  flex: 1;
-}
-
 .diff-url-options-container label select,
 .diff-url-options-container label input {
   display: block;
+}
+
+/* 15 columns */
+
+.col-md- *.col-md-15 {
+  width: 20%;
 }

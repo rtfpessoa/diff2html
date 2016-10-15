@@ -11,33 +11,44 @@
           with code syntax highlight and line similarity matching for better code reviews.
         </p>
         <h2>Options:</h2>
-        <div class="diff-url-options-container">
-          <label title="Output format of the HTML, either line by line or side by side">Output Format
-            <select class="options-label-value" id="diff-url-options-output-format" name="outputFormat">
-              <option value="line-by-line" selected>Line by Line</option>
-              <option value="side-by-side">Side by Side</option>
-            </select>
-          </label>
-          <label title="Show the file list summary before the diff">File Summary
-            <input class="options-label-value" id="diff-url-options-show-files" type="checkbox" name="showFiles" checked/>
-          </label>
-          <label title="Level of matching for the comparison algorithm">Matching Type
-            <select class="options-label-value" id="diff-url-options-matching" name="matching">
-              <option value="lines">Lines</option>
-              <option value="words" selected>Words</option>
-              <option value="none">None</option>
-            </select>
-          </label>
-          <label title="Similarity threshold for the matching algorithm">Words Threshold
-            <input class="options-label-value" id="diff-url-options-match-words-threshold" type="number"
-                   name="matchWordsThreshold" value="0.25" step="0.05"
-                   min="0" max="1"/>
-          </label>
-          <label title="Maximum number of comparison performed by the matching algorithm in a block of changes">Max Comparisons
-            <input class="options-label-value" id="diff-url-options-matching-max-comparisons" type="number"
-                   name="matchingMaxComparisons" value="2500"
-                   step="100" min="0"/>
-          </label>
+        <div class="row">
+          <div class="col-md-2 col-xs-12 col-15">
+            <label title="Output format of the HTML, either line by line or side by side">Output Format
+              <select class="options-label-value" id="diff-url-options-output-format" name="outputFormat">
+                <option value="line-by-line" selected>Line by Line</option>
+                <option value="side-by-side">Side by Side</option>
+              </select>
+            </label>
+          </div>
+          <div class=" col-md-2 col-xs-12 col-15">
+            <label title="Show the file list summary before the diff">File Summary
+              <input class="options-label-value" id="diff-url-options-show-files" type="checkbox" name="showFiles" checked/>
+            </label>
+          </div>
+          <div class=" col-md-2 col-xs-12 col-15">
+            <label title="Level of matching for the comparison algorithm">Matching Type
+              <select class="options-label-value" id="diff-url-options-matching" name="matching">
+                <option value="lines">Lines</option>
+                <option value="words" selected>Words</option>
+                <option value="none">None</option>
+              </select>
+            </label>
+          </div>
+          <div class=" col-md-2 col-xs-12 col-15">
+            <label title="Similarity threshold for the matching algorithm">Words Threshold
+              <input class="options-label-value" id="diff-url-options-match-words-threshold" type="number"
+                     name="matchWordsThreshold" value="0.25" step="0.05"
+                     min="0" max="1"/>
+            </label>
+          </div>
+          <div class=" col-md-2 col-xs-12 col-15">
+            <label title="Maximum number of comparison performed by the matching algorithm in a block of changes">Max
+              Comparisons
+              <input class="options-label-value" id="diff-url-options-matching-max-comparisons" type="number"
+                     name="matchingMaxComparisons" value="2500"
+                     step="100" min="0"/>
+            </label>
+          </div>
         </div>
         <br>
         <div class="diff-url-wrapper">
