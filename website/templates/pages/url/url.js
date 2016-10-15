@@ -132,11 +132,11 @@ $(document).ready(function() {
 
   function draw(req) {
     if (!validateUrl(req.url)) {
-      console.error("Invalid url provided!");
+      console.error('Invalid url provided!');
       return;
     }
 
-    if (!validateUrl(req.originalUrl)) updateUrl(req.originalUrl);
+    if (validateUrl(req.originalUrl)) updateUrl(req.originalUrl);
 
     var outputFormat = $outputFormat.val();
     var showFiles = $showFiles.is(':checked');
@@ -188,5 +188,4 @@ $(document).ready(function() {
       window.location.search = '?diff=' + url;
     }
   }
-
 });
