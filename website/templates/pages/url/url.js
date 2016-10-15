@@ -82,7 +82,6 @@ $(document).ready(function() {
     var bitbucketCommitUrl = /^https?:\/\/(?:www\.)?bitbucket\.org\/(.*?)\/(.*?)\/commits\/(.*?)(?:\/raw)?(?:\/.*)?$/;
     var bitbucketPrUrl = /^https?:\/\/(?:www\.)?bitbucket\.org\/(.*?)\/(.*?)\/pull-requests\/(.*?)(?:\/.*)?$/;
 
-
     function gitLabUrlGen(userName, projectName, type, value) {
       return 'https://crossorigin.me/https://gitlab.com/' + userName + '/' + projectName + '/' + type + '/' + value + '.diff';
     }
