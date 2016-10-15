@@ -17,6 +17,13 @@
   function HoganJsUtils(configuration) {
     this.config = configuration || {};
     extraTemplates = this.config.templates || {};
+
+    var rawTemplates = this.config.rawTemplates || {};
+    for (var templateName in rawTemplates) {
+      if (rawTemplates.hasOwnProperty(templateName)) {
+        if (!extraTemplates[templateName]) extraTemplates[templateName] = this.compile(rawTemplates[templateName]);
+      }
+    }
   }
 
   HoganJsUtils.prototype.render = function(namespace, view, params) {

@@ -36,10 +36,32 @@ describe('HoganJsUtils', function() {
       assert.equal(null, result);
     });
 
-    it('should allow templates to be overridden', function() {
+    it('should allow templates to be overridden with compiled templates', function() {
       var emptyDiffTemplate = HoganJsUtils.compile('<p>{{myName}}</p>');
 
       var config = {templates: {'generic-empty-diff': emptyDiffTemplate}};
+      var hoganUtils = new (require('../src/hoganjs-utils.js').HoganJsUtils)(config);
+      var result = hoganUtils.render('generic', 'empty-diff', {myName: 'Rodrigo Fernandes'});
+      assert.equal('<p>Rodrigo Fernandes</p>', result);
+    });
+
+    it('should allow templates to be overridden with uncompiled templates', function() {
+      var emptyDiffTemplate = '<p>{{myName}}</p>';
+
+      var config = {rawTemplates: {'generic-empty-diff': emptyDiffTemplate}};
+      var hoganUtils = new (require('../src/hoganjs-utils.js').HoganJsUtils)(config);
+      var result = hoganUtils.render('generic', 'empty-diff', {myName: 'Rodrigo Fernandes'});
+      assert.equal('<p>Rodrigo Fernandes</p>', result);
+    });
+
+    it('should allow templates to be overridden giving priority to compiled templates', function() {
+      var emptyDiffTemplate = HoganJsUtils.compile('<p>{{myName}}</p>');
+      var emptyDiffTemplateUncompiled = '<p>Not used!</p>';
+
+      var config = {
+        templates: {'generic-empty-diff': emptyDiffTemplate},
+        rawTemplates: {'generic-empty-diff': emptyDiffTemplateUncompiled}
+      };
       var hoganUtils = new (require('../src/hoganjs-utils.js').HoganJsUtils)(config);
       var result = hoganUtils.render('generic', 'empty-diff', {myName: 'Rodrigo Fernandes'});
       assert.equal('<p>Rodrigo Fernandes</p>', result);
