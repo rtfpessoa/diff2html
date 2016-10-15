@@ -67,7 +67,7 @@ function escapeHTML(s) {
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
-exports.default = /*istanbul ignore end*/Diff;
+exports['default'] = /*istanbul ignore end*/Diff;
 function Diff() {}
 
 Diff.prototype = { /*istanbul ignore start*/
@@ -304,9 +304,9 @@ var /*istanbul ignore start*/_base = require('./base') /*istanbul ignore end*/;
 /*istanbul ignore start*/
 var _base2 = _interopRequireDefault(_base);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-/*istanbul ignore end*/var characterDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/characterDiff = new /*istanbul ignore start*/_base2.default() /*istanbul ignore end*/;
+/*istanbul ignore end*/var characterDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/characterDiff = new /*istanbul ignore start*/_base2['default']() /*istanbul ignore end*/;
 function diffChars(oldStr, newStr, callback) {
   return characterDiff.diff(oldStr, newStr, callback);
 }
@@ -324,9 +324,9 @@ var /*istanbul ignore start*/_base = require('./base') /*istanbul ignore end*/;
 /*istanbul ignore start*/
 var _base2 = _interopRequireDefault(_base);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-/*istanbul ignore end*/var cssDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/cssDiff = new /*istanbul ignore start*/_base2.default() /*istanbul ignore end*/;
+/*istanbul ignore end*/var cssDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/cssDiff = new /*istanbul ignore start*/_base2['default']() /*istanbul ignore end*/;
 cssDiff.tokenize = function (value) {
   return value.split(/([{}:;,]|\s+)/);
 };
@@ -356,13 +356,13 @@ var _base2 = _interopRequireDefault(_base);
 var /*istanbul ignore start*/_line = require('./line') /*istanbul ignore end*/;
 
 /*istanbul ignore start*/
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 /*istanbul ignore end*/
 
 var objectPrototypeToString = Object.prototype.toString;
 
-var jsonDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/jsonDiff = new /*istanbul ignore start*/_base2.default() /*istanbul ignore end*/;
+var jsonDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/jsonDiff = new /*istanbul ignore start*/_base2['default']() /*istanbul ignore end*/;
 // Discriminate between two lines of pretty-printed, serialized JSON where one of them has a
 // dangling comma and the other doesn't. Turns out including the dangling comma yields the nicest output:
 jsonDiff.useLongestToken = true;
@@ -372,7 +372,7 @@ jsonDiff.castInput = function (value) {
   return typeof value === 'string' ? value : JSON.stringify(canonicalize(value), undefined, '  ');
 };
 jsonDiff.equals = function (left, right) {
-  return (/*istanbul ignore start*/_base2.default. /*istanbul ignore end*/prototype.equals(left.replace(/,([\r\n])/g, '$1'), right.replace(/,([\r\n])/g, '$1'))
+  return (/*istanbul ignore start*/_base2['default']. /*istanbul ignore end*/prototype.equals(left.replace(/,([\r\n])/g, '$1'), right.replace(/,([\r\n])/g, '$1'))
   );
 };
 
@@ -455,9 +455,9 @@ var _base2 = _interopRequireDefault(_base);
 var /*istanbul ignore start*/_params = require('../util/params') /*istanbul ignore end*/;
 
 /*istanbul ignore start*/
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-/*istanbul ignore end*/var lineDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/lineDiff = new /*istanbul ignore start*/_base2.default() /*istanbul ignore end*/;
+/*istanbul ignore end*/var lineDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/lineDiff = new /*istanbul ignore start*/_base2['default']() /*istanbul ignore end*/;
 lineDiff.tokenize = function (value) {
   var retLines = [],
       linesAndNewlines = value.split(/(\n|\r\n)/);
@@ -505,9 +505,9 @@ var /*istanbul ignore start*/_base = require('./base') /*istanbul ignore end*/;
 /*istanbul ignore start*/
 var _base2 = _interopRequireDefault(_base);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-/*istanbul ignore end*/var sentenceDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/sentenceDiff = new /*istanbul ignore start*/_base2.default() /*istanbul ignore end*/;
+/*istanbul ignore end*/var sentenceDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/sentenceDiff = new /*istanbul ignore start*/_base2['default']() /*istanbul ignore end*/;
 sentenceDiff.tokenize = function (value) {
   return value.split(/(\S.+?[.!?])(?=\s+|$)/);
 };
@@ -534,7 +534,7 @@ var _base2 = _interopRequireDefault(_base);
 var /*istanbul ignore start*/_params = require('../util/params') /*istanbul ignore end*/;
 
 /*istanbul ignore start*/
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 /*istanbul ignore end*/
 
@@ -560,7 +560,7 @@ var extendedWordChars = /^[A-Za-z\xC0-\u02C6\u02C8-\u02D7\u02DE-\u02FF\u1E00-\u1
 
 var reWhitespace = /\S/;
 
-var wordDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/wordDiff = new /*istanbul ignore start*/_base2.default() /*istanbul ignore end*/;
+var wordDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/wordDiff = new /*istanbul ignore start*/_base2['default']() /*istanbul ignore end*/;
 wordDiff.equals = function (left, right) {
   return left === right || this.options.ignoreWhitespace && !reWhitespace.test(left) && !reWhitespace.test(right);
 };
@@ -624,7 +624,7 @@ var /*istanbul ignore start*/_dmp = require('./convert/dmp') /*istanbul ignore e
 var /*istanbul ignore start*/_xml = require('./convert/xml') /*istanbul ignore end*/;
 
 /*istanbul ignore start*/
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 /* See LICENSE file for terms of use */
 
@@ -642,7 +642,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * "An O(ND) Difference Algorithm and its Variations" (Myers, 1986).
  * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.4.6927
  */
-exports. /*istanbul ignore end*/Diff = _base2.default;
+exports. /*istanbul ignore end*/Diff = _base2['default'];
 /*istanbul ignore start*/exports. /*istanbul ignore end*/diffChars = _character.diffChars;
 /*istanbul ignore start*/exports. /*istanbul ignore end*/diffWords = _word.diffWords;
 /*istanbul ignore start*/exports. /*istanbul ignore end*/diffWordsWithSpace = _word.diffWordsWithSpace;
@@ -676,7 +676,7 @@ var /*istanbul ignore start*/_distanceIterator = require('../util/distance-itera
 /*istanbul ignore start*/
 var _distanceIterator2 = _interopRequireDefault(_distanceIterator);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 /*istanbul ignore end*/function applyPatch(source, uniDiff) {
   /*istanbul ignore start*/var /*istanbul ignore end*/options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
@@ -739,7 +739,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         localOffset = 0,
         toPos = offset + hunk.oldStart - 1;
 
-    var iterator = /*istanbul ignore start*/(0, _distanceIterator2.default) /*istanbul ignore end*/(toPos, minLine, maxLine);
+    var iterator = /*istanbul ignore start*/(0, _distanceIterator2['default']) /*istanbul ignore end*/(toPos, minLine, maxLine);
 
     for (; localOffset !== undefined; localOffset = iterator()) {
       if (hunkFits(hunk, toPos + localOffset)) {
@@ -1077,6 +1077,11 @@ function parsePatch(uniDiff) {
     var addCount = 0,
         removeCount = 0;
     for (; i < diffstr.length; i++) {
+      // Lines starting with '---' could be mistaken for the "remove line" operation
+      // But they could be the header for the next file. Therefore prune such cases out.
+      if (diffstr[i].indexOf('--- ') === 0 && i + 2 < diffstr.length && diffstr[i + 1].indexOf('+++ ') === 0 && diffstr[i + 2].indexOf('@@') === 0) {
+        break;
+      }
       var operation = diffstr[i][0];
 
       if (operation === '+' || operation === '-' || operation === ' ' || operation === '\\') {
@@ -1129,7 +1134,7 @@ function parsePatch(uniDiff) {
 
 exports.__esModule = true;
 
-exports.default = /*istanbul ignore end*/function (start, minLine, maxLine) {
+exports["default"] = /*istanbul ignore end*/function (start, minLine, maxLine) {
   var wantForward = true,
       backwardExhausted = false,
       forwardExhausted = false,
@@ -2224,25 +2229,40 @@ var process = module.exports = {};
 var cachedSetTimeout;
 var cachedClearTimeout;
 
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
 (function () {
     try {
-        cachedSetTimeout = setTimeout;
-    } catch (e) {
-        cachedSetTimeout = function () {
-            throw new Error('setTimeout is not defined');
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
         }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
     }
     try {
-        cachedClearTimeout = clearTimeout;
-    } catch (e) {
-        cachedClearTimeout = function () {
-            throw new Error('clearTimeout is not defined');
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
         }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
     }
 } ())
 function runTimeout(fun) {
     if (cachedSetTimeout === setTimeout) {
         //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
         return setTimeout(fun, 0);
     }
     try {
@@ -2263,6 +2283,11 @@ function runTimeout(fun) {
 function runClearTimeout(marker) {
     if (cachedClearTimeout === clearTimeout) {
         //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
         return clearTimeout(marker);
     }
     try {
@@ -2804,7 +2829,6 @@ process.umask = function() { return 0; };
 
 (function() {
   var diffParser = require('./diff-parser.js').DiffParser;
-  var fileLister = require('./file-list-printer.js').FileListPrinter;
   var htmlPrinter = require('./html-printer.js').HtmlPrinter;
 
   function Diff2Html() {
@@ -2840,7 +2864,7 @@ process.umask = function() { return 0; };
 
     var fileList = '';
     if (configOrEmpty.showFiles === true) {
-      fileList = fileLister.generateFileList(diffJson, configOrEmpty);
+      fileList = htmlPrinter.generateFileListSummary(diffJson, configOrEmpty);
     }
 
     var diffOutput = '';
@@ -2905,7 +2929,7 @@ process.umask = function() { return 0; };
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./diff-parser.js":22,"./file-list-printer.js":24,"./html-printer.js":26}],24:[function(require,module,exports){
+},{"./diff-parser.js":22,"./html-printer.js":26}],24:[function(require,module,exports){
 /*
  *
  * FileListPrinter (file-list-printer.js)
@@ -2916,11 +2940,16 @@ process.umask = function() { return 0; };
 (function() {
   var printerUtils = require('./printer-utils.js').PrinterUtils;
 
-  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
+  var hoganUtils;
+
   var baseTemplatesPath = 'file-summary';
   var iconsBaseTemplatesPath = 'icon';
 
-  function FileListPrinter() {
+  function FileListPrinter(config) {
+    this.config = config;
+
+    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
+    hoganUtils = new HoganJsUtils(config);
   }
 
   FileListPrinter.prototype.generateFileList = function(diffFiles) {
@@ -2946,7 +2975,7 @@ process.umask = function() { return 0; };
     });
   };
 
-  module.exports.FileListPrinter = new FileListPrinter();
+  module.exports.FileListPrinter = FileListPrinter;
 })();
 
 },{"./hoganjs-utils.js":25,"./printer-utils.js":28}],25:[function(require,module,exports){
@@ -2961,18 +2990,26 @@ process.umask = function() { return 0; };
 (function() {
   var fs = require('fs');
   var path = require('path');
-
   var hogan = require('hogan.js');
 
   var hoganTemplates = require('./templates/diff2html-templates.js');
 
-  var templatesPath = path.resolve(__dirname, 'templates');
+  var extraTemplates;
 
-  function HoganJsUtils() {
+  function HoganJsUtils(configuration) {
+    this.config = configuration || {};
+    extraTemplates = this.config.templates || {};
+
+    var rawTemplates = this.config.rawTemplates || {};
+    for (var templateName in rawTemplates) {
+      if (rawTemplates.hasOwnProperty(templateName)) {
+        if (!extraTemplates[templateName]) extraTemplates[templateName] = this.compile(rawTemplates[templateName]);
+      }
+    }
   }
 
-  HoganJsUtils.prototype.render = function(namespace, view, params, configuration) {
-    var template = this.template(namespace, view, configuration);
+  HoganJsUtils.prototype.render = function(namespace, view, params) {
+    var template = this.template(namespace, view);
     if (template) {
       return template.render(params);
     }
@@ -2980,17 +3017,16 @@ process.umask = function() { return 0; };
     return null;
   };
 
-  HoganJsUtils.prototype.template = function(namespace, view, configuration) {
-    var config = configuration || {};
+  HoganJsUtils.prototype.template = function(namespace, view) {
     var templateKey = this._templateKey(namespace, view);
 
-    return this._getTemplate(templateKey, config);
+    return this._getTemplate(templateKey);
   };
 
-  HoganJsUtils.prototype._getTemplate = function(templateKey, config) {
+  HoganJsUtils.prototype._getTemplate = function(templateKey) {
     var template;
 
-    if (!config.noCache) {
+    if (!this.config.noCache) {
       template = this._readFromCache(templateKey);
     }
 
@@ -3006,6 +3042,7 @@ process.umask = function() { return 0; };
 
     try {
       if (fs.readFileSync) {
+        var templatesPath = path.resolve(__dirname, 'templates');
         var templatePath = path.join(templatesPath, templateKey);
         var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
         template = hogan.compile(templateContent);
@@ -3019,14 +3056,18 @@ process.umask = function() { return 0; };
   };
 
   HoganJsUtils.prototype._readFromCache = function(templateKey) {
-    return hoganTemplates[templateKey];
+    return extraTemplates[templateKey] || hoganTemplates[templateKey];
   };
 
   HoganJsUtils.prototype._templateKey = function(namespace, view) {
     return namespace + '-' + view;
   };
 
-  module.exports.HoganJsUtils = new HoganJsUtils();
+  HoganJsUtils.prototype.compile = function(templateStr) {
+    return hogan.compile(templateStr);
+  };
+
+  module.exports.HoganJsUtils = HoganJsUtils;
 })();
 
 }).call(this,"/src")
@@ -3041,6 +3082,7 @@ process.umask = function() { return 0; };
 (function() {
   var LineByLinePrinter = require('./line-by-line-printer.js').LineByLinePrinter;
   var SideBySidePrinter = require('./side-by-side-printer.js').SideBySidePrinter;
+  var FileListPrinter = require('./file-list-printer.js').FileListPrinter;
 
   function HtmlPrinter() {
   }
@@ -3055,10 +3097,15 @@ process.umask = function() { return 0; };
     return sideBySidePrinter.generateSideBySideJsonHtml(diffFiles);
   };
 
+  HtmlPrinter.prototype.generateFileListSummary = function(diffJson, config) {
+    var fileListPrinter = new FileListPrinter(config);
+    return fileListPrinter.generateFileList(diffJson);
+  };
+
   module.exports.HtmlPrinter = new HtmlPrinter();
 })();
 
-},{"./line-by-line-printer.js":27,"./side-by-side-printer.js":30}],27:[function(require,module,exports){
+},{"./file-list-printer.js":24,"./line-by-line-printer.js":27,"./side-by-side-printer.js":30}],27:[function(require,module,exports){
 /*
  *
  * LineByLinePrinter (line-by-line-printer.js)
@@ -3072,7 +3119,8 @@ process.umask = function() { return 0; };
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
-  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
+  var hoganUtils;
+
   var genericTemplatesPath = 'generic';
   var baseTemplatesPath = 'line-by-line';
   var iconsBaseTemplatesPath = 'icon';
@@ -3080,6 +3128,9 @@ process.umask = function() { return 0; };
 
   function LineByLinePrinter(config) {
     this.config = config;
+
+    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
+    hoganUtils = new HoganJsUtils(config);
   }
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
@@ -3674,7 +3725,8 @@ process.umask = function() { return 0; };
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
-  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
+  var hoganUtils;
+
   var genericTemplatesPath = 'generic';
   var baseTemplatesPath = 'side-by-side';
   var iconsBaseTemplatesPath = 'icon';
@@ -3689,6 +3741,9 @@ process.umask = function() { return 0; };
 
   function SideBySidePrinter(config) {
     this.config = config;
+
+    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
+    hoganUtils = new HoganJsUtils(config);
   }
 
   SideBySidePrinter.prototype.makeDiffHtml = function(file, diffs) {
