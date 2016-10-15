@@ -511,7 +511,7 @@ $(document).ready(function() {
       fetchUrl = bitbucketUrlGen(values[1], values[2], 'pullrequests', values[3]);
     } else {
       console.info('Could not parse url, using the provided url.');
-      fetchUrl = url;
+      fetchUrl = 'https://crossorigin.me/' + url;
     }
 
     return {
