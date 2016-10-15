@@ -56,28 +56,16 @@ $(document).ready(function() {
       smartDraw();
     });
 
-  function smartDraw(urlOpt) {
-    var url = urlOpt | $url.val();
-    var req = prepareUrl(url);
-    draw(req);
-  }
-
-  function updateHash(url) {
-    window.location.hash = '#!' + url;
-  }
-
   function bind() {
     $('#url-btn').click(function(e) {
       e.preventDefault();
       var url = $url.val();
       smartDraw(url);
-      updateHash(url);
     });
 
     $url.on('paste', function(e) {
       var url = e.originalEvent.clipboardData.getData('Text');
       smartDraw(url);
-      updateHash(url);
     });
   }
 
@@ -131,12 +119,26 @@ $(document).ready(function() {
     }
 
     return {
+      originalUrl: url,
       url: fetchUrl,
       headers: headers
     };
   }
 
+  function smartDraw(urlOpt) {
+    var url = urlOpt || $url.val();
+    var req = prepareUrl(url);
+    draw(req);
+  }
+
   function draw(req) {
+    if (!validateUrl(req.url)) {
+      console.error("Invalid url provided!");
+      return;
+    }
+
+    if (!validateUrl(req.originalUrl)) updateUrl(req.originalUrl);
+
     var outputFormat = $outputFormat.val();
     var showFiles = $showFiles.is(':checked');
     var matching = $matching.val();
@@ -174,4 +176,18 @@ $(document).ready(function() {
         diff2htmlUi.highlightCode(container);
       });
   }
+
+  function validateUrl(url) {
+    return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(url);
+  }
+
+  function updateUrl(url) {
+    if (window.history.pushState) {
+      window.history.pushState('', '/', 'url.html?diff=' + url);
+    } else {
+      window.location.hash = '';
+      window.location.search = '?diff=' + url;
+    }
+  }
+
 });
