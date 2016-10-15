@@ -554,9 +554,9 @@ $(document).ready(function() {
         var diff2htmlUi = new Diff2HtmlUI({diff: data});
 
         if (outputFormat === 'side-by-side') {
-          $container.css({'min-width': '1280px'});
+          $container.css({'width': '100%'});
         } else {
-          $container.css({'width': '980px'});
+          $container.css({'width': ''});
         }
 
         diff2htmlUi.draw(container, {

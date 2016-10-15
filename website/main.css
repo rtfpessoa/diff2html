@@ -3,6 +3,14 @@
  * Adapted by @rtfpessoa
  */
 
+.template-index {
+  width: 100%;
+}
+
+.template-index-min {
+  min-width: 700px;
+}
+
 .m-b-md {
   margin-bottom: 23px !important
 }
@@ -87,13 +95,13 @@
 
 @media (min-width: 768px) {
   .footer {
-    padding: 60px 0
+    padding: 60px 0;
   }
 }
 
 @media (min-width: 768px) {
   .container {
-    width: 710px
+    width: 100%;
   }
 
   .row-centered {
@@ -108,13 +116,13 @@
 
 @media (min-width: 992px) {
   .container {
-    width: 890px
+    width: 100%;
   }
 }
 
 @media (min-width: 1200px) {
   .container {
-    width: 1050px
+    width: 100%;
   }
 }
 
@@ -167,7 +175,7 @@
 
 .swag-line:before {
   content: '';
-  position: absolute;
+  position: fixed;
   display: block;
   top: 0;
   left: 0;
