@@ -14,7 +14,7 @@ describe('SideBySidePrinter', function() {
         '            File without changes\n' +
         '        </div>\n' +
         '    </td>\n' +
-        '</tr>\n';
+        '</tr>';
 
       assert.equal(expectedRight, fileHtml.right);
       assert.equal(expectedLeft, fileHtml.left);
@@ -324,7 +324,6 @@ describe('SideBySidePrinter', function() {
         '        </div>\n' +
         '    </td>\n' +
         '</tr>\n' +
-        '\n' +
         '                    </tbody>\n' +
         '                </table>\n' +
         '            </div>\n' +

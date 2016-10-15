@@ -11,7 +11,8 @@
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
 
-  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
+  var hoganUtils;
+
   var genericTemplatesPath = 'generic';
   var baseTemplatesPath = 'line-by-line';
   var iconsBaseTemplatesPath = 'icon';
@@ -19,6 +20,9 @@
 
   function LineByLinePrinter(config) {
     this.config = config;
+
+    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
+    hoganUtils = new HoganJsUtils(config);
   }
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {

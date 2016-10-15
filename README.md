@@ -98,6 +98,9 @@ The HTML output accepts a Javascript object with configuration. Possible options
   - `synchronisedScroll`: scroll both panes in side-by-side mode: `true` or `false`, default is `false`
   - `matchWordsThreshold`: similarity threshold for word matching, default is 0.25
   - `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is `2500`
+  - `templates`: object with previously compiled templates to replace parts of the html
+  - `rawTemplates`: object with raw not compiled templates to replace parts of the html
+  > For more information regarding the possible templates look into [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
 
 ## Diff2HtmlUI Helper
 

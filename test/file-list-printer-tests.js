@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-var fileListPrinter = require('../src/file-list-printer.js').FileListPrinter;
+var fileListPrinter = new (require('../src/file-list-printer.js').FileListPrinter)();
 
 describe('FileListPrinter', function() {
   describe('generateFileList', function() {

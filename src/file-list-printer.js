@@ -8,11 +8,16 @@
 (function() {
   var printerUtils = require('./printer-utils.js').PrinterUtils;
 
-  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
+  var hoganUtils;
+
   var baseTemplatesPath = 'file-summary';
   var iconsBaseTemplatesPath = 'icon';
 
-  function FileListPrinter() {
+  function FileListPrinter(config) {
+    this.config = config;
+
+    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
+    hoganUtils = new HoganJsUtils(config);
   }
 
   FileListPrinter.prototype.generateFileList = function(diffFiles) {
@@ -38,5 +43,5 @@
     });
   };
 
-  module.exports.FileListPrinter = new FileListPrinter();
+  module.exports.FileListPrinter = FileListPrinter;
 })();
