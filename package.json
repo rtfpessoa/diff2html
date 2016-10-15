@@ -56,14 +56,14 @@
   "dependencies": {
     "diff": "^3.0.0",
     "hogan.js": "^3.0.2",
-    "whatwg-fetch": "0.11.1"
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "^6.5.0",
+    "autoprefixer": "^6.5.1",
     "browserify": "^13.1.0",
     "clean-css": "^3.4.20",
     "codacy-coverage": "^2.0.0",
-    "eslint": "^3.7.1",
+    "eslint": "^3.8.0",
     "eslint-plugin-promise": "^3.0.0",
     "eslint-plugin-standard": "^2.0.1",
     "fast-html-parser": "^1.0.1",
