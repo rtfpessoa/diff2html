@@ -17,6 +17,8 @@ $(document).ready(function() {
   // Improves browser compatibility
   require('whatwg-fetch');
 
+  var searchParam = 'diff';
+
   var $container = $('.container');
   var $url = $('#url');
   var $outputFormat = $('#diff-url-options-output-format');
@@ -25,24 +27,10 @@ $(document).ready(function() {
   var $wordThreshold = $('#diff-url-options-match-words-threshold');
   var $matchingMaxComparisons = $('#diff-url-options-matching-max-comparisons');
 
-  var hash = window.location.hash
-    .replace(/^(#!?\/?)/, '');
-
-  var search = window.location.search;
-
-  if (hash) {
-    $url.val(hash);
-    smartDraw(hash);
-  } else if (search) {
-    try {
-      var url = search
-        .split('?')[1]
-        .split('diff=')[1]
-        .split('&')[0];
-      $url.val(url);
-      smartDraw(url);
-    } catch (_ignore) {
-    }
+  if (window.location.search) {
+    var url = getUrlFromSearch(window.location.search);
+    $url.val(url);
+    smartDraw(url);
   }
 
   bind();
@@ -55,6 +43,18 @@ $(document).ready(function() {
     .change(function() {
       smartDraw();
     });
+
+  function getUrlFromSearch(search) {
+    try {
+      return search
+        .split('?')[1]
+        .split(searchParam + '=')[1]
+        .split('&')[0];
+    } catch (_ignore) {
+    }
+
+    return null;
+  }
 
   function bind() {
     $('#url-btn').click(function(e) {
@@ -181,11 +181,10 @@ $(document).ready(function() {
   }
 
   function updateUrl(url) {
-    if (window.history.pushState) {
-      window.history.pushState('', '/', 'url.html?diff=' + url);
-    } else {
-      window.location.hash = '';
-      window.location.search = '?diff=' + url;
-    }
+    var currentUrl = getUrlFromSearch(window.location.search);
+
+    if (currentUrl === url) return;
+
+    window.location = 'demo.html?' + searchParam + '=' + url;
   }
 });

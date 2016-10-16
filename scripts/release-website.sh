@@ -8,12 +8,12 @@
 set -e
 
 INPUT_DIR=website
-INPUT_URL_JS=${INPUT_DIR}/templates/pages/url/url.js
+INPUT_DEMO_JS=${INPUT_DIR}/templates/pages/demo/demo.js
 INPUT_CSS_FILE=${INPUT_DIR}/main.css
 
 OUTPUT_DIR=docs
-OUTPUT_URL_JS=${OUTPUT_DIR}/url.js
-OUTPUT_URL_MIN_JS=${OUTPUT_DIR}/url.min.js
+OUTPUT_DEMO_JS=${OUTPUT_DIR}/demo.js
+OUTPUT_DEMO_MIN_JS=${OUTPUT_DIR}/demo.min.js
 OUTPUT_CSS_FILE=${OUTPUT_DIR}/main.css
 OUTPUT_MIN_CSS_FILE=${OUTPUT_DIR}/main.min.css
 
@@ -27,11 +27,11 @@ echo "Minifying ${OUTPUT_CSS_FILE} to ${OUTPUT_MIN_CSS_FILE}"
 postcss --use autoprefixer ${INPUT_CSS_FILE} -d ${OUTPUT_DIR}
 cleancss --advanced --compatibility=ie8 -o ${OUTPUT_MIN_CSS_FILE} ${OUTPUT_CSS_FILE}
 
-echo "Generating website js aggregation file in ${OUTPUT_URL_JS}"
-browserify -e ${INPUT_URL_JS} -o ${OUTPUT_URL_JS}
+echo "Generating website js aggregation file in ${OUTPUT_DEMO_JS}"
+browserify -e ${INPUT_DEMO_JS} -o ${OUTPUT_DEMO_JS}
 
-echo "Minifying ${OUTPUT_URL_JS} to ${OUTPUT_URL_MIN_JS}"
-uglifyjs ${OUTPUT_URL_JS} -c -o ${OUTPUT_URL_MIN_JS}
+echo "Minifying ${OUTPUT_DEMO_JS} to ${OUTPUT_DEMO_MIN_JS}"
+uglifyjs ${OUTPUT_DEMO_JS} -c -o ${OUTPUT_DEMO_MIN_JS}
 
 echo "Generating HTMLs from templates ..."
 node ./scripts/release-website.js
