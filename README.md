@@ -141,12 +141,13 @@ diff2htmlUi.draw('html-target-elem', {inputFormat: 'json', showFiles: true, matc
 #### Syntax Highlight
 
 > Add the dependencies.
-Choose one color scheme, and add the main highlight code.
+Choose one color scheme, and add the main highlight code. Note that the stylesheet for the color scheme must come **before** the main diff2html stylesheet.
 If your favourite language is not included in the default package also add its javascript highlight file.
 
 ```html
 <!-- Stylesheet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/github.min.css">
+<link rel="stylesheet" type="text/css" href="dist/diff2html.css">
 
 <!-- Javascripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.js"></script>
