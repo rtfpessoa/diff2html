@@ -32,6 +32,9 @@
     var oldLine2 = null; // Used for combined diff
     var newLine = null;
 
+    var possibleOldName;
+    var possibleNewName;
+
     /* Diff Header */
     var oldFileNameHeader = '--- ';
     var newFileNameHeader = '+++ ';
@@ -50,10 +53,23 @@
      * if it has name (to avoid binary files errors)
      */
     function saveFile() {
-      if (currentFile && currentFile.newName) {
-        files.push(currentFile);
-        currentFile = null;
+      if (currentFile) {
+        if (!currentFile.oldName) {
+          currentFile.oldName = possibleOldName;
+        }
+
+        if (!currentFile.newName) {
+          currentFile.newName = possibleNewName;
+        }
+
+        if (currentFile.newName) {
+          files.push(currentFile);
+          currentFile = null;
+        }
       }
+
+      possibleOldName = undefined;
+      possibleNewName = undefined;
     }
 
     /* Create file structure */
@@ -196,6 +212,7 @@
     var index = /^index ([0-9a-z]+)\.\.([0-9a-z]+)\s*(\d{6})?/;
 
     var binaryFiles = /^Binary files (.*) and (.*) differ/;
+    var binaryDiff = /^GIT binary patch/;
 
     /* Combined Diff */
     var combinedIndex = /^index ([0-9a-z]+),([0-9a-z]+)\.\.([0-9a-z]+)/;
@@ -211,12 +228,23 @@
         return;
       }
 
+      // Used to store regex capture groups
+      var values;
+
       var prevLine = diffLines[lineIndex - 1];
       var nxtLine = diffLines[lineIndex + 1];
       var afterNxtLine = diffLines[lineIndex + 2];
 
       if (utils.startsWith(line, 'diff')) {
         startFile();
+
+        // diff --git a/blocked_delta_results.png b/blocked_delta_results.png
+        var gitDiffStart = /^diff --git "?(.+)"? "?(.+)"?/;
+        if ((values = gitDiffStart.exec(line))) {
+          possibleOldName = _getFilename(null, values[1], config.dstPrefix);
+          possibleNewName = _getFilename(null, values[2], config.srcPrefix);
+        }
+
         currentFile.isGitDiff = true;
         return;
       }
@@ -233,8 +261,6 @@
       ) {
         startFile();
       }
-
-      var values;
 
       /*
        * We need to make sure that we have the three lines of the header.
@@ -328,8 +354,12 @@
         currentFile.isRename = true;
       } else if ((values = binaryFiles.exec(line))) {
         currentFile.isBinary = true;
-        currentFile.oldName = _getFilename(null, values[1], [config.srcPrefix]);
-        currentFile.newName = _getFilename(null, values[2], [config.dstPrefix]);
+        currentFile.oldName = _getFilename(null, values[1], config.srcPrefix);
+        currentFile.newName = _getFilename(null, values[2], config.dstPrefix);
+        startBlock('Binary file');
+      } else if ((values = binaryDiff.exec(line))) {
+        currentFile.isBinary = true;
+        startBlock(line);
       } else if ((values = similarityIndex.exec(line))) {
         currentFile.unchangedPercentage = values[1];
       } else if ((values = dissimilarityIndex.exec(line))) {
@@ -369,26 +399,19 @@
   }
 
   function getSrcFilename(line, cfg) {
-    var prefixes = ['a/', 'i/', 'w/', 'c/', 'o/'];
-
-    if (cfg.srcPrefix) {
-      prefixes.push(cfg.srcPrefix);
-    }
-
-    return _getFilename('---', line, prefixes);
+    return _getFilename('---', line, cfg.srcPrefix);
   }
 
   function getDstFilename(line, cfg) {
-    var prefixes = ['b/', 'i/', 'w/', 'c/', 'o/'];
-
-    if (cfg.dstPrefix) {
-      prefixes.push(cfg.dstPrefix);
-    }
-
-    return _getFilename('\\+\\+\\+', line, prefixes);
+    return _getFilename('\\+\\+\\+', line, cfg.dstPrefix);
   }
 
-  function _getFilename(linePrefix, line, prefixes) {
+  function _getFilename(linePrefix, line, extraPrefix) {
+    var prefixes = ['a/', 'b/', 'i/', 'w/', 'c/', 'o/'];
+    if (extraPrefix) {
+      prefixes.push(extraPrefix);
+    }
+
     var FilenameRegExp;
     if (linePrefix) {
       FilenameRegExp = new RegExp('^' + linePrefix + ' "?(.+?)"?$');
