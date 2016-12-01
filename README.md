@@ -186,6 +186,17 @@ $(document).ready(function() {
 });
 ```
 
+# Troubleshooting
+
+### 1. Out of memory or Slow execution
+
+#### Causes:
+* Big files
+* Big lines
+
+#### Fix:
+* Disable the line matching algorithm, by setting the option `{"matching": "none"}` when invoking diff2html
+
 ## Contributions
 
 This is a developer friendly project, all the contributions are welcome.
