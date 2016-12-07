@@ -67,6 +67,30 @@ function escapeHTML(s) {
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
+exports.arrayDiff = undefined;
+exports. /*istanbul ignore end*/diffArrays = diffArrays;
+
+var /*istanbul ignore start*/_base = require('./base') /*istanbul ignore end*/;
+
+/*istanbul ignore start*/
+var _base2 = _interopRequireDefault(_base);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+/*istanbul ignore end*/var arrayDiff = /*istanbul ignore start*/exports. /*istanbul ignore end*/arrayDiff = new /*istanbul ignore start*/_base2['default']() /*istanbul ignore end*/;
+arrayDiff.tokenize = arrayDiff.join = function (value) {
+  return value.slice();
+};
+
+function diffArrays(oldArr, newArr, callback) {
+  return arrayDiff.diff(oldArr, newArr, callback);
+}
+
+
+},{"./base":5}],5:[function(require,module,exports){
+/*istanbul ignore start*/'use strict';
+
+exports.__esModule = true;
 exports['default'] = /*istanbul ignore end*/Diff;
 function Diff() {}
 
@@ -111,7 +135,7 @@ Diff.prototype = { /*istanbul ignore start*/
     var oldPos = this.extractCommon(bestPath[0], newString, oldString, 0);
     if (bestPath[0].newPos + 1 >= newLen && oldPos + 1 >= oldLen) {
       // Identity per the equality and tokenizer
-      return done([{ value: newString.join(''), count: newString.length }]);
+      return done([{ value: this.join(newString), count: newString.length }]);
     }
 
     // Main worker method. checks all permutations of a given edit length for acceptance.
@@ -232,6 +256,9 @@ Diff.prototype = { /*istanbul ignore start*/
   },
   /*istanbul ignore start*/ /*istanbul ignore end*/tokenize: function tokenize(value) {
     return value.split('');
+  },
+  /*istanbul ignore start*/ /*istanbul ignore end*/join: function join(chars) {
+    return chars.join('');
   }
 };
 
@@ -251,9 +278,9 @@ function buildValues(diff, components, newString, oldString, useLongestToken) {
           return oldValue.length > value.length ? oldValue : value;
         });
 
-        component.value = value.join('');
+        component.value = diff.join(value);
       } else {
-        component.value = newString.slice(newPos, newPos + component.count).join('');
+        component.value = diff.join(newString.slice(newPos, newPos + component.count));
       }
       newPos += component.count;
 
@@ -262,7 +289,7 @@ function buildValues(diff, components, newString, oldString, useLongestToken) {
         oldPos += component.count;
       }
     } else {
-      component.value = oldString.slice(oldPos, oldPos + component.count).join('');
+      component.value = diff.join(oldString.slice(oldPos, oldPos + component.count));
       oldPos += component.count;
 
       // Reverse add and remove so removes are output first to match common convention
@@ -292,7 +319,7 @@ function clonePath(path) {
 }
 
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -312,7 +339,7 @@ function diffChars(oldStr, newStr, callback) {
 }
 
 
-},{"./base":4}],6:[function(require,module,exports){
+},{"./base":5}],7:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -336,7 +363,7 @@ function diffCss(oldStr, newStr, callback) {
 }
 
 
-},{"./base":4}],7:[function(require,module,exports){
+},{"./base":5}],8:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -438,7 +465,7 @@ function canonicalize(obj, stack, replacementStack) {
 }
 
 
-},{"./base":4,"./line":8}],8:[function(require,module,exports){
+},{"./base":5,"./line":9}],9:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -493,7 +520,7 @@ function diffTrimmedLines(oldStr, newStr, callback) {
 }
 
 
-},{"../util/params":16,"./base":4}],9:[function(require,module,exports){
+},{"../util/params":17,"./base":5}],10:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -517,7 +544,7 @@ function diffSentences(oldStr, newStr, callback) {
 }
 
 
-},{"./base":4}],10:[function(require,module,exports){
+},{"./base":5}],11:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -589,11 +616,11 @@ function diffWordsWithSpace(oldStr, newStr, callback) {
 }
 
 
-},{"../util/params":16,"./base":4}],11:[function(require,module,exports){
+},{"../util/params":17,"./base":5}],12:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
-exports.canonicalize = exports.convertChangesToXML = exports.convertChangesToDMP = exports.parsePatch = exports.applyPatches = exports.applyPatch = exports.createPatch = exports.createTwoFilesPatch = exports.structuredPatch = exports.diffJson = exports.diffCss = exports.diffSentences = exports.diffTrimmedLines = exports.diffLines = exports.diffWordsWithSpace = exports.diffWords = exports.diffChars = exports.Diff = undefined;
+exports.canonicalize = exports.convertChangesToXML = exports.convertChangesToDMP = exports.parsePatch = exports.applyPatches = exports.applyPatch = exports.createPatch = exports.createTwoFilesPatch = exports.structuredPatch = exports.diffArrays = exports.diffJson = exports.diffCss = exports.diffSentences = exports.diffTrimmedLines = exports.diffLines = exports.diffWordsWithSpace = exports.diffWords = exports.diffChars = exports.Diff = undefined;
 /*istanbul ignore end*/
 var /*istanbul ignore start*/_base = require('./diff/base') /*istanbul ignore end*/;
 
@@ -613,6 +640,8 @@ var /*istanbul ignore start*/_css = require('./diff/css') /*istanbul ignore end*
 
 var /*istanbul ignore start*/_json = require('./diff/json') /*istanbul ignore end*/;
 
+var /*istanbul ignore start*/_array = require('./diff/array') /*istanbul ignore end*/;
+
 var /*istanbul ignore start*/_apply = require('./patch/apply') /*istanbul ignore end*/;
 
 var /*istanbul ignore start*/_parse = require('./patch/parse') /*istanbul ignore end*/;
@@ -626,7 +655,25 @@ var /*istanbul ignore start*/_xml = require('./convert/xml') /*istanbul ignore e
 /*istanbul ignore start*/
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-/* See LICENSE file for terms of use */
+exports. /*istanbul ignore end*/Diff = _base2['default'];
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffChars = _character.diffChars;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffWords = _word.diffWords;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffWordsWithSpace = _word.diffWordsWithSpace;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffLines = _line.diffLines;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffTrimmedLines = _line.diffTrimmedLines;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffSentences = _sentence.diffSentences;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffCss = _css.diffCss;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffJson = _json.diffJson;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/diffArrays = _array.diffArrays;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/structuredPatch = _create.structuredPatch;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/createTwoFilesPatch = _create.createTwoFilesPatch;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/createPatch = _create.createPatch;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/applyPatch = _apply.applyPatch;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/applyPatches = _apply.applyPatches;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/parsePatch = _parse.parsePatch;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/convertChangesToDMP = _dmp.convertChangesToDMP;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/convertChangesToXML = _xml.convertChangesToXML;
+/*istanbul ignore start*/exports. /*istanbul ignore end*/canonicalize = _json.canonicalize; /* See LICENSE file for terms of use */
 
 /*
  * Text diff implementation.
@@ -642,27 +689,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
  * "An O(ND) Difference Algorithm and its Variations" (Myers, 1986).
  * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.4.6927
  */
-exports. /*istanbul ignore end*/Diff = _base2['default'];
-/*istanbul ignore start*/exports. /*istanbul ignore end*/diffChars = _character.diffChars;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/diffWords = _word.diffWords;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/diffWordsWithSpace = _word.diffWordsWithSpace;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/diffLines = _line.diffLines;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/diffTrimmedLines = _line.diffTrimmedLines;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/diffSentences = _sentence.diffSentences;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/diffCss = _css.diffCss;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/diffJson = _json.diffJson;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/structuredPatch = _create.structuredPatch;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/createTwoFilesPatch = _create.createTwoFilesPatch;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/createPatch = _create.createPatch;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/applyPatch = _apply.applyPatch;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/applyPatches = _apply.applyPatches;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/parsePatch = _parse.parsePatch;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/convertChangesToDMP = _dmp.convertChangesToDMP;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/convertChangesToXML = _xml.convertChangesToXML;
-/*istanbul ignore start*/exports. /*istanbul ignore end*/canonicalize = _json.canonicalize;
 
 
-},{"./convert/dmp":2,"./convert/xml":3,"./diff/base":4,"./diff/character":5,"./diff/css":6,"./diff/json":7,"./diff/line":8,"./diff/sentence":9,"./diff/word":10,"./patch/apply":12,"./patch/create":13,"./patch/parse":14}],12:[function(require,module,exports){
+},{"./convert/dmp":2,"./convert/xml":3,"./diff/array":4,"./diff/base":5,"./diff/character":6,"./diff/css":7,"./diff/json":8,"./diff/line":9,"./diff/sentence":10,"./diff/word":11,"./patch/apply":13,"./patch/create":14,"./patch/parse":15}],13:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -694,7 +723,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
   }
 
   // Apply the diff to the input
-  var lines = source.split('\n'),
+  var lines = source.split(/\r\n|[\n\v\f\r\x85]/),
+      delimiters = source.match(/\r\n|[\n\v\f\r\x85]/g) || [],
       hunks = uniDiff.hunks,
       compareLine = options.compareLine || function (lineNumber, line, operation, patchContent) /*istanbul ignore start*/{
     return (/*istanbul ignore end*/line === patchContent
@@ -768,15 +798,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
     for (var j = 0; j < _hunk.lines.length; j++) {
       var line = _hunk.lines[j],
           operation = line[0],
-          content = line.substr(1);
+          content = line.substr(1),
+          delimiter = _hunk.linedelimiters[j];
 
       if (operation === ' ') {
         _toPos++;
       } else if (operation === '-') {
         lines.splice(_toPos, 1);
+        delimiters.splice(_toPos, 1);
         /* istanbul ignore else */
       } else if (operation === '+') {
           lines.splice(_toPos, 0, content);
+          delimiters.splice(_toPos, 0, delimiter);
           _toPos++;
         } else if (operation === '\\') {
           var previousOperation = _hunk.lines[j - 1] ? _hunk.lines[j - 1][0] : null;
@@ -793,11 +826,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
   if (removeEOFNL) {
     while (!lines[lines.length - 1]) {
       lines.pop();
+      delimiters.pop();
     }
   } else if (addEOFNL) {
     lines.push('');
+    delimiters.push('\n');
   }
-  return lines.join('\n');
+  for (var _k = 0; _k < lines.length - 1; _k++) {
+    lines[_k] = lines[_k] + delimiters[_k];
+  }
+  return lines.join('');
 }
 
 // Wrapper that supports multiple file patches via callbacks.
@@ -832,7 +870,7 @@ function applyPatches(uniDiff, options) {
 }
 
 
-},{"../util/distance-iterator":15,"./parse":14}],13:[function(require,module,exports){
+},{"../util/distance-iterator":16,"./parse":15}],14:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -987,7 +1025,7 @@ function createPatch(fileName, oldStr, newStr, oldHeader, newHeader, options) {
 }
 
 
-},{"../diff/line":8}],14:[function(require,module,exports){
+},{"../diff/line":9}],15:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -995,7 +1033,8 @@ exports. /*istanbul ignore end*/parsePatch = parsePatch;
 function parsePatch(uniDiff) {
   /*istanbul ignore start*/var /*istanbul ignore end*/options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-  var diffstr = uniDiff.split('\n'),
+  var diffstr = uniDiff.split(/\r\n|[\n\v\f\r\x85]/),
+      delimiters = uniDiff.match(/\r\n|[\n\v\f\r\x85]/g) || [],
       list = [],
       i = 0;
 
@@ -1071,7 +1110,8 @@ function parsePatch(uniDiff) {
       oldLines: +chunkHeader[2] || 1,
       newStart: +chunkHeader[3],
       newLines: +chunkHeader[4] || 1,
-      lines: []
+      lines: [],
+      linedelimiters: []
     };
 
     var addCount = 0,
@@ -1086,6 +1126,7 @@ function parsePatch(uniDiff) {
 
       if (operation === '+' || operation === '-' || operation === ' ' || operation === '\\') {
         hunk.lines.push(diffstr[i]);
+        hunk.linedelimiters.push(delimiters[i] || '\n');
 
         if (operation === '+') {
           addCount++;
@@ -1129,7 +1170,7 @@ function parsePatch(uniDiff) {
 }
 
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*istanbul ignore start*/"use strict";
 
 exports.__esModule = true;
@@ -1178,7 +1219,7 @@ exports["default"] = /*istanbul ignore end*/function (start, minLine, maxLine) {
 };
 
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /*istanbul ignore start*/'use strict';
 
 exports.__esModule = true;
@@ -1198,7 +1239,7 @@ function generateOptions(options, defaults) {
 }
 
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -1623,7 +1664,7 @@ function generateOptions(options, defaults) {
   }
 })(typeof exports !== 'undefined' ? exports : Hogan);
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -1646,7 +1687,7 @@ Hogan.Template = require('./template').Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
-},{"./compiler":17,"./template":19}],19:[function(require,module,exports){
+},{"./compiler":18,"./template":20}],20:[function(require,module,exports){
 /*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -1989,7 +2030,7 @@ var Hogan = {};
 
 })(typeof exports !== 'undefined' ? exports : Hogan);
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -2217,7 +2258,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":21}],21:[function(require,module,exports){
+},{"_process":22}],22:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2399,7 +2440,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /*
  *
  * Diff Parser (diff-parser.js)
@@ -2434,6 +2475,9 @@ process.umask = function() { return 0; };
     var oldLine2 = null; // Used for combined diff
     var newLine = null;
 
+    var possibleOldName;
+    var possibleNewName;
+
     /* Diff Header */
     var oldFileNameHeader = '--- ';
     var newFileNameHeader = '+++ ';
@@ -2452,10 +2496,23 @@ process.umask = function() { return 0; };
      * if it has name (to avoid binary files errors)
      */
     function saveFile() {
-      if (currentFile && currentFile.newName) {
-        files.push(currentFile);
-        currentFile = null;
+      if (currentFile) {
+        if (!currentFile.oldName) {
+          currentFile.oldName = possibleOldName;
+        }
+
+        if (!currentFile.newName) {
+          currentFile.newName = possibleNewName;
+        }
+
+        if (currentFile.newName) {
+          files.push(currentFile);
+          currentFile = null;
+        }
       }
+
+      possibleOldName = undefined;
+      possibleNewName = undefined;
     }
 
     /* Create file structure */
@@ -2598,6 +2655,7 @@ process.umask = function() { return 0; };
     var index = /^index ([0-9a-z]+)\.\.([0-9a-z]+)\s*(\d{6})?/;
 
     var binaryFiles = /^Binary files (.*) and (.*) differ/;
+    var binaryDiff = /^GIT binary patch/;
 
     /* Combined Diff */
     var combinedIndex = /^index ([0-9a-z]+),([0-9a-z]+)\.\.([0-9a-z]+)/;
@@ -2613,12 +2671,23 @@ process.umask = function() { return 0; };
         return;
       }
 
+      // Used to store regex capture groups
+      var values;
+
       var prevLine = diffLines[lineIndex - 1];
       var nxtLine = diffLines[lineIndex + 1];
       var afterNxtLine = diffLines[lineIndex + 2];
 
       if (utils.startsWith(line, 'diff')) {
         startFile();
+
+        // diff --git a/blocked_delta_results.png b/blocked_delta_results.png
+        var gitDiffStart = /^diff --git "?(.+)"? "?(.+)"?/;
+        if ((values = gitDiffStart.exec(line))) {
+          possibleOldName = _getFilename(null, values[1], config.dstPrefix);
+          possibleNewName = _getFilename(null, values[2], config.srcPrefix);
+        }
+
         currentFile.isGitDiff = true;
         return;
       }
@@ -2635,8 +2704,6 @@ process.umask = function() { return 0; };
       ) {
         startFile();
       }
-
-      var values;
 
       /*
        * We need to make sure that we have the three lines of the header.
@@ -2730,8 +2797,12 @@ process.umask = function() { return 0; };
         currentFile.isRename = true;
       } else if ((values = binaryFiles.exec(line))) {
         currentFile.isBinary = true;
-        currentFile.oldName = _getFilename(null, values[1], [config.srcPrefix]);
-        currentFile.newName = _getFilename(null, values[2], [config.dstPrefix]);
+        currentFile.oldName = _getFilename(null, values[1], config.srcPrefix);
+        currentFile.newName = _getFilename(null, values[2], config.dstPrefix);
+        startBlock('Binary file');
+      } else if ((values = binaryDiff.exec(line))) {
+        currentFile.isBinary = true;
+        startBlock(line);
       } else if ((values = similarityIndex.exec(line))) {
         currentFile.unchangedPercentage = values[1];
       } else if ((values = dissimilarityIndex.exec(line))) {
@@ -2771,26 +2842,19 @@ process.umask = function() { return 0; };
   }
 
   function getSrcFilename(line, cfg) {
-    var prefixes = ['a/', 'i/', 'w/', 'c/', 'o/'];
-
-    if (cfg.srcPrefix) {
-      prefixes.push(cfg.srcPrefix);
-    }
-
-    return _getFilename('---', line, prefixes);
+    return _getFilename('---', line, cfg.srcPrefix);
   }
 
   function getDstFilename(line, cfg) {
-    var prefixes = ['b/', 'i/', 'w/', 'c/', 'o/'];
-
-    if (cfg.dstPrefix) {
-      prefixes.push(cfg.dstPrefix);
-    }
-
-    return _getFilename('\\+\\+\\+', line, prefixes);
+    return _getFilename('\\+\\+\\+', line, cfg.dstPrefix);
   }
 
-  function _getFilename(linePrefix, line, prefixes) {
+  function _getFilename(linePrefix, line, extraPrefix) {
+    var prefixes = ['a/', 'b/', 'i/', 'w/', 'c/', 'o/'];
+    if (extraPrefix) {
+      prefixes.push(extraPrefix);
+    }
+
     var FilenameRegExp;
     if (linePrefix) {
       FilenameRegExp = new RegExp('^' + linePrefix + ' "?(.+?)"?$');
@@ -2823,7 +2887,7 @@ process.umask = function() { return 0; };
   module.exports.DiffParser = new DiffParser();
 })();
 
-},{"./utils.js":32}],23:[function(require,module,exports){
+},{"./utils.js":33}],24:[function(require,module,exports){
 (function (global){
 /*
  *
@@ -2934,7 +2998,7 @@ process.umask = function() { return 0; };
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./diff-parser.js":22,"./html-printer.js":26}],24:[function(require,module,exports){
+},{"./diff-parser.js":23,"./html-printer.js":27}],25:[function(require,module,exports){
 /*
  *
  * FileListPrinter (file-list-printer.js)
@@ -2983,7 +3047,7 @@ process.umask = function() { return 0; };
   module.exports.FileListPrinter = FileListPrinter;
 })();
 
-},{"./hoganjs-utils.js":25,"./printer-utils.js":28}],25:[function(require,module,exports){
+},{"./hoganjs-utils.js":26,"./printer-utils.js":29}],26:[function(require,module,exports){
 (function (__dirname){
 /*
  *
@@ -3076,7 +3140,7 @@ process.umask = function() { return 0; };
 })();
 
 }).call(this,"/src")
-},{"./templates/diff2html-templates.js":31,"fs":1,"hogan.js":18,"path":20}],26:[function(require,module,exports){
+},{"./templates/diff2html-templates.js":32,"fs":1,"hogan.js":19,"path":21}],27:[function(require,module,exports){
 /*
  *
  * HtmlPrinter (html-printer.js)
@@ -3110,7 +3174,7 @@ process.umask = function() { return 0; };
   module.exports.HtmlPrinter = new HtmlPrinter();
 })();
 
-},{"./file-list-printer.js":24,"./line-by-line-printer.js":27,"./side-by-side-printer.js":30}],27:[function(require,module,exports){
+},{"./file-list-printer.js":25,"./line-by-line-printer.js":28,"./side-by-side-printer.js":31}],28:[function(require,module,exports){
 /*
  *
  * LineByLinePrinter (line-by-line-printer.js)
@@ -3335,7 +3399,7 @@ process.umask = function() { return 0; };
   module.exports.LineByLinePrinter = LineByLinePrinter;
 })();
 
-},{"./diff-parser.js":22,"./hoganjs-utils.js":25,"./printer-utils.js":28,"./rematch.js":29,"./utils.js":32}],28:[function(require,module,exports){
+},{"./diff-parser.js":23,"./hoganjs-utils.js":26,"./printer-utils.js":29,"./rematch.js":30,"./utils.js":33}],29:[function(require,module,exports){
 /*
  *
  * PrinterUtils (printer-utils.js)
@@ -3573,7 +3637,7 @@ process.umask = function() { return 0; };
   module.exports.PrinterUtils = new PrinterUtils();
 })();
 
-},{"./rematch.js":29,"./utils.js":32,"diff":11}],29:[function(require,module,exports){
+},{"./rematch.js":30,"./utils.js":33,"diff":12}],30:[function(require,module,exports){
 /*
  *
  * Rematch (rematch.js)
@@ -3716,7 +3780,7 @@ process.umask = function() { return 0; };
   module.exports.Rematch = Rematch;
 })();
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /*
  *
  * HtmlPrinter (html-printer.js)
@@ -3976,7 +4040,7 @@ process.umask = function() { return 0; };
   module.exports.SideBySidePrinter = SideBySidePrinter;
 })();
 
-},{"./diff-parser.js":22,"./hoganjs-utils.js":25,"./printer-utils.js":28,"./rematch.js":29,"./utils.js":32}],31:[function(require,module,exports){
+},{"./diff-parser.js":23,"./hoganjs-utils.js":26,"./printer-utils.js":29,"./rematch.js":30,"./utils.js":33}],32:[function(require,module,exports){
 (function (global){
 (function() {
 if (!!!global.browserTemplates) global.browserTemplates = {};
@@ -4003,7 +4067,7 @@ module.exports = global.browserTemplates;
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"hogan.js":18}],32:[function(require,module,exports){
+},{"hogan.js":19}],33:[function(require,module,exports){
 /*
  *
  * Utils (utils.js)
@@ -4045,4 +4109,4 @@ module.exports = global.browserTemplates;
   module.exports.Utils = new Utils();
 })();
 
-},{}]},{},[23]);
+},{}]},{},[24]);
