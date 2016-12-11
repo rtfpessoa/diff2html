@@ -14,6 +14,10 @@
    * Will be removed when this part of the API is exposed
    */
 
+  /* Utility vars */
+
+  var ArrayProto = [];
+
   /* Utility functions */
 
   function escape(value) {
@@ -86,11 +90,11 @@
     }
 
     function open(node) {
-      function attrStr(a) {
+      function attr_str(a) {
         return ' ' + a.nodeName + '="' + escape(a.value) + '"';
       }
 
-      result += '<' + tag(node) + Array.prototype.map.call(node.attributes, attrStr).join('') + '>';
+      result += '<' + tag(node) + ArrayProto.map.call(node.attributes, attr_str).join('') + '>';
     }
 
     function close(node) {
@@ -103,7 +107,7 @@
 
     while (original.length || highlighted.length) {
       var stream = selectStream();
-      result += escape(value.substr(processed, stream[0].offset - processed));
+      result += escape(value.substring(processed, stream[0].offset));
       processed = stream[0].offset;
       if (stream === original) {
         /*
