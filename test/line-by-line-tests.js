@@ -303,34 +303,40 @@ describe('LineByLinePrinter', function() {
 
   describe('generateLineByLineJsonHtml', function() {
     it('should work for list of files', function() {
-      var exampleJson = [{
-        blocks: [{
-          lines: [{
-            content: '-test',
-            type: 'd2h-del',
-            oldNumber: 1,
-            newNumber: null
-          },
+      var exampleJson = [
+        {
+          blocks: [
             {
-              content: '+test1r',
-              type: 'd2h-ins',
-              oldNumber: null,
-              newNumber: 1
-            }],
-          oldStartLine: '1',
-          oldStartLine2: null,
-          newStartLine: '1',
-          header: '@@ -1 +1 @@'
-        }],
-        deletedLines: 1,
-        addedLines: 1,
-        checksumBefore: '0000001',
-        checksumAfter: '0ddf2ba',
-        oldName: 'sample',
-        language: undefined,
-        newName: 'sample',
-        isCombined: false
-      }];
+              lines: [
+                {
+                  content: '-test',
+                  type: 'd2h-del',
+                  oldNumber: 1,
+                  newNumber: null
+                },
+                {
+                  content: '+test1r',
+                  type: 'd2h-ins',
+                  oldNumber: null,
+                  newNumber: 1
+                }
+              ],
+              oldStartLine: '1',
+              oldStartLine2: null,
+              newStartLine: '1',
+              header: '@@ -1 +1 @@'
+            }
+          ],
+          deletedLines: 1,
+          addedLines: 1,
+          checksumBefore: '0000001',
+          checksumAfter: '0ddf2ba',
+          oldName: 'sample',
+          language: undefined,
+          newName: 'sample',
+          isCombined: false
+        }
+      ];
 
       var lineByLinePrinter = new LineByLinePrinter({matching: 'lines'});
       var html = lineByLinePrinter.generateLineByLineJsonHtml(exampleJson);
@@ -484,36 +490,40 @@ describe('LineByLinePrinter', function() {
     it('should work for simple file', function() {
       var lineByLinePrinter = new LineByLinePrinter({});
       var file = {
-        blocks: [{
-          lines: [{
-            content: ' one context line',
-            type: 'd2h-cntx',
-            oldNumber: 1,
-            newNumber: 1
-          },
-            {
-              content: '-test',
-              type: 'd2h-del',
-              oldNumber: 2,
-              newNumber: null
-            },
-            {
-              content: '+test1r',
-              type: 'd2h-ins',
-              oldNumber: null,
-              newNumber: 2
-            },
-            {
-              content: '+test2r',
-              type: 'd2h-ins',
-              oldNumber: null,
-              newNumber: 3
-            }],
-          oldStartLine: '1',
-          oldStartLine2: null,
-          newStartLine: '1',
-          header: '@@ -1 +1 @@'
-        }],
+        blocks: [
+          {
+            lines: [
+              {
+                content: ' one context line',
+                type: 'd2h-cntx',
+                oldNumber: 1,
+                newNumber: 1
+              },
+              {
+                content: '-test',
+                type: 'd2h-del',
+                oldNumber: 2,
+                newNumber: null
+              },
+              {
+                content: '+test1r',
+                type: 'd2h-ins',
+                oldNumber: null,
+                newNumber: 2
+              },
+              {
+                content: '+test2r',
+                type: 'd2h-ins',
+                oldNumber: null,
+                newNumber: 3
+              }
+            ],
+            oldStartLine: '1',
+            oldStartLine2: null,
+            newStartLine: '1',
+            header: '@@ -1 +1 @@'
+          }
+        ],
         deletedLines: 1,
         addedLines: 1,
         checksumBefore: '0000001',

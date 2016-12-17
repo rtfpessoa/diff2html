@@ -59,18 +59,18 @@
     "whatwg-fetch": "^2.0.1"
   },
   "devDependencies": {
-    "autoprefixer": "^6.5.3",
+    "autoprefixer": "^6.5.4",
     "browserify": "^13.1.1",
-    "clean-css": "^3.4.21",
+    "clean-css": "^3.4.23",
     "codacy-coverage": "^2.0.0",
-    "eslint": "^3.12.0",
+    "eslint": "^3.12.2",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "fast-html-parser": "^1.0.1",
     "istanbul": "^0.4.5",
     "mkdirp": "^0.5.1",
     "mocha": "^3.2.0",
-    "nopt": "^3.0.6",
+    "nopt": "^4.0.1",
     "postcss-cli": "^2.6.0",
     "uglifyjs": "^2.4.10"
   },

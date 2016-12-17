@@ -12,34 +12,40 @@ var diffExample1 =
   '+test1\n';
 
 var jsonExample1 =
-  [{
-    blocks: [{
-      lines: [{
-        content: '-test',
-        type: 'd2h-del',
-        oldNumber: 1,
-        newNumber: null
-      },
+  [
+    {
+      blocks: [
         {
-          content: '+test1',
-          type: 'd2h-ins',
-          oldNumber: null,
-          newNumber: 1
-        }],
-      oldStartLine: '1',
-      oldStartLine2: null,
-      newStartLine: '1',
-      header: '@@ -1 +1 @@'
-    }],
-    deletedLines: 1,
-    addedLines: 1,
-    checksumBefore: '0000001',
-    checksumAfter: '0ddf2ba',
-    oldName: 'sample',
-    language: undefined,
-    newName: 'sample',
-    isCombined: false
-  }];
+          lines: [
+            {
+              content: '-test',
+              type: 'd2h-del',
+              oldNumber: 1,
+              newNumber: null
+            },
+            {
+              content: '+test1',
+              type: 'd2h-ins',
+              oldNumber: null,
+              newNumber: 1
+            }
+          ],
+          oldStartLine: '1',
+          oldStartLine2: null,
+          newStartLine: '1',
+          header: '@@ -1 +1 @@'
+        }
+      ],
+      deletedLines: 1,
+      addedLines: 1,
+      checksumBefore: '0000001',
+      checksumAfter: '0ddf2ba',
+      oldName: 'sample',
+      language: undefined,
+      newName: 'sample',
+      isCombined: false
+    }
+  ];
 
 var filesExample1 =
   '<div class="d2h-file-list-wrapper">\n' +
