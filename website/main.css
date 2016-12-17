@@ -11,6 +11,11 @@
   min-width: 700px;
 }
 
+.container {
+  width: 100%;
+  padding: 0 8%;
+}
+
 .m-b-md {
   margin-bottom: 23px !important
 }
@@ -100,10 +105,6 @@
 }
 
 @media (min-width: 768px) {
-  .container {
-    width: 100%;
-  }
-
   .row-centered {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -111,18 +112,6 @@
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-  }
-}
-
-@media (min-width: 992px) {
-  .container {
-    width: 100%;
-  }
-}
-
-@media (min-width: 1200px) {
-  .container {
-    width: 100%;
   }
 }
 
