@@ -37,18 +37,19 @@
     var $target = this._getTarget(targetId);
     $target.html(Diff2Html.getPrettyHtml(diffJson, cfg));
 
-    synchronisedScroll($target, cfg);
+    if (cfg.synchronisedScroll) {
+      this.synchronisedScroll($target, cfg);
+    }
   };
 
-  function synchronisedScroll($target, config) {
-    if (config.synchronisedScroll) {
-      $target.find('.d2h-file-side-diff').scroll(function() {
-        var $this = $(this);
-        $this.closest('.d2h-file-wrapper').find('.d2h-file-side-diff')
-          .scrollLeft($this.scrollLeft());
-      });
-    }
-  }
+  Diff2HtmlUI.prototype.synchronisedScroll = function(targetId) {
+    var $target = this._getTarget(targetId);
+    $target.find('.d2h-file-side-diff').scroll(function() {
+      var $this = $(this);
+      $this.closest('.d2h-file-wrapper').find('.d2h-file-side-diff')
+        .scrollLeft($this.scrollLeft());
+    });
+  };
 
   Diff2HtmlUI.prototype.fileListCloseable = function(targetId, startVisible) {
     var $target = this._getTarget(targetId);
@@ -237,6 +238,10 @@
    * Will be removed when this part of the API is exposed
    */
 
+  /* Utility vars */
+
+  var ArrayProto = [];
+
   /* Utility functions */
 
   function escape(value) {
@@ -309,11 +314,11 @@
     }
 
     function open(node) {
-      function attrStr(a) {
+      function attr_str(a) {
         return ' ' + a.nodeName + '="' + escape(a.value) + '"';
       }
 
-      result += '<' + tag(node) + Array.prototype.map.call(node.attributes, attrStr).join('') + '>';
+      result += '<' + tag(node) + ArrayProto.map.call(node.attributes, attr_str).join('') + '>';
     }
 
     function close(node) {
@@ -326,7 +331,7 @@
 
     while (original.length || highlighted.length) {
       var stream = selectStream();
-      result += escape(value.substr(processed, stream[0].offset - processed));
+      result += escape(value.substring(processed, stream[0].offset));
       processed = stream[0].offset;
       if (stream === original) {
         /*

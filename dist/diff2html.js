@@ -396,15 +396,24 @@ jsonDiff.useLongestToken = true;
 
 jsonDiff.tokenize = /*istanbul ignore start*/_line.lineDiff. /*istanbul ignore end*/tokenize;
 jsonDiff.castInput = function (value) {
-  return typeof value === 'string' ? value : JSON.stringify(canonicalize(value), undefined, '  ');
+  /*istanbul ignore start*/var /*istanbul ignore end*/undefinedReplacement = this.options.undefinedReplacement;
+
+
+  return typeof value === 'string' ? value : JSON.stringify(canonicalize(value), function (k, v) {
+    if (typeof v === 'undefined') {
+      return undefinedReplacement;
+    }
+
+    return v;
+  }, '  ');
 };
 jsonDiff.equals = function (left, right) {
   return (/*istanbul ignore start*/_base2['default']. /*istanbul ignore end*/prototype.equals(left.replace(/,([\r\n])/g, '$1'), right.replace(/,([\r\n])/g, '$1'))
   );
 };
 
-function diffJson(oldObj, newObj, callback) {
-  return jsonDiff.diff(oldObj, newObj, callback);
+function diffJson(oldObj, newObj, options) {
+  return jsonDiff.diff(oldObj, newObj, options);
 }
 
 // This function handles the presence of circular references by bailing out when encountering an
@@ -885,10 +894,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 /*istanbul ignore end*/function structuredPatch(oldFileName, newFileName, oldStr, newStr, oldHeader, newHeader, options) {
   if (!options) {
-    options = { context: 4 };
+    options = {};
+  }
+  if (typeof options.context === 'undefined') {
+    options.context = 4;
   }
 
-  var diff = /*istanbul ignore start*/(0, _line.diffLines) /*istanbul ignore end*/(oldStr, newStr);
+  var diff = /*istanbul ignore start*/(0, _line.diffLines) /*istanbul ignore end*/(oldStr, newStr, options);
   diff.push({ value: '', lines: [] }); // Append an empty value to make cleanup easier
 
   function contextLines(lines) {
