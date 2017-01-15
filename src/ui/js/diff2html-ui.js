@@ -35,18 +35,19 @@
     var $target = this._getTarget(targetId);
     $target.html(Diff2Html.getPrettyHtml(diffJson, cfg));
 
-    synchronisedScroll($target, cfg);
+    if (cfg.synchronisedScroll) {
+      this.synchronisedScroll($target, cfg);
+    }
   };
 
-  function synchronisedScroll($target, config) {
-    if (config.synchronisedScroll) {
-      $target.find('.d2h-file-side-diff').scroll(function() {
-        var $this = $(this);
-        $this.closest('.d2h-file-wrapper').find('.d2h-file-side-diff')
-          .scrollLeft($this.scrollLeft());
-      });
-    }
-  }
+  Diff2HtmlUI.prototype.synchronisedScroll = function(targetId) {
+    var $target = this._getTarget(targetId);
+    $target.find('.d2h-file-side-diff').scroll(function() {
+      var $this = $(this);
+      $this.closest('.d2h-file-wrapper').find('.d2h-file-side-diff')
+        .scrollLeft($this.scrollLeft());
+    });
+  };
 
   Diff2HtmlUI.prototype.fileListCloseable = function(targetId, startVisible) {
     var $target = this._getTarget(targetId);

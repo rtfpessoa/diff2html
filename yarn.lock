@@ -158,9 +158,9 @@ assert-plus@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
 
-assert@~1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/assert/-/assert-1.3.0.tgz#03939a622582a812cc202320a0b9a56c9b815849"
+assert@^1.4.0:
+  version "1.4.1"
+  resolved "https://registry.npmjs.org/assert/-/assert-1.4.1.tgz#99912d591836b5a6f5b345c0f07eefc08fc65d91"
   dependencies:
     util "0.10.3"
 
@@ -186,15 +186,15 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-autoprefixer@^6.5.4:
-  version "6.5.4"
-  resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-6.5.4.tgz#1386eb6708ccff36aefff70adc694ecfd60af1b0"
+autoprefixer@^6.6.1:
+  version "6.6.1"
+  resolved "https://registry.npmjs.org/autoprefixer/-/autoprefixer-6.6.1.tgz#11a4077abb4b313253ec2f6e1adb91ad84253519"
   dependencies:
-    browserslist "~1.4.0"
-    caniuse-db "^1.0.30000597"
+    browserslist "~1.5.1"
+    caniuse-db "^1.0.30000604"
     normalize-range "^0.1.2"
     num2fraction "^1.2.2"
-    postcss "^5.2.6"
+    postcss "^5.2.8"
     postcss-value-parser "^3.2.3"
 
 aws-sign2@~0.6.0:
@@ -341,12 +341,12 @@ browserify-zlib@~0.1.2:
   dependencies:
     pako "~0.2.0"
 
-browserify@^13.1.1:
-  version "13.1.1"
-  resolved "https://registry.yarnpkg.com/browserify/-/browserify-13.1.1.tgz#72a2310e2f706ed87db929cf0ee73a5e195d9bb0"
+browserify@^13.3.0:
+  version "13.3.0"
+  resolved "https://registry.npmjs.org/browserify/-/browserify-13.3.0.tgz#b5a9c9020243f0c70e4675bec8223bc627e415ce"
   dependencies:
     JSONStream "^1.0.3"
-    assert "~1.3.0"
+    assert "^1.4.0"
     browser-pack "^6.0.1"
     browser-resolve "^1.11.0"
     browserify-zlib "~0.1.2"
@@ -361,7 +361,7 @@ browserify@^13.1.1:
     domain-browser "~1.1.0"
     duplexer2 "~0.1.2"
     events "~1.1.0"
-    glob "^5.0.15"
+    glob "^7.1.0"
     has "^1.0.0"
     htmlescape "^1.1.0"
     https-browserify "~0.0.0"
@@ -379,7 +379,7 @@ browserify@^13.1.1:
     readable-stream "^2.0.2"
     resolve "^1.1.4"
     shasum "^1.0.0"
-    shell-quote "^1.4.3"
+    shell-quote "^1.6.1"
     stream-browserify "^2.0.0"
     stream-http "^2.0.0"
     string_decoder "~0.10.0"
@@ -393,11 +393,11 @@ browserify@^13.1.1:
     vm-browserify "~0.0.1"
     xtend "^4.0.0"
 
-browserslist@~1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-1.4.0.tgz#9cfdcf5384d9158f5b70da2aa00b30e8ff019049"
+browserslist@~1.5.1:
+  version "1.5.2"
+  resolved "https://registry.npmjs.org/browserslist/-/browserslist-1.5.2.tgz#1c82fde0ee8693e6d15c49b7bff209dc06298c56"
   dependencies:
-    caniuse-db "^1.0.30000539"
+    caniuse-db "^1.0.30000604"
 
 buffer-shims@^1.0.0:
   version "1.0.0"
@@ -445,9 +445,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-caniuse-db@^1.0.30000539, caniuse-db@^1.0.30000597:
-  version "1.0.30000597"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000597.tgz#b52e6cbe9dc83669affb98501629feaee1af6588"
+caniuse-db@^1.0.30000604:
+  version "1.0.30000611"
+  resolved "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000611.tgz#1075d14d9b3cc153caf5e9e35f45565b03304c37"
 
 caseless@~0.11.0:
   version "0.11.0"
@@ -497,7 +497,7 @@ circular-json@^0.3.0:
 
 clean-css@^3.4.23:
   version "3.4.23"
-  resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-3.4.23.tgz#604fbbca24c12feb59b02f00b84f1fb7ded6d001"
+  resolved "https://registry.npmjs.org/clean-css/-/clean-css-3.4.23.tgz#604fbbca24c12feb59b02f00b84f1fb7ded6d001"
   dependencies:
     commander "2.8.x"
     source-map "0.4.x"
@@ -534,7 +534,7 @@ co@^4.6.0:
 
 codacy-coverage@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/codacy-coverage/-/codacy-coverage-2.0.0.tgz#58c5b5df4bcaaa7b52142417f2f8774ed3fb4fe7"
+  resolved "https://registry.npmjs.org/codacy-coverage/-/codacy-coverage-2.0.0.tgz#58c5b5df4bcaaa7b52142417f2f8774ed3fb4fe7"
   dependencies:
     bluebird "^2.9.x"
     commander "^2.x"
@@ -668,17 +668,11 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-debug@2.2.0, debug@~2.2.0:
+debug@2.2.0, debug@^2.1.1, debug@~2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
     ms "0.7.1"
-
-debug@^2.1.1:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
-  dependencies:
-    ms "0.7.2"
 
 decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
@@ -743,9 +737,9 @@ diff@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-1.4.0.tgz#7f28d2eb9ee7b15a97efd89ce63dcfdaa3ccbabf"
 
-diff@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/diff/-/diff-3.1.0.tgz#9406c73a401e6c2b3ba901c5e2c44eb6a60c5385"
+diff@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/diff/-/diff-3.2.0.tgz#c9ce393a4b7cbd0b058a725c93df299027868ff9"
 
 diffie-hellman@^5.0.0:
   version "5.0.2"
@@ -875,15 +869,15 @@ escope@^3.6.0:
 
 eslint-plugin-promise@^3.4.0:
   version "3.4.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-promise/-/eslint-plugin-promise-3.4.0.tgz#6ba9048c2df57be77d036e0c68918bc9b4fc4195"
+  resolved "https://registry.npmjs.org/eslint-plugin-promise/-/eslint-plugin-promise-3.4.0.tgz#6ba9048c2df57be77d036e0c68918bc9b4fc4195"
 
 eslint-plugin-standard@^2.0.1:
   version "2.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-2.0.1.tgz#3589699ff9c917f2c25f76a916687f641c369ff3"
+  resolved "https://registry.npmjs.org/eslint-plugin-standard/-/eslint-plugin-standard-2.0.1.tgz#3589699ff9c917f2c25f76a916687f641c369ff3"
 
-eslint@^3.12.2:
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.12.2.tgz#6be5a9aa29658252abd7f91e9132bab1f26f3c34"
+eslint@^3.13.1:
+  version "3.13.1"
+  resolved "https://registry.npmjs.org/eslint/-/eslint-3.13.1.tgz#564d2646b5efded85df96985332edd91a23bff25"
   dependencies:
     babel-code-frame "^6.16.0"
     chalk "^1.1.3"
@@ -915,7 +909,7 @@ eslint@^3.12.2:
     require-uncached "^1.0.2"
     shelljs "^0.7.5"
     strip-bom "^3.0.0"
-    strip-json-comments "~1.0.1"
+    strip-json-comments "~2.0.1"
     table "^3.7.8"
     text-table "~0.2.0"
     user-home "^2.0.0"
@@ -1003,7 +997,7 @@ extsprintf@1.0.2:
 
 fast-html-parser@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/fast-html-parser/-/fast-html-parser-1.0.1.tgz#4ecc9683b8bb79afe11a50807b7853e79256cea2"
+  resolved "https://registry.npmjs.org/fast-html-parser/-/fast-html-parser-1.0.1.tgz#4ecc9683b8bb79afe11a50807b7853e79256cea2"
   dependencies:
     apollojs "^1.3.0"
     entities "^1.1.1"
@@ -1192,7 +1186,7 @@ glob@^6.0.1:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.0, glob@^7.0.3, glob@^7.0.5:
+glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.0:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
   dependencies:
@@ -1301,7 +1295,7 @@ hoek@2.x.x:
 
 hogan.js@^3.0.2:
   version "3.0.2"
-  resolved "https://registry.yarnpkg.com/hogan.js/-/hogan.js-3.0.2.tgz#4cd9e1abd4294146e7679e41d7898732b02c7bfd"
+  resolved "https://registry.npmjs.org/hogan.js/-/hogan.js-3.0.2.tgz#4cd9e1abd4294146e7679e41d7898732b02c7bfd"
   dependencies:
     mkdirp "0.3.0"
     nopt "1.0.10"
@@ -1545,7 +1539,7 @@ isstream@~0.1.2:
 
 istanbul@^0.4.5:
   version "0.4.5"
-  resolved "https://registry.yarnpkg.com/istanbul/-/istanbul-0.4.5.tgz#65c7d73d4c4da84d4f3ac310b918fb0b8033733b"
+  resolved "https://registry.npmjs.org/istanbul/-/istanbul-0.4.5.tgz#65c7d73d4c4da84d4f3ac310b918fb0b8033733b"
   dependencies:
     abbrev "1.0.x"
     async "1.x"
@@ -1821,13 +1815,13 @@ mkdirp@0.3.0:
 
 mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.1:
   version "0.5.1"
-  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
+  resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
 
 mocha@^3.2.0:
   version "3.2.0"
-  resolved "https://registry.yarnpkg.com/mocha/-/mocha-3.2.0.tgz#7dc4f45e5088075171a68896814e6ae9eb7a85e3"
+  resolved "https://registry.npmjs.org/mocha/-/mocha-3.2.0.tgz#7dc4f45e5088075171a68896814e6ae9eb7a85e3"
   dependencies:
     browser-stdout "1.3.0"
     commander "2.9.0"
@@ -1868,10 +1862,6 @@ moment@2.x.x:
 ms@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
-
-ms@0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
 
 mute-stream@0.0.5:
   version "0.0.5"
@@ -1917,7 +1907,7 @@ nopt@3.x, nopt@~3.0.6:
 
 nopt@^4.0.1:
   version "4.0.1"
-  resolved "https://registry.yarnpkg.com/nopt/-/nopt-4.0.1.tgz#d0d4685afd5415193c8c7505602d0d17cd64474d"
+  resolved "https://registry.npmjs.org/nopt/-/nopt-4.0.1.tgz#d0d4685afd5415193c8c7505602d0d17cd64474d"
   dependencies:
     abbrev "1"
     osenv "^0.1.4"
@@ -2121,7 +2111,7 @@ pluralize@^1.2.1:
 
 postcss-cli@^2.6.0:
   version "2.6.0"
-  resolved "https://registry.yarnpkg.com/postcss-cli/-/postcss-cli-2.6.0.tgz#f0de393caa026fcfc1b1479822989af508ed515d"
+  resolved "https://registry.npmjs.org/postcss-cli/-/postcss-cli-2.6.0.tgz#f0de393caa026fcfc1b1479822989af508ed515d"
   dependencies:
     globby "^4.1.0"
     mkdirp "^0.5.1"
@@ -2137,9 +2127,9 @@ postcss-value-parser@^3.2.3:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-3.3.0.tgz#87f38f9f18f774a4ab4c8a232f5c5ce8872a9d15"
 
-postcss@^5.0.0, postcss@^5.2.6:
-  version "5.2.6"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-5.2.6.tgz#a252cd67cd52585035f17e9ad12b35137a7bdd9e"
+postcss@^5.0.0, postcss@^5.2.8:
+  version "5.2.10"
+  resolved "https://registry.npmjs.org/postcss/-/postcss-5.2.10.tgz#b58b64e04f66f838b7bc7cb41f7dac168568a945"
   dependencies:
     chalk "^1.1.3"
     js-base64 "^2.1.9"
@@ -2419,9 +2409,9 @@ shasum@^1.0.0:
     json-stable-stringify "~0.0.0"
     sha.js "~2.4.4"
 
-shell-quote@^1.4.3:
+shell-quote@^1.6.1:
   version "1.6.1"
-  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.6.1.tgz#f4781949cce402697127430ea3b3c5476f481767"
+  resolved "https://registry.npmjs.org/shell-quote/-/shell-quote-1.6.1.tgz#f4781949cce402697127430ea3b3c5476f481767"
   dependencies:
     array-filter "~0.0.0"
     array-map "~0.0.0"
@@ -2575,9 +2565,13 @@ strip-bom@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/strip-bom/-/strip-bom-3.0.0.tgz#2334c18e9c759f7bdd56fdef7e9ae3d588e68ed3"
 
-strip-json-comments@~1.0.1, strip-json-comments@~1.0.4:
+strip-json-comments@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-1.0.4.tgz#1e15fbcac97d3ee99bf2d73b4c656b082bbafb91"
+
+strip-json-comments@~2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
 subarg@^1.0.0:
   version "1.0.0"
@@ -2715,7 +2709,7 @@ uglify-to-browserify@~1.0.0:
 
 uglifyjs@^2.4.10:
   version "2.4.10"
-  resolved "https://registry.yarnpkg.com/uglifyjs/-/uglifyjs-2.4.10.tgz#632927319fa6a3da3fc91f9773ac27bfe6c3ee92"
+  resolved "https://registry.npmjs.org/uglifyjs/-/uglifyjs-2.4.10.tgz#632927319fa6a3da3fc91f9773ac27bfe6c3ee92"
   dependencies:
     async "~0.2.6"
     source-map "0.1.34"
@@ -2778,7 +2772,7 @@ vm-browserify@~0.0.1:
 
 whatwg-fetch@^2.0.1:
   version "2.0.1"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.1.tgz#078b9461bbe91cea73cbce8bb122a05f9e92b772"
+  resolved "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-2.0.1.tgz#078b9461bbe91cea73cbce8bb122a05f9e92b772"
 
 which-module@^1.0.0:
   version "1.0.0"

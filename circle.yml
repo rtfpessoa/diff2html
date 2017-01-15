@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 6
+    version: 7
 dependencies:
   cache_directories:
     - ~/nvm
@@ -9,20 +9,29 @@ dependencies:
     - git clean -dfx
 test:
   override:
+    - echo "Running tests with node 7.x"
+    - git clean -dfx
+    - nvm use 7 && nvm alias default 7
+    - npm install
+    - npm run lint
+    - npm run codacy
+    - npm run test
+    - echo "Running tests with node 6.x"
     - git clean -dfx
     - nvm use 6 && nvm alias default 6
     - npm install
-    - npm run style
     - npm run test
-    - npm run codacy
+    - echo "Running tests with node 5.x"
     - git clean -dfx
     - nvm use 5 && nvm alias default 5
     - npm install
     - npm run test
+    - echo "Running tests with node 4.x"
     - git clean -dfx
     - nvm use 4 && nvm alias default 4
     - npm install
     - npm run test
+    - echo "Running tests with node 0.12.x"
     - git clean -dfx
     - nvm use 0.12 && nvm alias default 0.12
     - npm install

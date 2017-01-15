@@ -40,12 +40,13 @@
     "release-website": "./scripts/release-website.sh",
     "release-bower": "./scripts/update-bower-version.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
-    "style": "eslint .",
+    "style": "npm run lint",
+    "lint": "eslint .",
     "coverage": "istanbul cover _mocha -- -u exports -R spec ./test/**/*",
     "check-coverage": "istanbul check-coverage --statements 90 --functions 90 --branches 85 --lines 90 ./coverage/coverage.json",
     "test": "npm run coverage && npm run check-coverage",
     "codacy": "cat ./coverage/lcov.info | codacy-coverage",
-    "preversion": "npm run release && npm run release-website && npm run style && npm test",
+    "preversion": "npm run release && npm run release-website && npm run lint && npm test",
     "version": "npm run release-bower && git add -A src dist docs package.json bower.json",
     "postversion": "git push && git push --tags"
   },
@@ -54,16 +55,16 @@
     "fs": false
   },
   "dependencies": {
-    "diff": "^3.1.0",
+    "diff": "^3.2.0",
     "hogan.js": "^3.0.2",
     "whatwg-fetch": "^2.0.1"
   },
   "devDependencies": {
-    "autoprefixer": "^6.5.4",
-    "browserify": "^13.1.1",
+    "autoprefixer": "^6.6.1",
+    "browserify": "^13.3.0",
     "clean-css": "^3.4.23",
     "codacy-coverage": "^2.0.0",
-    "eslint": "^3.12.2",
+    "eslint": "^3.13.1",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "fast-html-parser": "^1.0.1",
