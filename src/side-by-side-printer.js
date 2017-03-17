@@ -71,7 +71,7 @@
   SideBySidePrinter.prototype.makeSideHtml = function(blockHeader) {
     return hoganUtils.render(genericTemplatesPath, 'column-line-number', {
       diffParser: diffParser,
-      blockHeader: blockHeader,
+      blockHeader: utils.escape(blockHeader),
       lineClass: 'd2h-code-side-linenumber',
       contentClass: 'd2h-code-side-line'
     });

@@ -73,7 +73,7 @@
   LineByLinePrinter.prototype.makeColumnLineNumberHtml = function(block) {
     return hoganUtils.render(genericTemplatesPath, 'column-line-number', {
       diffParser: diffParser,
-      blockHeader: block.header,
+      blockHeader: utils.escape(block.header),
       lineClass: 'd2h-code-linenumber',
       contentClass: 'd2h-code-line'
     });
