@@ -3262,7 +3262,7 @@ process.umask = function() { return 0; };
   LineByLinePrinter.prototype.makeColumnLineNumberHtml = function(block) {
     return hoganUtils.render(genericTemplatesPath, 'column-line-number', {
       diffParser: diffParser,
-      blockHeader: block.header,
+      blockHeader: utils.escape(block.header),
       lineClass: 'd2h-code-linenumber',
       contentClass: 'd2h-code-line'
     });
@@ -3866,7 +3866,7 @@ process.umask = function() { return 0; };
   SideBySidePrinter.prototype.makeSideHtml = function(blockHeader) {
     return hoganUtils.render(genericTemplatesPath, 'column-line-number', {
       diffParser: diffParser,
-      blockHeader: blockHeader,
+      blockHeader: utils.escape(blockHeader),
       lineClass: 'd2h-code-side-linenumber',
       contentClass: 'd2h-code-side-line'
     });
@@ -4096,6 +4096,9 @@ module.exports = global.browserTemplates;
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;')
       .replace(/\t/g, '    ');
   };
 
