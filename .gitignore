@@ -18,6 +18,7 @@ target/
 # Node
 node_modules/
 npm-debug.log
+yarn-error.log
 
 # Istanbul
 coverage/

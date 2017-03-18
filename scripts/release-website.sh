@@ -24,7 +24,7 @@ rm -rf ${OUTPUT_DIR}
 mkdir -p ${OUTPUT_DIR}
 
 echo "Minifying ${OUTPUT_CSS_FILE} to ${OUTPUT_MIN_CSS_FILE}"
-postcss --use autoprefixer ${INPUT_CSS_FILE} -d ${OUTPUT_DIR}
+postcss --use autoprefixer -o ${OUTPUT_CSS_FILE} ${INPUT_CSS_FILE}
 cleancss --advanced --compatibility=ie8 -o ${OUTPUT_MIN_CSS_FILE} ${OUTPUT_CSS_FILE}
 
 echo "Generating website js aggregation file in ${OUTPUT_DEMO_JS}"

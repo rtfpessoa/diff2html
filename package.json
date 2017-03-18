@@ -62,7 +62,7 @@
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "browserify": "^14.1.0",
-    "clean-css": "^4.0.9",
+    "clean-css-cli": "^4.0.9",
     "codacy-coverage": "^2.0.1",
     "eslint": "^3.18.0",
     "eslint-plugin-promise": "^3.5.0",
