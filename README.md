@@ -36,6 +36,8 @@ diff2html generates pretty HTML diffs from git or unified diff output.
 
 * Easy code selection
 
+* Support `svn diff --git` output
+
 ## Online Example
 
 > Go to [diff2html](https://diff2html.xyz/)
@@ -100,6 +102,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
   - `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is `2500`
   - `templates`: object with previously compiled templates to replace parts of the html
   - `rawTemplates`: object with raw not compiled templates to replace parts of the html
+  - `ignoreSvnPropertyChange`: If you use `svn diff --git`, and add or delete a binary file, you will get two file change records in output. Set `ignoreSvnPropertyChange = true` will help you ignore the second record.
+   
   > For more information regarding the possible templates look into [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
 
 ## Diff2HtmlUI Helper

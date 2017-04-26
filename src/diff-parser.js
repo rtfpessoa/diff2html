@@ -5,7 +5,7 @@
  *
  */
 
-(function() {
+(function () {
   var utils = require('./utils.js').Utils;
 
   var LINE_TYPE = {
@@ -22,7 +22,7 @@
 
   DiffParser.prototype.LINE_TYPE = LINE_TYPE;
 
-  DiffParser.prototype.generateDiffJson = function(diffInput, configuration) {
+  DiffParser.prototype.generateDiffJson = function (diffInput, configuration) {
     var config = configuration || {};
 
     var files = [];
@@ -198,8 +198,8 @@
     /* Diff */
     var oldMode = /^old mode (\d{6})/;
     var newMode = /^new mode (\d{6})/;
-    var deletedFileMode = /^deleted file mode (\d{6})/;
-    var newFileMode = /^new file mode (\d{6})/;
+    var deletedFileMode = /^deleted file mode (\d{5,6})/;
+    var newFileMode = /^new file mode (\d{5,6})/;
 
     var copyFrom = /^copy from "?(.+)"?/;
     var copyTo = /^copy to "?(.+)"?/;
@@ -220,7 +220,45 @@
     var combinedNewFile = /^new file mode (\d{6})/;
     var combinedDeletedFile = /^deleted file mode (\d{6}),(\d{6})/;
 
-    diffLines.forEach(function(line, lineIndex) {
+    var svnNullFileMode = /^(.+)(\s+)(\(nonexistent\))$/;
+    var svnWithVersionFileMode = /^(.+)(\s+)(\(revision\s+\d+\))$/;
+
+    /* if we use command `svn diff --git`. we wiil get header like that:
+     *
+     * ```
+     * diff --git a/color_doc.docx b/color_doc.docx
+     * --- a/color_doc.docx (nonexistent)
+     * +++ b/color_doc.docx (revision 10)
+     * ```
+     *
+     * `(nonexistent)` means that file do not exist.
+     * `(revision 10)` shows the current version of file. When the string exit, this file is in reposity.
+     */
+    function checkSvnFileMode(fileName, isOld) {
+      var result = null;
+      if (isOld) {
+        if (result = svnNullFileMode.exec(fileName)) {
+          currentFile.oldName = result[1];
+          //          currentFile.isNew   = true;
+        } else if (result = svnWithVersionFileMode.exec(fileName)) {
+          currentFile.oldName = result[1];
+        } else {
+          currentFile.oldName = fileName;
+        }
+      } else {
+        if (result = svnNullFileMode.exec(fileName)) {
+          currentFile.newName = result[1];
+          //          currentFile.isDeleted = true;
+        } else if (result = svnWithVersionFileMode.exec(fileName)) {
+          currentFile.newName = result[1];
+        } else {
+          currentFile.newName = fileName;
+        }
+
+      }
+    }
+
+    diffLines.forEach(function (line, lineIndex) {
       // Unmerged paths, and possibly other non-diffable files
       // https://github.com/scottgonzalez/pretty-diff/issues/11
       // Also, remove some useless lines
@@ -280,7 +318,9 @@
          */
         if (currentFile && !currentFile.oldName &&
           utils.startsWith(line, '--- ') && (values = getSrcFilename(line, config))) {
-          currentFile.oldName = values;
+
+          checkSvnFileMode(values, true);
+          //          currentFile.oldName = values;
           currentFile.language = getExtension(currentFile.oldName, currentFile.language);
           return;
         }
@@ -291,7 +331,8 @@
          */
         if (currentFile && !currentFile.newName &&
           utils.startsWith(line, '+++ ') && (values = getDstFilename(line, config))) {
-          currentFile.newName = values;
+          checkSvnFileMode(values, false);
+          //          currentFile.newName = values;
           currentFile.language = getExtension(currentFile.newName, currentFile.language);
           return;
         }
@@ -386,8 +427,56 @@
     saveBlock();
     saveFile();
 
+    if (configuration.ignoreSvnPropertyChange)
+      files = dropSvnPropertyChangeFiles(files);
     return files;
   };
+
+  /**
+   * If you use `svn diff --git`, and add or delete a binary file, you will get two file change records in output, like that:
+   *
+   * ```
+   * ===================================================================
+   * diff --git a/text.png b/text.png
+   * deleted file mode 10644
+   * GIT binary patch
+   * ...
+   * ===================================================================
+   * diff --git a/text.png b/text.png
+   * --- a/text.png  (revision 15)
+   * +++ b/text.png  (nonexistent)
+   *
+   * Property changes on: text.png
+   * ...
+   * ```
+   * First record for "delete/new" a file.
+   * Second record for svn property change.
+   *
+   * You proberly do not want to see the second record. So will provide an `ignoreSvnPropertyChange` option to do that for you.
+   */
+  function dropSvnPropertyChangeFiles(files) {
+    const GIT_BINNARY_HEADER = 'GIT binary patch';
+    const PROPERTY_CHANGE_HEADER = 'Property changes on:';
+    let ret = new Array();
+    for (var i = 0; i < files.length - 1; i++) {
+      let file = files[i];
+      let nextFile = files[i + 1];
+
+      ret.push(file);
+      if (file.blocks.length > 0
+        && utils.startsWith(file.blocks[0].header, GIT_BINNARY_HEADER)
+        && nextFile.blocks.length > 0
+        && utils.startsWith(nextFile.blocks[0].header, PROPERTY_CHANGE_HEADER)
+        && file.name === nextFile.name
+        && (file.isDeleted === true || file.isNew === true)
+      ) {
+        i += 1;
+      }
+    }
+
+    return ret;
+  }
+
 
   function getExtension(filename, language) {
     var nameSplit = filename.split('.');
@@ -397,6 +486,7 @@
 
     return language;
   }
+
 
   function getSrcFilename(line, cfg) {
     return _getFilename('---', line, cfg.srcPrefix);
@@ -423,7 +513,7 @@
     var values = FilenameRegExp.exec(line);
     if (values && values[1]) {
       filename = values[1];
-      var matchingPrefixes = prefixes.filter(function(p) {
+      var matchingPrefixes = prefixes.filter(function (p) {
         return filename.indexOf(p) === 0;
       });
 
@@ -442,4 +532,6 @@
   }
 
   module.exports.DiffParser = new DiffParser();
-})();
+})
+();
+
