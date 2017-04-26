@@ -457,10 +457,10 @@
   function dropSvnPropertyChangeFiles(files) {
     const GIT_BINNARY_HEADER = 'GIT binary patch';
     const PROPERTY_CHANGE_HEADER = 'Property changes on:';
-    let ret = new Array();
+    var ret = new Array();
     for (var i = 0; i < files.length - 1; i++) {
-      let file = files[i];
-      let nextFile = files[i + 1];
+      var file = files[i];
+      var nextFile = files[i + 1];
 
       ret.push(file);
       if (file.blocks.length > 0
