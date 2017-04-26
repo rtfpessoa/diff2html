@@ -5,7 +5,7 @@
  *
  */
 
-(function () {
+(function() {
   var utils = require('./utils.js').Utils;
 
   var LINE_TYPE = {
@@ -22,7 +22,7 @@
 
   DiffParser.prototype.LINE_TYPE = LINE_TYPE;
 
-  DiffParser.prototype.generateDiffJson = function (diffInput, configuration) {
+  DiffParser.prototype.generateDiffJson = function(diffInput, configuration) {
     var config = configuration || {};
 
     var files = [];
@@ -237,28 +237,27 @@
     function checkSvnFileMode(fileName, isOld) {
       var result = null;
       if (isOld) {
-        if (result = svnNullFileMode.exec(fileName)) {
+        if ((result = svnNullFileMode.exec(fileName))) {
           currentFile.oldName = result[1];
           //          currentFile.isNew   = true;
-        } else if (result = svnWithVersionFileMode.exec(fileName)) {
+        } else if ((result = svnWithVersionFileMode.exec(fileName))) {
           currentFile.oldName = result[1];
         } else {
           currentFile.oldName = fileName;
         }
       } else {
-        if (result = svnNullFileMode.exec(fileName)) {
+        if ((result = svnNullFileMode.exec(fileName))) {
           currentFile.newName = result[1];
           //          currentFile.isDeleted = true;
-        } else if (result = svnWithVersionFileMode.exec(fileName)) {
+        } else if ((result = svnWithVersionFileMode.exec(fileName))) {
           currentFile.newName = result[1];
         } else {
           currentFile.newName = fileName;
         }
-
       }
     }
 
-    diffLines.forEach(function (line, lineIndex) {
+    diffLines.forEach(function(line, lineIndex) {
       // Unmerged paths, and possibly other non-diffable files
       // https://github.com/scottgonzalez/pretty-diff/issues/11
       // Also, remove some useless lines
@@ -317,8 +316,9 @@
          * --- 2002-02-21 23:30:39.942229878 -0800
          */
         if (currentFile && !currentFile.oldName &&
-          utils.startsWith(line, '--- ') && (values = getSrcFilename(line, config))) {
-
+          utils.startsWith(line, '--- ') &&
+          (values = getSrcFilename(line, config))
+        ) {
           checkSvnFileMode(values, true);
           //          currentFile.oldName = values;
           currentFile.language = getExtension(currentFile.oldName, currentFile.language);
@@ -427,8 +427,9 @@
     saveBlock();
     saveFile();
 
-    if (configuration.ignoreSvnPropertyChange)
+    if (config.ignoreSvnPropertyChange) {
       files = dropSvnPropertyChangeFiles(files);
+    }
     return files;
   };
 
@@ -457,18 +458,18 @@
   function dropSvnPropertyChangeFiles(files) {
     const GIT_BINNARY_HEADER = 'GIT binary patch';
     const PROPERTY_CHANGE_HEADER = 'Property changes on:';
-    var ret = new Array();
+    var ret = [];
     for (var i = 0; i < files.length - 1; i++) {
       var file = files[i];
       var nextFile = files[i + 1];
 
       ret.push(file);
-      if (file.blocks.length > 0
-        && utils.startsWith(file.blocks[0].header, GIT_BINNARY_HEADER)
-        && nextFile.blocks.length > 0
-        && utils.startsWith(nextFile.blocks[0].header, PROPERTY_CHANGE_HEADER)
-        && file.name === nextFile.name
-        && (file.isDeleted === true || file.isNew === true)
+      if (file.blocks.length > 0 &&
+        utils.startsWith(file.blocks[0].header, GIT_BINNARY_HEADER) &&
+        nextFile.blocks.length > 0 &&
+        utils.startsWith(nextFile.blocks[0].header, PROPERTY_CHANGE_HEADER) &&
+        file.name === nextFile.name &&
+        (file.isDeleted === true || file.isNew === true)
       ) {
         i += 1;
       }
@@ -476,7 +477,6 @@
 
     return ret;
   }
-
 
   function getExtension(filename, language) {
     var nameSplit = filename.split('.');
@@ -486,7 +486,6 @@
 
     return language;
   }
-
 
   function getSrcFilename(line, cfg) {
     return _getFilename('---', line, cfg.srcPrefix);
@@ -513,7 +512,7 @@
     var values = FilenameRegExp.exec(line);
     if (values && values[1]) {
       filename = values[1];
-      var matchingPrefixes = prefixes.filter(function (p) {
+      var matchingPrefixes = prefixes.filter(function(p) {
         return filename.indexOf(p) === 0;
       });
 
@@ -532,6 +531,5 @@
   }
 
   module.exports.DiffParser = new DiffParser();
-})
-();
+})();
 
