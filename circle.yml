@@ -14,8 +14,8 @@ test:
     - nvm install 7 && nvm use 7 && nvm alias default 7
     - npm install
     - npm run lint
-    - npm run codacy
     - npm run test
+    - npm run codacy
     - echo "Running tests with node 6.x"
     - git clean -dfx
     - nvm install 6 && nvm use 6 && nvm alias default 6
