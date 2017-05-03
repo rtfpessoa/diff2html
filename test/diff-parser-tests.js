@@ -728,5 +728,45 @@ describe('DiffParser', function() {
       assert.deepEqual(linesContent,
         [' function foo() {', '-var bar = "Whoops!";', '+var baz = "Whoops!";', ' }', ' ']);
     });
+
+    it('should parse `svn diff --git` content', function() {
+      var diff =
+        'Index: color_doc.docx\n' +
+        '===================================================================\n' +
+        'diff --git a/color_doc.docx b/color_doc.docx\n' +
+        'new file mode 10644\n' +
+        'GIT binary patch\n' +
+        'literal 296291\n' +
+        'zc%1CHV|b>|mmvJaPteH|b!;ac+w9n8$F^;E+_5|E*jC3@$F^-JoBsW0W@mS2->>`O\n' +
+        ' \n' +
+        'literal 0\n' +
+        'Hc$@<O00001\n' +
+        ' \n' +
+        'Index: color_doc.docx\n' +
+        '===================================================================\n' +
+        'diff --git a/color_doc.docx b/color_doc.docx\n' +
+        '--- a/color_doc.docx	(nonexistent)\n' +
+        '+++ b/color_doc.docx	(revision 10)\n' +
+        '\n' +
+        'Property changes on: color_doc.docx\n' +
+        '___________________________________________________________________\n' +
+        'Added: svn:executable\n' +
+        '## -0,0 +1 ##\n' +
+        '+*\n' +
+        '\\ No newline at end of property\n' +
+        'Added: svn:mime-type\n' +
+        '## -0,0 +1 ##\n' +
+        '+application/octet-stream\n' +
+        '\\ No newline at end of property\n' +
+        ' ';
+      var result = DiffParser.generateDiffJson(diff, {ignoreSvnPropertyChange: true});
+      assert.equal(1, result.length);
+
+      var file1 = result[0];
+      assert.equal('color_doc.docx', file1.oldName);
+      assert.equal('color_doc.docx', file1.newName);
+      assert.equal(true, file1.isNew);
+      assert.equal('10644', file1.newFileMode);
+    });
   });
 });

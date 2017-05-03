@@ -455,7 +455,7 @@
    * You proberly do not want to see the second record. So will provide an `ignoreSvnPropertyChange` option to do that for you.
    */
   function dropSvnPropertyChangeFiles(files) {
-    const GIT_BINNARY_HEADER = 'GIT binary patch';
+    const GIT_BINARY_HEADER = 'GIT binary patch';
     const PROPERTY_CHANGE_HEADER = 'Property changes on:';
     var ret = [];
     for (var i = 0; i < files.length - 1; i++) {
@@ -464,7 +464,7 @@
 
       ret.push(file);
       if (file.blocks.length > 0 &&
-        utils.startsWith(file.blocks[0].header, GIT_BINNARY_HEADER) &&
+        utils.startsWith(file.blocks[0].header, GIT_BINARY_HEADER) &&
         nextFile.blocks.length > 0 &&
         utils.startsWith(nextFile.blocks[0].header, PROPERTY_CHANGE_HEADER) &&
         file.name === nextFile.name &&
