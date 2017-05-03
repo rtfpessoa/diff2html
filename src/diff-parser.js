@@ -223,7 +223,7 @@
     var svnNullFileMode = /^(.+)(\s+)(\(nonexistent\))$/;
     var svnWithVersionFileMode = /^(.+)(\s+)(\(revision\s+\d+\))$/;
 
-    /* if we use command `svn diff --git`. we wiil get header like that:
+    /* if we use command `svn diff --git`. we will get header like that:
      *
      * ```
      * diff --git a/color_doc.docx b/color_doc.docx
@@ -320,7 +320,6 @@
           (values = getSrcFilename(line, config))
         ) {
           checkSvnFileMode(values, true);
-          //          currentFile.oldName = values;
           currentFile.language = getExtension(currentFile.oldName, currentFile.language);
           return;
         }
