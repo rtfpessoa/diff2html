@@ -239,7 +239,6 @@
       if (isOld) {
         if ((result = svnNullFileMode.exec(fileName))) {
           currentFile.oldName = result[1];
-          //          currentFile.isNew   = true;
         } else if ((result = svnWithVersionFileMode.exec(fileName))) {
           currentFile.oldName = result[1];
         } else {
@@ -248,7 +247,6 @@
       } else {
         if ((result = svnNullFileMode.exec(fileName))) {
           currentFile.newName = result[1];
-          //          currentFile.isDeleted = true;
         } else if ((result = svnWithVersionFileMode.exec(fileName))) {
           currentFile.newName = result[1];
         } else {
@@ -331,7 +329,6 @@
         if (currentFile && !currentFile.newName &&
           utils.startsWith(line, '+++ ') && (values = getDstFilename(line, config))) {
           checkSvnFileMode(values, false);
-          //          currentFile.newName = values;
           currentFile.language = getExtension(currentFile.newName, currentFile.language);
           return;
         }
