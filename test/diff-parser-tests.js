@@ -5,8 +5,7 @@ var DiffParser = require('../src/diff-parser.js').DiffParser;
 describe('DiffParser', function() {
   describe('generateDiffJson', function() {
     it('should parse unix with \n diff', function() {
-      var diff =
-        'diff --git a/sample b/sample\n' +
+      var diff = 'diff --git a/sample b/sample\n' +
         'index 0000001..0ddf2ba\n' +
         '--- a/sample\n' +
         '+++ b/sample\n' +
@@ -17,8 +16,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse windows with \r\n diff', function() {
-      var diff =
-        'diff --git a/sample b/sample\r\n' +
+      var diff = 'diff --git a/sample b/sample\r\n' +
         'index 0000001..0ddf2ba\r\n' +
         '--- a/sample\r\n' +
         '+++ b/sample\r\n' +
@@ -29,8 +27,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse old os x with \r diff', function() {
-      var diff =
-        'diff --git a/sample b/sample\r' +
+      var diff = 'diff --git a/sample b/sample\r' +
         'index 0000001..0ddf2ba\r' +
         '--- a/sample\r' +
         '+++ b/sample\r' +
@@ -41,8 +38,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse mixed eols diff', function() {
-      var diff =
-        'diff --git a/sample b/sample\n' +
+      var diff = 'diff --git a/sample b/sample\n' +
         'index 0000001..0ddf2ba\r\n' +
         '--- a/sample\r' +
         '+++ b/sample\r\n' +
@@ -64,8 +60,7 @@ describe('DiffParser', function() {
     }
 
     it('should parse diff with special characters', function() {
-      var diff =
-        'diff --git "a/bla with \ttab.scala" "b/bla with \ttab.scala"\n' +
+      var diff = 'diff --git "a/bla with \ttab.scala" "b/bla with \ttab.scala"\n' +
         'index 4c679d7..e9bd385 100644\n' +
         '--- "a/bla with \ttab.scala"\n' +
         '+++ "b/bla with \ttab.scala"\n' +
@@ -85,8 +80,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with prefix', function() {
-      var diff =
-        'diff --git "\tbla with \ttab.scala" "\tbla with \ttab.scala"\n' +
+      var diff = 'diff --git "\tbla with \ttab.scala" "\tbla with \ttab.scala"\n' +
         'index 4c679d7..e9bd385 100644\n' +
         '--- "\tbla with \ttab.scala"\n' +
         '+++ "\tbla with \ttab.scala"\n' +
@@ -95,7 +89,10 @@ describe('DiffParser', function() {
         '+cenas com ananas\n' +
         '+bananas';
 
-      var result = DiffParser.generateDiffJson(diff, {'srcPrefix': '\t', 'dstPrefix': '\t'});
+      var result = DiffParser.generateDiffJson(diff, {
+        'srcPrefix': '\t',
+        'dstPrefix': '\t'
+      });
       var file1 = result[0];
       assert.equal(1, result.length);
       assert.equal(2, file1.addedLines);
@@ -106,8 +103,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with deleted file', function() {
-      var diff =
-        'diff --git a/src/var/strundefined.js b/src/var/strundefined.js\n' +
+      var diff = 'diff --git a/src/var/strundefined.js b/src/var/strundefined.js\n' +
         'deleted file mode 100644\n' +
         'index 04e16b0..0000000\n' +
         '--- a/src/var/strundefined.js\n' +
@@ -133,8 +129,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with new file', function() {
-      var diff =
-        'diff --git a/test.js b/test.js\n' +
+      var diff = 'diff --git a/test.js b/test.js\n' +
         'new file mode 100644\n' +
         'index 0000000..e1e22ec\n' +
         '--- /dev/null\n' +
@@ -163,8 +158,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with nested diff', function() {
-      var diff =
-        'diff --git a/src/offset.js b/src/offset.js\n' +
+      var diff = 'diff --git a/src/offset.js b/src/offset.js\n' +
         'index cc6ffb4..fa51f18 100644\n' +
         '--- a/src/offset.js\n' +
         '+++ b/src/offset.js\n' +
@@ -192,8 +186,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with multiple blocks', function() {
-      var diff =
-        'diff --git a/src/attributes/classes.js b/src/attributes/classes.js\n' +
+      var diff = 'diff --git a/src/attributes/classes.js b/src/attributes/classes.js\n' +
         'index c617824..c8d1393 100644\n' +
         '--- a/src/attributes/classes.js\n' +
         '+++ b/src/attributes/classes.js\n' +
@@ -236,8 +229,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with multiple files', function() {
-      var diff =
-        'diff --git a/src/core/init.js b/src/core/init.js\n' +
+      var diff = 'diff --git a/src/core/init.js b/src/core/init.js\n' +
         'index e49196a..50f310c 100644\n' +
         '--- a/src/core/init.js\n' +
         '+++ b/src/core/init.js\n' +
@@ -289,8 +281,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse combined diff', function() {
-      var diff =
-        'diff --combined describe.c\n' +
+      var diff = 'diff --combined describe.c\n' +
         'index fabadb8,cc95eb0..4866510\n' +
         '--- a/describe.c\n' +
         '+++ b/describe.c\n' +
@@ -334,8 +325,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diffs with copied files', function() {
-      var diff =
-        'diff --git a/index.js b/more-index.js\n' +
+      var diff = 'diff --git a/index.js b/more-index.js\n' +
         'dissimilarity index 5%\n' +
         'copy from index.js\n' +
         'copy to more-index.js\n';
@@ -354,8 +344,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diffs with moved files', function() {
-      var diff =
-        'diff --git a/more-index.js b/other-index.js\n' +
+      var diff = 'diff --git a/more-index.js b/other-index.js\n' +
         'similarity index 86%\n' +
         'rename from more-index.js\n' +
         'rename to other-index.js\n';
@@ -374,8 +363,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diffs correct line numbers', function() {
-      var diff =
-        'diff --git a/sample b/sample\n' +
+      var diff = 'diff --git a/sample b/sample\n' +
         'index 0000001..0ddf2ba\n' +
         '--- a/sample\n' +
         '+++ b/sample\n' +
@@ -400,8 +388,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse unified non git diff and strip timestamps off the headers', function() {
-      var diff =
-        '--- a/sample.js	2016-10-25 11:37:14.000000000 +0200\n' +
+      var diff = '--- a/sample.js	2016-10-25 11:37:14.000000000 +0200\n' +
         '+++ b/sample.js	2016-10-25 11:37:14.000000000 +0200\n' +
         '@@ -1 +1,2 @@\n' +
         '-test\n' +
@@ -424,8 +411,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse unified non git diff', function() {
-      var diff =
-        '--- a/sample.js\n' +
+      var diff = '--- a/sample.js\n' +
         '+++ b/sample.js\n' +
         '@@ -1 +1,2 @@\n' +
         '-test\n' +
@@ -448,8 +434,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse unified diff with multiple hunks and files', function() {
-      var diff =
-        '--- sample.js\n' +
+      var diff = '--- sample.js\n' +
         '+++ sample.js\n' +
         '@@ -1 +1,2 @@\n' +
         '-test\n' +
@@ -494,8 +479,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with --- and +++ in the context lines', function() {
-      var diff =
-        '--- sample.js\n' +
+      var diff = '--- sample.js\n' +
         '+++ sample.js\n' +
         '@@ -1,8 +1,8 @@\n' +
         ' test\n' +
@@ -525,8 +509,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff without proper hunk headers', function() {
-      var diff =
-        '--- sample.js\n' +
+      var diff = '--- sample.js\n' +
         '+++ sample.js\n' +
         '@@ @@\n' +
         ' test';
@@ -547,8 +530,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse binary file diff', function() {
-      var diff =
-        'diff --git a/last-changes-config.png b/last-changes-config.png\n' +
+      var diff = 'diff --git a/last-changes-config.png b/last-changes-config.png\n' +
         'index 322248b..56fc1f2 100644\n' +
         '--- a/last-changes-config.png\n' +
         '+++ b/last-changes-config.png\n' +
@@ -567,8 +549,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with --find-renames', function() {
-      var diff =
-        'diff --git a/src/test-bar.js b/src/test-baz.js\n' +
+      var diff = 'diff --git a/src/test-bar.js b/src/test-baz.js\n' +
         'similarity index 98%\n' +
         'rename from src/test-bar.js\n' +
         'rename to src/test-baz.js\n' +
@@ -599,8 +580,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse diff with prefix', function() {
-      var diff =
-        'diff --git "\tTest.scala" "\tScalaTest.scala"\n' +
+      var diff = 'diff --git "\tTest.scala" "\tScalaTest.scala"\n' +
         'similarity index 88%\n' +
         'rename from Test.scala\n' +
         'rename to ScalaTest.scala\n' +
@@ -642,7 +622,10 @@ describe('DiffParser', function() {
         ' }\n' +
         ' ';
 
-      var result = DiffParser.generateDiffJson(diff, {'srcPrefix': '\t', 'dstPrefix': '\t'});
+      var result = DiffParser.generateDiffJson(diff, {
+        'srcPrefix': '\t',
+        'dstPrefix': '\t'
+      });
       assert.equal(3, result.length);
 
       var file1 = result[0];
@@ -673,8 +656,7 @@ describe('DiffParser', function() {
     });
 
     it('should parse binary with content', function() {
-      var diff =
-        'diff --git a/favicon.png b/favicon.png\n' +
+      var diff = 'diff --git a/favicon.png b/favicon.png\n' +
         'deleted file mode 100644\n' +
         'index 2a9d516a5647205d7be510dd0dff93a3663eff6f..0000000000000000000000000000000000000000\n' +
         'GIT binary patch\n' +
@@ -729,9 +711,8 @@ describe('DiffParser', function() {
         [' function foo() {', '-var bar = "Whoops!";', '+var baz = "Whoops!";', ' }', ' ']);
     });
 
-    it('should parse `svn diff --git` content', function() {
-      var diff =
-        'Index: color_doc.docx\n' +
+    it('should ignore the property set record of `svn diff --git` with ignoreSvnPropertyChange = true', function() {
+      var diff = 'Index: color_doc.docx\n' +
         '===================================================================\n' +
         'diff --git a/color_doc.docx b/color_doc.docx\n' +
         'new file mode 10644\n' +
@@ -759,7 +740,9 @@ describe('DiffParser', function() {
         '+application/octet-stream\n' +
         '\\ No newline at end of property\n' +
         ' ';
-      var result = DiffParser.generateDiffJson(diff, {ignoreSvnPropertyChange: true});
+      var result = DiffParser.generateDiffJson(diff, {
+        ignoreSvnPropertyChange: true
+      });
       assert.equal(1, result.length);
 
       var file1 = result[0];
@@ -767,6 +750,103 @@ describe('DiffParser', function() {
       assert.equal('color_doc.docx', file1.newName);
       assert.equal(true, file1.isNew);
       assert.equal('10644', file1.newFileMode);
+    });
+
+    it('should parse `svn diff --git` content without ignoreSvnPropertyChange', function() {
+      var diff = 'Index: color_doc.docx\n' +
+        '===================================================================\n' +
+        'diff --git a/color_doc.docx b/color_doc.docx\n' +
+        'new file mode 10644\n' +
+        'GIT binary patch\n' +
+        'literal 296291\n' +
+        'zc%1CHV|b>|mmvJaPteH|b!;ac+w9n8$F^;E+_5|E*jC3@$F^-JoBsW0W@mS2->>`O\n' +
+        ' \n' +
+        'literal 0\n' +
+        'Hc$@<O00001\n' +
+        ' \n' +
+        'Index: color_doc.docx\n' +
+        '===================================================================\n' +
+        'diff --git a/color_doc.docx b/color_doc.docx\n' +
+        '--- a/color_doc.docx	(nonexistent)\n' +
+        '+++ b/color_doc.docx	(revision 10)\n' +
+        '\n' +
+        'Property changes on: color_doc.docx\n' +
+        '___________________________________________________________________\n' +
+        'Added: svn:executable\n' +
+        '## -0,0 +1 ##\n' +
+        '+*\n' +
+        '\\ No newline at end of property\n' +
+        'Added: svn:mime-type\n' +
+        '## -0,0 +1 ##\n' +
+        '+application/octet-stream\n' +
+        '\\ No newline at end of property\n' +
+        ' ';
+      var result = DiffParser.generateDiffJson(diff);
+      assert.equal(2, result.length);
+
+      var file1 = result[0];
+      assert.equal('color_doc.docx', file1.oldName);
+      assert.equal('color_doc.docx', file1.newName);
+      assert.equal(true, file1.isNew);
+      assert.equal('10644', file1.newFileMode);
+
+      var file2 = result[1];
+      assert.equal('color_doc.docx', file2.oldName);
+      assert.equal('color_doc.docx', file2.newName);
+      assert.equal('docx', file2.language);
+    });
+
+
+    it('should parse multiple files without ignoreSvnPropertyChange', function() {
+      var diff = 'Index: trunk/README.md\n' +
+        '===================================================================\n' +
+        'diff --git a/trunk/README.md b/trunk/README.md\n' +
+        'new file mode 10644\n' +
+        '--- /dev/null	(nonexistent)\n' +
+        '+++ b/trunk/README.md	(revision 4)\n' +
+        '@@ -0,0 +1 @@\n' +
+        '+用来测试 svndiff 和 gitdiff 的项目\n' +
+        'Index: trunk/blue_octocat.txt\n' +
+        '===================================================================\n' +
+        'diff --git a/trunk/blue_octocat.txt b/trunk/blue_octocat.txt\n' +
+        'deleted file mode 10644\n' +
+        '--- a/trunk/blue_octocat.txt	(revision 2)\n' +
+        '+++ /dev/null	(nonexistent)\n' +
+        '@@ -1 +0,0 @@\n' +
+        '-A Blue Octocat\n' +
+        'Index: trunk/octocat.txt\n' +
+        '===================================================================\n' +
+        'diff --git a/trunk/octocat.txt b/trunk/octocat.txt\n' +
+        'deleted file mode 10644\n' +
+        '--- a/trunk/octocat.txt	(revision 2)\n' +
+        '+++ /dev/null	(nonexistent)\n' +
+        '@@ -1 +0,0 @@\n' +
+        '-A Tale of Two Octocats\n' +
+        'Index: trunk/octofamily/momma_octocat.txt\n' +
+        '===================================================================\n' +
+        'diff --git a/trunk/octofamily/momma_octocat.txt b/trunk/octofamily/momma_octocat.txt\n' +
+        'deleted file mode 10644\n' +
+        '--- a/trunk/octofamily/momma_octocat.txt	(revision 2)\n' +
+        '+++ /dev/null	(nonexistent)\n' +
+        '@@ -1 +0,0 @@\n' +
+        '-A Momma Octocat\n' +
+        ' ';
+      var result = DiffParser.generateDiffJson(diff);
+      assert.equal(4, result.length);
+
+      var file1 = result[0];
+      assert.equal('trunk/README.md', file1.newName);
+      assert.equal('/dev/null', file1.oldName);
+      assert.equal(true, file1.isNew);
+      assert.equal(true, file1.isGitDiff);
+      assert.equal('10644', file1.newFileMode);
+
+      var file4 = result[3];
+      assert.equal('trunk/octofamily/momma_octocat.txt', file4.oldName);
+      assert.equal("/dev/null", file4.newName);
+      assert.equal(true, file4.isDeleted);
+      assert.equal(true, file4.isGitDiff);
+
     });
   });
 });
