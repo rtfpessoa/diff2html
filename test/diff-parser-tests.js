@@ -796,7 +796,6 @@ describe('DiffParser', function() {
       assert.equal('docx', file2.language);
     });
 
-
     it('should parse multiple files without ignoreSvnPropertyChange', function() {
       var diff = 'Index: trunk/README.md\n' +
         '===================================================================\n' +
@@ -843,10 +842,9 @@ describe('DiffParser', function() {
 
       var file4 = result[3];
       assert.equal('trunk/octofamily/momma_octocat.txt', file4.oldName);
-      assert.equal("/dev/null", file4.newName);
+      assert.equal('/dev/null', file4.newName);
       assert.equal(true, file4.isDeleted);
       assert.equal(true, file4.isGitDiff);
-
     });
   });
 });
