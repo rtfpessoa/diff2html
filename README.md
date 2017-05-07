@@ -84,7 +84,7 @@ let dif2html = require("diff2html").Diff2Html
 
     getPrettyHtml(input: any, configuration?: Options): string
 
-> Check out the `docs/diff2html.d.ts` for a complete API definition in TypeScript.
+> Check out the `typescript/diff2html.d.ts` for a complete API definition in TypeScript.
 
 > Check out the `docs/demo.html` for a demo example.
 
