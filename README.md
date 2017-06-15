@@ -78,7 +78,7 @@ let dif2html = require("diff2html").Diff2Html
 
 > Pretty HTML diff
 
-    getJsonFromDiff(input: string, configuration?: Options): Result
+    getJsonFromDiff(input: string, configuration?: Options): Result[]
 
 > Intermediate Json From Git Word Diff Output
 
