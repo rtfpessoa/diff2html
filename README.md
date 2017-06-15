@@ -76,11 +76,11 @@ let dif2html = require("diff2html").Diff2Html
 
 ## API
 
-> Pretty HTML diff
+> Intermediate Json From Git Word Diff Output
 
     getJsonFromDiff(input: string, configuration?: Options): Result[]
 
-> Intermediate Json From Git Word Diff Output
+> Pretty HTML diff
 
     getPrettyHtml(input: any, configuration?: Options): string
 
