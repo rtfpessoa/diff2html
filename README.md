@@ -71,7 +71,7 @@ It will now be available as a global variable named `Diff2Html`.
 ### Node Module
 
 ```js
-let dif2html = require("diff2html").Diff2Html
+let diff2html = require("diff2html").Diff2Html
 ```
 
 ## API
