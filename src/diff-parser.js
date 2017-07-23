@@ -198,8 +198,8 @@
     /* Diff */
     var oldMode = /^old mode (\d{6})/;
     var newMode = /^new mode (\d{6})/;
-    var deletedFileMode = /^deleted file mode (\d{6})/;
-    var newFileMode = /^new file mode (\d{6})/;
+    var deletedFileMode = /^deleted file mode (\d{5,6})/;
+    var newFileMode = /^new file mode (\d{5,6})/;
 
     var copyFrom = /^copy from "?(.+)"?/;
     var copyTo = /^copy to "?(.+)"?/;
@@ -219,6 +219,41 @@
     var combinedMode = /^mode (\d{6}),(\d{6})\.\.(\d{6})/;
     var combinedNewFile = /^new file mode (\d{6})/;
     var combinedDeletedFile = /^deleted file mode (\d{6}),(\d{6})/;
+
+    var svnNullFileMode = /^(.+)(\s+)(\(nonexistent\))$/;
+    var svnWithVersionFileMode = /^(.+)(\s+)(\(revision\s+\d+\))$/;
+
+    /* if we use command `svn diff --git`. we will get header like that:
+     *
+     * ```
+     * diff --git a/color_doc.docx b/color_doc.docx
+     * --- a/color_doc.docx (nonexistent)
+     * +++ b/color_doc.docx (revision 10)
+     * ```
+     *
+     * `(nonexistent)` means that file do not exist.
+     * `(revision 10)` shows the current version of file. When the string exit, this file is in reposity.
+     */
+    function checkSvnFileMode(fileName, isOld) {
+      var result = null;
+      if (isOld) {
+        if ((result = svnNullFileMode.exec(fileName))) {
+          currentFile.oldName = result[1];
+        } else if ((result = svnWithVersionFileMode.exec(fileName))) {
+          currentFile.oldName = result[1];
+        } else {
+          currentFile.oldName = fileName;
+        }
+      } else {
+        if ((result = svnNullFileMode.exec(fileName))) {
+          currentFile.newName = result[1];
+        } else if ((result = svnWithVersionFileMode.exec(fileName))) {
+          currentFile.newName = result[1];
+        } else {
+          currentFile.newName = fileName;
+        }
+      }
+    }
 
     diffLines.forEach(function(line, lineIndex) {
       // Unmerged paths, and possibly other non-diffable files
@@ -279,8 +314,10 @@
          * --- 2002-02-21 23:30:39.942229878 -0800
          */
         if (currentFile && !currentFile.oldName &&
-          utils.startsWith(line, '--- ') && (values = getSrcFilename(line, config))) {
-          currentFile.oldName = values;
+          utils.startsWith(line, '--- ') &&
+          (values = getSrcFilename(line, config))
+        ) {
+          checkSvnFileMode(values, true);
           currentFile.language = getExtension(currentFile.oldName, currentFile.language);
           return;
         }
@@ -291,7 +328,7 @@
          */
         if (currentFile && !currentFile.newName &&
           utils.startsWith(line, '+++ ') && (values = getDstFilename(line, config))) {
-          currentFile.newName = values;
+          checkSvnFileMode(values, false);
           currentFile.language = getExtension(currentFile.newName, currentFile.language);
           return;
         }
@@ -386,8 +423,56 @@
     saveBlock();
     saveFile();
 
+    if (config.ignoreSvnPropertyChange) {
+      files = dropSvnPropertyChangeFiles(files);
+    }
     return files;
   };
+
+  /**
+   * If you use `svn diff --git`, and add or delete a binary file, you will get two file change records in output, like that:
+   *
+   * ```
+   * ===================================================================
+   * diff --git a/text.png b/text.png
+   * deleted file mode 10644
+   * GIT binary patch
+   * ...
+   * ===================================================================
+   * diff --git a/text.png b/text.png
+   * --- a/text.png  (revision 15)
+   * +++ b/text.png  (nonexistent)
+   *
+   * Property changes on: text.png
+   * ...
+   * ```
+   * First record for "delete/new" a file.
+   * Second record for svn property change.
+   *
+   * You proberly do not want to see the second record. So will provide an `ignoreSvnPropertyChange` option to do that for you.
+   */
+  function dropSvnPropertyChangeFiles(files) {
+    const GIT_BINARY_HEADER = 'GIT binary patch';
+    const PROPERTY_CHANGE_HEADER = 'Property changes on:';
+    var ret = [];
+    for (var i = 0; i < files.length - 1; i++) {
+      var file = files[i];
+      var nextFile = files[i + 1];
+
+      ret.push(file);
+      if (file.blocks.length > 0 &&
+        utils.startsWith(file.blocks[0].header, GIT_BINARY_HEADER) &&
+        nextFile.blocks.length > 0 &&
+        utils.startsWith(nextFile.blocks[0].header, PROPERTY_CHANGE_HEADER) &&
+        file.name === nextFile.name &&
+        (file.isDeleted === true || file.isNew === true)
+      ) {
+        i += 1;
+      }
+    }
+
+    return ret;
+  }
 
   function getExtension(filename, language) {
     var nameSplit = filename.split('.');
@@ -443,3 +528,4 @@
 
   module.exports.DiffParser = new DiffParser();
 })();
+
