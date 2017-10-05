@@ -35,7 +35,7 @@ postcss --use autoprefixer -o ${OUTPUT_CSS_FILE} ${INPUT_CSS_FILE}
 cleancss --advanced --compatibility=ie8 -o ${OUTPUT_MIN_CSS_FILE} ${OUTPUT_CSS_FILE}
 
 echo "Pre-compile hogan.js templates"
-npm run templates
+yarn run templates
 
 echo "Generating js aggregation file in ${OUTPUT_JS_FILE}"
 browserify -e ${INPUT_JS_FILE} -o ${OUTPUT_JS_FILE}
