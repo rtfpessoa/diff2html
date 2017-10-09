@@ -400,27 +400,40 @@ describe('DiffParser', function() {
     });
 
     it('should parse unified non git diff and strip timestamps off the headers', function() {
-      var diff =
-        '--- a/sample.js	2016-10-25 11:37:14.000000000 +0200\n' +
-        '+++ b/sample.js	2016-10-25 11:37:14.000000000 +0200\n' +
-        '@@ -1 +1,2 @@\n' +
-        '-test\n' +
-        '+test1r\n' +
-        '+test2r\n';
+      var diffs = [
+        // 2 hours ahead of GMT
+        '--- a/sample.js  2016-10-25 11:37:14.000000000 +0200\n' +
+          '+++ b/sample.js  2016-10-25 11:37:14.000000000 +0200\n' +
+          '@@ -1 +1,2 @@\n' +
+          '-test\n' +
+          '+test1r\n' +
+          '+test2r\n',
+        // 2 hours behind GMT
+        '--- a/sample.js 2016-10-25 11:37:14.000000000 -0200\n' +
+          '+++ b/sample.js  2016-10-25 11:37:14.000000000 -0200\n' +
+          '@@ -1 +1,2 @@\n' +
+          '-test\n' +
+          '+test1r\n' +
+          '+test2r\n'
+      ];
 
-      var result = DiffParser.generateDiffJson(diff);
-      var file1 = result[0];
-      assert.equal(1, result.length);
-      assert.equal(2, file1.addedLines);
-      assert.equal(1, file1.deletedLines);
-      assert.equal('sample.js', file1.oldName);
-      assert.equal('sample.js', file1.newName);
-      assert.equal(1, file1.blocks.length);
+      diffs.forEach(function(diff) {
+        var result = DiffParser.generateDiffJson(diff);
+        var file1 = result[0];
+        assert.equal(1, result.length);
+        assert.equal(2, file1.addedLines);
+        assert.equal(1, file1.deletedLines);
+        assert.equal('sample.js', file1.oldName);
+        assert.equal('sample.js', file1.newName);
+        assert.equal(1, file1.blocks.length);
 
-      var linesContent = file1.blocks[0].lines.map(function(line) {
-        return line.content;
+        var linesContent = file1.blocks[0].lines.map(function(line) {
+          return line.content;
+        });
+        assert.deepEqual(linesContent, ['-test', '+test1r', '+test2r']);
       });
-      assert.deepEqual(linesContent, ['-test', '+test1r', '+test2r']);
+
+      
     });
 
     it('should parse unified non git diff', function() {
