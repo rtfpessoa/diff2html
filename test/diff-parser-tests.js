@@ -432,8 +432,6 @@ describe('DiffParser', function() {
         });
         assert.deepEqual(linesContent, ['-test', '+test1r', '+test2r']);
       });
-
-      
     });
 
     it('should parse unified non git diff', function() {
