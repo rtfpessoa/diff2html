@@ -57,6 +57,7 @@
   "dependencies": {
     "diff": "^3.3.1",
     "hogan.js": "^3.0.2",
+    "lodash": "^4.17.4",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {

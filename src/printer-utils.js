@@ -144,6 +144,20 @@
     unprefixedLine1 = diffLine1.substr(prefixSize);
     unprefixedLine2 = diffLine2.substr(prefixSize);
 
+    if (unprefixedLine1.length > config.maxLineLengthHighlight ||
+      unprefixedLine2.length > config.maxLineLengthHighlight) {
+      return {
+        first: {
+          prefix: linePrefix1,
+          line: utils.escape(unprefixedLine1)
+        },
+        second: {
+          prefix: linePrefix2,
+          line: utils.escape(unprefixedLine2)
+        }
+      };
+    }
+
     var diff;
     if (config.charByChar) {
       diff = jsDiff.diffChars(unprefixedLine1, unprefixedLine2);
