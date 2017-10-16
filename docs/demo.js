@@ -488,7 +488,7 @@ $(document).ready(function() {
   var $outputFormat = $('#diff-url-options-output-format');
   var $showFiles = $('#diff-url-options-show-files');
   var $matching = $('#diff-url-options-matching');
-  var $wordThreshold = $('#diff-url-options-match-words-threshold');
+  var $wordsThreshold = $('#diff-url-options-match-words-threshold');
   var $matchingMaxComparisons = $('#diff-url-options-matching-max-comparisons');
 
   if (window.location.search) {
@@ -502,10 +502,13 @@ $(document).ready(function() {
   $outputFormat
     .add($showFiles)
     .add($matching)
-    .add($wordThreshold)
+    .add($wordsThreshold)
     .add($matchingMaxComparisons)
-    .change(function() {
-      smartDraw();
+    .change(function(e) {
+      console.log('');
+      console.log(e);
+      console.log('');
+      smartDraw(null, true);
     });
 
   function getUrlFromSearch(search) {
@@ -518,6 +521,22 @@ $(document).ready(function() {
     }
 
     return null;
+  }
+
+  function getParamsFromSearch(search) {
+    var map = {};
+    try {
+      search
+        .split('?')[1]
+        .split('&')
+        .map(function(e) {
+          var values = e.split('=');
+          map[values[0]] = values[1];
+        });
+    } catch (_ignore) {
+    }
+
+    return map;
   }
 
   function bind() {
@@ -588,13 +607,13 @@ $(document).ready(function() {
     };
   }
 
-  function smartDraw(urlOpt) {
+  function smartDraw(urlOpt, forced) {
     var url = urlOpt || $url.val();
     var req = prepareUrl(url);
-    draw(req);
+    draw(req, forced);
   }
 
-  function draw(req) {
+  function draw(req, forced) {
     if (!validateUrl(req.url)) {
       console.error('Invalid url provided!');
       return;
@@ -605,7 +624,7 @@ $(document).ready(function() {
     var outputFormat = $outputFormat.val();
     var showFiles = $showFiles.is(':checked');
     var matching = $matching.val();
-    var wordThreshold = $wordThreshold.val();
+    var wordsThreshold = $wordsThreshold.val();
     var matchingMaxComparisons = $matchingMaxComparisons.val();
 
     fetch(req.url, {
@@ -627,16 +646,34 @@ $(document).ready(function() {
           $container.css({'width': ''});
         }
 
-        diff2htmlUi.draw(container, {
-          outputFormat: outputFormat,
-          showFiles: showFiles,
-          matching: matching,
-          matchWordsThreshold: wordThreshold,
-          matchingMaxComparisons: matchingMaxComparisons,
-          synchronisedScroll: true
-        });
-        diff2htmlUi.fileListCloseable(container, false);
-        diff2htmlUi.highlightCode(container);
+        var params = getParamsFromSearch(window.location.search);
+        delete params[searchParam];
+
+        if (forced) {
+          params['outputFormat'] = outputFormat;
+          params['showFiles'] = showFiles;
+          params['matching'] = matching;
+          params['wordsThreshold'] = wordsThreshold;
+          params['matchingMaxComparisons'] = matchingMaxComparisons;
+        } else {
+          params['outputFormat'] = params['outputFormat'] || outputFormat;
+          params['showFiles'] = String(params['showFiles']) !== 'false' || (params['showFiles'] === null && showFiles);
+          params['matching'] = params['matching'] || matching;
+          params['wordsThreshold'] = params['wordsThreshold'] || wordsThreshold;
+          params['matchingMaxComparisons'] = params['matchingMaxComparisons'] || matchingMaxComparisons;
+
+          $outputFormat.val(params['outputFormat']);
+          $showFiles.prop('checked', params['showFiles']);
+          $matching.val(params['matching']);
+          $wordsThreshold.val(params['wordsThreshold']);
+          $matchingMaxComparisons.val(params['matchingMaxComparisons']);
+        }
+
+        params['synchronisedScroll'] = params['synchronisedScroll'] || true;
+
+        diff2htmlUi.draw(container, params);
+        diff2htmlUi.fileListCloseable(container, params['fileListCloseable'] || false);
+        params['highlight'] && diff2htmlUi.highlightCode(container);
       });
   }
 
@@ -645,11 +682,15 @@ $(document).ready(function() {
   }
 
   function updateUrl(url) {
-    var currentUrl = getUrlFromSearch(window.location.search);
+    var params = getParamsFromSearch(window.location.search);
 
-    if (currentUrl === url) return;
+    if (params[searchParam] === url) return;
 
-    window.location = 'demo.html?' + searchParam + '=' + url;
+    params[searchParam] = url;
+
+    var paramString = Object.keys(params).map(function(k) { return k + '=' + params[k]; }).join('&');
+
+    window.location = 'demo.html?' + paramString;
   }
 });
 
