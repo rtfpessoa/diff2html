@@ -6,6 +6,8 @@
  */
 
 (function() {
+  var lodash = require('lodash');
+
   function Utils() {
   }
 
@@ -37,6 +39,12 @@
 
   Utils.prototype.valueOrEmpty = function(value) {
     return value || '';
+  };
+
+  Utils.prototype.safeConfig = function(cfg, defaultConfig) {
+    var newCfg = {};
+    lodash.merge(newCfg, defaultConfig, cfg);
+    return newCfg;
   };
 
   module.exports.Utils = new Utils();
