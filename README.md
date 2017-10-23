@@ -102,11 +102,6 @@ export class AppDiffComponent implements OnInit {
     this.outputHtml = outputHtml;
     this.
 }
-
-export class Diff2HtmlOptionsImpl implements Diff2Html.Options {
-  constructor(public inputFormat: string) {
-  }
-}
 ```
  in html file
  ```html
