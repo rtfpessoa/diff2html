@@ -6,7 +6,7 @@
  */
 
 (function() {
-  var lodash = require('lodash');
+  var merge = require('lodash/merge');
 
   function Utils() {
   }
@@ -43,7 +43,7 @@
 
   Utils.prototype.safeConfig = function(cfg, defaultConfig) {
     var newCfg = {};
-    lodash.merge(newCfg, defaultConfig, cfg);
+    merge(newCfg, defaultConfig, cfg);
     return newCfg;
   };
 
