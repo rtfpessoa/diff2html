@@ -32,7 +32,7 @@
     "url": "https://www.github.com/rtfpessoa/diff2html/issues"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=4"
   },
   "preferGlobal": true,
   "scripts": {
@@ -55,26 +55,26 @@
     "fs": false
   },
   "dependencies": {
-    "diff": "^3.3.1",
+    "diff": "^3.5.0",
     "hogan.js": "^3.0.2",
-    "lodash": "^4.17.4",
-    "whatwg-fetch": "^2.0.3"
+    "lodash": "^4.17.10",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
-    "autoprefixer": "^7.1.4",
-    "browserify": "^14.4.0",
-    "clean-css-cli": "^4.1.10",
-    "codacy-coverage": "^2.0.3",
-    "eslint": "^4.8.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
+    "autoprefixer": "^8.6.2",
+    "browserify": "^16.2.2",
+    "clean-css-cli": "^4.1.11",
+    "codacy-coverage": "^3.0.0",
+    "eslint": "^4.19.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
     "fast-html-parser": "^1.0.1",
     "istanbul": "^0.4.5",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.5.3",
+    "mocha": "^5.2.0",
     "nopt": "^4.0.1",
-    "postcss-cli": "^4.1.1",
-    "uglify-js": "^3.1.2"
+    "postcss-cli": "^5.0.0",
+    "uglify-js": "^3.4.0"
   },
   "license": "MIT",
   "files": [

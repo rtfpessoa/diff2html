@@ -33,11 +33,6 @@ jobs:
       - run: yarn run lint
       - run: yarn run codacy
 
-  build-node_0.12:
-    <<: *common-build
-    docker:
-      - image: node:0.12
-
   build-node_4:
     <<: *common-build
     docker:
@@ -59,17 +54,28 @@ jobs:
       - image: node:7
 
   build-node_8:
-    <<: *latest-build
+    <<: *common-build
     docker:
       - image: node:8
+
+  build-node_9:
+    <<: *common-build
+    docker:
+      - image: node:9
+
+  build-node_10:
+    <<: *latest-build
+    docker:
+      - image: node:10
 
 workflows:
   version: 2
   build:
     jobs:
-      - build-node_0.12
       - build-node_4
       - build-node_5
       - build-node_6
       - build-node_7
       - build-node_8
+      - build-node_9
+      - build-node_10
