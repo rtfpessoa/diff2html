@@ -68,6 +68,14 @@ Import the stylesheet and the library code
 
 It will now be available as a global variable named `Diff2Html`.
 
+```js
+var diffHtml = Diff2Html.getPrettyHtml(
+  '<Unified Diff String>',
+  {inputFormat: 'diff', showFiles: true, matching: 'lines', outputFormat: 'side-by-side'}
+);
+document.getElementById("destination-elem-id").innerHTML = diffHtml;
+```
+
 ### Node Module
 
 ```js
