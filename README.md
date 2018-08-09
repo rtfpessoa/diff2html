@@ -1,7 +1,7 @@
 # diff2html
 
-[![Codacy Code Badge](https://api.codacy.com/project/badge/grade/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/Codacy/diff2html)
-[![Codacy Coverage Badge](https://api.codacy.com/project/badge/coverage/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/Codacy/diff2html)
+[![Codacy Quality Badge](https://api.codacy.com/project/badge/Grade/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/rtfpessoa/diff2html?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rtfpessoa/diff2html&amp;utm_campaign=Badge_Grade)
+[![Codacy Coverage Badge](https://api.codacy.com/project/badge/Coverage/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/rtfpessoa/diff2html?utm_source=github.com&utm_medium=referral&utm_content=rtfpessoa/diff2html&utm_campaign=Badge_Coverage)
 [![Circle CI](https://circleci.com/gh/rtfpessoa/diff2html.svg?style=svg)](https://circleci.com/gh/rtfpessoa/diff2html)
 [![Dependency Status](https://dependencyci.com/github/rtfpessoa/diff2html/badge)](https://dependencyci.com/github/rtfpessoa/diff2html)
 
