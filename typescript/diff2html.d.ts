@@ -13,6 +13,7 @@ declare namespace Diff2Html {
     synchronisedScroll?: boolean;
     matchWordsThreshold?: number;
     matchingMaxComparisons?: number;
+    maxLineLengthHighlight?: number;
   }
 
   export interface Line {
