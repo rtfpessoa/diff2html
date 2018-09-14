@@ -15,6 +15,7 @@
 
   var genericTemplatesPath = 'generic';
   var baseTemplatesPath = 'line-by-line';
+  var wrappedTemplatesPath = 'wrapped';
   var iconsBaseTemplatesPath = 'icon';
   var tagsBaseTemplatesPath = 'tag';
 

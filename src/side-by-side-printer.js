@@ -15,6 +15,7 @@
 
   var genericTemplatesPath = 'generic';
   var baseTemplatesPath = 'side-by-side';
+  var wrappedTemplatesPath = 'wrapped';
   var iconsBaseTemplatesPath = 'icon';
   var tagsBaseTemplatesPath = 'tag';
 
@@ -33,7 +34,8 @@
   }
 
   SideBySidePrinter.prototype.makeDiffHtml = function(file, diffs) {
-    var fileDiffTemplate = hoganUtils.template(baseTemplatesPath, 'file-diff');
+    var that = this;
+    var fileDiffTemplate = hoganUtils.template(baseTemplatesPath, (that.config.lineFolding) ? 'wrapped-file-diff' : 'file-diff');
     var filePathTemplate = hoganUtils.template(genericTemplatesPath, 'file-path');
     var fileIconTemplate = hoganUtils.template(iconsBaseTemplatesPath, 'file');
     var fileTagTemplate = hoganUtils.template(tagsBaseTemplatesPath, printerUtils.getFileTypeIcon(file));
@@ -53,15 +55,18 @@
 
   SideBySidePrinter.prototype.generateSideBySideJsonHtml = function(diffFiles) {
     var that = this;
-
+    var lineFolding = that.config.lineFolding;
     var content = diffFiles.map(function(file) {
       var diffs;
       if (file.blocks.length) {
-        diffs = that.generateSideBySideFileHtml(file);
+        if(!lineFolding) {
+            diffs = that.generateSideBySideFileHtml(file);
+        } else {
+            diffs = that.generateSideBySideWrappedFileHtml(file);
+        }
       } else {
         diffs = that.generateEmptyDiff();
       }
-
       return that.makeDiffHtml(file, diffs);
     }).join('\n');
 
@@ -82,7 +87,6 @@
     var fileHtml = {};
     fileHtml.left = '';
     fileHtml.right = '';
-
     file.blocks.forEach(function(block) {
       fileHtml.left += that.makeSideHtml(block.header);
       fileHtml.right += that.makeSideHtml('');
@@ -178,6 +182,132 @@
 
     return fileHtml;
   };
+  
+  SideBySidePrinter.prototype.generateSideBySideWrappedFileHtml = function(file) {
+    var that = this;
+    var fileHtml = {};
+    var lineFolding = that.config.lineFolding;
+    fileHtml = '';
+    file.blocks.forEach(function(block) {
+      fileHtml += that.makeSideHtml(block.header) + that.makeSideHtml('');
+
+      var oldLines = [];
+      var newLines = [];
+
+      function processChangeBlock() {
+        var matches;
+        var insertType;
+        var deleteType;
+
+        var comparisons = oldLines.length * newLines.length;
+        var maxComparisons = that.config.matchingMaxComparisons || 2500;
+        var doMatching = comparisons < maxComparisons && (that.config.matching === 'lines' ||
+          that.config.matching === 'words');
+
+        if (doMatching) {
+          matches = matcher(oldLines, newLines);
+          insertType = diffParser.LINE_TYPE.INSERT_CHANGES;
+          deleteType = diffParser.LINE_TYPE.DELETE_CHANGES;
+        } else {
+          matches = [[oldLines, newLines]];
+          insertType = diffParser.LINE_TYPE.INSERTS;
+          deleteType = diffParser.LINE_TYPE.DELETES;
+        }
+
+        matches.forEach(function(match) {
+          oldLines = match[0];
+          newLines = match[1];
+
+          var common = Math.min(oldLines.length, newLines.length);
+          var max = Math.max(oldLines.length, newLines.length);
+
+          for (var j = 0; j < common; j++) {
+            var oldLine = oldLines[j];
+            var newLine = newLines[j];
+
+            that.config.isCombined = file.isCombined;
+
+            var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
+            fileHtml += that.generateWrappedSingleLineHtml({
+                isCombined: file.isCombined,
+                type: deleteType,
+                number: oldLine.oldNumber,
+                content: diff.first.line,
+                possiblePrefix: diff.first.prefix
+            }, {
+                isCombined: file.isCombined,
+                type: insertType,
+                number: newLine.newNumber,
+                content: diff.second.line,
+                possiblePrefix: diff.second.prefix
+            });
+          }
+
+          if (max > common) {
+            var oldSlice = oldLines.slice(common);
+            var newSlice = newLines.slice(common);
+
+            var tmpHtml = that.processWrappedLines(file.isCombined, oldSlice, newSlice);
+            fileHtml += tmpHtml;
+          }
+        });
+        oldLines = [];
+        newLines = [];
+      }
+
+      for (var i = 0; i < block.lines.length; i++) {
+        var line = block.lines[i];
+        var prefix = line.content[0];
+        var escapedLine = utils.escape(line.content.substr(1));
+
+        if (line.type !== diffParser.LINE_TYPE.INSERTS &&
+          (newLines.length > 0 || (line.type !== diffParser.LINE_TYPE.DELETES && oldLines.length > 0))) {
+          processChangeBlock();
+        }
+
+        if (line.type === diffParser.LINE_TYPE.CONTEXT) {
+            fileHtml += that.generateWrappedSingleLineHtml({
+                isCombined: file.isCombined,
+                type: line.type,
+                number: line.oldNumber,
+                content: escapedLine,
+                possiblePrefix: prefix  
+            },{
+                isCombined: file.isCombined,
+                type: line.type,
+                number: line.newNumber,
+                content: escapedLine,
+                possiblePrefix: prefix  
+            });
+        } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
+            fileHtml += that.generateWrappedSingleLineHtml({
+                isCombined: file.isCombined,
+                type: diffParser.LINE_TYPE.CONTEXT,
+                number: '',
+                content: '',
+                possiblePrefix: ''  
+            },{
+                isCombined: file.isCombined,
+                type: line.type,
+                number: line.newNumber,
+                content: escapedLine,
+                possiblePrefix: prefix  
+            });
+        } else if (line.type === diffParser.LINE_TYPE.DELETES) {
+          oldLines.push(line);
+        } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
+          newLines.push(line);
+        } else {
+          console.error('unknown state in html side-by-side generator');
+          processChangeBlock();
+        }
+      }
+
+      processChangeBlock();
+    });
+
+    return fileHtml;
+  };
 
   SideBySidePrinter.prototype.processLines = function(isCombined, oldLines, newLines) {
     var that = this;
@@ -220,6 +350,80 @@
 
     return fileHtml;
   };
+  
+  SideBySidePrinter.prototype.processWrappedLines = function(isCombined, oldLines, newLines) {
+    var that = this;
+    var fileHtml = {};
+    var lineFolding = that.config.lineFolding;
+    fileHtml = '';
+    var maxLinesNumber = Math.max(oldLines.length, newLines.length);
+    for (var i = 0; i < maxLinesNumber; i++) {
+      var oldLine = oldLines[i];
+      var newLine = newLines[i];
+      var oldContent;
+      var newContent;
+      var oldPrefix;
+      var newPrefix;
+
+      if (oldLine) {
+        oldContent = utils.escape(oldLine.content.substr(1));
+        oldPrefix = oldLine.content[0];
+      }
+
+      if (newLine) {
+        newContent = utils.escape(newLine.content.substr(1));
+        newPrefix = newLine.content[0];
+      }
+
+      if (oldLine && newLine) {
+        fileHtml += that.generateWrappedSingleLineHtml({
+            isCombined: isCombined,
+            type: oldLine.type,
+            number: oldLine.oldNumber,
+            content: oldContent,
+            possiblePrefix: oldPrefix  
+        },{
+            isCombined: isCombined,
+            type: newLine.type,
+            number: newLine.newNumber,
+            content: newContent,
+            possiblePrefix: newPrefix  
+        });
+      } else if (oldLine) {
+        fileHtml += that.generateWrappedSingleLineHtml({
+            isCombined: isCombined,
+            type: oldLine.type,
+            number: oldLine.oldNumber,
+            content: oldContent,
+            possiblePrefix: oldPrefix  
+        },{
+            isCombined: isCombined,
+            type: diffParser.LINE_TYPE.CONTEXT,
+            number: '',
+            content: '',
+            possiblePrefix: ''  
+        });
+      } else if (newLine) {
+        fileHtml += that.generateWrappedSingleLineHtml({
+            isCombined: isCombined,
+            type: diffParser.LINE_TYPE.CONTEXT,
+            number: '',
+            content: '',
+            possiblePrefix: ''  
+        },{
+            isCombined: isCombined,
+            type: newLine.type,
+            number: newLine.newNumber,
+            content: newContent,
+            possiblePrefix: newPrefix  
+        });
+      } else {
+        console.error('How did it get here?');
+      }
+    }
+
+    return fileHtml;
+  };
 
   SideBySidePrinter.prototype.generateSingleLineHtml = function(isCombined, type, number, content, possiblePrefix) {
     var lineWithoutPrefix = content;
@@ -239,6 +443,34 @@
         prefix: prefix,
         content: lineWithoutPrefix,
         lineNumber: number
+      });
+  };
+  
+  SideBySidePrinter.prototype.generateFileWrappedTemplateObj = function(side) {
+      var lineWithoutPrefix = side.content;
+    var prefix = side.possiblePrefix;
+
+    if (!prefix) {
+      var lineWithPrefix = printerUtils.separatePrefix(side.isCombined, side.content);
+      prefix = lineWithPrefix.prefix;
+      lineWithoutPrefix = lineWithPrefix.line;
+    }
+    return {
+        type: side.type,
+        lineClass: 'd2h-wrapped-code-side-linenumber',
+        contentClass: 'd2h-wrapped-code-side-line',
+        prefix: prefix,
+        content: lineWithoutPrefix,
+        lineNumber: side.number
+      };
+  };
+
+  SideBySidePrinter.prototype.generateWrappedSingleLineHtml = function(left, right) { //isCombined, type, number, content, possiblePrefix) {
+    var that = this;
+    
+    return hoganUtils.render("wrapped", 'line', {
+          left: that.generateFileWrappedTemplateObj(left),
+          right: that.generateFileWrappedTemplateObj(right)
       });
   };
 

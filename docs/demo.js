@@ -485,7 +485,6 @@
 $(document).ready(function() {
   // Improves browser compatibility
   require('whatwg-fetch');
-
   var searchParam = 'diff';
 
   var $container = $('.container');
@@ -639,11 +638,26 @@ $(document).ready(function() {
       cache: 'default'
     })
       .then(function(res) {
-        return res.text();
+        //   return res.text();
+        return "diff --git a/README b/README\nindex 771ef03..1f8b36b 100644\n--- a/README\n+++ b/README\n@@ -8,16 +8,17 @@\n matchingMaxComparisons: perform at most this much comparisons for line matching a block of changes, default is 2500\n maxLineLengthHighlight: only perform diff changes highlight if lines are smaller than this, default is 10000\n templates: object with previously compiled templates to replace parts of the html\n-rawTemplates: object with raw not compiled templates to replace parts of the html\n+\n+Transpilation\n+\n+CoffeeScript 2 generates JavaScript that uses the latest, modern syntax. The runtime or browsers where you want your code to run might not support all of that syntax. In that case, we want to convert modern JavaScript into older JavaScript that will run in older versions of Node or older browsers; for example, { a } = obj into a = obj.a. This is done via transpilers like Babel, Bublé or Traceur Compiler.\n+\n+Quickstart\n+\n+From the root of your project:\n+\n+npm install --save-dev babel-core babel-preset-env\n+echo '{ \"presets\": [\"env\"] }' > .babelrc\n+coffee --compile --transpile --inline-map some-file.coffee\n For more information regarding the possible templates look into src/templates\n \n-character_length characters characterset charindex charset charsetform charsetid check checksum checksum_agg child \n-\n-choose chr chunk class cleanup clear client clob clob_base clone close cluster\t\t\n-id cluster_probability cluster_set clustering coalesce \n-\t\t\n-coercibility col collate collation collect colu colum column column_value columns columns_updated comment \n-\n-commit compact compatibility compiled complete composite_limit compound compress compute concat concat_ws \n-\n-concurrent confirm conn connec connect connect_by_iscycle connect_by_isleaf connect_by_root connect_time connection consider consistent constant constraint constraints constructor container content contents context contributors controlfile conv convert convert_tz corr corr_k corr_s corresponding corruption cos cost count count_big counted covar_pop covar_samp cpu_per_call cpu_per_session crc32 create creation critical cross cube cume_dist curdate current current_date current_time current_timestamp current_user cursor curtime customdatum cycle data database databases datafile datafiles datalength date_add date_cache date_format date_sub dateadd datediff datefromparts datename datepart datetime2fromparts day day_to_second dayname dayofmonth dayofweek dayofyear days db_role_change dbtimezone ddl deallocate declare decode decompose decrement decrypt deduplicate def defa defau defaul default defaults deferred defi defin define degrees \n";
       })
       .then(function(data) {
-        var container = '#url-diff-container';
-        var diff2htmlUi = new Diff2HtmlUI({diff: data});
+        var container = 'url-diff-container';
+        
+        var diffJson = Diff2Html.getJsonFromDiff(data);
+        var diff2html = Diff2Html.getPrettyHtml(diffJson, {
+                    inputFormat: 'json',
+                    outputFormat: "side-by-side",
+                    matching: 'none',
+                    lineFolding: true,
+                    matchWordsThreshold: 1
+                });
+        document.getElementById(container).innerHTML = diff2html;
+        var codeLines = document.getElementById(container).getElementsByClassName("d2h-code-line-ctn");
+        [].forEach.call(codeLines, function(line) {
+            hljs.highlightBlock(line);
+        });        
+        // var diff2htmlUi = new Diff2HtmlUI({diff: data});
 
         if (outputFormat === 'side-by-side') {
           $container.css({'width': '100%'});
@@ -676,9 +690,9 @@ $(document).ready(function() {
 
         params['synchronisedScroll'] = params['synchronisedScroll'] || true;
 
-        diff2htmlUi.draw(container, params);
-        diff2htmlUi.fileListCloseable(container, params['fileListCloseable'] || false);
-        params['highlight'] && diff2htmlUi.highlightCode(container);
+        // diff2htmlUi.draw(container, params);
+        // diff2htmlUi.fileListCloseable(container, params['fileListCloseable'] || false);
+        // params['highlight'] && diff2htmlUi.highlightCode(container);
       });
   }
 
