@@ -132,6 +132,7 @@
   padding: 0 10px;
 }
 
+.d2h-wrapped-code-line del,
 .d2h-wrapped-code-side-line del,
 .d2h-code-line del,
 .d2h-code-side-line del {
@@ -142,6 +143,7 @@
   border-radius: 0.2em;
 }
 
+.d2h-wrapped-code-line ins,
 .d2h-wrapped-code-side-line ins,
 .d2h-code-line ins,
 .d2h-code-side-line ins {
@@ -396,6 +398,8 @@
 .selecting-right td.d2h-code-linenumber *,
 .selecting-left .d2h-code-side-line,
 .selecting-left .d2h-code-side-line *,
+.selecting-left .d2h-wrapped-code-line,
+.selecting-left .d2h-wrapped-code-line *,
 .selecting-left .d2h-wrapped-code-side-line,
 .selecting-left .d2h-wrapped-code-side-line *,
 .selecting-right td.d2h-code-side-linenumber,
@@ -411,6 +415,8 @@
 .selecting-left .d2h-code-line *::-moz-selection,
 .selecting-right td.d2h-code-linenumber::-moz-selection,
 .selecting-left .d2h-code-side-line::-moz-selection,
+.selecting-left .d2h-wrapped-code-line *::-moz-selection,
+.selecting-left .d2h-wrapped-code-line::-moz-selection,
 .selecting-left .d2h-wrapped-code-side-line *::-moz-selection,
 .selecting-left .d2h-wrapped-code-side-line::-moz-selection,
 .selecting-left .d2h-code-side-line *::-moz-selection,
@@ -424,6 +430,8 @@
 .selecting-right td.d2h-code-linenumber::selection,
 .selecting-left .d2h-code-side-line::selection,
 .selecting-left .d2h-code-side-line *::selection,
+.selecting-left .d2h-wrapped-code-line::selection,
+.selecting-left .d2h-wrapped-code-line *::selection,
 .selecting-left .d2h-wrapped-code-side-line::selection,
 .selecting-left .d2h-wrapped-code-side-line *::selection,
 .selecting-right td.d2h-code-side-linenumber::selection,
