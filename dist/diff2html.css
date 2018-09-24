@@ -93,6 +93,15 @@
   margin-bottom: -8px;
 }
 
+.d2h-wrapped-file-side-diff {
+  display: inline-block;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: 100%;
+  margin-right: -4px;
+  margin-bottom: -8px;
+}
+
 .d2h-code-line {
   display: inline-block;
   white-space: nowrap;
@@ -107,6 +116,14 @@
   margin-left: 50px;
 }
 
+.d2h-wrapped-code-side-line {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 10px;
+  width:720px;
+}
+
+.d2h-wrapped-code-side-line del,
 .d2h-code-line del,
 .d2h-code-side-line del {
   display: inline-block;
@@ -116,6 +133,7 @@
   border-radius: 0.2em;
 }
 
+.d2h-wrapped-code-side-line ins,
 .d2h-code-line ins,
 .d2h-code-side-line ins {
   display: inline-block;
@@ -140,6 +158,15 @@
   padding: 0;
   word-wrap: normal;
   white-space: pre;
+}
+
+.d2h-wrapped-code-line-ctn {
+  display: inline;
+  background: none;
+  padding: 0;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .line-num1 {
@@ -179,6 +206,22 @@
   position: absolute;
   width: 56px;
   padding-left: 5px;
+  padding-right: 5px;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.3);
+  text-align: right;
+  border: solid #eeeeee;
+  border-width: 0 1px 0 1px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.d2h-wrapped-code-side-linenumber {
+  box-sizing: border-box;
+  position: relative;
+  width: 56px;
+  padding-left: 25px;
   padding-right: 5px;
   background-color: #fff;
   color: rgba(0, 0, 0, 0.3);
@@ -331,6 +374,8 @@
 .selecting-right td.d2h-code-linenumber *,
 .selecting-left .d2h-code-side-line,
 .selecting-left .d2h-code-side-line *,
+.selecting-left .d2h-wrapped-code-side-line,
+.selecting-left .d2h-wrapped-code-side-line *,
 .selecting-right td.d2h-code-side-linenumber,
 .selecting-right td.d2h-code-side-linenumber * {
   -webkit-touch-callout: none;
@@ -344,6 +389,8 @@
 .selecting-left .d2h-code-line *::-moz-selection,
 .selecting-right td.d2h-code-linenumber::-moz-selection,
 .selecting-left .d2h-code-side-line::-moz-selection,
+.selecting-left .d2h-wrapped-code-side-line *::-moz-selection,
+.selecting-left .d2h-wrapped-code-side-line::-moz-selection,
 .selecting-left .d2h-code-side-line *::-moz-selection,
 .selecting-right td.d2h-code-side-linenumber::-moz-selection,
 .selecting-right td.d2h-code-side-linenumber *::-moz-selection {
@@ -355,6 +402,8 @@
 .selecting-right td.d2h-code-linenumber::selection,
 .selecting-left .d2h-code-side-line::selection,
 .selecting-left .d2h-code-side-line *::selection,
+.selecting-left .d2h-wrapped-code-side-line::selection,
+.selecting-left .d2h-wrapped-code-side-line *::selection,
 .selecting-right td.d2h-code-side-linenumber::selection,
 .selecting-right td.d2h-code-side-linenumber *::selection {
   background: transparent;
