@@ -15,6 +15,7 @@
 
   var genericTemplatesPath = 'generic';
   var baseTemplatesPath = 'line-by-line';
+  var wrappedTemplatesPath = 'wrapped';
   var iconsBaseTemplatesPath = 'icon';
   var tagsBaseTemplatesPath = 'tag';
 
@@ -200,12 +201,12 @@
       prefix = lineWithPrefix.prefix;
       lineWithoutPrefix = lineWithPrefix.line;
     }
-
-    return hoganUtils.render(genericTemplatesPath, 'line',
+    var lineFolding = this.config.lineFolding;
+    return hoganUtils.render((lineFolding !== null && lineFolding) ? wrappedTemplatesPath : genericTemplatesPath, 'line',
       {
         type: type,
-        lineClass: 'd2h-code-linenumber',
-        contentClass: 'd2h-code-line',
+        lineClass: (lineFolding !== null && lineFolding) ? 'd2h-wrapped-code-linenumber' : 'd2h-code-linenumber',
+        contentClass: (lineFolding !== null && lineFolding) ? 'd2h-wrapped-code-line' : 'd2h-code-line',
         prefix: prefix,
         content: lineWithoutPrefix,
         lineNumber: lineNumberTemplate
