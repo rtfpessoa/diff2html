@@ -68,6 +68,10 @@
   font-size: 13px;
 }
 
+.fixed-layout {
+  table-layout: fixed;
+}
+
 .d2h-diff-tbody > tr > td {
   height: 20px;
   line-height: 20px;
@@ -109,6 +113,12 @@
   margin-left: 80px;
 }
 
+.d2h-wrapped-code-line {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 10px;
+}
+
 .d2h-code-side-line {
   display: inline-block;
   white-space: nowrap;
@@ -120,7 +130,6 @@
   display: inline-block;
   white-space: nowrap;
   padding: 0 10px;
-  width:720px;
 }
 
 .d2h-wrapped-code-side-line del,
@@ -201,6 +210,19 @@
   cursor: pointer;
 }
 
+.d2h-wrapped-code-linenumber {
+  box-sizing: border-box;
+  position: relative;
+  width: 86px;
+  padding-left: 2px;
+  padding-right: 2px;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.3);
+  text-align: right;
+  border: solid #eeeeee;
+  border-width: 0 1px 0 1px;
+  cursor: pointer;
+}
 .d2h-code-side-linenumber {
   box-sizing: border-box;
   position: absolute;
