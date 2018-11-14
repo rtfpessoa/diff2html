@@ -38,7 +38,6 @@
   "scripts": {
     "release": "./scripts/release.sh",
     "release-website": "./scripts/release-website.sh",
-    "release-bower": "./scripts/update-bower-version.sh",
     "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
     "style": "yarn run lint",
     "lint": "eslint .",
@@ -47,7 +46,7 @@
     "test": "yarn run coverage && yarn run check-coverage",
     "codacy": "cat ./coverage/lcov.info | codacy-coverage",
     "preversion": "yarn run release && yarn run release-website && yarn run lint && yarn test",
-    "version": "yarn run release-bower && git add -A src dist docs package.json bower.json",
+    "version": "git add -A src dist docs package.json",
     "postversion": "git push && git push --tags"
   },
   "main": "./src/diff2html.js",
