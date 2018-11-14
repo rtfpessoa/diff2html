@@ -32,6 +32,11 @@ jobs:
       - run: yarn run test
       - run: yarn run lint
       - run: yarn run codacy
+      - persist_to_workspace:
+          root: ~/diff2html
+          paths:
+            - docs
+            - dist
 
   build-node_4:
     <<: *common-build
@@ -68,6 +73,23 @@ jobs:
     docker:
       - image: node:10
 
+  deploy:
+    machine:
+      enabled: true
+    working_directory: ~/diff2html
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Prepare website sources
+          command: |
+              rm -f docs/assets
+              mv dist docs/assets
+      - run:
+          name: Deploy
+          working_directory: ~/diff2html/docs
+          command: aws s3 sync . s3://diff2html.rtfpessoa.xyz --region eu-west-1
+
 workflows:
   version: 2
   build:
@@ -79,3 +101,9 @@ workflows:
       - build-node_8
       - build-node_9
       - build-node_10
+      - deploy:
+          requires:
+            - build-node_10
+          filters:
+            branches:
+              only: master
