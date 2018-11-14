@@ -196,6 +196,12 @@
   text-overflow: ellipsis;
 }
 
+.d2h-code-side-emptyplaceholder,
+.d2h-emptyplaceholder {
+  background-color: #f1f1f1;
+  border-color: #e1e1e1;
+}
+
 /*
  * Changes Highlight
  */
