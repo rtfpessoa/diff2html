@@ -3334,7 +3334,7 @@ function baseMergeDeep(object, source, key, srcIndex, mergeFunc, customizer, sta
       if (isArguments(objValue)) {
         newValue = toPlainObject(objValue);
       }
-      else if (!isObject(objValue) || (srcIndex && isFunction(objValue))) {
+      else if (!isObject(objValue) || isFunction(objValue)) {
         newValue = initCloneObject(srcValue);
       }
     }
@@ -4416,9 +4416,11 @@ module.exports = root;
  * @returns {*} Returns the property value.
  */
 function safeGet(object, key) {
-  return key == '__proto__'
-    ? undefined
-    : object[key];
+  if (key == '__proto__') {
+    return;
+  }
+
+  return object[key];
 }
 
 module.exports = safeGet;
@@ -7235,6 +7237,14 @@ process.umask = function() { return 0; };
   SideBySidePrinter.prototype.generateSingleLineHtml = function(isCombined, type, number, content, possiblePrefix) {
     var lineWithoutPrefix = content;
     var prefix = possiblePrefix;
+    var lineClass = 'd2h-code-side-linenumber';
+    var contentClass = 'd2h-code-side-line';
+
+    if (!number && !content) {
+      lineClass += ' d2h-code-side-emptyplaceholder';
+      contentClass += ' d2h-code-side-emptyplaceholder';
+      type += ' d2h-emptyplaceholder';
+    }
 
     if (!prefix) {
       var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
@@ -7245,8 +7255,8 @@ process.umask = function() { return 0; };
     return hoganUtils.render(genericTemplatesPath, 'line',
       {
         type: type,
-        lineClass: 'd2h-code-side-linenumber',
-        contentClass: 'd2h-code-side-line',
+        lineClass: lineClass,
+        contentClass: contentClass,
         prefix: prefix,
         content: lineWithoutPrefix,
         lineNumber: number
