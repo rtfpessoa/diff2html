@@ -162,8 +162,6 @@ export default {
 </script>
 ```
 
-
-
 ## API
 
 > Intermediate Json From Git Word Diff Output
