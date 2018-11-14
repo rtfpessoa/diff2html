@@ -57,24 +57,24 @@
   "dependencies": {
     "diff": "^3.5.0",
     "hogan.js": "^3.0.2",
-    "lodash": "^4.17.10",
-    "whatwg-fetch": "^2.0.4"
+    "lodash": "^4.17.11",
+    "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "^8.6.2",
-    "browserify": "^16.2.2",
-    "clean-css-cli": "^4.1.11",
-    "codacy-coverage": "^3.0.0",
-    "eslint": "^4.19.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
+    "autoprefixer": "^9.3.1",
+    "browserify": "^16.2.3",
+    "clean-css-cli": "^4.2.1",
+    "codacy-coverage": "^3.2.0",
+    "eslint": "^5.9.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "fast-html-parser": "^1.0.1",
     "istanbul": "^0.4.5",
     "mkdirp": "^0.5.1",
     "mocha": "^5.2.0",
     "nopt": "^4.0.1",
-    "postcss-cli": "^5.0.0",
-    "uglify-js": "^3.4.0"
+    "postcss-cli": "^6.0.1",
+    "uglify-js": "^3.4.9"
   },
   "license": "MIT",
   "files": [
