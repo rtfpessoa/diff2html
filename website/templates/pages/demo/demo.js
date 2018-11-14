@@ -209,7 +209,9 @@ $(document).ready(function() {
 
         diff2htmlUi.draw(container, params);
         diff2htmlUi.fileListCloseable(container, params['fileListCloseable'] || false);
-        params['highlight'] && diff2htmlUi.highlightCode(container);
+        if (params['highlight'] === undefined || params['highlight']) {
+          diff2htmlUi.highlightCode(container);
+        }
       });
   }
 
