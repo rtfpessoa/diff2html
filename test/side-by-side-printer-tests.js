@@ -99,12 +99,12 @@ describe('SideBySidePrinter', function() {
         '        </div>\n' +
         '    </td>\n' +
         '</tr><tr>\n' +
-        '    <td class="d2h-code-side-linenumber d2h-cntx">\n' +
+        '    <td class="d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder">\n' +
         '      ' +
         '\n' +
         '    </td>\n' +
-        '    <td class="d2h-cntx">\n' +
-        '        <div class="d2h-code-side-line d2h-cntx">\n' +
+        '    <td class="d2h-cntx d2h-emptyplaceholder">\n' +
+        '        <div class="d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder">\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
