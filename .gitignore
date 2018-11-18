@@ -25,3 +25,6 @@ coverage/
 
 # Bower
 bower_components/
+
+# Terraform
+/terraform/.terraform
