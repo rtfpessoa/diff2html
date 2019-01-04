@@ -10,6 +10,7 @@
 }
 
 .d2h-file-header {
+  height: 35px;
   padding: 5px 10px;
   border-bottom: 1px solid #d8d8d8;
   background-color: #f7f7f7;
@@ -58,7 +59,6 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow-x: hidden;
-  line-height: 21px;
 }
 
 .d2h-file-wrapper {
@@ -76,7 +76,7 @@
 
 .d2h-diff-tbody > tr > td {
   height: 20px;
-  line-height: 20px;
+  line-height: 1;
 }
 
 .d2h-files-diff {
@@ -103,14 +103,12 @@
   display: inline-block;
   white-space: nowrap;
   padding: 0 10px;
-  margin-left: 80px;
 }
 
 .d2h-code-side-line {
   display: inline-block;
   white-space: nowrap;
   padding: 0 10px;
-  margin-left: 50px;
 }
 
 .d2h-code-line del,
@@ -168,7 +166,6 @@
 
 .d2h-code-linenumber {
   box-sizing: border-box;
-  position: absolute;
   width: 86px;
   padding-left: 2px;
   padding-right: 2px;
@@ -182,7 +179,6 @@
 
 .d2h-code-side-linenumber {
   box-sizing: border-box;
-  position: absolute;
   width: 56px;
   padding-left: 5px;
   padding-right: 5px;
@@ -283,10 +279,6 @@
   display: none;
   font-size: 10px;
   cursor: pointer;
-}
-
-.d2h-icon-wrapper {
-  line-height: 31px;
 }
 
 .d2h-icon {
