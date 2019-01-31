@@ -281,6 +281,23 @@ describe('LineByLinePrinter', function() {
 
       assert.equal(expected, fileHtml);
     });
+    it('should return empty when option renderNothingWhenEmpty is true and file blocks not present', function() {
+      var lineByLinePrinter = new LineByLinePrinter({
+        renderNothingWhenEmpty: true,
+      });
+
+      var file = {
+        blocks: [],
+      };
+
+      var diffs = '<span>Random Html</span>';
+
+      var fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+
+      var expected = '';
+
+      assert.equal(expected, fileHtml);
+    });
   });
 
   describe('makeLineByLineHtmlWrapper', function() {
@@ -399,7 +416,7 @@ describe('LineByLinePrinter', function() {
         isCombined: false
       }];
 
-      var lineByLinePrinter = new LineByLinePrinter();
+      var lineByLinePrinter = new LineByLinePrinter({ renderNothingWhenEmpty: false });
       var html = lineByLinePrinter.generateLineByLineJsonHtml(exampleJson);
       var expected =
         '<div class="d2h-wrapper">\n' +

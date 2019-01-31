@@ -26,6 +26,8 @@
   }
 
   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
+    if (this.config.renderNothingWhenEmpty && file.blocks && !file.blocks.length) return '';
+
     var fileDiffTemplate = hoganUtils.template(baseTemplatesPath, 'file-diff');
     var filePathTemplate = hoganUtils.template(genericTemplatesPath, 'file-path');
     var fileIconTemplate = hoganUtils.template(iconsBaseTemplatesPath, 'file');
