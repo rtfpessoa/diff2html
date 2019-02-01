@@ -188,6 +188,7 @@ The HTML output accepts a Javascript object with configuration. Possible options
   - `maxLineLengthHighlight`: only perform diff changes highlight if lines are smaller than this, default is `10000`
   - `templates`: object with previously compiled templates to replace parts of the html
   - `rawTemplates`: object with raw not compiled templates to replace parts of the html
+  - `renderNothingWhenEmpty`: render nothing if the diff shows no change in its comparison: `true` or `false`, default is `false`
   > For more information regarding the possible templates look into [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
 
 ** Diff2HtmlUI Helper Options **
