@@ -283,11 +283,11 @@ describe('LineByLinePrinter', function() {
     });
     it('should return empty when option renderNothingWhenEmpty is true and file blocks not present', function() {
       var lineByLinePrinter = new LineByLinePrinter({
-        renderNothingWhenEmpty: true,
+        renderNothingWhenEmpty: true
       });
 
       var file = {
-        blocks: [],
+        blocks: []
       };
 
       var diffs = '<span>Random Html</span>';

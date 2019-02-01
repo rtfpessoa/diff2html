@@ -20,7 +20,7 @@
     matchWordsThreshold: 0.25,
     matchingMaxComparisons: 2500,
     maxLineLengthHighlight: 10000,
-    renderNothingWhenEmpty: false,
+    renderNothingWhenEmpty: false
   };
 
   /*
