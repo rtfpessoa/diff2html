@@ -63,7 +63,7 @@
         }
 
         if (currentFile.newName) {
-          if (configuration.maxLinesShowing && currentFile.deletedLines + currentFile.addedLines > configuration.maxLinesShowing) {
+          if ((configuration || {}).maxLinesShowing && currentFile.deletedLines + currentFile.addedLines > configuration.maxLinesShowing) {
             currentFile.shouldCollapse = true;
           }
           files.push(currentFile);

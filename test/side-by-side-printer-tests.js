@@ -241,6 +241,8 @@ describe('SideBySidePrinter', function() {
         '        <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
         '    </svg>    <span class="d2h-file-name">sample</span>\n' +
         '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
+        '      <a class="d2h-file-collapse-switch d2h-collapse">collapse</a>\n' +
+        '      <a class="d2h-file-collapse-switch d2h-expand">expand</a>\n' +
         '    </div>\n' +
         '    <div class="d2h-files-diff">\n' +
         '        <div class="d2h-file-side-diff">\n' +
@@ -317,6 +319,8 @@ describe('SideBySidePrinter', function() {
         '        <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>\n' +
         '    </svg>    <span class="d2h-file-name">sample</span>\n' +
         '    <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>\n' +
+        '      <a class="d2h-file-collapse-switch d2h-collapse">collapse</a>\n' +
+        '      <a class="d2h-file-collapse-switch d2h-expand">expand</a>\n' +
         '    </div>\n' +
         '    <div class="d2h-files-diff">\n' +
         '        <div class="d2h-file-side-diff">\n' +
