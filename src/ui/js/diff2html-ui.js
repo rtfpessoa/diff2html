@@ -79,6 +79,41 @@
     }
   };
 
+  Diff2HtmlUI.prototype.collapseAndExpand = function() {
+    function expand(targetId) {
+      var $target = $(targetId);
+      $target.removeClass('d2h-file-collapsed');
+      $target.find('.d2h-expand').hide();
+      $target.find('.d2h-collapse').show();
+    }
+
+    function collapse(targetId) {
+      var $target = $(targetId);
+      $target.addClass('d2h-file-collapsed');
+      $target.find('.d2h-collapse').hide();
+      $target.find('.d2h-expand').show();
+    }
+
+    $('body').find('.d2h-file-wrapper').map(function(_i, file) {
+      $file = $(file);
+      $expand = $file.find('.d2h-expand');
+      $collapse = $file.find('.d2h-collapse');
+      var id = '#' + $file.attr('id');
+
+      if ($file.hasClass('d2h-file-collapsed')) {
+        $expand.show();
+      } else {
+        $collapse.show();
+      }
+      $expand.click(function() {
+        expand(id);
+      });
+      $collapse.click(function() {
+        collapse(id);
+      });
+    });
+  }
+
   Diff2HtmlUI.prototype.highlightCode = function(targetId) {
     var that = this;
 

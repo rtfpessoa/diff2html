@@ -1,6 +1,13 @@
+{{#file.shouldCollapse}}
+<div id="{{fileHtmlId}}" class="d2h-file-wrapper d2h-file-collapsed" data-lang="{{file.language}}">
+{{/file.shouldCollapse}}
+{{^file.shouldCollapse}}
 <div id="{{fileHtmlId}}" class="d2h-file-wrapper" data-lang="{{file.language}}">
+{{/file.shouldCollapse}}
     <div class="d2h-file-header">
     {{{filePath}}}
+    <a class="d2h-file-collapse-switch d2h-collapse">collapse</a>
+    <a class="d2h-file-collapse-switch d2h-expand">expand</a>
     </div>
     <div class="d2h-file-diff">
         <div class="d2h-code-wrapper">

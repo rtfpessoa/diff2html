@@ -63,6 +63,9 @@
         }
 
         if (currentFile.newName) {
+          if (configuration.maxLinesShowing && currentFile.deletedLines + currentFile.addedLines > configuration.maxLinesShowing) {
+            currentFile.shouldCollapse = true;
+          }
           files.push(currentFile);
           currentFile = null;
         }
@@ -81,6 +84,7 @@
       currentFile.blocks = [];
       currentFile.deletedLines = 0;
       currentFile.addedLines = 0;
+      currentFile.shouldCollapse = false;
     }
 
     function startBlock(line) {

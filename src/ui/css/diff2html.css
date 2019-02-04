@@ -16,6 +16,11 @@
   background-color: #f7f7f7;
 }
 
+.d2h-file-header a {
+  color: #3572b0;
+  text-decoration: none;
+}
+
 .d2h-file-stats {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -65,6 +70,7 @@
   border: 1px solid #ddd;
   border-radius: 3px;
   margin-bottom: 1em;
+  overflow: hidden;
 }
 
 .d2h-diff-table {
@@ -88,6 +94,11 @@
 .d2h-file-diff {
   overflow-x: scroll;
   overflow-y: hidden;
+}
+
+.d2h-file-collapsed .d2h-file-diff,
+.d2h-file-collapsed .d2h-files-diff {
+  height: 0;
 }
 
 .d2h-file-side-diff {
@@ -275,10 +286,15 @@
   border-bottom: none;
 }
 
-.d2h-file-switch {
+.d2h-file-switch,
+.d2h-file-collapse-switch {
   display: none;
   font-size: 10px;
   cursor: pointer;
+}
+
+.d2h-file-collapse-switch {
+  float: right;
 }
 
 .d2h-icon {

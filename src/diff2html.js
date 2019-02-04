@@ -19,7 +19,8 @@
     matching: 'none',
     matchWordsThreshold: 0.25,
     matchingMaxComparisons: 2500,
-    maxLineLengthHighlight: 10000
+    maxLineLengthHighlight: 10000,
+    maxLinesShowing: 0
   };
 
   /*
