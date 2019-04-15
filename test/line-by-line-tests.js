@@ -1,5 +1,4 @@
 var assert = require('assert');
-var Utils = require('../src/utils.js').Utils;
 
 var LineByLinePrinter = require('../src/line-by-line-printer.js').LineByLinePrinter;
 
@@ -109,11 +108,11 @@ describe('LineByLinePrinter', function() {
       assert.equal(expected, fileHtml);
     });
 
-    it('should convert indents into non breakin spaces (one tab)', function() {
+    it('should preserve tabs', function() {
       var diffParser = require('../src/diff-parser.js').DiffParser;
       var lineByLinePrinter = new LineByLinePrinter({});
       var fileHtml = lineByLinePrinter.makeLineHtml(false,
-        diffParser.LINE_TYPE.INSERTS, '', 30, Utils.escape('\ttest'), '+');
+        diffParser.LINE_TYPE.INSERTS, '', 30, '\ttest', '+');
       fileHtml = fileHtml.replace(/\n\n+/g, '\n');
       var expected = '<tr>\n' +
         '    <td class="d2h-code-linenumber d2h-ins">\n' +
@@ -124,7 +123,7 @@ describe('LineByLinePrinter', function() {
         '    <td class="d2h-ins">\n' +
         '        <div class="d2h-code-line d2h-ins">\n' +
         '            <span class="d2h-code-line-prefix">+</span>\n' +
-        '            <span class="d2h-code-line-ctn">    test</span>\n' +
+        '            <span class="d2h-code-line-ctn">\ttest</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';

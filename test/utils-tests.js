@@ -18,7 +18,7 @@ describe('Utils', function() {
     });
     it('should escape a string with multiple problematic characters', function() {
       var result = Utils.escape('<a href="#">\tlink text</a>');
-      var expected = '&lt;a href=&quot;#&quot;&gt;    link text&lt;&#x2F;a&gt;';
+      var expected = '&lt;a href=&quot;#&quot;&gt;\tlink text&lt;&#x2F;a&gt;';
       assert.equal(expected, result);
     });
   });
