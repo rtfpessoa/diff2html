@@ -20,7 +20,8 @@
     matchWordsThreshold: 0.25,
     matchingMaxComparisons: 2500,
     maxLineLengthHighlight: 10000,
-    renderNothingWhenEmpty: false
+    renderNothingWhenEmpty: false,
+    showButton: true
   };
 
   /*
@@ -42,6 +43,11 @@
       diffJson = diffParser.generateDiffJson(diffInput, cfg);
     }
 
+    var floatButton = '';
+    if (cfg.showButton === true) {
+      floatButton = htmlPrinter.generateFloatButton();
+    }
+
     var fileList = '';
     if (cfg.showFiles === true) {
       fileList = htmlPrinter.generateFileListSummary(diffJson, cfg);
@@ -54,7 +60,7 @@
       diffOutput = htmlPrinter.generateLineByLineJsonHtml(diffJson, cfg);
     }
 
-    return fileList + diffOutput;
+    return floatButton + fileList + diffOutput;
   };
 
   /*

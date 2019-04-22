@@ -16,6 +16,7 @@
   var diffJson = null;
   var defaultTarget = 'body';
   var currentSelectionColumnId = -1;
+  var currentDiffBlockIdx = -1;
 
   function Diff2HtmlUI(config) {
     var cfg = config || {};
@@ -189,6 +190,33 @@
       var text = that._getSelectedText();
       clipboardData.setData('text', text);
       event.preventDefault();
+    });
+
+    body.on('mousedown', '.btn-previous', function() {
+      if (currentDiffBlockIdx === -1){
+        return;
+      }
+      currentDiffBlockIdx -= 1;
+      var target = document.getElementById('diff-block-' + currentDiffBlockIdx);
+      if (target) {
+        var top = target.offsetTop + 200;
+        window.scrollTo(0, top);
+      } else {
+        currentDiffBlockIdx = 0;
+        alert('already first');
+      }
+    });
+
+    body.on('mousedown', '.btn-next', function() {
+      currentDiffBlockIdx += 1;
+      var target = document.getElementById('diff-block-' + currentDiffBlockIdx);
+      if (target) {
+        var top = target.offsetTop + 200;
+        window.scrollTo(0, top);
+      } else {
+        currentDiffBlockIdx -= 1;
+        alert('already last');
+      }
     });
   };
 

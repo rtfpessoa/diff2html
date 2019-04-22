@@ -10,6 +10,8 @@
   var printerUtils = require('./printer-utils.js').PrinterUtils;
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
+  var diffBlockIdx = 0;
+  var blockFlag = true;
 
   var hoganUtils;
 
@@ -89,6 +91,7 @@
 
       var oldLines = [];
       var newLines = [];
+      blockFlag = true;
 
       function processChangeBlock() {
         var matches;
@@ -124,10 +127,15 @@
             that.config.isCombined = file.isCombined;
 
             var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
-
+            var tid = '';
+            if (blockFlag && oldLines.length && newLines.length) {
+              tid = 'diff-block-' + diffBlockIdx;
+              diffBlockIdx += 1;
+              blockFlag = false;
+            }
             fileHtml.left +=
               that.generateSingleLineHtml(file.isCombined, deleteType, oldLine.oldNumber,
-                diff.first.line, diff.first.prefix);
+                diff.first.line, diff.first.prefix, tid);
             fileHtml.right +=
               that.generateSingleLineHtml(file.isCombined, insertType, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
@@ -158,10 +166,17 @@
         }
 
         if (line.type === diffParser.LINE_TYPE.CONTEXT) {
+          blockFlag = true;
           fileHtml.left += that.generateSingleLineHtml(file.isCombined, line.type, line.oldNumber, escapedLine, prefix);
           fileHtml.right += that.generateSingleLineHtml(file.isCombined, line.type, line.newNumber, escapedLine, prefix);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          fileHtml.left += that.generateSingleLineHtml(file.isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
+          var tid = '';
+          if (blockFlag) {
+            tid = 'diff-block-' + diffBlockIdx;
+            diffBlockIdx += 1;
+            blockFlag = false;
+          }
+          fileHtml.left += that.generateSingleLineHtml(file.isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '', tid);
           fileHtml.right += that.generateSingleLineHtml(file.isCombined, line.type, line.newNumber, escapedLine, prefix);
         } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
@@ -184,6 +199,7 @@
     var fileHtml = {};
     fileHtml.left = '';
     fileHtml.right = '';
+    var LineBlockFlag = true;
 
     var maxLinesNumber = Math.max(oldLines.length, newLines.length);
     for (var i = 0; i < maxLinesNumber; i++) {
@@ -208,7 +224,15 @@
         fileHtml.left += that.generateSingleLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
         fileHtml.right += that.generateSingleLineHtml(isCombined, newLine.type, newLine.newNumber, newContent, newPrefix);
       } else if (oldLine) {
-        fileHtml.left += that.generateSingleLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldContent, oldPrefix);
+        var tid = '';
+        if (LineBlockFlag && blockFlag) {
+          tid = 'diff-block-' + diffBlockIdx;
+          diffBlockIdx += 1;
+          blockFlag = false;
+          LineBlockFlag = false;
+        } else {
+        }
+        fileHtml.left += that.generateSingleLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldContent, oldPrefix, tid);
         fileHtml.right += that.generateSingleLineHtml(isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
       } else if (newLine) {
         fileHtml.left += that.generateSingleLineHtml(isCombined, diffParser.LINE_TYPE.CONTEXT, '', '', '');
@@ -221,16 +245,21 @@
     return fileHtml;
   };
 
-  SideBySidePrinter.prototype.generateSingleLineHtml = function(isCombined, type, number, content, possiblePrefix) {
+  SideBySidePrinter.prototype.generateSingleLineHtml = function(isCombined, type, number, content, possiblePrefix, tid) {
     var lineWithoutPrefix = content;
     var prefix = possiblePrefix;
     var lineClass = 'd2h-code-side-linenumber';
     var contentClass = 'd2h-code-side-line';
+    var idxStr = '';
 
     if (!number && !content) {
       lineClass += ' d2h-code-side-emptyplaceholder';
       contentClass += ' d2h-code-side-emptyplaceholder';
       type += ' d2h-emptyplaceholder';
+    }
+
+    if (tid) {
+      idxStr += tid;
     }
 
     if (!prefix) {
@@ -246,7 +275,8 @@
         contentClass: contentClass,
         prefix: prefix,
         content: lineWithoutPrefix,
-        lineNumber: number
+        lineNumber: number,
+        eleID: idxStr
       });
   };
 

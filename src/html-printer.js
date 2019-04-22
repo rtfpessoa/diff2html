@@ -9,6 +9,7 @@
   var LineByLinePrinter = require('./line-by-line-printer.js').LineByLinePrinter;
   var SideBySidePrinter = require('./side-by-side-printer.js').SideBySidePrinter;
   var FileListPrinter = require('./file-list-printer.js').FileListPrinter;
+  var FloatButtonPrinter = require('./float-button-printer.js').FloatButtonPrinter;
 
   function HtmlPrinter() {
   }
@@ -26,6 +27,11 @@
   HtmlPrinter.prototype.generateFileListSummary = function(diffJson, config) {
     var fileListPrinter = new FileListPrinter(config);
     return fileListPrinter.generateFileList(diffJson);
+  };
+
+  HtmlPrinter.prototype.generateFloatButton = function() {
+    var floatButtonPrinter = new FloatButtonPrinter();
+    return floatButtonPrinter.generateFloatButton();
   };
 
   module.exports.HtmlPrinter = new HtmlPrinter();

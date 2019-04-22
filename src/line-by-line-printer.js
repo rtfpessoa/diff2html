@@ -10,6 +10,8 @@
   var printerUtils = require('./printer-utils.js').PrinterUtils;
   var utils = require('./utils.js').Utils;
   var Rematch = require('./rematch.js').Rematch;
+  var diffBlockIdx = 0;
+  var blockFlag = true;
 
   var hoganUtils;
 
@@ -87,6 +89,7 @@
       var lines = that.makeColumnLineNumberHtml(block);
       var oldLines = [];
       var newLines = [];
+      blockFlag = true;
 
       function processChangeBlock() {
         var matches;
@@ -124,10 +127,15 @@
 
             that.config.isCombined = file.isCombined;
             var diff = printerUtils.diffHighlight(oldLine.content, newLine.content, that.config);
-
+            var tid = '';
+            if (blockFlag && oldLines.length && newLines.length) {
+              tid = 'diff-block-' + diffBlockIdx;
+              diffBlockIdx += 1;
+              blockFlag = false;
+            }
             processedOldLines +=
               that.makeLineHtml(file.isCombined, deleteType, oldLine.oldNumber, oldLine.newNumber,
-                diff.first.line, diff.first.prefix);
+                diff.first.line, diff.first.prefix, tid);
             processedNewLines +=
               that.makeLineHtml(file.isCombined, insertType, newLine.oldNumber, newLine.newNumber,
                 diff.second.line, diff.second.prefix);
@@ -151,9 +159,16 @@
         }
 
         if (line.type === diffParser.LINE_TYPE.CONTEXT) {
+          blockFlag = true;
           lines += that.makeLineHtml(file.isCombined, line.type, line.oldNumber, line.newNumber, escapedLine);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && !oldLines.length) {
-          lines += that.makeLineHtml(file.isCombined, line.type, line.oldNumber, line.newNumber, escapedLine);
+          var tid = '';
+          if (blockFlag) {
+            tid = 'diff-block-' + diffBlockIdx;
+            diffBlockIdx += 1;
+            blockFlag = false;
+          }
+          lines += that.makeLineHtml(file.isCombined, line.type, line.oldNumber, line.newNumber, escapedLine, '', tid);
         } else if (line.type === diffParser.LINE_TYPE.DELETES) {
           oldLines.push(line);
         } else if (line.type === diffParser.LINE_TYPE.INSERTS && Boolean(oldLines.length)) {
@@ -172,23 +187,36 @@
 
   LineByLinePrinter.prototype._processLines = function(isCombined, oldLines, newLines) {
     var lines = '';
-
+    var LineBlockFlag = true;
+    var tid;
     for (var i = 0; i < oldLines.length; i++) {
       var oldLine = oldLines[i];
       var oldEscapedLine = utils.escape(oldLine.content);
-      lines += this.makeLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine);
+      if (LineBlockFlag && blockFlag) {
+        tid = 'diff-block-' + diffBlockIdx;
+        diffBlockIdx += 1;
+        blockFlag = false;
+        LineBlockFlag = false;
+      }
+      lines += this.makeLineHtml(isCombined, oldLine.type, oldLine.oldNumber, oldLine.newNumber, oldEscapedLine, '', tid);
     }
 
     for (var j = 0; j < newLines.length; j++) {
       var newLine = newLines[j];
       var newEscapedLine = utils.escape(newLine.content);
-      lines += this.makeLineHtml(isCombined, newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine);
+      if (LineBlockFlag && blockFlag) {
+        tid = 'diff-block-' + diffBlockIdx;
+        diffBlockIdx += 1;
+        blockFlag = false;
+        LineBlockFlag = false;
+      }
+      lines += this.makeLineHtml(isCombined, newLine.type, newLine.oldNumber, newLine.newNumber, newEscapedLine, '', tid);
     }
 
     return lines;
   };
 
-  LineByLinePrinter.prototype.makeLineHtml = function(isCombined, type, oldNumber, newNumber, content, possiblePrefix) {
+  LineByLinePrinter.prototype.makeLineHtml = function(isCombined, type, oldNumber, newNumber, content, possiblePrefix, tid) {
     var lineNumberTemplate = hoganUtils.render(baseTemplatesPath, 'numbers', {
       oldNumber: utils.valueOrEmpty(oldNumber),
       newNumber: utils.valueOrEmpty(newNumber)
@@ -196,6 +224,11 @@
 
     var lineWithoutPrefix = content;
     var prefix = possiblePrefix;
+    var idxStr = '';
+
+    if (tid) {
+      idxStr += tid;
+    }
 
     if (!prefix) {
       var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
@@ -210,7 +243,8 @@
         contentClass: 'd2h-code-line',
         prefix: prefix,
         content: lineWithoutPrefix,
-        lineNumber: lineNumberTemplate
+        lineNumber: lineNumberTemplate,
+        eleID: idxStr
       });
   };
 
