@@ -6,7 +6,7 @@
  */
 
 (function() {
-  var merge = require('lodash.merge');
+  var merge = require('merge');
 
   function Utils() {
   }
@@ -41,9 +41,7 @@
   };
 
   Utils.prototype.safeConfig = function(cfg, defaultConfig) {
-    var newCfg = {};
-    merge(newCfg, defaultConfig, cfg);
-    return newCfg;
+    return merge.recursive(true, defaultConfig, cfg);
   };
 
   module.exports.Utils = new Utils();
