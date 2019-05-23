@@ -54,6 +54,17 @@ diff2html generates pretty HTML diffs from git or unified diff output.
 
 ## How to use
 
+To load correctly in the Browser you always need to include the stylesheet in the final HTML.
+
+Import the stylesheet
+
+```html
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="dist/diff2html.css">
+```
+
+You can also refer to it from a CDN like [CDNJS](https://cdnjs.com/libraries/diff2html).
+
 ### Browser Library
 
 Import the stylesheet and the library code
