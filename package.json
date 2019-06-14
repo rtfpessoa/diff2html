@@ -60,7 +60,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "^9.5.1",
+    "autoprefixer": "^9.6.0",
     "browserify": "^16.2.3",
     "clean-css-cli": "^4.3.0",
     "codacy-coverage": "^3.4.0",
@@ -73,7 +73,7 @@
     "mocha": "5.2.0",
     "nopt": "^4.0.1",
     "postcss-cli": "^6.1.2",
-    "uglify-js": "^3.5.9"
+    "uglify-js": "^3.6.0"
   },
   "license": "MIT",
   "files": [
