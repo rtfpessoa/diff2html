@@ -196,6 +196,7 @@ The HTML output accepts a Javascript object with configuration. Possible options
   - `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default is `none`
   - `matchWordsThreshold`: similarity threshold for word matching, default is 0.25
   - `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is `2500`
+  - `maxLineSizeInBlockForComparison`: maximum number os characters of the bigger line in a block to apply comparison, default is `200`
   - `maxLineLengthHighlight`: only perform diff changes highlight if lines are smaller than this, default is `10000`
   - `templates`: object with previously compiled templates to replace parts of the html
   - `rawTemplates`: object with raw not compiled templates to replace parts of the html
