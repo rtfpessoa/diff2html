@@ -3518,6 +3518,7 @@ process.umask = function() { return 0; };
     matching: 'none',
     matchWordsThreshold: 0.25,
     matchingMaxComparisons: 2500,
+    maxLineSizeInBlockForComparison: 200,
     maxLineLengthHighlight: 10000,
     renderNothingWhenEmpty: false
   };
@@ -3881,9 +3882,17 @@ process.umask = function() { return 0; };
         var deleteType;
 
         var comparisons = oldLines.length * newLines.length;
-        var maxComparisons = that.config.matchingMaxComparisons || 2500;
-        var doMatching = comparisons < maxComparisons && (that.config.matching === 'lines' ||
-          that.config.matching === 'words');
+
+        var maxLineSizeInBlock = Math.max.apply(null,
+          [0].concat((oldLines.concat(newLines)).map(
+            function(elem) {
+              return elem.content.length;
+            }
+          )));
+
+        var doMatching = comparisons < that.config.matchingMaxComparisons &&
+          maxLineSizeInBlock < that.config.maxLineSizeInBlockForComparison &&
+          (that.config.matching === 'lines' || that.config.matching === 'words');
 
         if (doMatching) {
           matches = matcher(oldLines, newLines);
@@ -4505,9 +4514,14 @@ process.umask = function() { return 0; };
         var deleteType;
 
         var comparisons = oldLines.length * newLines.length;
-        var maxComparisons = that.config.matchingMaxComparisons || 2500;
-        var doMatching = comparisons < maxComparisons && (that.config.matching === 'lines' ||
-          that.config.matching === 'words');
+
+        var maxLineSizeInBlock = Math.max.apply(null, (oldLines.concat(newLines)).map(function(elem) {
+          return elem.length;
+        }));
+
+        var doMatching = comparisons < that.config.matchingMaxComparisons &&
+          maxLineSizeInBlock < that.config.maxLineSizeInBlockForComparison &&
+          (that.config.matching === 'lines' || that.config.matching === 'words');
 
         if (doMatching) {
           matches = matcher(oldLines, newLines);
