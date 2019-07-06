@@ -244,6 +244,10 @@
       lineWithoutPrefix = lineWithPrefix.line;
     }
 
+    if (prefix === ' ') {
+      prefix = '&nbsp;';
+    }
+
     return hoganUtils.render(genericTemplatesPath, 'line',
       {
         type: type,
