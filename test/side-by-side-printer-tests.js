@@ -84,7 +84,7 @@ describe('SideBySidePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-side-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">context</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -121,7 +121,7 @@ describe('SideBySidePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-side-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">context</span>\n' +
         '        </div>\n' +
         '    </td>\n' +

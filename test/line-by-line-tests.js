@@ -559,7 +559,7 @@ describe('LineByLinePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">one context line</span>\n' +
         '        </div>\n' +
         '    </td>\n' +

@@ -335,7 +335,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn"># Change Log</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -346,7 +346,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">All notable changes to this project will be documented in this file.</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -357,7 +357,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">This project adheres to [Semantic Versioning](http:&#x2F;&#x2F;semver.org&#x2F;).</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -379,7 +379,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">$a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -390,7 +390,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">$a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#877](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;878)</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -401,7 +401,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">- 1.1.8:</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -418,7 +418,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">- 1.1.7:</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -429,7 +429,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">    - Fix diff flickering issue and optimization [#865](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;865)</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -440,7 +440,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">    - Fix credential dialog issue [#864](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;864)</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -473,7 +473,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">- 1.1.6: Fix path auto complete [#861](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;861)</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -484,7 +484,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">- 1.1.5: Update &quot;Toggle all&quot; button after commit or changing selected files [#859](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;859)</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -495,7 +495,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '            <span class="d2h-code-line-ctn">- 1.1.4: [patch] Promise refactoring</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
@@ -506,7 +506,7 @@ describe('Diff2Html', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx">\n' +
         '        <div class="d2h-code-line d2h-cntx">\n' +
-        '            <span class="d2h-code-line-prefix"> </span>\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>\n' +
