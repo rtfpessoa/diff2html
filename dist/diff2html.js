@@ -3513,13 +3513,16 @@ process.umask = function() { return 0; };
   }
 
   var defaultConfig = {
-    wordByWord: true,
+    inputFormat: 'diff',
     outputFormat: 'line-by-line',
+    showFiles: false,
     matching: 'none',
     matchWordsThreshold: 0.25,
     matchingMaxComparisons: 2500,
     maxLineSizeInBlockForComparison: 200,
     maxLineLengthHighlight: 10000,
+    templates: {},
+    rawTemplates: {},
     renderNothingWhenEmpty: false
   };
 
@@ -3997,6 +4000,10 @@ process.umask = function() { return 0; };
       var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
       prefix = lineWithPrefix.prefix;
       lineWithoutPrefix = lineWithPrefix.line;
+    }
+
+    if (prefix === ' ') {
+      prefix = '&nbsp;';
     }
 
     return hoganUtils.render(genericTemplatesPath, 'line',
@@ -4660,6 +4667,10 @@ process.umask = function() { return 0; };
       var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
       prefix = lineWithPrefix.prefix;
       lineWithoutPrefix = lineWithPrefix.line;
+    }
+
+    if (prefix === ' ') {
+      prefix = '&nbsp;';
     }
 
     return hoganUtils.render(genericTemplatesPath, 'line',
