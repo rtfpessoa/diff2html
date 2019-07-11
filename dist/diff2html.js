@@ -3644,6 +3644,8 @@ process.umask = function() { return 0; };
 
       return lineTemplate.render({
         fileHtmlId: printerUtils.getHtmlId(file),
+        oldName: file.oldName,
+        newName: file.newName,
         fileName: printerUtils.getDiffName(file),
         deletedLines: '-' + file.deletedLines,
         addedLines: '+' + file.addedLines
