@@ -1,9 +1,53 @@
 var assert = require('assert');
-
-var fileListPrinter = new (require('../src/file-list-printer.js').FileListPrinter)();
+var FileListPrinter = require('../src/file-list-printer.js').FileListPrinter;
 
 describe('FileListPrinter', function() {
   describe('generateFileList', function() {
+    it('should expose old and new files to templates', function() {
+      var files = [{
+        addedlines: 12,
+        deletedlines: 41,
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'my/file/name.js'
+      }, {
+        addedLines: 12,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name1.js',
+        newName: 'my/file/name2.js'
+      }, {
+        addedLines: 12,
+        deletedLines: 0,
+        language: 'js',
+        oldName: 'dev/null',
+        newName: 'my/file/name.js',
+        isNew: true
+      }, {
+        addedLines: 0,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'dev/null',
+        isDeleted: true
+      }];
+
+      var fileListPrinter = new FileListPrinter({
+        rawTemplates: {
+          'file-summary-wrapper': '{{{files}}}',
+          'file-summary-line': '{{oldName}}, {{newName}}, {{fileName}}'
+        }
+      });
+
+      var fileHtml = fileListPrinter.generateFileList(files);
+      var expected = 'my/file/name.js, my/file/name.js, my/file/name.js\n' +
+        'my/file/name1.js, my/file/name2.js, my/file/{name1.js → name2.js}\n' +
+        'dev/null, my/file/name.js, my/file/name.js\n' +
+        'my/file/name.js, dev/null, my/file/name.js';
+
+      assert.equal(expected, fileHtml);
+    });
+
     it('should work for all kinds of files', function() {
       var files = [{
         addedLines: 12,
@@ -33,6 +77,7 @@ describe('FileListPrinter', function() {
         isDeleted: true
       }];
 
+      var fileListPrinter = new FileListPrinter();
       var fileHtml = fileListPrinter.generateFileList(files);
 
       var expected =
