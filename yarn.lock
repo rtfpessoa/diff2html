@@ -717,7 +717,7 @@ codacy-coverage@^3.4.0:
     jacoco-parse "^2.x"
     joi "^13.x"
     lcov-parse "^1.x"
-    lodash "^4.17.4"
+    lodash "^4.17.14"
     log-driver "^1.x"
     request "^2.88.0"
     request-promise "^4.x"
@@ -1202,7 +1202,7 @@ eslint@^5.16.0:
     js-yaml "^3.13.0"
     json-stable-stringify-without-jsonify "^1.0.1"
     levn "^0.3.0"
-    lodash "^4.17.11"
+    lodash "^4.17.14"
     minimatch "^3.0.4"
     mkdirp "^0.5.1"
     natural-compare "^1.4.0"
@@ -1870,7 +1870,7 @@ inquirer@^6.2.2:
     cli-width "^2.0.0"
     external-editor "^3.0.3"
     figures "^2.0.0"
-    lodash "^4.17.11"
+    lodash "^4.17.14"
     mute-stream "0.0.7"
     run-async "^2.2.0"
     rxjs "^6.4.0"
@@ -2930,7 +2930,7 @@ postcss-reporter@^6.0.0:
   integrity sha512-LpmQjfRWyabc+fRygxZjpRxfhRf9u/fdlKf4VHG4TSPbV2XNsuISzYW1KL+1aQzx53CAppa1bKG4APIB/DOXXw==
   dependencies:
     chalk "^2.4.1"
-    lodash "^4.17.11"
+    lodash "^4.17.14"
     log-symbols "^2.2.0"
     postcss "^7.0.7"
 
@@ -3122,7 +3122,7 @@ request-promise-core@1.1.2:
   resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.2.tgz#339f6aababcafdb31c799ff158700336301d3346"
   integrity sha512-UHYyq1MO8GsefGEt7EprS8UrXsm1TxEvFUX1IMTuSLU2Rh7fTIdFtl8xD7JiEYiWU2dl+NYAjCTksTehQUxPag==
   dependencies:
-    lodash "^4.17.11"
+    lodash "^4.17.14"
 
 request-promise@^4.x:
   version "4.2.4"
@@ -3610,7 +3610,7 @@ table@^5.2.3:
   integrity sha512-nHFDrxmbrkU7JAFKqKbDJXfzrX2UBsWmrieXFTGxiI5e4ncg3VqsZeI4EzNmX0ncp4XNGVeoxIWJXfCIXwrsvw==
   dependencies:
     ajv "^6.9.1"
-    lodash "^4.17.11"
+    lodash "^4.17.14"
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
