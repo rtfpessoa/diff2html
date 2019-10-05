@@ -99,7 +99,7 @@ describe('Utils', function() {
       var result = PrinterUtils.diffHighlight(
         '-var myVar = 2;',
         '+var myVariable = 3;',
-        {charByChar: true}
+        { diffStyle: 'char' }
       );
 
       assert.deepEqual({
@@ -118,6 +118,7 @@ describe('Utils', function() {
         ' -var myVar = 2;',
         ' +var myVariable = 3;',
         {
+          diffStyle: 'word',
           isCombined: true,
           matching: 'words',
           matchWordsThreshold: 1.00

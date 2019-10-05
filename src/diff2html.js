@@ -17,6 +17,7 @@
     inputFormat: 'diff',
     outputFormat: 'line-by-line',
     showFiles: false,
+    diffStyle: 'word',
     matching: 'none',
     matchWordsThreshold: 0.25,
     matchingMaxComparisons: 2500,
