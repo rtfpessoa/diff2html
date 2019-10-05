@@ -159,7 +159,7 @@
     }
 
     var diff;
-    if (config.charByChar) {
+    if (config.diffStyle === 'char') {
       diff = jsDiff.diffChars(unprefixedLine1, unprefixedLine2);
     } else {
       diff = jsDiff.diffWordsWithSpace(unprefixedLine1, unprefixedLine2);
@@ -168,7 +168,7 @@
     var highlightedLine = '';
 
     var changedWords = [];
-    if (!config.charByChar && config.matching === 'words') {
+    if (config.diffStyle === 'word' && config.matching === 'words') {
       var treshold = 0.25;
 
       if (typeof (config.matchWordsThreshold) !== 'undefined') {
