@@ -3516,6 +3516,7 @@ process.umask = function() { return 0; };
     inputFormat: 'diff',
     outputFormat: 'line-by-line',
     showFiles: false,
+    diffStyle: 'word',
     matching: 'none',
     matchWordsThreshold: 0.25,
     matchingMaxComparisons: 2500,
@@ -4191,7 +4192,7 @@ process.umask = function() { return 0; };
     }
 
     var diff;
-    if (config.charByChar) {
+    if (config.diffStyle === 'char') {
       diff = jsDiff.diffChars(unprefixedLine1, unprefixedLine2);
     } else {
       diff = jsDiff.diffWordsWithSpace(unprefixedLine1, unprefixedLine2);
@@ -4200,7 +4201,7 @@ process.umask = function() { return 0; };
     var highlightedLine = '';
 
     var changedWords = [];
-    if (!config.charByChar && config.matching === 'words') {
+    if (config.diffStyle === 'word' && config.matching === 'words') {
       var treshold = 0.25;
 
       if (typeof (config.matchWordsThreshold) !== 'undefined') {
