@@ -9,6 +9,7 @@ declare namespace Diff2Html {
     inputFormat?: 'diff' | 'json';
     outputFormat?: 'line-by-line' | 'side-by-side';
     showFiles?: boolean;
+    diffStyle?: 'word' | 'char';
     matching?: 'lines' | 'words' | 'none';
     matchWordsThreshold?: number;
     matchingMaxComparisons?: number;
