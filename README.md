@@ -51,7 +51,7 @@ diff2html generates pretty HTML diffs from git or unified diff output.
 
 * [Node CLI](https://www.npmjs.org/package/diff2html-cli)
 
-* Manually download and import `dist/diff2html.min.js` into your page
+* Manually download and import [dist/diff2html.min.js](./dist/diff2html.min.js) into your page
 
 ## How to use
 
@@ -184,9 +184,9 @@ export default {
 
     getPrettyHtml(input: any, configuration?: Options): string
 
-> Check out the `typescript/diff2html.d.ts` for a complete API definition in TypeScript.
+> Check out the [src/diff2html.d.ts](./src/diff2html.d.ts) for a complete API definition in TypeScript.
 
-> Check out the `docs/demo.html` for a demo example.
+> Check out the [docs/demo.html](./docs/demo.html) for a demo example.
 
 ## Configuration
 The HTML output accepts a Javascript object with configuration. Possible options:
