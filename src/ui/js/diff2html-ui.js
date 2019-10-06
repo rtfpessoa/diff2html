@@ -8,17 +8,17 @@
  *
  */
 
-/*global $, hljs, Diff2Html*/
+/* global $, hljs, Diff2Html */
 
 (function() {
-  var highlightJS = require('./highlight.js-internals.js').HighlightJS;
+  const highlightJS = require("./highlight.js-internals.js").HighlightJS;
 
-  var diffJson = null;
-  var defaultTarget = 'body';
-  var currentSelectionColumnId = -1;
+  let diffJson = null;
+  const defaultTarget = "body";
+  let currentSelectionColumnId = -1;
 
   function Diff2HtmlUI(config) {
-    var cfg = config || {};
+    const cfg = config || {};
 
     if (cfg.diff) {
       diffJson = Diff2Html.getJsonFromDiff(cfg.diff);
@@ -30,9 +30,9 @@
   }
 
   Diff2HtmlUI.prototype.draw = function(targetId, config) {
-    var cfg = config || {};
-    cfg.inputFormat = 'json';
-    var $target = this._getTarget(targetId);
+    const cfg = config || {};
+    cfg.inputFormat = "json";
+    const $target = this._getTarget(targetId);
     $target.html(Diff2Html.getPrettyHtml(diffJson, cfg));
 
     if (cfg.synchronisedScroll) {
@@ -41,25 +41,27 @@
   };
 
   Diff2HtmlUI.prototype.synchronisedScroll = function(targetId) {
-    var $target = this._getTarget(targetId);
-    $target.find('.d2h-file-side-diff').scroll(function() {
-      var $this = $(this);
-      $this.closest('.d2h-file-wrapper').find('.d2h-file-side-diff')
+    const $target = this._getTarget(targetId);
+    $target.find(".d2h-file-side-diff").scroll(function() {
+      const $this = $(this);
+      $this
+        .closest(".d2h-file-wrapper")
+        .find(".d2h-file-side-diff")
         .scrollLeft($this.scrollLeft());
     });
   };
 
   Diff2HtmlUI.prototype.fileListCloseable = function(targetId, startVisible) {
-    var $target = this._getTarget(targetId);
+    const $target = this._getTarget(targetId);
 
-    var hashTag = this._getHashTag();
+    const hashTag = this._getHashTag();
 
-    var $showBtn = $target.find('.d2h-show');
-    var $hideBtn = $target.find('.d2h-hide');
-    var $fileList = $target.find('.d2h-file-list');
+    const $showBtn = $target.find(".d2h-show");
+    const $hideBtn = $target.find(".d2h-hide");
+    const $fileList = $target.find(".d2h-file-list");
 
-    if (hashTag === 'files-summary-show') show();
-    else if (hashTag === 'files-summary-hide') hide();
+    if (hashTag === "files-summary-show") show();
+    else if (hashTag === "files-summary-hide") hide();
     else if (startVisible) show();
     else hide();
 
@@ -80,51 +82,53 @@
   };
 
   Diff2HtmlUI.prototype.highlightCode = function(targetId) {
-    var that = this;
+    const that = this;
 
-    var $target = that._getTarget(targetId);
+    const $target = that._getTarget(targetId);
 
     // collect all the diff files and execute the highlight on their lines
-    var $files = $target.find('.d2h-file-wrapper');
+    const $files = $target.find(".d2h-file-wrapper");
     $files.map(function(_i, file) {
-      var oldLinesState;
-      var newLinesState;
-      var $file = $(file);
-      var language = $file.data('lang');
+      let oldLinesState;
+      let newLinesState;
+      const $file = $(file);
+      const language = $file.data("lang");
 
       // collect all the code lines and execute the highlight on them
-      var $codeLines = $file.find('.d2h-code-line-ctn');
+      const $codeLines = $file.find(".d2h-code-line-ctn");
       $codeLines.map(function(_j, line) {
-        var $line = $(line);
-        var text = line.textContent;
-        var lineParent = line.parentNode;
+        const $line = $(line);
+        const text = line.textContent;
+        const lineParent = line.parentNode;
 
-        var lineState;
-        if (lineParent.className.indexOf('d2h-del') !== -1) {
+        let lineState;
+        if (lineParent.className.indexOf("d2h-del") !== -1) {
           lineState = oldLinesState;
         } else {
           lineState = newLinesState;
         }
 
-        var result = hljs.getLanguage(language) ? hljs.highlight(language, text, true, lineState) : hljs.highlightAuto(text);
+        const result = hljs.getLanguage(language)
+          ? hljs.highlight(language, text, true, lineState)
+          : hljs.highlightAuto(text);
 
-        if (lineParent.className.indexOf('d2h-del') !== -1) {
+        if (lineParent.className.indexOf("d2h-del") !== -1) {
           oldLinesState = result.top;
-        } else if (lineParent.className.indexOf('d2h-ins') !== -1) {
+        } else if (lineParent.className.indexOf("d2h-ins") !== -1) {
           newLinesState = result.top;
         } else {
           oldLinesState = result.top;
           newLinesState = result.top;
         }
 
-        var originalStream = highlightJS.nodeStream(line);
+        const originalStream = highlightJS.nodeStream(line);
         if (originalStream.length) {
-          var resultNode = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+          const resultNode = document.createElementNS("http://www.w3.org/1999/xhtml", "div");
           resultNode.innerHTML = result.value;
           result.value = highlightJS.mergeStreams(originalStream, highlightJS.nodeStream(resultNode), text);
         }
 
-        $line.addClass('hljs');
+        $line.addClass("hljs");
         $line.addClass(result.language);
         $line.html(result.value);
       });
@@ -132,15 +136,15 @@
   };
 
   Diff2HtmlUI.prototype._getTarget = function(targetId) {
-    var $target;
+    let $target;
 
-    if (typeof targetId === 'object' && targetId instanceof jQuery) {
+    if (typeof targetId === "object" && targetId instanceof jQuery) {
       $target = targetId;
-    } else if (typeof targetId === 'string') {
+    } else if (typeof targetId === "string") {
       $target = $(targetId);
     } else {
       console.error("Wrong target provided! Falling back to default value 'body'.");
-      console.log('Please provide a jQuery object or a valid DOM query string.');
+      console.log("Please provide a jQuery object or a valid DOM query string.");
       $target = $(defaultTarget);
     }
 
@@ -148,10 +152,10 @@
   };
 
   Diff2HtmlUI.prototype._getHashTag = function() {
-    var docUrl = document.URL;
-    var hashTagIndex = docUrl.indexOf('#');
+    const docUrl = document.URL;
+    const hashTagIndex = docUrl.indexOf("#");
 
-    var hashTag = null;
+    let hashTag = null;
     if (hashTagIndex !== -1) {
       hashTag = docUrl.substr(hashTagIndex + 1);
     }
@@ -166,46 +170,46 @@
   };
 
   Diff2HtmlUI.prototype._initSelection = function() {
-    var body = $('body');
-    var that = this;
+    const body = $("body");
+    const that = this;
 
-    body.on('mousedown', '.d2h-diff-table', function(event) {
-      var target = $(event.target);
-      var table = target.closest('.d2h-diff-table');
+    body.on("mousedown", ".d2h-diff-table", function(event) {
+      const target = $(event.target);
+      const table = target.closest(".d2h-diff-table");
 
-      if (target.closest('.d2h-code-line,.d2h-code-side-line').length) {
-        table.removeClass('selecting-left');
-        table.addClass('selecting-right');
+      if (target.closest(".d2h-code-line,.d2h-code-side-line").length) {
+        table.removeClass("selecting-left");
+        table.addClass("selecting-right");
         currentSelectionColumnId = 1;
-      } else if (target.closest('.d2h-code-linenumber,.d2h-code-side-linenumber').length) {
-        table.removeClass('selecting-right');
-        table.addClass('selecting-left');
+      } else if (target.closest(".d2h-code-linenumber,.d2h-code-side-linenumber").length) {
+        table.removeClass("selecting-right");
+        table.addClass("selecting-left");
         currentSelectionColumnId = 0;
       }
     });
 
-    body.on('copy', '.d2h-diff-table', function(event) {
-      var clipboardData = event.originalEvent.clipboardData;
-      var text = that._getSelectedText();
-      clipboardData.setData('text', text);
+    body.on("copy", ".d2h-diff-table", function(event) {
+      const clipboardData = event.originalEvent.clipboardData;
+      const text = that._getSelectedText();
+      clipboardData.setData("text", text);
       event.preventDefault();
     });
   };
 
   Diff2HtmlUI.prototype._getSelectedText = function() {
-    var sel = window.getSelection();
-    var range = sel.getRangeAt(0);
-    var doc = range.cloneContents();
-    var nodes = doc.querySelectorAll('tr');
-    var text = '';
-    var idx = currentSelectionColumnId;
+    const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
+    const doc = range.cloneContents();
+    const nodes = doc.querySelectorAll("tr");
+    let text = "";
+    const idx = currentSelectionColumnId;
 
     if (nodes.length === 0) {
       text = doc.textContent;
     } else {
       [].forEach.call(nodes, function(tr, i) {
-        var td = tr.cells[tr.cells.length === 1 ? 0 : idx];
-        text += (i ? '\n' : '') + td.textContent.replace(/(?:\r\n|\r|\n)/g, '');
+        const td = tr.cells[tr.cells.length === 1 ? 0 : idx];
+        text += (i ? "\n" : "") + td.textContent.replace(/(?:\r\n|\r|\n)/g, "");
       });
     }
 

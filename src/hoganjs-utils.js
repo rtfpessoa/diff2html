@@ -6,20 +6,20 @@
  */
 
 (function() {
-  var fs = require('fs');
-  var path = require('path');
-  var hogan = require('hogan.js');
+  const fs = require("fs");
+  const path = require("path");
+  const hogan = require("hogan.js");
 
-  var hoganTemplates = require('./templates/diff2html-templates.js');
+  const hoganTemplates = require("./diff2html-templates.js");
 
-  var extraTemplates;
+  let extraTemplates;
 
   function HoganJsUtils(configuration) {
     this.config = configuration || {};
     extraTemplates = this.config.templates || {};
 
-    var rawTemplates = this.config.rawTemplates || {};
-    for (var templateName in rawTemplates) {
+    const rawTemplates = this.config.rawTemplates || {};
+    for (const templateName in rawTemplates) {
       if (rawTemplates.hasOwnProperty(templateName)) {
         if (!extraTemplates[templateName]) extraTemplates[templateName] = this.compile(rawTemplates[templateName]);
       }
@@ -27,7 +27,7 @@
   }
 
   HoganJsUtils.prototype.render = function(namespace, view, params) {
-    var template = this.template(namespace, view);
+    const template = this.template(namespace, view);
     if (template) {
       return template.render(params);
     }
@@ -36,13 +36,13 @@
   };
 
   HoganJsUtils.prototype.template = function(namespace, view) {
-    var templateKey = this._templateKey(namespace, view);
+    const templateKey = this._templateKey(namespace, view);
 
     return this._getTemplate(templateKey);
   };
 
   HoganJsUtils.prototype._getTemplate = function(templateKey) {
-    var template;
+    let template;
 
     if (!this.config.noCache) {
       template = this._readFromCache(templateKey);
@@ -56,18 +56,18 @@
   };
 
   HoganJsUtils.prototype._loadTemplate = function(templateKey) {
-    var template;
+    let template;
 
     try {
       if (fs.readFileSync) {
-        var templatesPath = path.resolve(__dirname, 'templates');
-        var templatePath = path.join(templatesPath, templateKey);
-        var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
+        const templatesPath = path.resolve(__dirname, "templates");
+        const templatePath = path.join(templatesPath, templateKey);
+        const templateContent = fs.readFileSync(templatePath + ".mustache", "utf8");
         template = hogan.compile(templateContent);
         hoganTemplates[templateKey] = template;
       }
     } catch (e) {
-      console.error('Failed to read (template: ' + templateKey + ') from fs: ' + e.message);
+      console.error("Failed to read (template: " + templateKey + ") from fs: " + e.message);
     }
 
     return template;
@@ -78,7 +78,7 @@
   };
 
   HoganJsUtils.prototype._templateKey = function(namespace, view) {
-    return namespace + '-' + view;
+    return namespace + "-" + view;
   };
 
   HoganJsUtils.prototype.compile = function(templateStr) {

@@ -28,3 +28,8 @@ bower_components/
 
 # Terraform
 /terraform/.terraform
+
+/docs/
+/dist/
+/build/
+/src/diff2html-templates.js

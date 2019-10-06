@@ -4,13 +4,12 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 declare namespace Diff2Html {
-
   export interface Options {
-    inputFormat?: 'diff' | 'json';
-    outputFormat?: 'line-by-line' | 'side-by-side';
+    inputFormat?: "diff" | "json";
+    outputFormat?: "line-by-line" | "side-by-side";
     showFiles?: boolean;
-    diffStyle?: 'word' | 'char';
-    matching?: 'lines' | 'words' | 'none';
+    diffStyle?: "word" | "char";
+    matching?: "lines" | "words" | "none";
     matchWordsThreshold?: number;
     matchingMaxComparisons?: number;
     maxLineSizeInBlockForComparison?: number;
@@ -66,6 +65,6 @@ declare namespace Diff2Html {
 }
 
 declare module "diff2html" {
-  var d2h: { "Diff2Html": Diff2Html.Diff2Html };
+  var d2h: { Diff2Html: Diff2Html.Diff2Html };
   export = d2h;
 }

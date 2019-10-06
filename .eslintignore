@@ -1,11 +1,6 @@
-# Skip coverage and build folders
+# Skip build results
 coverage/**
-dist/**
-
-# Ignore symlink to build folder
+build/**
 docs/**
-
-# Ignore HTML templates generated code
-src/**
-!src/*.js
-!src/ui/js/*.js
+node_modules/**
+src/diff2html-templates.js

@@ -6,8 +6,7 @@
  */
 
 (function() {
-  function HighlightJS() {
-  }
+  function HighlightJS() {}
 
   /*
    * Copied from Highlight.js Private API
@@ -16,12 +15,15 @@
 
   /* Utility vars */
 
-  var ArrayProto = [];
+  const ArrayProto = [];
 
   /* Utility functions */
 
   function escape(value) {
-    return value.replace(/&/gm, '&amp;').replace(/</gm, '&lt;').replace(/>/gm, '&gt;');
+    return value
+      .replace(/&/gm, "&amp;")
+      .replace(/</gm, "&lt;")
+      .replace(/>/gm, "&gt;");
   }
 
   function tag(node) {
@@ -31,14 +33,14 @@
   /* Stream merging */
 
   HighlightJS.prototype.nodeStream = function(node) {
-    var result = [];
+    const result = [];
     (function _nodeStream(node, offset) {
-      for (var child = node.firstChild; child; child = child.nextSibling) {
+      for (let child = node.firstChild; child; child = child.nextSibling) {
         if (child.nodeType === 3) {
           offset += child.nodeValue.length;
         } else if (child.nodeType === 1) {
           result.push({
-            event: 'start',
+            event: "start",
             offset: offset,
             node: child
           });
@@ -48,7 +50,7 @@
           // but we list only those realistically expected in code display.
           if (!tag(child).match(/br|hr|img|input/)) {
             result.push({
-              event: 'stop',
+              event: "stop",
               offset: offset,
               node: child
             });
@@ -61,16 +63,16 @@
   };
 
   HighlightJS.prototype.mergeStreams = function(original, highlighted, value) {
-    var processed = 0;
-    var result = '';
-    var nodeStack = [];
+    let processed = 0;
+    let result = "";
+    const nodeStack = [];
 
     function selectStream() {
       if (!original.length || !highlighted.length) {
         return original.length ? original : highlighted;
       }
       if (original[0].offset !== highlighted[0].offset) {
-        return (original[0].offset < highlighted[0].offset) ? original : highlighted;
+        return original[0].offset < highlighted[0].offset ? original : highlighted;
       }
 
       /*
@@ -86,27 +88,27 @@
        return highlighted;
        ... which is collapsed to:
        */
-      return highlighted[0].event === 'start' ? original : highlighted;
+      return highlighted[0].event === "start" ? original : highlighted;
     }
 
     function open(node) {
       function attr_str(a) {
-        return ' ' + a.nodeName + '="' + escape(a.value) + '"';
+        return " " + a.nodeName + '="' + escape(a.value) + '"';
       }
 
-      result += '<' + tag(node) + ArrayProto.map.call(node.attributes, attr_str).join('') + '>';
+      result += "<" + tag(node) + ArrayProto.map.call(node.attributes, attr_str).join("") + ">";
     }
 
     function close(node) {
-      result += '</' + tag(node) + '>';
+      result += "</" + tag(node) + ">";
     }
 
     function render(event) {
-      (event.event === 'start' ? open : close)(event.node);
+      (event.event === "start" ? open : close)(event.node);
     }
 
     while (original.length || highlighted.length) {
-      var stream = selectStream();
+      let stream = selectStream();
       result += escape(value.substring(processed, stream[0].offset));
       processed = stream[0].offset;
       if (stream === original) {
@@ -123,7 +125,7 @@
         } while (stream === original && stream.length && stream[0].offset === processed);
         nodeStack.reverse().forEach(open);
       } else {
-        if (stream[0].event === 'start') {
+        if (stream[0].event === "start") {
           nodeStack.push(stream[0].node);
         } else {
           nodeStack.pop();

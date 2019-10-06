@@ -1,34 +1,38 @@
-var fs = require('fs');
+#!/usr/bin/env node
 
-var hogan = require('hogan.js');
+const fs = require("fs");
 
-var root = 'website/templates';
-var pagesRoot = root + '/pages';
+const hogan = require("hogan.js");
 
-var websitePages = fs.readdirSync(root + '/pages');
+const root = "website/templates";
+const pagesRoot = root + "/pages";
 
-var template = hogan.compile(readFile(root + '/template.mustache'));
+const websitePages = fs.readdirSync(root + "/pages");
 
-var options = {
-  'all': {
-    'demoUrl': 'demo.html?diff=https://github.com/rtfpessoa/diff2html/pull/106'
+const template = hogan.compile(readFile(root + "/template.mustache"));
+
+const options = {
+  all: {
+    demoUrl: "demo.html?diff=https://github.com/rtfpessoa/diff2html/pull/106"
   },
-  'demo': {
-    'extraClass': 'template-index-min'
+  demo: {
+    extraClass: "template-index-min"
   }
 };
 
 websitePages.map(function(page) {
-  var pagePartialTemplate = hogan.compile(readFile(pagesRoot + '/' + page + '/' + page + '.partial.mustache'));
-  var pageAssetsTemplate = hogan.compile(readFile(pagesRoot + '/' + page + '/' + page + '-assets.partial.mustache'));
-  var pageScriptsTemplate = hogan.compile(readFile(pagesRoot + '/' + page + '/' + page + '-scripts.partial.mustache'));
+  const pagePartialTemplate = hogan.compile(readFile(pagesRoot + "/" + page + "/" + page + ".partial.mustache"));
+  const pageAssetsTemplate = hogan.compile(readFile(pagesRoot + "/" + page + "/" + page + "-assets.partial.mustache"));
+  const pageScriptsTemplate = hogan.compile(
+    readFile(pagesRoot + "/" + page + "/" + page + "-scripts.partial.mustache")
+  );
 
-  var templateOptions = {};
+  const templateOptions = {};
 
-  var key;
+  let key;
 
   // Allow the pages to share common options
-  var genericOptions = options['all'] || {};
+  const genericOptions = options.all || {};
   for (key in genericOptions) {
     if (genericOptions.hasOwnProperty(key)) {
       templateOptions[key] = genericOptions[key];
@@ -36,32 +40,31 @@ websitePages.map(function(page) {
   }
 
   // Allow each page to have custom options
-  var pageOptions = options[page] || {};
+  const pageOptions = options[page] || {};
   for (key in pageOptions) {
     if (pageOptions.hasOwnProperty(key)) {
       templateOptions[key] = pageOptions[key];
     }
   }
 
-  var pagePartial = pagePartialTemplate.render(templateOptions);
-  var pageAssets = pageAssetsTemplate.render(templateOptions);
-  var pageScripts = pageScriptsTemplate.render(templateOptions);
+  const pagePartial = pagePartialTemplate.render(templateOptions);
+  const pageAssets = pageAssetsTemplate.render(templateOptions);
+  const pageScripts = pageScriptsTemplate.render(templateOptions);
 
   templateOptions.assets = pageAssets;
   templateOptions.scripts = pageScripts;
   templateOptions.content = pagePartial;
 
-  var pageHtml = template.render(templateOptions);
-  writeFile('docs/' + page + '.html', pageHtml);
+  const pageHtml = template.render(templateOptions);
+  writeFile("docs/" + page + ".html", pageHtml);
 });
 
 function readFile(filePath) {
   try {
-    return fs.readFileSync(filePath, 'utf8');
-  } catch (_ignore) {
-  }
+    return fs.readFileSync(filePath, "utf8");
+  } catch (_ignore) {}
 
-  return '';
+  return "";
 }
 
 function writeFile(filePath, content) {

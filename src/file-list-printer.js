@@ -6,40 +6,45 @@
  */
 
 (function() {
-  var printerUtils = require('./printer-utils.js').PrinterUtils;
+  const printerUtils = require("./printer-utils.js").PrinterUtils;
 
-  var hoganUtils;
+  let hoganUtils;
 
-  var baseTemplatesPath = 'file-summary';
-  var iconsBaseTemplatesPath = 'icon';
+  const baseTemplatesPath = "file-summary";
+  const iconsBaseTemplatesPath = "icon";
 
   function FileListPrinter(config) {
     this.config = config;
 
-    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
+    const HoganJsUtils = require("./hoganjs-utils.js").HoganJsUtils;
     hoganUtils = new HoganJsUtils(config);
   }
 
   FileListPrinter.prototype.generateFileList = function(diffFiles) {
-    var lineTemplate = hoganUtils.template(baseTemplatesPath, 'line');
+    const lineTemplate = hoganUtils.template(baseTemplatesPath, "line");
 
-    var files = diffFiles.map(function(file) {
-      var fileTypeName = printerUtils.getFileTypeIcon(file);
-      var iconTemplate = hoganUtils.template(iconsBaseTemplatesPath, fileTypeName);
+    const files = diffFiles
+      .map(function(file) {
+        const fileTypeName = printerUtils.getFileTypeIcon(file);
+        const iconTemplate = hoganUtils.template(iconsBaseTemplatesPath, fileTypeName);
 
-      return lineTemplate.render({
-        fileHtmlId: printerUtils.getHtmlId(file),
-        oldName: file.oldName,
-        newName: file.newName,
-        fileName: printerUtils.getDiffName(file),
-        deletedLines: '-' + file.deletedLines,
-        addedLines: '+' + file.addedLines
-      }, {
-        fileIcon: iconTemplate
-      });
-    }).join('\n');
+        return lineTemplate.render(
+          {
+            fileHtmlId: printerUtils.getHtmlId(file),
+            oldName: file.oldName,
+            newName: file.newName,
+            fileName: printerUtils.getDiffName(file),
+            deletedLines: "-" + file.deletedLines,
+            addedLines: "+" + file.addedLines
+          },
+          {
+            fileIcon: iconTemplate
+          }
+        );
+      })
+      .join("\n");
 
-    return hoganUtils.render(baseTemplatesPath, 'wrapper', {
+    return hoganUtils.render(baseTemplatesPath, "wrapper", {
       filesNumber: diffFiles.length,
       files: files
     });

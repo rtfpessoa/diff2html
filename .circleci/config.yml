@@ -29,14 +29,14 @@ jobs:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-      - run: yarn run test
       - run: yarn run lint
+      - run: yarn run coverage
       - run: yarn run codacy
       - persist_to_workspace:
           root: ~/diff2html
           paths:
             - docs
-            - dist
+            - build
 
   build-node_4:
     <<: *common-build
@@ -80,11 +80,6 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run:
-          name: Prepare website sources
-          command: |
-              rm -f docs/assets
-              mv dist docs/assets
       - run:
           name: Deploy
           working_directory: ~/diff2html/docs

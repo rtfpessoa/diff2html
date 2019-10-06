@@ -7,7 +7,7 @@
  */
 
 (function() {
-  var Rematch = {};
+  const Rematch = {};
 
   /*
    Copyright (c) 2011 Andrei Mackenzie
@@ -29,16 +29,16 @@
       return a.length;
     }
 
-    var matrix = [];
+    const matrix = [];
 
     // Increment along the first column of each row
-    var i;
+    let i;
     for (i = 0; i <= b.length; i++) {
       matrix[i] = [i];
     }
 
     // Increment each column in the first row
-    var j;
+    let j;
     for (j = 0; j <= a.length; j++) {
       matrix[0][j] = j;
     }
@@ -49,9 +49,13 @@
         if (b.charAt(i - 1) === a.charAt(j - 1)) {
           matrix[i][j] = matrix[i - 1][j - 1];
         } else {
-          matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, // Substitution
-            Math.min(matrix[i][j - 1] + 1, // Insertion
-              matrix[i - 1][j] + 1)); // Deletion
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1, // Substitution
+            Math.min(
+              matrix[i][j - 1] + 1, // Insertion
+              matrix[i - 1][j] + 1
+            )
+          ); // Deletion
         }
       }
     }
@@ -64,19 +68,19 @@
   Rematch.distance = function distance(x, y) {
     x = x.trim();
     y = y.trim();
-    var lev = levenshtein(x, y);
-    var score = lev / (x.length + y.length);
+    const lev = levenshtein(x, y);
+    const score = lev / (x.length + y.length);
 
     return score;
   };
 
   Rematch.rematch = function rematch(distanceFunction) {
     function findBestMatch(a, b, cache) {
-      var bestMatchDist = Infinity;
-      var bestMatch;
-      for (var i = 0; i < a.length; ++i) {
-        for (var j = 0; j < b.length; ++j) {
-          var cacheKey = JSON.stringify([a[i], b[j]]);
+      let bestMatchDist = Infinity;
+      let bestMatch;
+      for (let i = 0; i < a.length; ++i) {
+        for (let j = 0; j < b.length; ++j) {
+          const cacheKey = JSON.stringify([a[i], b[j]]);
           var md;
           if (cache.hasOwnProperty(cacheKey)) {
             md = cache[cacheKey];
@@ -86,7 +90,7 @@
           }
           if (md < bestMatchDist) {
             bestMatchDist = md;
-            bestMatch = {indexA: i, indexB: j, score: bestMatchDist};
+            bestMatch = { indexA: i, indexB: j, score: bestMatchDist };
           }
         }
       }
@@ -95,33 +99,33 @@
     }
 
     function group(a, b, level, cache) {
-      if (typeof (cache) === 'undefined') {
+      if (typeof cache === "undefined") {
         cache = {};
       }
 
-      var bm = findBestMatch(a, b, cache);
+      const bm = findBestMatch(a, b, cache);
 
       if (!level) {
         level = 0;
       }
 
-      if (!bm || (a.length + b.length < 3)) {
+      if (!bm || a.length + b.length < 3) {
         return [[a, b]];
       }
 
-      var a1 = a.slice(0, bm.indexA);
-      var b1 = b.slice(0, bm.indexB);
-      var aMatch = [a[bm.indexA]];
-      var bMatch = [b[bm.indexB]];
-      var tailA = bm.indexA + 1;
-      var tailB = bm.indexB + 1;
-      var a2 = a.slice(tailA);
-      var b2 = b.slice(tailB);
+      const a1 = a.slice(0, bm.indexA);
+      const b1 = b.slice(0, bm.indexB);
+      const aMatch = [a[bm.indexA]];
+      const bMatch = [b[bm.indexB]];
+      const tailA = bm.indexA + 1;
+      const tailB = bm.indexB + 1;
+      const a2 = a.slice(tailA);
+      const b2 = b.slice(tailB);
 
-      var group1 = group(a1, b1, level + 1, cache);
-      var groupMatch = group(aMatch, bMatch, level + 1, cache);
-      var group2 = group(a2, b2, level + 1, cache);
-      var result = groupMatch;
+      const group1 = group(a1, b1, level + 1, cache);
+      const groupMatch = group(aMatch, bMatch, level + 1, cache);
+      const group2 = group(a2, b2, level + 1, cache);
+      let result = groupMatch;
 
       if (bm.indexA > 0 || bm.indexB > 0) {
         result = group1.concat(result);

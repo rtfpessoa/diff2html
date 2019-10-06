@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "outDir": "./build/commonjs-node",
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    // TODO: Change to true after migration to TS is complete
+    "allowJs": true,
+    "declaration": false,
+    "declarationMap": false,
+    /////////////////////////////////////////////////////////
+    "strictNullChecks": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "alwaysStrict": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "./src/__tests__/*"]
+}

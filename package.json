@@ -34,22 +34,25 @@
   "engines": {
     "node": ">=4"
   },
-  "preferGlobal": true,
   "scripts": {
-    "release": "./scripts/release.sh",
-    "release-website": "./scripts/release-website.sh",
-    "templates": "./scripts/hulk.js --wrapper node --variable 'browserTemplates' ./src/templates/*.mustache > ./src/templates/diff2html-templates.js",
+    "build": "tsc",
+    "lint": "eslint '*/**/*.{js,jsx,ts,tsx}'",
     "style": "yarn run lint",
-    "lint": "eslint .",
-    "coverage": "istanbul cover _mocha -- -u exports -R spec ./test/**/*",
-    "check-coverage": "istanbul check-coverage --statements 90 --functions 90 --branches 85 --lines 90 ./coverage/coverage.json",
-    "test": "yarn run coverage && yarn run check-coverage",
+    "test": "jest",
+    "coverage": "jest --collectCoverage",
+    "coverage-html": "yarn run coverage && open ./coverage/index.html",
     "codacy": "cat ./coverage/lcov.info | codacy-coverage",
-    "preversion": "yarn run release && yarn run release-website && yarn run lint && yarn test",
-    "version": "git add -A src dist docs package.json",
+    "release": "yarn run release-css && yarn run release-templates && yarn run release-ts && yarn run release-browser-bundle && yarn run release-website",
+    "release-css": "./scripts/release-css.sh",
+    "release-templates": "./scripts/release-templates.sh",
+    "release-ts": "yarn run build",
+    "release-browser-bundle": "./scripts/release-browser-bundle.sh",
+    "release-website": "./scripts/release-website.sh",
+    "preversion": "yarn run release && yarn run lint && yarn test",
+    "version": "git add -A package.json",
     "postversion": "git push && git push --tags"
   },
-  "main": "./src/diff2html.js",
+  "main": "./build/commonjs-node/diff2html.js",
   "browser": {
     "fs": false
   },
@@ -60,28 +63,38 @@
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
+    "@types/jest": "24.0.18",
+    "@types/node": "^12.7.2",
+    "@typescript-eslint/eslint-plugin": "2.0.0",
+    "@typescript-eslint/parser": "2.0.0",
     "autoprefixer": "^9.6.0",
-    "browserify": "^16.2.3",
+    "browserify": "^16.5.0",
     "clean-css-cli": "^4.3.0",
     "codacy-coverage": "^3.4.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0",
+    "eslint": "6.2.2",
+    "eslint-config-prettier": "6.1.0",
+    "eslint-config-standard": "14.0.1",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-jest": "22.15.2",
+    "eslint-plugin-node": "9.1.0",
+    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "fast-html-parser": "^1.0.1",
-    "istanbul": "^0.4.5",
+    "jest": "24.9.0",
     "mkdirp": "^0.5.1",
-    "mocha": "5.2.0",
     "nopt": "^4.0.1",
-    "postcss-cli": "^6.1.2",
-    "uglify-js": "^3.6.0"
+    "postcss-cli": "^6.1.3",
+    "prettier": "1.18.2",
+    "ts-jest": "24.0.2",
+    "typescript": "^3.6.3",
+    "terser": "^4.3.8"
   },
   "resolutions": {
-    "lodash": "4.17.14"
+    "lodash": "4.17.15"
   },
   "license": "MIT",
   "files": [
-    "src",
-    "dist",
-    "typescript"
+    "build"
   ]
 }
