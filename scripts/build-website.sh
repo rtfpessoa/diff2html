@@ -31,7 +31,7 @@ echo "Minifying ${OUTPUT_DEMO_JS} to ${OUTPUT_DEMO_MIN_JS}"
 terser ${OUTPUT_DEMO_JS} -c -o ${OUTPUT_DEMO_MIN_JS}
 
 echo "Generating HTMLs from templates ..."
-node ${SCRIPT_DIRECTORY}/release-website.js
+node ${SCRIPT_DIRECTORY}/../build/scripts/build-website.js
 
 echo "Copying static files ..."
 cp -rf ${INPUT_DIR}/img ${OUTPUT_DIR}/
