@@ -1,4 +1,5 @@
-const Diff2Html = require("../diff2html.js").Diff2Html;
+import { parse, html } from "../diff2html";
+import { DiffFile, LineType } from "../render-utils";
 
 const diffExample1 =
   "diff --git a/sample b/sample\n" +
@@ -9,27 +10,27 @@ const diffExample1 =
   "-test\n" +
   "+test1\n";
 
-const jsonExample1 = [
+const jsonExample1: DiffFile[] = [
   {
     blocks: [
       {
         lines: [
           {
             content: "-test",
-            type: "d2h-del",
+            type: LineType.DELETE,
             oldNumber: 1,
-            newNumber: null
+            newNumber: undefined
           },
           {
             content: "+test1",
-            type: "d2h-ins",
-            oldNumber: null,
+            type: LineType.INSERT,
+            oldNumber: undefined,
             newNumber: 1
           }
         ],
-        oldStartLine: "1",
-        oldStartLine2: null,
-        newStartLine: "1",
+        oldStartLine: 1,
+        oldStartLine2: undefined,
+        newStartLine: 1,
         header: "@@ -1 +1 @@"
       }
     ],
@@ -38,9 +39,10 @@ const jsonExample1 = [
     checksumBefore: "0000001",
     checksumAfter: "0ddf2ba",
     oldName: "sample",
-    language: undefined,
     newName: "sample",
-    isCombined: false
+    language: "",
+    isCombined: false,
+    isGitDiff: true
   }
 ];
 
@@ -183,9 +185,9 @@ const htmlSideExample1 =
 
 const htmlSideExample1WithFilesSummary = filesExample1 + htmlSideExample1;
 
-describe("Diff2Html", function() {
-  describe("getJsonFromDiff", function() {
-    it("should parse simple diff to json", function() {
+describe("Diff2Html", () => {
+  describe("getJsonFromDiff", () => {
+    it("should parse simple diff to json", () => {
       const diff =
         "diff --git a/sample b/sample\n" +
         "index 0000001..0ddf2ba\n" +
@@ -194,19 +196,19 @@ describe("Diff2Html", function() {
         "@@ -1 +1 @@\n" +
         "-test\n" +
         "+test1\n";
-      const result = Diff2Html.getJsonFromDiff(diff);
+      const result = parse(diff);
 
       const file1 = result[0];
-      expect(1).toEqual(result.length);
-      expect(1).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("sample").toEqual(file1.oldName);
-      expect("sample").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
+      expect(result.length).toEqual(1);
+      expect(file1.addedLines).toEqual(1);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("sample");
+      expect(file1.newName).toEqual("sample");
+      expect(file1.blocks.length).toEqual(1);
     });
 
     // Test case for issue #49
-    it("should parse diff with added EOF", function() {
+    it("should parse diff with added EOF", () => {
       const diff =
         "diff --git a/sample.scala b/sample.scala\n" +
         "index b583263..8b2fc3e 100644\n" +
@@ -223,67 +225,67 @@ describe("Diff2Html", function() {
         "+  IndexLock, RepositoryError, NotValidRepo, PullRequestNotMergeable, BranchError,\n" +
         "+  PluginError, CodeParserError, EngineError = Value\n" +
         "+}\n";
-      const result = Diff2Html.getJsonFromDiff(diff);
+      const result = parse(diff);
 
-      expect(50).toEqual(result[0].blocks[0].lines[0].oldNumber);
-      expect(50).toEqual(result[0].blocks[0].lines[0].newNumber);
+      expect(result[0].blocks[0].lines[0].oldNumber).toEqual(50);
+      expect(result[0].blocks[0].lines[0].newNumber).toEqual(50);
 
-      expect(51).toEqual(result[0].blocks[0].lines[1].oldNumber);
-      expect(51).toEqual(result[0].blocks[0].lines[1].newNumber);
+      expect(result[0].blocks[0].lines[1].oldNumber).toEqual(51);
+      expect(result[0].blocks[0].lines[1].newNumber).toEqual(51);
 
-      expect(52).toEqual(result[0].blocks[0].lines[2].oldNumber);
-      expect(52).toEqual(result[0].blocks[0].lines[2].newNumber);
+      expect(result[0].blocks[0].lines[2].oldNumber).toEqual(52);
+      expect(result[0].blocks[0].lines[2].newNumber).toEqual(52);
 
-      expect(53).toEqual(result[0].blocks[0].lines[3].oldNumber);
-      expect(null).toEqual(result[0].blocks[0].lines[3].newNumber);
+      expect(result[0].blocks[0].lines[3].oldNumber).toEqual(53);
+      expect(result[0].blocks[0].lines[3].newNumber).toBeUndefined();
 
-      expect(54).toEqual(result[0].blocks[0].lines[4].oldNumber);
-      expect(null).toEqual(result[0].blocks[0].lines[4].newNumber);
+      expect(result[0].blocks[0].lines[4].oldNumber).toEqual(54);
+      expect(result[0].blocks[0].lines[4].newNumber).toBeUndefined();
 
-      expect(null).toEqual(result[0].blocks[0].lines[5].oldNumber);
-      expect(53).toEqual(result[0].blocks[0].lines[5].newNumber);
+      expect(result[0].blocks[0].lines[5].oldNumber).toBeUndefined();
+      expect(result[0].blocks[0].lines[5].newNumber).toEqual(53);
 
-      expect(null).toEqual(result[0].blocks[0].lines[6].oldNumber);
-      expect(54).toEqual(result[0].blocks[0].lines[6].newNumber);
+      expect(result[0].blocks[0].lines[6].oldNumber).toBeUndefined();
+      expect(result[0].blocks[0].lines[6].newNumber).toEqual(54);
 
-      expect(null).toEqual(result[0].blocks[0].lines[7].oldNumber);
-      expect(55).toEqual(result[0].blocks[0].lines[7].newNumber);
+      expect(result[0].blocks[0].lines[7].oldNumber).toBeUndefined();
+      expect(result[0].blocks[0].lines[7].newNumber).toEqual(55);
 
-      expect(null).toEqual(result[0].blocks[0].lines[8].oldNumber);
-      expect(56).toEqual(result[0].blocks[0].lines[8].newNumber);
+      expect(result[0].blocks[0].lines[8].oldNumber).toBeUndefined();
+      expect(result[0].blocks[0].lines[8].newNumber).toEqual(56);
     });
 
-    it("should generate pretty line by line html from diff", function() {
-      const result = Diff2Html.getPrettyHtmlFromDiff(diffExample1);
-      expect(htmlLineExample1).toEqual(result);
+    it("should generate pretty line by line html from diff", () => {
+      const result = html(diffExample1);
+      expect(result).toEqual(htmlLineExample1);
     });
 
-    it("should generate pretty line by line html from json", function() {
-      const result = Diff2Html.getPrettyHtmlFromJson(jsonExample1);
-      expect(htmlLineExample1).toEqual(result);
+    it("should generate pretty line by line html from json", () => {
+      const result = html(jsonExample1);
+      expect(result).toEqual(htmlLineExample1);
     });
 
-    it("should generate pretty diff with files summary", function() {
-      const result = Diff2Html.getPrettyHtmlFromDiff(diffExample1, { showFiles: true });
-      expect(htmlLineExample1WithFilesSummary).toEqual(result);
+    it("should generate pretty diff with files summary", () => {
+      const result = html(diffExample1, { showFiles: true });
+      expect(result).toEqual(htmlLineExample1WithFilesSummary);
     });
 
-    it("should generate pretty side by side html from diff", function() {
-      const result = Diff2Html.getPrettySideBySideHtmlFromDiff(diffExample1);
-      expect(htmlSideExample1).toEqual(result);
+    it("should generate pretty side by side html from diff", () => {
+      const result = html(diffExample1, { outputFormat: "side-by-side" });
+      expect(result).toEqual(htmlSideExample1);
     });
 
-    it("should generate pretty side by side html from json", function() {
-      const result = Diff2Html.getPrettySideBySideHtmlFromJson(jsonExample1);
-      expect(htmlSideExample1).toEqual(result);
+    it("should generate pretty side by side html from json", () => {
+      const result = html(jsonExample1, { outputFormat: "side-by-side" });
+      expect(result).toEqual(htmlSideExample1);
     });
 
-    it("should generate pretty side by side html from diff 2", function() {
-      const result = Diff2Html.getPrettySideBySideHtmlFromDiff(diffExample1, { showFiles: true });
-      expect(htmlSideExample1WithFilesSummary).toEqual(result);
+    it("should generate pretty side by side html from diff 2", () => {
+      const result = html(diffExample1, { outputFormat: "side-by-side", showFiles: true });
+      expect(result).toEqual(htmlSideExample1WithFilesSummary);
     });
 
-    it("should generate pretty side by side html from diff with html on headers", function() {
+    it("should generate pretty side by side html from diff with html on headers", () => {
       const diffExample2 =
         "diff --git a/CHANGELOG.md b/CHANGELOG.md\n" +
         "index fc3e3f4..b486d10 100644\n" +
@@ -516,8 +518,8 @@ describe("Diff2Html", function() {
         "</div>\n" +
         "</div>";
 
-      const result = Diff2Html.getPrettyHtmlFromDiff(diffExample2);
-      expect(result).toEqual(htmlExample2);
+      const result = html(diffExample2);
+      expect(htmlExample2).toEqual(result);
     });
   });
 });

@@ -1,19 +1,19 @@
-const DiffParser = require("../diff-parser.js").DiffParser;
+import { parse } from "../diff-parser";
 
-function checkDiffSample(diff) {
-  const result = DiffParser.generateDiffJson(diff);
+function checkDiffSample(diff: string): void {
+  const result = parse(diff);
   const file1 = result[0];
-  expect(1).toEqual(result.length);
-  expect(1).toEqual(file1.addedLines);
-  expect(1).toEqual(file1.deletedLines);
-  expect("sample").toEqual(file1.oldName);
-  expect("sample").toEqual(file1.newName);
-  expect(1).toEqual(file1.blocks.length);
+  expect(result.length).toEqual(1);
+  expect(file1.addedLines).toEqual(1);
+  expect(file1.deletedLines).toEqual(1);
+  expect(file1.oldName).toEqual("sample");
+  expect(file1.newName).toEqual("sample");
+  expect(file1.blocks.length).toEqual(1);
 }
 
-describe("DiffParser", function() {
-  describe("generateDiffJson", function() {
-    it("should parse unix with \n diff", function() {
+describe("DiffParser", () => {
+  describe("generateDiffJson", () => {
+    it("should parse unix with \n diff", () => {
       const diff =
         "diff --git a/sample b/sample\n" +
         "index 0000001..0ddf2ba\n" +
@@ -25,7 +25,7 @@ describe("DiffParser", function() {
       checkDiffSample(diff);
     });
 
-    it("should parse windows with \r\n diff", function() {
+    it("should parse windows with \r\n diff", () => {
       const diff =
         "diff --git a/sample b/sample\r\n" +
         "index 0000001..0ddf2ba\r\n" +
@@ -37,7 +37,7 @@ describe("DiffParser", function() {
       checkDiffSample(diff);
     });
 
-    it("should parse old os x with \r diff", function() {
+    it("should parse old os x with \r diff", () => {
       const diff =
         "diff --git a/sample b/sample\r" +
         "index 0000001..0ddf2ba\r" +
@@ -49,7 +49,7 @@ describe("DiffParser", function() {
       checkDiffSample(diff);
     });
 
-    it("should parse mixed eols diff", function() {
+    it("should parse mixed eols diff", () => {
       const diff =
         "diff --git a/sample b/sample\n" +
         "index 0000001..0ddf2ba\r\n" +
@@ -61,7 +61,7 @@ describe("DiffParser", function() {
       checkDiffSample(diff);
     });
 
-    it("should parse diff with special characters", function() {
+    it("should parse diff with special characters", () => {
       const diff =
         'diff --git "a/bla with \ttab.scala" "b/bla with \ttab.scala"\n' +
         "index 4c679d7..e9bd385 100644\n" +
@@ -72,17 +72,17 @@ describe("DiffParser", function() {
         "+cenas com ananas\n" +
         "+bananas";
 
-      const result = DiffParser.generateDiffJson(diff);
+      const result = parse(diff);
       const file1 = result[0];
-      expect(1).toEqual(result.length);
-      expect(2).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("bla with \ttab.scala").toEqual(file1.oldName);
-      expect("bla with \ttab.scala").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
+      expect(result.length).toEqual(1);
+      expect(file1.addedLines).toEqual(2);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("bla with \ttab.scala");
+      expect(file1.newName).toEqual("bla with \ttab.scala");
+      expect(file1.blocks.length).toEqual(1);
     });
 
-    it("should parse diff with prefix", function() {
+    it("should parse diff with prefix", () => {
       const diff =
         'diff --git "\tbla with \ttab.scala" "\tbla with \ttab.scala"\n' +
         "index 4c679d7..e9bd385 100644\n" +
@@ -93,17 +93,17 @@ describe("DiffParser", function() {
         "+cenas com ananas\n" +
         "+bananas";
 
-      const result = DiffParser.generateDiffJson(diff, { srcPrefix: "\t", dstPrefix: "\t" });
+      const result = parse(diff, { srcPrefix: "\t", dstPrefix: "\t" });
       const file1 = result[0];
-      expect(1).toEqual(result.length);
-      expect(2).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("bla with \ttab.scala").toEqual(file1.oldName);
-      expect("bla with \ttab.scala").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
+      expect(result.length).toEqual(1);
+      expect(file1.addedLines).toEqual(2);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("bla with \ttab.scala");
+      expect(file1.newName).toEqual("bla with \ttab.scala");
+      expect(file1.blocks.length).toEqual(1);
     });
 
-    it("should parse diff with deleted file", function() {
+    it("should parse diff with deleted file", () => {
       const diff =
         "diff --git a/src/var/strundefined.js b/src/var/strundefined.js\n" +
         "deleted file mode 100644\n" +
@@ -111,26 +111,26 @@ describe("DiffParser", function() {
         "--- a/src/var/strundefined.js\n" +
         "+++ /dev/null\n" +
         "@@ -1,3 +0,0 @@\n" +
-        "-define(function() {\n" +
+        "-define(() => {\n" +
         "-  return typeof undefined;\n" +
         "-});\n";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(1).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(1);
 
       const file1 = result[0];
-      expect(false).toEqual(file1.isCombined);
-      expect(0).toEqual(file1.addedLines);
-      expect(3).toEqual(file1.deletedLines);
-      expect("src/var/strundefined.js").toEqual(file1.oldName);
-      expect("/dev/null").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(true).toEqual(file1.isDeleted);
-      expect("04e16b0").toEqual(file1.checksumBefore);
-      expect("0000000").toEqual(file1.checksumAfter);
+      expect(file1.isCombined).toEqual(false);
+      expect(file1.addedLines).toEqual(0);
+      expect(file1.deletedLines).toEqual(3);
+      expect(file1.oldName).toEqual("src/var/strundefined.js");
+      expect(file1.newName).toEqual("/dev/null");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.isDeleted).toEqual(true);
+      expect(file1.checksumBefore).toEqual("04e16b0");
+      expect(file1.checksumAfter).toEqual("0000000");
     });
 
-    it("should parse diff with new file", function() {
+    it("should parse diff with new file", () => {
       const diff =
         "diff --git a/test.js b/test.js\n" +
         "new file mode 100644\n" +
@@ -144,23 +144,23 @@ describe("DiffParser", function() {
         "+\n" +
         "+console.log(parser.parsePatchDiffResult(text, patchLineList));\n";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(1).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(1);
 
       const file1 = result[0];
-      expect(false).toEqual(file1.isCombined);
-      expect(5).toEqual(file1.addedLines);
-      expect(0).toEqual(file1.deletedLines);
-      expect("/dev/null").toEqual(file1.oldName);
-      expect("test.js").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(true).toEqual(file1.isNew);
-      expect("100644").toEqual(file1.newFileMode);
-      expect("0000000").toEqual(file1.checksumBefore);
-      expect("e1e22ec").toEqual(file1.checksumAfter);
+      expect(file1.isCombined).toEqual(false);
+      expect(file1.addedLines).toEqual(5);
+      expect(file1.deletedLines).toEqual(0);
+      expect(file1.oldName).toEqual("/dev/null");
+      expect(file1.newName).toEqual("test.js");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.isNew).toEqual(true);
+      expect(file1.newFileMode).toEqual("100644");
+      expect(file1.checksumBefore).toEqual("0000000");
+      expect(file1.checksumAfter).toEqual("e1e22ec");
     });
 
-    it("should parse diff with nested diff", function() {
+    it("should parse diff with nested diff", () => {
       const diff =
         "diff --git a/src/offset.js b/src/offset.js\n" +
         "index cc6ffb4..fa51f18 100644\n" +
@@ -174,22 +174,22 @@ describe("DiffParser", function() {
         "+\n" +
         "+console.log(parser.parsePatchDiffResult(text, patchLineList));\n";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(1).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(1);
 
       const file1 = result[0];
-      expect(false).toEqual(file1.isCombined);
-      expect(6).toEqual(file1.addedLines);
-      expect(0).toEqual(file1.deletedLines);
-      expect("src/offset.js").toEqual(file1.oldName);
-      expect("src/offset.js").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(6).toEqual(file1.blocks[0].lines.length);
-      expect("cc6ffb4").toEqual(file1.checksumBefore);
-      expect("fa51f18").toEqual(file1.checksumAfter);
+      expect(file1.isCombined).toEqual(false);
+      expect(file1.addedLines).toEqual(6);
+      expect(file1.deletedLines).toEqual(0);
+      expect(file1.oldName).toEqual("src/offset.js");
+      expect(file1.newName).toEqual("src/offset.js");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.blocks[0].lines.length).toEqual(6);
+      expect(file1.checksumBefore).toEqual("cc6ffb4");
+      expect(file1.checksumAfter).toEqual("fa51f18");
     });
 
-    it("should parse diff with multiple blocks", function() {
+    it("should parse diff with multiple blocks", () => {
       const diff =
         "diff --git a/src/attributes/classes.js b/src/attributes/classes.js\n" +
         "index c617824..c8d1393 100644\n" +
@@ -217,23 +217,23 @@ describe("DiffParser", function() {
         "           // store className if set\n" +
         '           dataPriv.set( this, "__className__", this.className );\n';
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(1).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(1);
 
       const file1 = result[0];
-      expect(false).toEqual(file1.isCombined);
-      expect(2).toEqual(file1.addedLines);
-      expect(3).toEqual(file1.deletedLines);
-      expect("src/attributes/classes.js").toEqual(file1.oldName);
-      expect("src/attributes/classes.js").toEqual(file1.newName);
-      expect(2).toEqual(file1.blocks.length);
-      expect(11).toEqual(file1.blocks[0].lines.length);
-      expect(8).toEqual(file1.blocks[1].lines.length);
-      expect("c617824").toEqual(file1.checksumBefore);
-      expect("c8d1393").toEqual(file1.checksumAfter);
+      expect(file1.isCombined).toEqual(false);
+      expect(file1.addedLines).toEqual(2);
+      expect(file1.deletedLines).toEqual(3);
+      expect(file1.oldName).toEqual("src/attributes/classes.js");
+      expect(file1.newName).toEqual("src/attributes/classes.js");
+      expect(file1.blocks.length).toEqual(2);
+      expect(file1.blocks[0].lines.length).toEqual(11);
+      expect(file1.blocks[1].lines.length).toEqual(8);
+      expect(file1.checksumBefore).toEqual("c617824");
+      expect(file1.checksumAfter).toEqual("c8d1393");
     });
 
-    it("should parse diff with multiple files", function() {
+    it("should parse diff with multiple files", () => {
       const diff =
         "diff --git a/src/core/init.js b/src/core/init.js\n" +
         "index e49196a..50f310c 100644\n" +
@@ -260,33 +260,33 @@ describe("DiffParser", function() {
         '   "./var/hasOwn",\n' +
         '   "./var/slice",\n';
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(2).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(2);
 
       const file1 = result[0];
-      expect(false).toEqual(file1.isCombined);
-      expect(1).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("src/core/init.js").toEqual(file1.oldName);
-      expect("src/core/init.js").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(8).toEqual(file1.blocks[0].lines.length);
-      expect("e49196a").toEqual(file1.checksumBefore);
-      expect("50f310c").toEqual(file1.checksumAfter);
+      expect(file1.isCombined).toEqual(false);
+      expect(file1.addedLines).toEqual(1);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("src/core/init.js");
+      expect(file1.newName).toEqual("src/core/init.js");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.blocks[0].lines.length).toEqual(8);
+      expect(file1.checksumBefore).toEqual("e49196a");
+      expect(file1.checksumAfter).toEqual("50f310c");
 
       const file2 = result[1];
-      expect(false).toEqual(file2.isCombined);
-      expect(0).toEqual(file2.addedLines);
-      expect(1).toEqual(file2.deletedLines);
-      expect("src/event.js").toEqual(file2.oldName);
-      expect("src/event.js").toEqual(file2.newName);
-      expect(1).toEqual(file2.blocks.length);
-      expect(6).toEqual(file2.blocks[0].lines.length);
-      expect("7336f4d").toEqual(file2.checksumBefore);
-      expect("6183f70").toEqual(file2.checksumAfter);
+      expect(file2.isCombined).toEqual(false);
+      expect(file2.addedLines).toEqual(0);
+      expect(file2.deletedLines).toEqual(1);
+      expect(file2.oldName).toEqual("src/event.js");
+      expect(file2.newName).toEqual("src/event.js");
+      expect(file2.blocks.length).toEqual(1);
+      expect(file2.blocks[0].lines.length).toEqual(6);
+      expect(file2.checksumBefore).toEqual("7336f4d");
+      expect(file2.checksumAfter).toEqual("6183f70");
     });
 
-    it("should parse combined diff", function() {
+    it("should parse combined diff", () => {
       const diff =
         "diff --combined describe.c\n" +
         "index fabadb8,cc95eb0..4866510\n" +
@@ -316,62 +316,62 @@ describe("DiffParser", function() {
         "       initialized = 1;\n" +
         "       for_each_ref(get_name);\n";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(1).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(1);
 
       const file1 = result[0];
-      expect(true).toEqual(file1.isCombined);
+      expect(file1.isCombined).toEqual(true);
       expect(9).toEqual(file1.addedLines);
       expect(2).toEqual(file1.deletedLines);
-      expect("describe.c").toEqual(file1.oldName);
-      expect("describe.c").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(22).toEqual(file1.blocks[0].lines.length);
-      expect(["4866510", "cc95eb0"].sort()).toEqual(file1.checksumBefore.sort());
-      expect("fabadb8").toEqual(file1.checksumAfter);
+      expect(file1.oldName).toEqual("describe.c");
+      expect(file1.newName).toEqual("describe.c");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.blocks[0].lines.length).toEqual(22);
+      expect(file1.checksumBefore).toEqual(["cc95eb0", "4866510"]);
+      expect(file1.checksumAfter).toEqual("fabadb8");
     });
 
-    it("should parse diffs with copied files", function() {
+    it("should parse diffs with copied files", () => {
       const diff =
         "diff --git a/index.js b/more-index.js\n" +
         "dissimilarity index 5%\n" +
         "copy from index.js\n" +
         "copy to more-index.js\n";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(1).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(1);
 
       const file1 = result[0];
-      expect(0).toEqual(file1.addedLines);
-      expect(0).toEqual(file1.deletedLines);
-      expect("index.js").toEqual(file1.oldName);
-      expect("more-index.js").toEqual(file1.newName);
-      expect(0).toEqual(file1.blocks.length);
-      expect(true).toEqual(file1.isCopy);
-      expect("5").toEqual(file1.changedPercentage);
+      expect(file1.addedLines).toEqual(0);
+      expect(file1.deletedLines).toEqual(0);
+      expect(file1.oldName).toEqual("index.js");
+      expect(file1.newName).toEqual("more-index.js");
+      expect(file1.blocks.length).toEqual(0);
+      expect(file1.isCopy).toEqual(true);
+      expect(file1.changedPercentage).toEqual(5);
     });
 
-    it("should parse diffs with moved files", function() {
+    it("should parse diffs with moved files", () => {
       const diff =
         "diff --git a/more-index.js b/other-index.js\n" +
         "similarity index 86%\n" +
         "rename from more-index.js\n" +
         "rename to other-index.js\n";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(1).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(1);
 
       const file1 = result[0];
-      expect(0).toEqual(file1.addedLines);
-      expect(0).toEqual(file1.deletedLines);
-      expect("more-index.js").toEqual(file1.oldName);
-      expect("other-index.js").toEqual(file1.newName);
-      expect(0).toEqual(file1.blocks.length);
-      expect(true).toEqual(file1.isRename);
-      expect("86").toEqual(file1.unchangedPercentage);
+      expect(file1.addedLines).toEqual(0);
+      expect(file1.deletedLines).toEqual(0);
+      expect(file1.oldName).toEqual("more-index.js");
+      expect(file1.newName).toEqual("other-index.js");
+      expect(file1.blocks.length).toEqual(0);
+      expect(file1.isRename).toEqual(true);
+      expect(file1.unchangedPercentage).toEqual(86);
     });
 
-    it("should parse diffs correct line numbers", function() {
+    it("should parse diffs correct line numbers", () => {
       const diff =
         "diff --git a/sample b/sample\n" +
         "index 0000001..0ddf2ba\n" +
@@ -381,23 +381,23 @@ describe("DiffParser", function() {
         "-test\n" +
         "+test1r\n";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(1).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(1);
 
       const file1 = result[0];
-      expect(1).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("sample").toEqual(file1.oldName);
-      expect("sample").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(2).toEqual(file1.blocks[0].lines.length);
-      expect(1).toEqual(file1.blocks[0].lines[0].oldNumber);
-      expect(null).toEqual(file1.blocks[0].lines[0].newNumber);
-      expect(null).toEqual(file1.blocks[0].lines[1].oldNumber);
-      expect(1).toEqual(file1.blocks[0].lines[1].newNumber);
+      expect(file1.addedLines).toEqual(1);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("sample");
+      expect(file1.newName).toEqual("sample");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.blocks[0].lines.length).toEqual(2);
+      expect(file1.blocks[0].lines[0].oldNumber).toEqual(1);
+      expect(file1.blocks[0].lines[0].newNumber).toBeUndefined();
+      expect(file1.blocks[0].lines[1].oldNumber).toBeUndefined();
+      expect(file1.blocks[0].lines[1].newNumber).toEqual(1);
     });
 
-    it("should parse unified non git diff and strip timestamps off the headers", function() {
+    it("should parse unified non git diff and strip timestamps off the headers", () => {
       const diffs = [
         // 2 hours ahead of GMT
         "--- a/sample.js  2016-10-25 11:37:14.000000000 +0200\n" +
@@ -416,42 +416,42 @@ describe("DiffParser", function() {
       ];
 
       diffs.forEach(function(diff) {
-        const result = DiffParser.generateDiffJson(diff);
+        const result = parse(diff);
         const file1 = result[0];
-        expect(1).toEqual(result.length);
-        expect(2).toEqual(file1.addedLines);
-        expect(1).toEqual(file1.deletedLines);
-        expect("sample.js").toEqual(file1.oldName);
-        expect("sample.js").toEqual(file1.newName);
-        expect(1).toEqual(file1.blocks.length);
+        expect(result.length).toEqual(1);
+        expect(file1.addedLines).toEqual(2);
+        expect(file1.deletedLines).toEqual(1);
+        expect(file1.oldName).toEqual("sample.js");
+        expect(file1.newName).toEqual("sample.js");
+        expect(file1.blocks.length).toEqual(1);
 
         const linesContent = file1.blocks[0].lines.map(function(line) {
           return line.content;
         });
-        expect(linesContent).toEqual(["-test", "+test1r", "+test2r"]);
+        expect(["-test", "+test1r", "+test2r"]).toEqual(linesContent);
       });
     });
 
-    it("should parse unified non git diff", function() {
+    it("should parse unified non git diff", () => {
       const diff =
         "--- a/sample.js\n" + "+++ b/sample.js\n" + "@@ -1 +1,2 @@\n" + "-test\n" + "+test1r\n" + "+test2r\n";
 
-      const result = DiffParser.generateDiffJson(diff);
+      const result = parse(diff);
       const file1 = result[0];
-      expect(1).toEqual(result.length);
-      expect(2).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("sample.js").toEqual(file1.oldName);
-      expect("sample.js").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
+      expect(result.length).toEqual(1);
+      expect(file1.addedLines).toEqual(2);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("sample.js");
+      expect(file1.newName).toEqual("sample.js");
+      expect(file1.blocks.length).toEqual(1);
 
       const linesContent = file1.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent).toEqual(["-test", "+test1r", "+test2r"]);
+      expect(["-test", "+test1r", "+test2r"]).toEqual(linesContent);
     });
 
-    it("should parse unified diff with multiple hunks and files", function() {
+    it("should parse unified diff with multiple hunks and files", () => {
       const diff =
         "--- sample.js\n" +
         "+++ sample.js\n" +
@@ -464,40 +464,40 @@ describe("DiffParser", function() {
         "@@ -1 +1,2 @@\n" +
         "+test1";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(2).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(2);
 
       const file1 = result[0];
-      expect(1).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("sample.js").toEqual(file1.oldName);
-      expect("sample.js").toEqual(file1.newName);
-      expect(2).toEqual(file1.blocks.length);
+      expect(file1.addedLines).toEqual(1);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("sample.js");
+      expect(file1.newName).toEqual("sample.js");
+      expect(file1.blocks.length).toEqual(2);
 
       const linesContent1 = file1.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent1).toEqual(["-test"]);
+      expect(["-test"]).toEqual(linesContent1);
 
       const linesContent2 = file1.blocks[1].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent2).toEqual(["+test"]);
+      expect(["+test"]).toEqual(linesContent2);
 
       const file2 = result[1];
-      expect(1).toEqual(file2.addedLines);
-      expect(0).toEqual(file2.deletedLines);
-      expect("sample1.js").toEqual(file2.oldName);
-      expect("sample1.js").toEqual(file2.newName);
-      expect(1).toEqual(file2.blocks.length);
+      expect(file2.addedLines).toEqual(1);
+      expect(file2.deletedLines).toEqual(0);
+      expect(file2.oldName).toEqual("sample1.js");
+      expect(file2.newName).toEqual("sample1.js");
+      expect(file2.blocks.length).toEqual(1);
 
       const linesContent = file2.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent).toEqual(["+test1"]);
+      expect(["+test1"]).toEqual(linesContent);
     });
 
-    it("should parse diff with --- and +++ in the context lines", function() {
+    it("should parse diff with --- and +++ in the context lines", () => {
       const diff =
         "--- sample.js\n" +
         "+++ sample.js\n" +
@@ -512,40 +512,40 @@ describe("DiffParser", function() {
         "+++ 2\n" +
         "++++ 2";
 
-      const result = DiffParser.generateDiffJson(diff);
+      const result = parse(diff);
       const file1 = result[0];
-      expect(1).toEqual(result.length);
-      expect(3).toEqual(file1.addedLines);
-      expect(3).toEqual(file1.deletedLines);
-      expect("sample.js").toEqual(file1.oldName);
-      expect("sample.js").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
+      expect(result.length).toEqual(1);
+      expect(file1.addedLines).toEqual(3);
+      expect(file1.deletedLines).toEqual(3);
+      expect(file1.oldName).toEqual("sample.js");
+      expect(file1.newName).toEqual("sample.js");
+      expect(file1.blocks.length).toEqual(1);
 
       const linesContent = file1.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent).toEqual([" test", " ", "-- 1", "--- 1", "---- 1", " ", "++ 2", "+++ 2", "++++ 2"]);
+      expect([" test", " ", "-- 1", "--- 1", "---- 1", " ", "++ 2", "+++ 2", "++++ 2"]).toEqual(linesContent);
     });
 
-    it("should parse diff without proper hunk headers", function() {
+    it("should parse diff without proper hunk headers", () => {
       const diff = "--- sample.js\n" + "+++ sample.js\n" + "@@ @@\n" + " test";
 
-      const result = DiffParser.generateDiffJson(diff);
+      const result = parse(diff);
       const file1 = result[0];
-      expect(1).toEqual(result.length);
-      expect(0).toEqual(file1.addedLines);
-      expect(0).toEqual(file1.deletedLines);
-      expect("sample.js").toEqual(file1.oldName);
-      expect("sample.js").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
+      expect(result.length).toEqual(1);
+      expect(file1.addedLines).toEqual(0);
+      expect(file1.deletedLines).toEqual(0);
+      expect(file1.oldName).toEqual("sample.js");
+      expect(file1.newName).toEqual("sample.js");
+      expect(file1.blocks.length).toEqual(1);
 
       const linesContent = file1.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent).toEqual([" test"]);
+      expect([" test"]).toEqual(linesContent);
     });
 
-    it("should parse binary file diff", function() {
+    it("should parse binary file diff", () => {
       const diff =
         "diff --git a/last-changes-config.png b/last-changes-config.png\n" +
         "index 322248b..56fc1f2 100644\n" +
@@ -553,19 +553,19 @@ describe("DiffParser", function() {
         "+++ b/last-changes-config.png\n" +
         "Binary files differ";
 
-      const result = DiffParser.generateDiffJson(diff);
+      const result = parse(diff);
       const file1 = result[0];
-      expect(1).toEqual(result.length);
-      expect(0).toEqual(file1.addedLines);
-      expect(0).toEqual(file1.deletedLines);
-      expect("last-changes-config.png").toEqual(file1.oldName);
-      expect("last-changes-config.png").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(0).toEqual(file1.blocks[0].lines.length);
-      expect("Binary files differ").toEqual(file1.blocks[0].header);
+      expect(result.length).toEqual(1);
+      expect(file1.addedLines).toEqual(0);
+      expect(file1.deletedLines).toEqual(0);
+      expect(file1.oldName).toEqual("last-changes-config.png");
+      expect(file1.newName).toEqual("last-changes-config.png");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.blocks[0].lines.length).toEqual(0);
+      expect(file1.blocks[0].header).toEqual("Binary files differ");
     });
 
-    it("should parse diff with --find-renames", function() {
+    it("should parse diff with --find-renames", () => {
       const diff =
         "diff --git a/src/test-bar.js b/src/test-baz.js\n" +
         "similarity index 98%\n" +
@@ -581,22 +581,22 @@ describe("DiffParser", function() {
         " }\n" +
         " ";
 
-      const result = DiffParser.generateDiffJson(diff);
+      const result = parse(diff);
       const file1 = result[0];
-      expect(1).toEqual(result.length);
-      expect(1).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("src/test-bar.js").toEqual(file1.oldName);
-      expect("src/test-baz.js").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(5).toEqual(file1.blocks[0].lines.length);
+      expect(result.length).toEqual(1);
+      expect(file1.addedLines).toEqual(1);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("src/test-bar.js");
+      expect(file1.newName).toEqual("src/test-baz.js");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.blocks[0].lines.length).toEqual(5);
       const linesContent = file1.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent).toEqual([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]);
+      expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
     });
 
-    it("should parse diff with prefix 2", function() {
+    it("should parse diff with prefix 2", () => {
       const diff =
         'diff --git "\tTest.scala" "\tScalaTest.scala"\n' +
         "similarity index 88%\n" +
@@ -640,36 +640,36 @@ describe("DiffParser", function() {
         " }\n" +
         " ";
 
-      const result = DiffParser.generateDiffJson(diff, { srcPrefix: "\t", dstPrefix: "\t" });
-      expect(3).toEqual(result.length);
+      const result = parse(diff, { srcPrefix: "\t", dstPrefix: "\t" });
+      expect(result.length).toEqual(3);
 
       const file1 = result[0];
-      expect(2).toEqual(file1.addedLines);
-      expect(1).toEqual(file1.deletedLines);
-      expect("Test.scala").toEqual(file1.oldName);
-      expect("ScalaTest.scala").toEqual(file1.newName);
-      expect(2).toEqual(file1.blocks.length);
-      expect(8).toEqual(file1.blocks[0].lines.length);
-      expect(7).toEqual(file1.blocks[1].lines.length);
+      expect(file1.addedLines).toEqual(2);
+      expect(file1.deletedLines).toEqual(1);
+      expect(file1.oldName).toEqual("Test.scala");
+      expect(file1.newName).toEqual("ScalaTest.scala");
+      expect(file1.blocks.length).toEqual(2);
+      expect(file1.blocks[0].lines.length).toEqual(8);
+      expect(file1.blocks[1].lines.length).toEqual(7);
 
       const file2 = result[1];
-      expect("/dev/null").toEqual(file2.oldName);
-      expect("tardis.png").toEqual(file2.newName);
+      expect(file2.oldName).toEqual("/dev/null");
+      expect(file2.newName).toEqual("tardis.png");
 
       const file3 = result[2];
-      expect(1).toEqual(file3.addedLines);
-      expect(1).toEqual(file3.deletedLines);
-      expect("src/test-bar.js").toEqual(file3.oldName);
-      expect("src/test-baz.js").toEqual(file3.newName);
-      expect(1).toEqual(file3.blocks.length);
-      expect(5).toEqual(file3.blocks[0].lines.length);
+      expect(file3.addedLines).toEqual(1);
+      expect(file3.deletedLines).toEqual(1);
+      expect(file3.oldName).toEqual("src/test-bar.js");
+      expect(file3.newName).toEqual("src/test-baz.js");
+      expect(file3.blocks.length).toEqual(1);
+      expect(file3.blocks[0].lines.length).toEqual(5);
       const linesContent = file3.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent).toEqual([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]);
+      expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
     });
 
-    it("should parse binary with content", function() {
+    it("should parse binary with content", () => {
       const diff =
         "diff --git a/favicon.png b/favicon.png\n" +
         "deleted file mode 100644\n" +
@@ -703,26 +703,26 @@ describe("DiffParser", function() {
         " }\n" +
         " ";
 
-      const result = DiffParser.generateDiffJson(diff);
-      expect(2).toEqual(result.length);
+      const result = parse(diff);
+      expect(result.length).toEqual(2);
 
       const file1 = result[0];
-      expect("favicon.png").toEqual(file1.oldName);
-      expect("favicon.png").toEqual(file1.newName);
-      expect(1).toEqual(file1.blocks.length);
-      expect(0).toEqual(file1.blocks[0].lines.length);
+      expect(file1.oldName).toEqual("favicon.png");
+      expect(file1.newName).toEqual("favicon.png");
+      expect(file1.blocks.length).toEqual(1);
+      expect(file1.blocks[0].lines.length).toEqual(0);
 
       const file2 = result[1];
-      expect(1).toEqual(file2.addedLines);
-      expect(1).toEqual(file2.deletedLines);
-      expect("src/test-bar.js").toEqual(file2.oldName);
-      expect("src/test-baz.js").toEqual(file2.newName);
-      expect(1).toEqual(file2.blocks.length);
-      expect(5).toEqual(file2.blocks[0].lines.length);
+      expect(file2.addedLines).toEqual(1);
+      expect(file2.deletedLines).toEqual(1);
+      expect(file2.oldName).toEqual("src/test-bar.js");
+      expect(file2.newName).toEqual("src/test-baz.js");
+      expect(file2.blocks.length).toEqual(1);
+      expect(file2.blocks[0].lines.length).toEqual(5);
       const linesContent = file2.blocks[0].lines.map(function(line) {
         return line.content;
       });
-      expect(linesContent).toEqual([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]);
+      expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
     });
   });
 });

@@ -1,10 +1,13 @@
-const LineByLinePrinter = require("../line-by-line-printer.js").LineByLinePrinter;
+import LineByLineRenderer from "../line-by-line-renderer";
+import HoganJsUtils from "../hoganjs-utils";
+import { LineType, CSSLineClass, DiffLine, DiffFile } from "../render-utils";
 
-describe("LineByLinePrinter", function() {
-  describe("_generateEmptyDiff", function() {
-    it("should return an empty diff", function() {
-      const lineByLinePrinter = new LineByLinePrinter({});
-      const fileHtml = lineByLinePrinter._generateEmptyDiff();
+describe("LineByLineRenderer", () => {
+  describe("_generateEmptyDiff", () => {
+    it("should return an empty diff", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      const fileHtml = lineByLineRenderer.generateEmptyDiff();
       const expected =
         "<tr>\n" +
         '    <td class="d2h-info">\n' +
@@ -14,15 +17,15 @@ describe("LineByLinePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
   });
 
-  describe("makeLineHtml", function() {
-    it("should work for insertions", function() {
-      const diffParser = require("../diff-parser.js").DiffParser;
-      const lineByLinePrinter = new LineByLinePrinter({});
-      let fileHtml = lineByLinePrinter.makeLineHtml(false, diffParser.LINE_TYPE.INSERTS, "", 30, "test", "+");
+  describe("makeLineHtml", () => {
+    it("should work for insertions", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.INSERTS, "test", undefined, 30, "+");
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -38,13 +41,13 @@ describe("LineByLinePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
 
-    it("should work for deletions", function() {
-      const diffParser = require("../diff-parser.js").DiffParser;
-      const lineByLinePrinter = new LineByLinePrinter({});
-      let fileHtml = lineByLinePrinter.makeLineHtml(false, diffParser.LINE_TYPE.DELETES, 30, "", "test", "-");
+    it("should work for deletions", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.DELETES, "test", 30, undefined, "-");
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -60,13 +63,13 @@ describe("LineByLinePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
 
-    it("should convert indents into non breakin spaces (2 white spaces)", function() {
-      const diffParser = require("../diff-parser.js").DiffParser;
-      const lineByLinePrinter = new LineByLinePrinter({});
-      let fileHtml = lineByLinePrinter.makeLineHtml(false, diffParser.LINE_TYPE.INSERTS, "", 30, "  test", "+");
+    it("should convert indents into non breakin spaces (2 white spaces)", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.INSERTS, "  test", undefined, 30, "+");
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -82,13 +85,13 @@ describe("LineByLinePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
 
-    it("should convert indents into non breakin spaces (4 white spaces)", function() {
-      const diffParser = require("../diff-parser.js").DiffParser;
-      const lineByLinePrinter = new LineByLinePrinter({});
-      let fileHtml = lineByLinePrinter.makeLineHtml(false, diffParser.LINE_TYPE.INSERTS, "", 30, "    test", "+");
+    it("should convert indents into non breakin spaces (4 white spaces)", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.INSERTS, "    test", undefined, 30, "+");
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -104,13 +107,13 @@ describe("LineByLinePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
 
-    it("should preserve tabs", function() {
-      const diffParser = require("../diff-parser.js").DiffParser;
-      const lineByLinePrinter = new LineByLinePrinter({});
-      let fileHtml = lineByLinePrinter.makeLineHtml(false, diffParser.LINE_TYPE.INSERTS, "", 30, "\ttest", "+");
+    it("should preserve tabs", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.INSERTS, "\ttest", undefined, 30, "+");
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -127,24 +130,28 @@ describe("LineByLinePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
   });
 
-  describe("makeFileDiffHtml", function() {
-    it("should work for simple file", function() {
-      const lineByLinePrinter = new LineByLinePrinter({});
+  describe("makeFileDiffHtml", () => {
+    it("should work for simple file", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
 
       const file = {
         addedLines: 12,
         deletedLines: 41,
         language: "js",
         oldName: "my/file/name.js",
-        newName: "my/file/name.js"
+        newName: "my/file/name.js",
+        isCombined: false,
+        isGitDiff: false,
+        blocks: []
       };
       const diffs = "<span>Random Html</span>";
 
-      const fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+      const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
       const expected =
         '<div id="d2h-781444" class="d2h-file-wrapper" data-lang="js">\n' +
@@ -166,10 +173,11 @@ describe("LineByLinePrinter", function() {
         "    </div>\n" +
         "</div>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
-    it("should work for simple added file", function() {
-      const lineByLinePrinter = new LineByLinePrinter({});
+    it("should work for simple added file", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
 
       const file = {
         addedLines: 12,
@@ -177,11 +185,14 @@ describe("LineByLinePrinter", function() {
         language: "js",
         oldName: "dev/null",
         newName: "my/file/name.js",
-        isNew: true
+        isNew: true,
+        isCombined: false,
+        isGitDiff: false,
+        blocks: []
       };
       const diffs = "<span>Random Html</span>";
 
-      const fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+      const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
       const expected =
         '<div id="d2h-781444" class="d2h-file-wrapper" data-lang="js">\n' +
@@ -203,10 +214,11 @@ describe("LineByLinePrinter", function() {
         "    </div>\n" +
         "</div>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
-    it("should work for simple deleted file", function() {
-      const lineByLinePrinter = new LineByLinePrinter({});
+    it("should work for simple deleted file", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
 
       const file = {
         addedLines: 0,
@@ -214,11 +226,14 @@ describe("LineByLinePrinter", function() {
         language: "js",
         oldName: "my/file/name.js",
         newName: "dev/null",
-        isDeleted: true
+        isDeleted: true,
+        isCombined: false,
+        isGitDiff: false,
+        blocks: []
       };
       const diffs = "<span>Random Html</span>";
 
-      const fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+      const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
       const expected =
         '<div id="d2h-781444" class="d2h-file-wrapper" data-lang="js">\n' +
@@ -240,10 +255,11 @@ describe("LineByLinePrinter", function() {
         "    </div>\n" +
         "</div>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
-    it("should work for simple renamed file", function() {
-      const lineByLinePrinter = new LineByLinePrinter({});
+    it("should work for simple renamed file", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
 
       const file = {
         addedLines: 12,
@@ -251,11 +267,14 @@ describe("LineByLinePrinter", function() {
         language: "js",
         oldName: "my/file/name1.js",
         newName: "my/file/name2.js",
-        isRename: true
+        isRename: true,
+        isCombined: false,
+        isGitDiff: false,
+        blocks: []
       };
       const diffs = "<span>Random Html</span>";
 
-      const fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+      const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
       const expected =
         '<div id="d2h-662683" class="d2h-file-wrapper" data-lang="js">\n' +
@@ -277,61 +296,71 @@ describe("LineByLinePrinter", function() {
         "    </div>\n" +
         "</div>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
-    it("should return empty when option renderNothingWhenEmpty is true and file blocks not present", function() {
-      const lineByLinePrinter = new LineByLinePrinter({
+    it("should return empty when option renderNothingWhenEmpty is true and file blocks not present", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {
         renderNothingWhenEmpty: true
       });
 
       const file = {
+        addedLines: 0,
+        deletedLines: 0,
+        language: "js",
+        oldName: "my/file/name1.js",
+        newName: "my/file/name2.js",
+        isRename: true,
+        isCombined: false,
+        isGitDiff: false,
         blocks: []
       };
 
       const diffs = "<span>Random Html</span>";
 
-      const fileHtml = lineByLinePrinter.makeFileDiffHtml(file, diffs);
+      const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
       const expected = "";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
   });
 
-  describe("makeLineByLineHtmlWrapper", function() {
-    it("should work for simple content", function() {
-      const lineByLinePrinter = new LineByLinePrinter({});
-      const fileHtml = lineByLinePrinter.makeLineByLineHtmlWrapper("<span>Random Html</span>");
+  describe("makeLineByLineHtmlWrapper", () => {
+    it("should work for simple content", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      const fileHtml = lineByLineRenderer.makeLineByLineHtmlWrapper("<span>Random Html</span>");
 
       const expected = '<div class="d2h-wrapper">\n' + "    <span>Random Html</span>\n" + "</div>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
   });
 
-  describe("generateLineByLineJsonHtml", function() {
-    it("should work for list of files", function() {
-      const exampleJson = [
+  describe("generateLineByLineJsonHtml", () => {
+    it("should work for list of files", () => {
+      const exampleJson: DiffFile[] = [
         {
           blocks: [
             {
               lines: [
                 {
                   content: "-test",
-                  type: "d2h-del",
+                  type: LineType.DELETE,
                   oldNumber: 1,
-                  newNumber: null
+                  newNumber: undefined
                 },
                 {
                   content: "+test1r",
-                  type: "d2h-ins",
-                  oldNumber: null,
+                  type: LineType.INSERT,
+                  oldNumber: undefined,
                   newNumber: 1
                 }
               ],
-              oldStartLine: "1",
-              oldStartLine2: null,
-              newStartLine: "1",
+              oldStartLine: 1,
+              oldStartLine2: undefined,
+              newStartLine: 1,
               header: "@@ -1 +1 @@"
             }
           ],
@@ -340,17 +369,21 @@ describe("LineByLinePrinter", function() {
           checksumBefore: "0000001",
           checksumAfter: "0ddf2ba",
           oldName: "sample",
-          language: undefined,
           newName: "sample",
-          isCombined: false
+          language: "txt",
+          isCombined: false,
+          isGitDiff: true
         }
       ];
 
-      const lineByLinePrinter = new LineByLinePrinter({ matching: "lines" });
-      const html = lineByLinePrinter.generateLineByLineJsonHtml(exampleJson);
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {
+        matching: "lines"
+      });
+      const html = lineByLineRenderer.render(exampleJson);
       const expected =
         '<div class="d2h-wrapper">\n' +
-        '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
+        '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="txt">\n' +
         '    <div class="d2h-file-header">\n' +
         '    <span class="d2h-file-name-wrapper">\n' +
         '    <svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
@@ -368,23 +401,23 @@ describe("LineByLinePrinter", function() {
         '        <div class="d2h-code-line d2h-info">@@ -1 +1 @@</div>\n' +
         "    </td>\n" +
         "</tr><tr>\n" +
-        '    <td class="d2h-code-linenumber d2h-del">\n' +
+        '    <td class="d2h-code-linenumber d2h-del d2h-change">\n' +
         '      <div class="line-num1">1</div>\n' +
         '<div class="line-num2"></div>\n' +
         "    </td>\n" +
-        '    <td class="d2h-del">\n' +
-        '        <div class="d2h-code-line d2h-del">\n' +
+        '    <td class="d2h-del d2h-change">\n' +
+        '        <div class="d2h-code-line d2h-del d2h-change">\n' +
         '            <span class="d2h-code-line-prefix">-</span>\n' +
         '            <span class="d2h-code-line-ctn"><del>test</del></span>\n' +
         "        </div>\n" +
         "    </td>\n" +
         "</tr><tr>\n" +
-        '    <td class="d2h-code-linenumber d2h-ins">\n' +
+        '    <td class="d2h-code-linenumber d2h-ins d2h-change">\n' +
         '      <div class="line-num1"></div>\n' +
         '<div class="line-num2">1</div>\n' +
         "    </td>\n" +
-        '    <td class="d2h-ins">\n' +
-        '        <div class="d2h-code-line d2h-ins">\n' +
+        '    <td class="d2h-ins d2h-change">\n' +
+        '        <div class="d2h-code-line d2h-ins d2h-change">\n' +
         '            <span class="d2h-code-line-prefix">+</span>\n' +
         '            <span class="d2h-code-line-ctn"><ins>test1r</ins></span>\n' +
         "        </div>\n" +
@@ -397,10 +430,10 @@ describe("LineByLinePrinter", function() {
         "</div>\n" +
         "</div>";
 
-      expect(expected).toEqual(html);
+      expect(html).toEqual(expected);
     });
 
-    it("should work for empty blocks", function() {
+    it("should work for empty blocks", () => {
       const exampleJson = [
         {
           blocks: [],
@@ -409,12 +442,16 @@ describe("LineByLinePrinter", function() {
           oldName: "sample",
           language: "js",
           newName: "sample",
-          isCombined: false
+          isCombined: false,
+          isGitDiff: false
         }
       ];
 
-      const lineByLinePrinter = new LineByLinePrinter({ renderNothingWhenEmpty: false });
-      const html = lineByLinePrinter.generateLineByLineJsonHtml(exampleJson);
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {
+        renderNothingWhenEmpty: false
+      });
+      const html = lineByLineRenderer.render(exampleJson);
       const expected =
         '<div class="d2h-wrapper">\n' +
         '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="js">\n' +
@@ -443,31 +480,32 @@ describe("LineByLinePrinter", function() {
         "</div>\n" +
         "</div>";
 
-      expect(expected).toEqual(html);
+      expect(html).toEqual(expected);
     });
   });
 
-  describe("_processLines", function() {
-    it("should work for simple block header", function() {
-      const lineByLinePrinter = new LineByLinePrinter({});
-      const oldLines = [
+  describe("_processLines", () => {
+    it("should work for simple block header", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      const oldLines: DiffLine[] = [
         {
           content: "-test",
-          type: "d2h-del",
+          type: LineType.DELETE,
           oldNumber: 1,
-          newNumber: null
+          newNumber: undefined
         }
       ];
-      const newLines = [
+      const newLines: DiffLine[] = [
         {
           content: "+test1r",
-          type: "d2h-ins",
-          oldNumber: null,
+          type: LineType.INSERT,
+          oldNumber: undefined,
           newNumber: 1
         }
       ];
 
-      const html = lineByLinePrinter._processLines(false, oldLines, newLines);
+      const html = lineByLineRenderer.processLines(false, oldLines, newLines);
 
       const expected =
         "<tr>\n" +
@@ -494,45 +532,46 @@ describe("LineByLinePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(html);
+      expect(html).toEqual(expected);
     });
   });
 
-  describe("_generateFileHtml", function() {
-    it("should work for simple file", function() {
-      const lineByLinePrinter = new LineByLinePrinter({});
-      const file = {
+  describe("_generateFileHtml", () => {
+    it("should work for simple file", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
+      const file: DiffFile = {
         blocks: [
           {
             lines: [
               {
                 content: " one context line",
-                type: "d2h-cntx",
+                type: LineType.CONTEXT,
                 oldNumber: 1,
                 newNumber: 1
               },
               {
                 content: "-test",
-                type: "d2h-del",
+                type: LineType.DELETE,
                 oldNumber: 2,
-                newNumber: null
+                newNumber: undefined
               },
               {
                 content: "+test1r",
-                type: "d2h-ins",
-                oldNumber: null,
+                type: LineType.INSERT,
+                oldNumber: undefined,
                 newNumber: 2
               },
               {
                 content: "+test2r",
-                type: "d2h-ins",
-                oldNumber: null,
+                type: LineType.INSERT,
+                oldNumber: undefined,
                 newNumber: 3
               }
             ],
-            oldStartLine: "1",
-            oldStartLine2: null,
-            newStartLine: "1",
+            oldStartLine: 1,
+            oldStartLine2: undefined,
+            newStartLine: 1,
             header: "@@ -1 +1 @@"
           }
         ],
@@ -541,12 +580,13 @@ describe("LineByLinePrinter", function() {
         checksumBefore: "0000001",
         checksumAfter: "0ddf2ba",
         oldName: "sample",
-        language: undefined,
+        language: "txt",
         newName: "sample",
-        isCombined: false
+        isCombined: false,
+        isGitDiff: true
       };
 
-      const html = lineByLinePrinter._generateFileHtml(file);
+      const html = lineByLineRenderer.generateFileHtml(file);
 
       const expected =
         "<tr>\n" +
@@ -600,7 +640,7 @@ describe("LineByLinePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(html);
+      expect(html).toEqual(expected);
     });
   });
 });

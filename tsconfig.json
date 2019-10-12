@@ -4,6 +4,7 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
+    "lib": ["es5", "es6", "es7", "esnext", "dom", "dom.iterable"],
     // TODO: Change to true after migration to TS is complete
     "allowJs": true,
     "declaration": false,
@@ -21,8 +22,9 @@
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./typings/**/*"],
   "exclude": ["node_modules", "./src/__tests__/*"]
 }

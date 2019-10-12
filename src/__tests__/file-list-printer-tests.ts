@@ -1,17 +1,30 @@
-const FileListPrinter = require("../file-list-printer.js").FileListPrinter;
+import { render } from "../file-list-renderer";
+import HoganJsUtils from "../hoganjs-utils";
 
-describe("FileListPrinter", function() {
-  describe("generateFileList", function() {
-    it("should expose old and new files to templates", function() {
+describe("FileListPrinter", () => {
+  describe("generateFileList", () => {
+    it("should expose old and new files to templates", () => {
+      const hoganUtils = new HoganJsUtils({
+        rawTemplates: {
+          "file-summary-wrapper": "{{{files}}}",
+          "file-summary-line": "{{oldName}}, {{newName}}, {{fileName}}"
+        }
+      });
       const files = [
         {
-          addedlines: 12,
-          deletedlines: 41,
+          isCombined: false,
+          isGitDiff: false,
+          blocks: [],
+          addedLines: 12,
+          deletedLines: 41,
           language: "js",
           oldName: "my/file/name.js",
           newName: "my/file/name.js"
         },
         {
+          isCombined: false,
+          isGitDiff: false,
+          blocks: [],
           addedLines: 12,
           deletedLines: 41,
           language: "js",
@@ -19,6 +32,9 @@ describe("FileListPrinter", function() {
           newName: "my/file/name2.js"
         },
         {
+          isCombined: false,
+          isGitDiff: false,
+          blocks: [],
           addedLines: 12,
           deletedLines: 0,
           language: "js",
@@ -27,6 +43,9 @@ describe("FileListPrinter", function() {
           isNew: true
         },
         {
+          isCombined: false,
+          isGitDiff: false,
+          blocks: [],
           addedLines: 0,
           deletedLines: 41,
           language: "js",
@@ -36,26 +55,23 @@ describe("FileListPrinter", function() {
         }
       ];
 
-      const fileListPrinter = new FileListPrinter({
-        rawTemplates: {
-          "file-summary-wrapper": "{{{files}}}",
-          "file-summary-line": "{{oldName}}, {{newName}}, {{fileName}}"
-        }
-      });
-
-      const fileHtml = fileListPrinter.generateFileList(files);
+      const fileHtml = render(files, hoganUtils);
       const expected =
         "my/file/name.js, my/file/name.js, my/file/name.js\n" +
         "my/file/name1.js, my/file/name2.js, my/file/{name1.js → name2.js}\n" +
         "dev/null, my/file/name.js, my/file/name.js\n" +
         "my/file/name.js, dev/null, my/file/name.js";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
 
-    it("should work for all kinds of files", function() {
+    it("should work for all kinds of files", () => {
+      const hoganUtils = new HoganJsUtils({});
       const files = [
         {
+          isCombined: false,
+          isGitDiff: false,
+          blocks: [],
           addedLines: 12,
           deletedLines: 41,
           language: "js",
@@ -63,6 +79,9 @@ describe("FileListPrinter", function() {
           newName: "my/file/name.js"
         },
         {
+          isCombined: false,
+          isGitDiff: false,
+          blocks: [],
           addedLines: 12,
           deletedLines: 41,
           language: "js",
@@ -70,6 +89,9 @@ describe("FileListPrinter", function() {
           newName: "my/file/name2.js"
         },
         {
+          isCombined: false,
+          isGitDiff: false,
+          blocks: [],
           addedLines: 12,
           deletedLines: 0,
           language: "js",
@@ -78,6 +100,9 @@ describe("FileListPrinter", function() {
           isNew: true
         },
         {
+          isCombined: false,
+          isGitDiff: false,
+          blocks: [],
           addedLines: 0,
           deletedLines: 41,
           language: "js",
@@ -87,8 +112,7 @@ describe("FileListPrinter", function() {
         }
       ];
 
-      const fileListPrinter = new FileListPrinter();
-      const fileHtml = fileListPrinter.generateFileList(files);
+      const fileHtml = render(files, hoganUtils);
 
       const expected =
         '<div class="d2h-file-list-wrapper">\n' +
@@ -149,7 +173,7 @@ describe("FileListPrinter", function() {
         "    </ol>\n" +
         "</div>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
   });
 });

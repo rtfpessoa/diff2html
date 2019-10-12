@@ -3,4 +3,5 @@ coverage/**
 build/**
 docs/**
 node_modules/**
-src/diff2html-templates.js
+src/diff2html-templates.*
+typings/**

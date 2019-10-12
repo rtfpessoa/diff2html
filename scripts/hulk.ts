@@ -19,7 +19,7 @@ import * as path from "path";
 import * as fs from "fs";
 
 import * as hogan from "hogan.js";
-import * as nopt from "nopt";
+import nopt from "nopt";
 import * as mkderp from "mkdirp";
 
 const options = nopt(
@@ -52,10 +52,9 @@ function cyan(text: string): string {
 }
 
 function extractFiles(files: string[]): string[] {
-  const usage = `
-    ${cyan(
-      "USAGE:"
-    )}  hulk [--wrapper wrapper] [--outputdir outputdir] [--namespace namespace] [--variable variable] FILES
+  const usage = `${cyan(
+    "USAGE:"
+  )}  hulk [--wrapper wrapper] [--outputdir outputdir] [--namespace namespace] [--variable variable] FILES
 
     ${cyan("OPTIONS:")}  [-w, --wrapper]   :: wraps the template (i.e. amd)
              [-o,  --outputdir] :: outputs the templates as individual files to a directory
@@ -130,6 +129,8 @@ function wrap(file: string, name: string, openedFile: string): string {
       // If we have a template per file the export will expose the template directly
       return options.outputdir ? `global.${objectStmt};\nmodule.exports = ${objectAccessor};` : `global.${objectStmt}`;
 
+    case "ts":
+      return `// @ts-ignore\n${objectStmt}`;
     default:
       return objectStmt;
   }
@@ -141,19 +142,18 @@ function prepareOutput(content: string): string {
     case "amd":
       return content;
     case "node":
-      return (
-        "(function() {\n" +
-        "if (!!!global." +
-        variableName +
-        ") global." +
-        variableName +
-        " = {};\n" +
-        'var Hogan = require("hogan.js");' +
-        content +
-        "\n" +
-        (!options.outputdir ? "module.exports = global." + variableName + ";\n" : "") +
-        "})();"
-      );
+      return `(function() {
+if (!!!global.${variableName}) global.${variableName} = {};
+var Hogan = require("hogan.js");
+${content}
+${!options.outputdir ? `module.exports = global.${variableName};\n` : ""})();`;
+
+    case "ts":
+      return `import * as Hogan from "hogan.js";
+type CompiledTemplates = { [name: string]: Hogan.Template };
+export const ${variableName}: CompiledTemplates = {};
+${content}`;
+
     default:
       return "if (!!!" + variableName + ") var " + variableName + " = {};\n" + content;
   }
@@ -181,7 +181,9 @@ const templates = extractFiles(options.argv.remain)
 
     if (!options.outputdir) return cleanFileContents;
 
-    return fs.writeFileSync(path.join(options.outputdir, `${name}.js`), prepareOutput(cleanFileContents));
+    const fileExtension = options.wrapper === "ts" ? "ts" : "js";
+
+    return fs.writeFileSync(path.join(options.outputdir, `${name}.${fileExtension}`), prepareOutput(cleanFileContents));
   })
   .filter(templateContents => typeof templateContents !== "undefined");
 

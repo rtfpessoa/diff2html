@@ -1,10 +1,13 @@
-const SideBySidePrinter = require("../side-by-side-printer.js").SideBySidePrinter;
+import SideBySideRenderer from "../side-by-side-renderer";
+import HoganJsUtils from "../hoganjs-utils";
+import { LineType, CSSLineClass, DiffLine, DiffFile } from "../render-utils";
 
-describe("SideBySidePrinter", function() {
-  describe("generateEmptyDiff", function() {
-    it("should return an empty diff", function() {
-      const sideBySidePrinter = new SideBySidePrinter({});
-      const fileHtml = sideBySidePrinter.generateEmptyDiff();
+describe("SideBySideRenderer", () => {
+  describe("generateEmptyDiff", () => {
+    it("should return an empty diff", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
+      const fileHtml = sideBySideRenderer.generateEmptyDiff();
       const expectedRight = "";
       const expectedLeft =
         "<tr>\n" +
@@ -15,51 +18,53 @@ describe("SideBySidePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expectedRight).toEqual(fileHtml.right);
-      expect(expectedLeft).toEqual(fileHtml.left);
+      expect(fileHtml.right).toEqual(expectedRight);
+      expect(fileHtml.left).toEqual(expectedLeft);
     });
   });
 
-  describe("generateSideBySideFileHtml", function() {
-    it("should generate lines with the right prefixes", function() {
-      const sideBySidePrinter = new SideBySidePrinter({});
+  describe("generateSideBySideFileHtml", () => {
+    it("should generate lines with the right prefixes", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
 
-      const file = {
+      const file: DiffFile = {
+        isGitDiff: true,
         blocks: [
           {
             lines: [
               {
                 content: " context",
-                type: "d2h-cntx",
+                type: LineType.CONTEXT,
                 oldNumber: 19,
                 newNumber: 19
               },
               {
                 content: "-removed",
-                type: "d2h-del",
+                type: LineType.DELETE,
                 oldNumber: 20,
-                newNumber: null
+                newNumber: undefined
               },
               {
                 content: "+added",
-                type: "d2h-ins",
-                oldNumber: null,
+                type: LineType.INSERT,
+                oldNumber: undefined,
                 newNumber: 20
               },
               {
                 content: "+another added",
-                type: "d2h-ins",
-                oldNumber: null,
+                type: LineType.INSERT,
+                oldNumber: undefined,
                 newNumber: 21
               }
             ],
-            oldStartLine: "19",
-            newStartLine: "19",
+            oldStartLine: 19,
+            newStartLine: 19,
             header: "@@ -19,7 +19,7 @@"
           }
         ],
         deletedLines: 1,
-        addedLines: 1,
+        addedLines: 2,
         checksumBefore: "fc56817",
         checksumAfter: "e8e7e49",
         mode: "100644",
@@ -69,7 +74,7 @@ describe("SideBySidePrinter", function() {
         isCombined: false
       };
 
-      const fileHtml = sideBySidePrinter.generateSideBySideFileHtml(file);
+      const fileHtml = sideBySideRenderer.generateSideBySideFileHtml(file);
 
       const expectedLeft =
         "<tr>\n" +
@@ -148,16 +153,16 @@ describe("SideBySidePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expectedLeft).toEqual(fileHtml.left);
-      expect(expectedRight).toEqual(fileHtml.right);
+      expect(fileHtml.left).toEqual(expectedLeft);
+      expect(fileHtml.right).toEqual(expectedRight);
     });
   });
 
-  describe("generateSingleLineHtml", function() {
-    it("should work for insertions", function() {
-      const diffParser = require("../diff-parser.js").DiffParser;
-      const sideBySidePrinter = new SideBySidePrinter({});
-      const fileHtml = sideBySidePrinter.generateSingleLineHtml(false, diffParser.LINE_TYPE.INSERTS, 30, "test", "+");
+  describe("generateSingleLineHtml", () => {
+    it("should work for insertions", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
+      const fileHtml = sideBySideRenderer.generateSingleLineHtml(false, CSSLineClass.INSERTS, "test", 30, "+");
       const expected =
         "<tr>\n" +
         '    <td class="d2h-code-side-linenumber d2h-ins">\n' +
@@ -171,12 +176,12 @@ describe("SideBySidePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
-    it("should work for deletions", function() {
-      const diffParser = require("../diff-parser.js").DiffParser;
-      const sideBySidePrinter = new SideBySidePrinter({});
-      const fileHtml = sideBySidePrinter.generateSingleLineHtml(false, diffParser.LINE_TYPE.DELETES, 30, "test", "-");
+    it("should work for deletions", () => {
+      const hoganUtils = new HoganJsUtils({});
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
+      const fileHtml = sideBySideRenderer.generateSingleLineHtml(false, CSSLineClass.DELETES, "test", 30, "-");
       const expected =
         "<tr>\n" +
         '    <td class="d2h-code-side-linenumber d2h-del">\n' +
@@ -190,33 +195,33 @@ describe("SideBySidePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expected).toEqual(fileHtml);
+      expect(fileHtml).toEqual(expected);
     });
   });
 
-  describe("generateSideBySideJsonHtml", function() {
-    it("should work for list of files", function() {
-      const exampleJson = [
+  describe("generateSideBySideJsonHtml", () => {
+    it("should work for list of files", () => {
+      const exampleJson: DiffFile[] = [
         {
           blocks: [
             {
               lines: [
                 {
                   content: "-test",
-                  type: "d2h-del",
+                  type: LineType.DELETE,
                   oldNumber: 1,
-                  newNumber: null
+                  newNumber: undefined
                 },
                 {
                   content: "+test1r",
-                  type: "d2h-ins",
-                  oldNumber: null,
+                  type: LineType.INSERT,
+                  oldNumber: undefined,
                   newNumber: 1
                 }
               ],
-              oldStartLine: "1",
-              oldStartLine2: null,
-              newStartLine: "1",
+              oldStartLine: 1,
+              oldStartLine2: undefined,
+              newStartLine: 1,
               header: "@@ -1 +1 @@"
             }
           ],
@@ -225,17 +230,19 @@ describe("SideBySidePrinter", function() {
           checksumBefore: "0000001",
           checksumAfter: "0ddf2ba",
           oldName: "sample",
-          language: undefined,
+          language: "txt",
           newName: "sample",
-          isCombined: false
+          isCombined: false,
+          isGitDiff: true
         }
       ];
 
-      const sideBySidePrinter = new SideBySidePrinter({ matching: "lines" });
-      const html = sideBySidePrinter.generateSideBySideJsonHtml(exampleJson);
+      const hoganUtils = new HoganJsUtils({});
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, { matching: "lines" });
+      const html = sideBySideRenderer.render(exampleJson);
       const expected =
         '<div class="d2h-wrapper">\n' +
-        '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">\n' +
+        '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="txt">\n' +
         '    <div class="d2h-file-header">\n' +
         '      <span class="d2h-file-name-wrapper">\n' +
         '    <svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">\n' +
@@ -254,11 +261,11 @@ describe("SideBySidePrinter", function() {
         '        <div class="d2h-code-side-line d2h-info">@@ -1 +1 @@</div>\n' +
         "    </td>\n" +
         "</tr><tr>\n" +
-        '    <td class="d2h-code-side-linenumber d2h-del">\n' +
+        '    <td class="d2h-code-side-linenumber d2h-del d2h-change">\n' +
         "      1\n" +
         "    </td>\n" +
-        '    <td class="d2h-del">\n' +
-        '        <div class="d2h-code-side-line d2h-del">\n' +
+        '    <td class="d2h-del d2h-change">\n' +
+        '        <div class="d2h-code-side-line d2h-del d2h-change">\n' +
         '            <span class="d2h-code-line-prefix">-</span>\n' +
         '            <span class="d2h-code-line-ctn"><del>test</del></span>\n' +
         "        </div>\n" +
@@ -278,11 +285,11 @@ describe("SideBySidePrinter", function() {
         '        <div class="d2h-code-side-line d2h-info"></div>\n' +
         "    </td>\n" +
         "</tr><tr>\n" +
-        '    <td class="d2h-code-side-linenumber d2h-ins">\n' +
+        '    <td class="d2h-code-side-linenumber d2h-ins d2h-change">\n' +
         "      1\n" +
         "    </td>\n" +
-        '    <td class="d2h-ins">\n' +
-        '        <div class="d2h-code-side-line d2h-ins">\n' +
+        '    <td class="d2h-ins d2h-change">\n' +
+        '        <div class="d2h-code-side-line d2h-ins d2h-change">\n' +
         '            <span class="d2h-code-line-prefix">+</span>\n' +
         '            <span class="d2h-code-line-ctn"><ins>test1r</ins></span>\n' +
         "        </div>\n" +
@@ -296,21 +303,25 @@ describe("SideBySidePrinter", function() {
         "</div>\n" +
         "</div>";
 
-      expect(expected).toEqual(html);
+      expect(html).toEqual(expected);
     });
-    it("should work for files without blocks", function() {
-      const exampleJson = [
+    it("should work for files without blocks", () => {
+      const exampleJson: DiffFile[] = [
         {
           blocks: [],
           oldName: "sample",
           language: "js",
           newName: "sample",
-          isCombined: false
+          isCombined: false,
+          addedLines: 0,
+          deletedLines: 0,
+          isGitDiff: false
         }
       ];
 
-      const sideBySidePrinter = new SideBySidePrinter();
-      const html = sideBySidePrinter.generateSideBySideJsonHtml(exampleJson);
+      const hoganUtils = new HoganJsUtils({});
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
+      const html = sideBySideRenderer.render(exampleJson);
       const expected =
         '<div class="d2h-wrapper">\n' +
         '    <div id="d2h-675094" class="d2h-file-wrapper" data-lang="js">\n' +
@@ -350,32 +361,33 @@ describe("SideBySidePrinter", function() {
         "</div>\n" +
         "</div>";
 
-      expect(expected).toEqual(html);
+      expect(html).toEqual(expected);
     });
   });
 
-  describe("processLines", function() {
-    it("should process file lines", function() {
-      const oldLines = [
+  describe("processLines", () => {
+    it("should process file lines", () => {
+      const oldLines: DiffLine[] = [
         {
           content: "-test",
-          type: "d2h-del",
+          type: LineType.DELETE,
           oldNumber: 1,
-          newNumber: null
+          newNumber: undefined
         }
       ];
 
-      const newLines = [
+      const newLines: DiffLine[] = [
         {
           content: "+test1r",
-          type: "d2h-ins",
-          oldNumber: null,
+          type: LineType.INSERT,
+          oldNumber: undefined,
           newNumber: 1
         }
       ];
 
-      const sideBySidePrinter = new SideBySidePrinter({ matching: "lines" });
-      const html = sideBySidePrinter.processLines(false, oldLines, newLines);
+      const hoganUtils = new HoganJsUtils({});
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, { matching: "lines" });
+      const html = sideBySideRenderer.processLines(false, oldLines, newLines);
       const expectedLeft =
         "<tr>\n" +
         '    <td class="d2h-code-side-linenumber d2h-del">\n' +
@@ -402,8 +414,8 @@ describe("SideBySidePrinter", function() {
         "    </td>\n" +
         "</tr>";
 
-      expect(expectedLeft).toEqual(html.left);
-      expect(expectedRight).toEqual(html.right);
+      expect(html.left).toEqual(expectedLeft);
+      expect(html.right).toEqual(expectedRight);
     });
   });
 });
