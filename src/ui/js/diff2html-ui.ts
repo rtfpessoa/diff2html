@@ -3,16 +3,24 @@ import * as HighlightJSInternals from "./highlight.js-internals";
 import { html, Diff2HtmlConfig, defaultDiff2HtmlConfig } from "../../diff2html";
 import { DiffFile } from "../../render-utils";
 
-interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
+export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
   synchronisedScroll?: boolean;
+  highlight?: boolean;
+  fileListToggle?: boolean;
+  fileListStartVisible?: boolean;
+  smartSelection?: boolean;
 }
 
-const defaultDiff2HtmlUIConfig = {
+export const defaultDiff2HtmlUIConfig = {
   ...defaultDiff2HtmlConfig,
-  synchronisedScroll: true
+  synchronisedScroll: true,
+  highlight: true,
+  fileListToggle: true,
+  fileListStartVisible: false,
+  smartSelection: true
 };
 
-export default class Diff2HtmlUI {
+export class Diff2HtmlUI {
   readonly config: typeof defaultDiff2HtmlUIConfig;
   readonly diffHtml: string;
   targetElement: HTMLElement;
@@ -26,32 +34,32 @@ export default class Diff2HtmlUI {
 
   draw(): void {
     this.targetElement.innerHTML = this.diffHtml;
-    this.initSelection();
+    if (this.config.smartSelection) this.initSelection();
     if (this.config.synchronisedScroll) this.synchronisedScroll();
+    if (this.config.highlight) this.highlightCode();
+    if (this.config.fileListToggle) this.fileListToggle(this.config.fileListStartVisible);
   }
 
   synchronisedScroll(): void {
     this.targetElement.querySelectorAll(".d2h-file-wrapper").forEach(wrapper => {
       const [left, right] = [].slice.call(wrapper.querySelectorAll(".d2h-file-side-diff")) as HTMLElement[];
-
       if (left === undefined || right === undefined) return;
-
       const onScroll = (event: Event): void => {
         if (event === null || event.target === null) return;
-
         if (event.target === left) {
           right.scrollTop = left.scrollTop;
+          right.scrollLeft = left.scrollLeft;
         } else {
           left.scrollTop = right.scrollTop;
+          left.scrollLeft = right.scrollLeft;
         }
       };
-
       left.addEventListener("scroll", onScroll);
       right.addEventListener("scroll", onScroll);
     });
   }
 
-  fileListCloseable(startVisible: boolean): void {
+  fileListToggle(startVisible: boolean): void {
     const hashTag = this.getHashTag();
 
     const showBtn = this.targetElement.querySelector(".d2h-show") as HTMLElement;
@@ -61,13 +69,13 @@ export default class Diff2HtmlUI {
     if (showBtn === null || hideBtn === null || fileList === null) return;
 
     function show(): void {
-      showBtn.style.display = "";
-      hideBtn.style.display = "";
-      fileList.style.display = "";
+      showBtn.style.display = "none";
+      hideBtn.style.display = "inline";
+      fileList.style.display = "block";
     }
 
     function hide(): void {
-      showBtn.style.display = "none";
+      showBtn.style.display = "inline";
       hideBtn.style.display = "none";
       fileList.style.display = "none";
     }
@@ -204,7 +212,7 @@ export default class Diff2HtmlUI {
       nodes.forEach((tr, i) => {
         const td = tr.cells[tr.cells.length === 1 ? 0 : idx];
 
-        if (td === null || td.textContent === null) return;
+        if (td === undefined || td.textContent === null) return;
 
         text += (i ? "\n" : "") + td.textContent.replace(/(?:\r\n|\r|\n)/g, "");
       });
@@ -213,8 +221,3 @@ export default class Diff2HtmlUI {
     return text;
   }
 }
-
-// TODO: Avoid disabling types
-// eslint-disable-next-line
-// @ts-ignore
-global.Diff2HtmlUI = Diff2HtmlUI;

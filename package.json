@@ -32,12 +32,12 @@
     "url": "https://www.github.com/rtfpessoa/diff2html/issues"
   },
   "engines": {
-    "node": ">=4"
+    "node": "8.* || >=10"
   },
   "scripts": {
     "lint": "eslint '*/**/*.{js,jsx,ts,tsx}'",
     "style": "yarn run lint",
-    "test": "jest",
+    "test": "yarn run build-scripts && yarn run build-templates && jest",
     "coverage": "jest --collectCoverage",
     "coverage-html": "yarn run coverage && open ./coverage/index.html",
     "codacy": "cat ./coverage/lcov.info | codacy-coverage",

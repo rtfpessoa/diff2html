@@ -254,7 +254,7 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     return false;
   }
 
-  diffLines.forEach(function(line, lineIndex) {
+  diffLines.forEach((line, lineIndex) => {
     // Unmerged paths, and possibly other non-diffable files
     // https://github.com/scottgonzalez/pretty-diff/issues/11
     // Also, remove some useless lines
@@ -340,8 +340,9 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     }
 
     if (
-      (currentFile && line.startsWith(hunkHeaderPrefix)) ||
-      (currentFile && currentFile.isGitDiff && currentFile.oldName && currentFile.newName && !currentBlock)
+      currentFile &&
+      (line.startsWith(hunkHeaderPrefix) ||
+        (currentFile.isGitDiff && currentFile.oldName && currentFile.newName && !currentBlock))
     ) {
       startBlock(line);
       return;
@@ -403,7 +404,7 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       currentFile.oldName = getFilename(values[1], undefined, config.srcPrefix);
       currentFile.newName = getFilename(values[2], undefined, config.dstPrefix);
       startBlock("Binary file");
-    } else if ((values = binaryDiff.exec(line))) {
+    } else if (binaryDiff.test(line)) {
       currentFile.isBinary = true;
       startBlock(line);
     } else if ((values = similarityIndex.exec(line))) {

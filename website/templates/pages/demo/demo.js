@@ -1,4 +1,4 @@
-/* global Diff2HtmlUI */
+/* global global */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 /*
@@ -16,33 +16,33 @@
 
 const searchParam = "diff";
 
-function getUrlFromSearch(search) {
-  try {
-    return search
-      .split("?")[1]
-      .split(searchParam + "=")[1]
-      .split("&")[0];
-  } catch (_ignore) {}
-
-  return null;
-}
-
 function getParamsFromSearch(search) {
-  const map = new Map();
+  const map = {};
   try {
     search
       .split("?")[1]
       .split("&")
       .forEach(e => {
         const values = e.split("=");
-        map.set(values[0], values[1]);
+        map[values[0]] = values[1];
       });
   } catch (_ignore) {}
 
   return map;
 }
 
-function prepareUrl(url) {
+function validateUrl(url) {
+  return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
+    url
+  );
+}
+
+function prepareRequest(url) {
+  if (!validateUrl(url)) {
+    console.error("Invalid url provided!");
+    return;
+  }
+
   let fetchUrl;
   const headers = new Headers();
 
@@ -93,150 +93,152 @@ function prepareUrl(url) {
   }
 
   return {
-    originalUrl: url,
     url: fetchUrl,
     headers: headers
   };
 }
 
-function validateUrl(url) {
-  return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
-    url
-  );
+function getConfiguration(urlParams) {
+  // Removing `diff` form `urlParams` to avoid being inserted
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { diff, ...urlParamsRest } = urlParams;
+  const config = {
+    ...global.defaultDiff2HtmlUIConfig,
+    ...urlParamsRest
+  };
+
+  return Object.entries(config).reduce((object, [k, v]) => {
+    const newObject = !Number.isNaN(Number(v))
+      ? { [k]: Number(v) }
+      : v === "true" && v === "false"
+      ? { [k]: Boolean(v) }
+      : { [k]: v };
+    return { ...object, ...newObject };
+  }, {});
 }
 
-function updateUrl(url) {
-  const params = getParamsFromSearch(window.location.search);
-
-  if (params[searchParam] === url) return;
-
-  params[searchParam] = url;
-
-  const paramString = Object.keys(params)
-    .map(function(k) {
-      return k + "=" + params[k];
-    })
-    .join("&");
-
-  window.location = "demo.html?" + paramString;
-}
-
-function draw(req, forced, elements) {
-  if (!validateUrl(req.url)) {
-    console.error("Invalid url provided!");
-    return;
-  }
-
-  if (validateUrl(req.originalUrl)) updateUrl(req.originalUrl);
-
-  const outputFormat = elements.outputFormat.val();
-  const showFiles = elements.showFiles.is(":checked");
-  const matching = elements.matching.val();
-  const wordsThreshold = elements.wordsThreshold.val();
-  const matchingMaxComparisons = elements.matchingMaxComparisons.val();
-
-  fetch(req.url, {
+function getDiff(request) {
+  return fetch(request.url, {
     method: "GET",
-    headers: req.headers,
+    headers: request.headers,
     mode: "cors",
     cache: "default"
   })
-    .then(function(res) {
+    .then(res => {
       return res.text();
     })
-    .then(function(data) {
-      const params = getParamsFromSearch(window.location.search);
-      delete params[searchParam];
-
-      if (forced) {
-        params.outputFormat = outputFormat;
-        params.showFiles = showFiles;
-        params.matching = matching;
-        params.wordsThreshold = wordsThreshold;
-        params.matchingMaxComparisons = matchingMaxComparisons;
-      } else {
-        params.outputFormat = params.outputFormat || outputFormat;
-        params.showFiles = String(params.showFiles) !== "false" || (params.showFiles === null && showFiles);
-        params.matching = params.matching || matching;
-        params.wordsThreshold = params.wordsThreshold || wordsThreshold;
-        params.matchingMaxComparisons = params.matchingMaxComparisons || matchingMaxComparisons;
-
-        elements.outputFormat.value = params.outputFormat;
-        elements.showFiles.setAttribute("checked", params.showFiles);
-        elements.matching.value = params.matching;
-        elements.wordsThreshold.value = params.wordsThreshold;
-        elements.matchingMaxComparisons.value = params.matchingMaxComparisons;
-      }
-
-      params.synchronisedScroll = params.synchronisedScroll || true;
-
-      const diff2htmlUi = new Diff2HtmlUI(data, elements.root);
-
-      if (outputFormat === "side-by-side") {
-        elements.container.css({ width: "100%" });
-      } else {
-        elements.container.css({ width: "" });
-      }
-
-      diff2htmlUi.draw();
-      diff2htmlUi.fileListCloseable(params.fileListCloseable || false);
-      if (params.highlight === undefined || params.highlight) {
-        diff2htmlUi.highlightCode();
-      }
-
-      return undefined;
-    })
-    .catch(() => {});
+    .catch(error => console.error("Failed to retrieve diff", error));
 }
 
-function smartDraw(urlOpt, urlElem, forced) {
-  const url = urlOpt || urlElem.val();
-  const req = prepareUrl(url);
-  draw(req, forced);
+function draw(diffString, config, elements) {
+  const diff2htmlUi = new global.Diff2HtmlUI(diffString, elements.structure.diffTarget, config);
+
+  if (config.outputFormat === "side-by-side") {
+    elements.structure.container.style.width = "100%";
+  } else {
+    elements.structure.container.style.width = "";
+  }
+
+  diff2htmlUi.draw();
 }
 
-function bind(urlElem) {
-  $("#url-btn").click(e => {
-    e.preventDefault();
-    const url = urlElem.val();
-    smartDraw(url, urlElem);
-  });
+async function prepareInitialState(elements) {
+  const urlParams = getParamsFromSearch(window.location.search);
+  const currentUrl = (urlParams && urlParams[searchParam]) || "https://github.com/rtfpessoa/diff2html/pull/106";
 
-  urlElem.on("paste", e => {
-    const url = e.originalEvent.clipboardData.getData("Text");
-    smartDraw(url, urlElem);
-  });
+  if (currentUrl !== elements.url.input.value) elements.url.input.value = currentUrl;
+
+  const request = prepareRequest(currentUrl);
+
+  const initialConfiguration = getConfiguration(urlParams);
+  const initialDiff = await getDiff(request);
+
+  return [initialConfiguration, initialDiff];
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+function updateBrowserUrl(config, newDiffUrl) {
+  if (history.pushState) {
+    const paramString = Object.entries(config)
+      .map(([k, v]) => k + "=" + v)
+      .join("&");
+    const newPageUrl =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      window.location.pathname +
+      "?" +
+      paramString +
+      "&" +
+      searchParam +
+      "=" +
+      newDiffUrl;
+    window.history.pushState({ path: newPageUrl }, "", newPageUrl);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
   // Improves browser compatibility
   require("whatwg-fetch");
 
-  const elements = {
-    root: document.getElementById("url-diff-container"),
-    container: document.getElementsByClassName("container"),
-    url: document.getElementById("url"),
-    outputFormat: document.getElementById("diff-url-options-output-format"),
-    showFiles: document.getElementById("diff-url-options-show-files"),
-    matching: document.getElementById("diff-url-options-matching"),
-    wordsThreshold: document.getElementById("diff-url-options-match-words-threshold"),
-    matchingMaxComparisons: document.getElementById("diff-url-options-matching-max-comparisons")
+  const drawAndUpdateUrl = async (diffUrl, diffString, config, elements) => {
+    updateBrowserUrl(config, diffUrl);
+    const newRequest = prepareRequest(diffUrl);
+    diffString = await getDiff(newRequest);
+    draw(diffString, config, elements);
   };
 
-  if (window.location.search) {
-    const url = getUrlFromSearch(window.location.search);
-    elements.url.val(url);
-    smartDraw(url, elements.url);
-  }
+  const elements = {
+    structure: {
+      container: document.getElementsByClassName("container")[0],
+      diffTarget: document.getElementById("url-diff-container")
+    },
+    url: {
+      input: document.getElementById("url"),
+      button: document.getElementById("url-btn")
+    },
+    options: {
+      outputFormat: document.getElementById("diff-url-options-output-format"),
+      matching: document.getElementById("diff-url-options-matching"),
+      wordsThreshold: document.getElementById("diff-url-options-match-words-threshold"),
+      matchingMaxComparisons: document.getElementById("diff-url-options-matching-max-comparisons")
+    },
+    checkboxes: {
+      drawFileList: document.getElementById("diff-url-options-show-files")
+    }
+  };
 
-  bind();
+  let [config, diffString] = await prepareInitialState(elements);
 
-  elements.outputFormat
-    .add(elements.showFiles)
-    .add(elements.matching)
-    .add(elements.wordsThreshold)
-    .add(elements.matchingMaxComparisons)
-    .change(() => smartDraw(null, elements.url, true));
+  // Update HTML inputs from any changes in URL
+  elements.options.outputFormat.value = config.outputFormat;
+  elements.checkboxes.drawFileList.checked = config.drawFileList;
+  elements.options.matching.value = config.matching;
+  elements.options.wordsThreshold.value = config.wordsThreshold;
+  elements.options.matchingMaxComparisons.value = config.matchingMaxComparisons;
+
+  Object.entries(elements.options).forEach(([option, element]) =>
+    element.addEventListener("change", () => {
+      config[option] = element.value;
+      drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
+    })
+  );
+
+  Object.entries(elements.checkboxes).forEach(([option, checkbox]) =>
+    checkbox.addEventListener("change", () => {
+      config[option] = checkbox.checked;
+      drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
+    })
+  );
+
+  elements.url.button.addEventListener("click", async e => {
+    e.preventDefault();
+    const newDiffUrl = elements.url.input.value;
+    const newRequest = prepareRequest(newDiffUrl);
+    diffString = await getDiff(newRequest);
+    drawAndUpdateUrl(newDiffUrl, diffString, config, elements);
+  });
+
+  return drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
 });
 
 /* eslint-enable @typescript-eslint/explicit-function-return-type */

@@ -256,32 +256,32 @@ describe("Diff2Html", () => {
     });
 
     it("should generate pretty line by line html from diff", () => {
-      const result = html(diffExample1);
+      const result = html(diffExample1, { drawFileList: false });
       expect(result).toEqual(htmlLineExample1);
     });
 
     it("should generate pretty line by line html from json", () => {
-      const result = html(jsonExample1);
+      const result = html(jsonExample1, { drawFileList: false });
       expect(result).toEqual(htmlLineExample1);
     });
 
     it("should generate pretty diff with files summary", () => {
-      const result = html(diffExample1, { showFiles: true });
+      const result = html(diffExample1, { drawFileList: true });
       expect(result).toEqual(htmlLineExample1WithFilesSummary);
     });
 
     it("should generate pretty side by side html from diff", () => {
-      const result = html(diffExample1, { outputFormat: "side-by-side" });
+      const result = html(diffExample1, { outputFormat: "side-by-side", drawFileList: false });
       expect(result).toEqual(htmlSideExample1);
     });
 
     it("should generate pretty side by side html from json", () => {
-      const result = html(jsonExample1, { outputFormat: "side-by-side" });
+      const result = html(jsonExample1, { outputFormat: "side-by-side", drawFileList: false });
       expect(result).toEqual(htmlSideExample1);
     });
 
     it("should generate pretty side by side html from diff 2", () => {
-      const result = html(diffExample1, { outputFormat: "side-by-side", showFiles: true });
+      const result = html(diffExample1, { outputFormat: "side-by-side", drawFileList: true });
       expect(result).toEqual(htmlSideExample1WithFilesSummary);
     });
 
@@ -518,7 +518,7 @@ describe("Diff2Html", () => {
         "</div>\n" +
         "</div>";
 
-      const result = html(diffExample2);
+      const result = html(diffExample2, { drawFileList: false });
       expect(htmlExample2).toEqual(result);
     });
   });

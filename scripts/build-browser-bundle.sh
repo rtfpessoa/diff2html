@@ -22,13 +22,13 @@ rm -rf ${OUTPUT_DIR}
 mkdir -p ${OUTPUT_DIR}
 
 echo "Generating js aggregation file in ${OUTPUT_JS_FILE}"
-browserify -e ${INPUT_JS_FILE} -o ${OUTPUT_JS_FILE}
+browserify -e ${INPUT_JS_FILE} -o ${OUTPUT_JS_FILE} -s global
 
 echo "Minifying ${OUTPUT_JS_FILE} to ${OUTPUT_MIN_JS_FILE}"
 terser ${OUTPUT_JS_FILE} -c -o ${OUTPUT_MIN_JS_FILE}
 
 echo "Generating js ui aggregation file in ${OUTPUT_JS_UI_FILE}"
-browserify -e ${INPUT_JS_UI_FILE} -o ${OUTPUT_JS_UI_FILE}
+browserify -e ${INPUT_JS_UI_FILE} -o ${OUTPUT_JS_UI_FILE} -s global
 
 echo "Minifying ${OUTPUT_JS_UI_FILE} to ${OUTPUT_MIN_JS_UI_FILE}"
 terser ${OUTPUT_JS_UI_FILE} -c -o ${OUTPUT_MIN_JS_UI_FILE}

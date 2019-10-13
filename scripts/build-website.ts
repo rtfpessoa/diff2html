@@ -12,9 +12,7 @@ type OptionsType = {
 const templatesRoot = "website/templates";
 const pagesRoot = `${templatesRoot}/pages`;
 const options: OptionsType = {
-  all: {
-    demoUrl: "demo.html?diff=https://github.com/rtfpessoa/diff2html/pull/106"
-  },
+  all: {},
   demo: {
     extraClass: "template-index-min"
   }

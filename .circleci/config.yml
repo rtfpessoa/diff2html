@@ -8,13 +8,13 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
-      - run: npm install
+      - run: yarn
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-      - run: npm run coverage
-      - run: npm run check-coverage
+      - run: yarn run build
+      - run: yarn run coverage
 
   build-latest: &latest-build
     docker:
@@ -29,6 +29,7 @@ jobs:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
+      - run: yarn run build
       - run: yarn run lint
       - run: yarn run coverage
       - run: yarn run codacy
@@ -38,40 +39,25 @@ jobs:
             - docs
             - build
 
-  build-node_4:
-    <<: *common-build
-    docker:
-      - image: node:4
-
-  build-node_5:
-    <<: *common-build
-    docker:
-      - image: node:5
-
-  build-node_6:
-    <<: *common-build
-    docker:
-      - image: node:6
-
-  build-node_7:
-    <<: *common-build
-    docker:
-      - image: node:7
-
   build-node_8:
     <<: *common-build
     docker:
       - image: node:8
 
-  build-node_9:
+  build-node_10:
     <<: *common-build
     docker:
-      - image: node:9
+      - image: node:10
 
-  build-node_10:
+  build-node_11:
+    <<: *common-build
+    docker:
+      - image: node:11
+
+  build-node_12:
     <<: *latest-build
     docker:
-      - image: node:10
+      - image: node:12
 
   deploy:
     machine:
@@ -89,16 +75,13 @@ workflows:
   version: 2
   build:
     jobs:
-      - build-node_4
-      - build-node_5
-      - build-node_6
-      - build-node_7
       - build-node_8
-      - build-node_9
       - build-node_10
+      - build-node_11
+      - build-node_12
       - deploy:
           requires:
-            - build-node_10
+            - build-node_12
           filters:
             branches:
               only: master

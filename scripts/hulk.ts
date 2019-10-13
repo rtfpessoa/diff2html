@@ -172,7 +172,7 @@ function namespace(name: string): string {
 // Write a template foreach file that matches template extension
 const templates = extractFiles(options.argv.remain)
   .map(file => {
-    const timmedFileContents = fs.readFileSync(file, "utf-8").trim();
+    const timmedFileContents = fs.readFileSync(file, "utf8").trim();
 
     if (!timmedFileContents) return;
 

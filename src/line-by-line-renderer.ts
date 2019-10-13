@@ -10,10 +10,10 @@ export interface LineByLineRendererConfig extends renderUtils.RenderConfig {
 }
 
 export const defaultLineByLineRendererConfig = {
+  ...renderUtils.defaultRenderConfig,
   renderNothingWhenEmpty: false,
   matchingMaxComparisons: 2500,
-  maxLineSizeInBlockForComparison: 200,
-  ...renderUtils.defaultRenderConfig
+  maxLineSizeInBlockForComparison: 200
 };
 
 const genericTemplatesPath = "generic";

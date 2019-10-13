@@ -415,7 +415,7 @@ describe("DiffParser", () => {
           "+test2r\n"
       ];
 
-      diffs.forEach(function(diff) {
+      diffs.forEach(diff => {
         const result = parse(diff);
         const file1 = result[0];
         expect(result.length).toEqual(1);

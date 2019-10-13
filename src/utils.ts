@@ -48,7 +48,7 @@ export function escapeForHtml(str: string): string {
  * Converts all '\' in @path to unix style '/'
  */
 export function unifyPath(path: string): string {
-  return path ? path.replace("\\", "/") : path;
+  return path ? path.replace(/\\/g, "/") : path;
 }
 
 /**
