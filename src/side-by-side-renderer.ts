@@ -2,6 +2,7 @@ import * as utils from "./utils";
 import HoganJsUtils from "./hoganjs-utils";
 import * as Rematch from "./rematch";
 import * as renderUtils from "./render-utils";
+import { DiffLine, LineType, DiffFile } from "./types";
 
 export interface SideBySideRendererConfig extends renderUtils.RenderConfig {
   renderNothingWhenEmpty?: boolean;
@@ -30,12 +31,12 @@ export default class SideBySideRenderer {
   private readonly hoganUtils: HoganJsUtils;
   private readonly config: typeof defaultSideBySideRendererConfig;
 
-  constructor(hoganUtils: HoganJsUtils, config: SideBySideRendererConfig) {
+  constructor(hoganUtils: HoganJsUtils, config: SideBySideRendererConfig = {}) {
     this.hoganUtils = hoganUtils;
     this.config = { ...defaultSideBySideRendererConfig, ...config };
   }
 
-  render(diffFiles: renderUtils.DiffFile[]): string | undefined {
+  render(diffFiles: DiffFile[]): string | undefined {
     const content = diffFiles
       .map(file => {
         let diffs;
@@ -65,7 +66,7 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
-  makeDiffHtml(file: renderUtils.DiffFile, diffs: FileHtml): string {
+  makeDiffHtml(file: DiffFile, diffs: FileHtml): string {
     const fileDiffTemplate = this.hoganUtils.template(baseTemplatesPath, "file-diff");
     const filePathTemplate = this.hoganUtils.template(genericTemplatesPath, "file-path");
     const fileIconTemplate = this.hoganUtils.template(iconsBaseTemplatesPath, "file");
@@ -98,9 +99,10 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
-  generateSideBySideFileHtml(file: renderUtils.DiffFile): FileHtml {
-    const prefixSize = renderUtils.prefixLength(file.isCombined);
-    const distance = Rematch.newDistanceFn((e: renderUtils.DiffLine) => e.content.substring(prefixSize));
+  generateSideBySideFileHtml(file: DiffFile): FileHtml {
+    const distance = Rematch.newDistanceFn(
+      (e: DiffLine) => renderUtils.deconstructLine(e.content, file.isCombined).content
+    );
     const matcher = Rematch.newMatcherFn(distance);
 
     const fileHtml = {
@@ -112,8 +114,8 @@ export default class SideBySideRenderer {
       fileHtml.left += this.makeSideHtml(block.header);
       fileHtml.right += this.makeSideHtml("");
 
-      let oldLines: renderUtils.DiffLine[] = [];
-      let newLines: renderUtils.DiffLine[] = [];
+      let oldLines: DiffLine[] = [];
+      let newLines: DiffLine[] = [];
 
       const processChangeBlock = (): void => {
         let matches;
@@ -184,17 +186,17 @@ export default class SideBySideRenderer {
 
       for (let i = 0; i < block.lines.length; i++) {
         const diffLine = block.lines[i];
-        const { prefix, line } = renderUtils.deconstructLine(diffLine.content, file.isCombined);
+        const { prefix, content: line } = renderUtils.deconstructLine(diffLine.content, file.isCombined);
         const escapedLine = utils.escapeForHtml(line);
 
         if (
-          diffLine.type !== renderUtils.LineType.INSERT &&
-          (newLines.length > 0 || (diffLine.type !== renderUtils.LineType.DELETE && oldLines.length > 0))
+          diffLine.type !== LineType.INSERT &&
+          (newLines.length > 0 || (diffLine.type !== LineType.DELETE && oldLines.length > 0))
         ) {
           processChangeBlock();
         }
 
-        if (diffLine.type === renderUtils.LineType.CONTEXT) {
+        if (diffLine.type === LineType.CONTEXT) {
           fileHtml.left += this.generateSingleLineHtml(
             file.isCombined,
             renderUtils.toCSSClass(diffLine.type),
@@ -209,7 +211,7 @@ export default class SideBySideRenderer {
             diffLine.newNumber,
             prefix
           );
-        } else if (diffLine.type === renderUtils.LineType.INSERT && !oldLines.length) {
+        } else if (diffLine.type === LineType.INSERT && !oldLines.length) {
           fileHtml.left += this.generateSingleLineHtml(file.isCombined, renderUtils.CSSLineClass.CONTEXT, "");
           fileHtml.right += this.generateSingleLineHtml(
             file.isCombined,
@@ -218,9 +220,9 @@ export default class SideBySideRenderer {
             diffLine.newNumber,
             prefix
           );
-        } else if (diffLine.type === renderUtils.LineType.DELETE) {
+        } else if (diffLine.type === LineType.DELETE) {
           oldLines.push(diffLine);
-        } else if (diffLine.type === renderUtils.LineType.INSERT && Boolean(oldLines.length)) {
+        } else if (diffLine.type === LineType.INSERT && Boolean(oldLines.length)) {
           newLines.push(diffLine);
         } else {
           console.error("unknown state in html side-by-side generator");
@@ -235,7 +237,7 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
-  processLines(isCombined: boolean, oldLines: renderUtils.DiffLine[], newLines: renderUtils.DiffLine[]): FileHtml {
+  processLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
     const fileHtml = {
       right: "",
       left: ""
@@ -252,7 +254,7 @@ export default class SideBySideRenderer {
       let newPrefix;
 
       if (oldLine) {
-        const { prefix, line } = renderUtils.deconstructLine(oldLine.content, isCombined);
+        const { prefix, content: line } = renderUtils.deconstructLine(oldLine.content, isCombined);
         oldContent = utils.escapeForHtml(line);
         oldPrefix = prefix;
       } else {
@@ -261,7 +263,7 @@ export default class SideBySideRenderer {
       }
 
       if (newLine) {
-        const { prefix, line } = renderUtils.deconstructLine(newLine.content, isCombined);
+        const { prefix, content: line } = renderUtils.deconstructLine(newLine.content, isCombined);
         newContent = utils.escapeForHtml(line);
         newPrefix = prefix;
       } else {
@@ -333,7 +335,7 @@ export default class SideBySideRenderer {
     } else if (!prefix) {
       const lineWithPrefix = renderUtils.deconstructLine(content, isCombined);
       prefix = lineWithPrefix.prefix;
-      lineWithoutPrefix = lineWithPrefix.line;
+      lineWithoutPrefix = lineWithPrefix.content;
     }
 
     if (prefix === " ") {

@@ -2,11 +2,7 @@ import * as jsDiff from "diff";
 
 import { unifyPath, escapeForHtml, hashCode } from "./utils";
 import * as rematch from "./rematch";
-
-export type DiffLineParts = {
-  prefix: string;
-  line: string;
-};
+import { LineMatchingType, DiffStyleType, LineType, DiffLineParts, DiffFile, DiffFileName } from "./types";
 
 export enum CSSLineClass {
   INSERTS = "d2h-ins",
@@ -17,72 +13,16 @@ export enum CSSLineClass {
   DELETE_CHANGES = "d2h-del d2h-change"
 }
 
-export enum LineType {
-  INSERT = "insert",
-  DELETE = "delete",
-  CONTEXT = "context"
-}
-
-interface DiffLineDeleted {
-  type: LineType.DELETE;
-  oldNumber: number;
-  newNumber: undefined;
-}
-
-interface DiffLineInserted {
-  type: LineType.INSERT;
-  oldNumber: undefined;
-  newNumber: number;
-}
-
-interface DiffLineContext {
-  type: LineType.CONTEXT;
-  oldNumber: number;
-  newNumber: number;
-}
-
-export type DiffLine = (DiffLineDeleted | DiffLineInserted | DiffLineContext) & {
-  content: string;
+export type HighlightedLines = {
+  oldLine: {
+    prefix: string;
+    content: string;
+  };
+  newLine: {
+    prefix: string;
+    content: string;
+  };
 };
-
-export interface DiffBlock {
-  oldStartLine: number;
-  oldStartLine2?: number;
-  newStartLine: number;
-  header: string;
-  lines: DiffLine[];
-}
-
-interface DiffFileName {
-  oldName: string;
-  newName: string;
-}
-
-export interface DiffFile extends DiffFileName {
-  addedLines: number;
-  deletedLines: number;
-  isCombined: boolean;
-  isGitDiff: boolean;
-  language: string;
-  blocks: DiffBlock[];
-  oldMode?: string | string[];
-  newMode?: string;
-  deletedFileMode?: string;
-  newFileMode?: string;
-  isDeleted?: boolean;
-  isNew?: boolean;
-  isCopy?: boolean;
-  isRename?: boolean;
-  isBinary?: boolean;
-  unchangedPercentage?: number;
-  changedPercentage?: number;
-  checksumBefore?: string | string[];
-  checksumAfter?: string;
-  mode?: string;
-}
-
-export type LineMatchingType = "lines" | "words" | "none";
-export type DiffStyleType = "word" | "char";
 
 export interface RenderConfig {
   matching?: LineMatchingType;
@@ -92,21 +32,10 @@ export interface RenderConfig {
 }
 
 export const defaultRenderConfig = {
-  matching: "none" as LineMatchingType,
+  matching: LineMatchingType.NONE,
   matchWordsThreshold: 0.25,
   maxLineLengthHighlight: 10000,
-  diffStyle: "word" as DiffStyleType
-};
-
-type HighlightedLines = {
-  oldLine: {
-    prefix: string;
-    content: string;
-  };
-  newLine: {
-    prefix: string;
-    content: string;
-  };
+  diffStyle: DiffStyleType.WORD
 };
 
 const separator = "/";
@@ -142,7 +71,7 @@ export function toCSSClass(lineType: LineType): CSSLineClass {
 /**
  * Prefix length of the hunk lines in the diff
  */
-export function prefixLength(isCombined: boolean): number {
+function prefixLength(isCombined: boolean): number {
   return isCombined ? 2 : 1;
 }
 
@@ -153,7 +82,7 @@ export function deconstructLine(line: string, isCombined: boolean): DiffLinePart
   const indexToSplit = prefixLength(isCombined);
   return {
     prefix: line.substring(0, indexToSplit),
-    line: line.substring(indexToSplit)
+    content: line.substring(indexToSplit)
   };
 }
 
@@ -263,40 +192,36 @@ export function getFileIcon(file: DiffFile): string {
 }
 
 /**
- * Generates a unique string numerical identifier based on the names of the file diff
+ * Highlight differences between @diffLine1 and @diffLine2 using <ins> and <del> tags
  */
 export function diffHighlight(
   diffLine1: string,
   diffLine2: string,
   isCombined: boolean,
-  config: RenderConfig
+  config: RenderConfig = {}
 ): HighlightedLines {
   const { matching, maxLineLengthHighlight, matchWordsThreshold, diffStyle } = { ...defaultRenderConfig, ...config };
-  const prefixLengthVal = prefixLength(isCombined);
 
-  const linePrefix1 = diffLine1.substr(0, prefixLengthVal);
-  const unprefixedLine1 = diffLine1.substr(prefixLengthVal);
+  const line1 = deconstructLine(diffLine1, isCombined);
+  const line2 = deconstructLine(diffLine2, isCombined);
 
-  const linePrefix2 = diffLine2.substr(0, prefixLengthVal);
-  const unprefixedLine2 = diffLine2.substr(prefixLengthVal);
-
-  if (unprefixedLine1.length > maxLineLengthHighlight || unprefixedLine2.length > maxLineLengthHighlight) {
+  if (line1.content.length > maxLineLengthHighlight || line2.content.length > maxLineLengthHighlight) {
     return {
       oldLine: {
-        prefix: linePrefix1,
-        content: escapeForHtml(unprefixedLine1)
+        prefix: line1.prefix,
+        content: escapeForHtml(line1.content)
       },
       newLine: {
-        prefix: linePrefix2,
-        content: escapeForHtml(unprefixedLine2)
+        prefix: line2.prefix,
+        content: escapeForHtml(line2.content)
       }
     };
   }
 
   const diff =
     diffStyle === "char"
-      ? jsDiff.diffChars(unprefixedLine1, unprefixedLine2)
-      : jsDiff.diffWordsWithSpace(unprefixedLine1, unprefixedLine2);
+      ? jsDiff.diffChars(line1.content, line2.content)
+      : jsDiff.diffWordsWithSpace(line1.content, line2.content);
 
   const changedWords: jsDiff.Change[] = [];
   if (diffStyle === "word" && matching === "words") {
@@ -332,11 +257,11 @@ export function diffHighlight(
 
   return {
     oldLine: {
-      prefix: linePrefix1,
+      prefix: line1.prefix,
       content: removeInsElements(highlightedLine)
     },
     newLine: {
-      prefix: linePrefix2,
+      prefix: line2.prefix,
       content: removeDelElements(highlightedLine)
     }
   };

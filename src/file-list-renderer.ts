@@ -1,10 +1,11 @@
 import * as renderUtils from "./render-utils";
 import HoganJsUtils from "./hoganjs-utils";
+import { DiffFile } from "./types";
 
 const baseTemplatesPath = "file-summary";
 const iconsBaseTemplatesPath = "icon";
 
-export function render(diffFiles: renderUtils.DiffFile[], hoganUtils: HoganJsUtils): string {
+export function render(diffFiles: DiffFile[], hoganUtils: HoganJsUtils): string {
   const files = diffFiles
     .map(file =>
       hoganUtils.render(

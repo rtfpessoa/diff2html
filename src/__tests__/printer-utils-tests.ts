@@ -1,4 +1,5 @@
 import * as renderUtils from "../render-utils";
+import { DiffStyleType, LineMatchingType } from "../types";
 
 describe("Utils", function() {
   describe("getHtmlId", function() {
@@ -73,7 +74,7 @@ describe("Utils", function() {
   describe("diffHighlight", function() {
     it("should highlight two lines", function() {
       const result = renderUtils.diffHighlight("-var myVar = 2;", "+var myVariable = 3;", false, {
-        matching: "words"
+        matching: LineMatchingType.WORDS
       });
 
       expect(result).toEqual({
@@ -88,7 +89,9 @@ describe("Utils", function() {
       });
     });
     it("should highlight two lines char by char", function() {
-      const result = renderUtils.diffHighlight("-var myVar = 2;", "+var myVariable = 3;", false, { diffStyle: "char" });
+      const result = renderUtils.diffHighlight("-var myVar = 2;", "+var myVariable = 3;", false, {
+        diffStyle: DiffStyleType.CHAR
+      });
 
       expect({
         oldLine: {
@@ -103,8 +106,8 @@ describe("Utils", function() {
     });
     it("should highlight combined diff lines", function() {
       const result = renderUtils.diffHighlight(" -var myVar = 2;", " +var myVariable = 3;", true, {
-        diffStyle: "word",
-        matching: "words",
+        diffStyle: DiffStyleType.WORD,
+        matching: LineMatchingType.WORDS,
         matchWordsThreshold: 1.0
       });
 

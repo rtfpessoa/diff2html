@@ -2,10 +2,8 @@ import * as DiffParser from "./diff-parser";
 import * as fileListPrinter from "./file-list-renderer";
 import LineByLineRenderer, { LineByLineRendererConfig, defaultLineByLineRendererConfig } from "./line-by-line-renderer";
 import SideBySideRenderer, { SideBySideRendererConfig, defaultSideBySideRendererConfig } from "./side-by-side-renderer";
-import { DiffFile } from "./render-utils";
+import { DiffFile, OutputFormatType } from "./types";
 import HoganJsUtils, { HoganJsUtilsConfig } from "./hoganjs-utils";
-
-type OutputFormatType = "line-by-line" | "side-by-side";
 
 export interface Diff2HtmlConfig
   extends DiffParser.DiffParserConfig,
@@ -19,7 +17,7 @@ export interface Diff2HtmlConfig
 export const defaultDiff2HtmlConfig = {
   ...defaultLineByLineRendererConfig,
   ...defaultSideBySideRendererConfig,
-  outputFormat: "line-by-line" as OutputFormatType,
+  outputFormat: OutputFormatType.LINE_BY_LINE,
   drawFileList: true
 };
 

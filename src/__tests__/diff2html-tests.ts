@@ -1,5 +1,5 @@
 import { parse, html } from "../diff2html";
-import { DiffFile, LineType } from "../render-utils";
+import { DiffFile, LineType, OutputFormatType } from "../types";
 
 const diffExample1 =
   "diff --git a/sample b/sample\n" +
@@ -271,17 +271,17 @@ describe("Diff2Html", () => {
     });
 
     it("should generate pretty side by side html from diff", () => {
-      const result = html(diffExample1, { outputFormat: "side-by-side", drawFileList: false });
+      const result = html(diffExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: false });
       expect(result).toEqual(htmlSideExample1);
     });
 
     it("should generate pretty side by side html from json", () => {
-      const result = html(jsonExample1, { outputFormat: "side-by-side", drawFileList: false });
+      const result = html(jsonExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: false });
       expect(result).toEqual(htmlSideExample1);
     });
 
     it("should generate pretty side by side html from diff 2", () => {
-      const result = html(diffExample1, { outputFormat: "side-by-side", drawFileList: true });
+      const result = html(diffExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: true });
       expect(result).toEqual(htmlSideExample1WithFilesSummary);
     });
 

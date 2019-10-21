@@ -1,6 +1,7 @@
 import SideBySideRenderer from "../side-by-side-renderer";
 import HoganJsUtils from "../hoganjs-utils";
-import { LineType, CSSLineClass, DiffLine, DiffFile } from "../render-utils";
+import { LineType, DiffLine, DiffFile, LineMatchingType } from "../types";
+import { CSSLineClass } from "../render-utils";
 
 describe("SideBySideRenderer", () => {
   describe("generateEmptyDiff", () => {
@@ -238,7 +239,7 @@ describe("SideBySideRenderer", () => {
       ];
 
       const hoganUtils = new HoganJsUtils({});
-      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, { matching: "lines" });
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, { matching: LineMatchingType.LINES });
       const html = sideBySideRenderer.render(exampleJson);
       const expected =
         '<div class="d2h-wrapper">\n' +
@@ -386,7 +387,7 @@ describe("SideBySideRenderer", () => {
       ];
 
       const hoganUtils = new HoganJsUtils({});
-      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, { matching: "lines" });
+      const sideBySideRenderer = new SideBySideRenderer(hoganUtils, { matching: LineMatchingType.LINES });
       const html = sideBySideRenderer.processLines(false, oldLines, newLines);
       const expectedLeft =
         "<tr>\n" +

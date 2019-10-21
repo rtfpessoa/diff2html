@@ -1,4 +1,4 @@
-import { DiffFile, DiffBlock, DiffLine, LineType } from "./render-utils";
+import { DiffFile, DiffBlock, DiffLine, LineType } from "./types";
 import { escapeForRegExp } from "./utils";
 
 export interface DiffParserConfig {

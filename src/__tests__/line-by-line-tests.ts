@@ -1,6 +1,7 @@
 import LineByLineRenderer from "../line-by-line-renderer";
 import HoganJsUtils from "../hoganjs-utils";
-import { LineType, CSSLineClass, DiffLine, DiffFile } from "../render-utils";
+import { LineType, DiffLine, DiffFile, LineMatchingType } from "../types";
+import { CSSLineClass } from "../render-utils";
 
 describe("LineByLineRenderer", () => {
   describe("_generateEmptyDiff", () => {
@@ -378,7 +379,7 @@ describe("LineByLineRenderer", () => {
 
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {
-        matching: "lines"
+        matching: LineMatchingType.LINES
       });
       const html = lineByLineRenderer.render(exampleJson);
       const expected =

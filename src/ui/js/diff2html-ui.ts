@@ -1,7 +1,7 @@
 import HighlightJS from "highlight.js";
 import * as HighlightJSInternals from "./highlight.js-internals";
 import { html, Diff2HtmlConfig, defaultDiff2HtmlConfig } from "../../diff2html";
-import { DiffFile } from "../../render-utils";
+import { DiffFile } from "../../types";
 
 export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
   synchronisedScroll?: boolean;
