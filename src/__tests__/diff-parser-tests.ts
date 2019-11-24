@@ -13,6 +13,7 @@ function checkDiffSample(diff: string): void {
 
 describe("DiffParser", () => {
   describe("generateDiffJson", () => {
+    // eslint-disable-next-line jest/expect-expect
     it("should parse unix with \n diff", () => {
       const diff =
         "diff --git a/sample b/sample\n" +
@@ -25,6 +26,7 @@ describe("DiffParser", () => {
       checkDiffSample(diff);
     });
 
+    // eslint-disable-next-line jest/expect-expect
     it("should parse windows with \r\n diff", () => {
       const diff =
         "diff --git a/sample b/sample\r\n" +
@@ -37,6 +39,7 @@ describe("DiffParser", () => {
       checkDiffSample(diff);
     });
 
+    // eslint-disable-next-line jest/expect-expect
     it("should parse old os x with \r diff", () => {
       const diff =
         "diff --git a/sample b/sample\r" +
@@ -49,6 +52,7 @@ describe("DiffParser", () => {
       checkDiffSample(diff);
     });
 
+    // eslint-disable-next-line jest/expect-expect
     it("should parse mixed eols diff", () => {
       const diff =
         "diff --git a/sample b/sample\n" +

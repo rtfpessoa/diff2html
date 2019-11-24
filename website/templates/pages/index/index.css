@@ -1,0 +1,111 @@
+.screenshot {
+    display: block;
+    overflow: hidden;
+  }
+  
+  .screenshot > img {
+    width: 100%
+  }
+  
+  .screenshots-fan {
+    margin-top: 50px
+  }
+  
+  .screenshots-fan .screenshot {
+    position: relative;
+    width: auto;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .screenshots-fan .screenshot:last-child, .screenshots-fan .screenshot:first-child {
+    z-index: 2
+  }
+  
+  .screenshots-fan .screenshot {
+    z-index: 3
+  }
+  
+  @media (min-width: 768px) {
+    .screenshots-fan {
+      position: relative;
+      overflow: hidden;
+      margin-top: 60px;
+      height: 200px
+    }
+  
+    .screenshots-fan .screenshot {
+      height: auto;
+      top: 10px;
+      width: 350px
+    }
+  
+    .screenshots-fan .screenshot:first-child, .screenshots-fan .screenshot:last-child {
+      width: 250px;
+      position: absolute;
+      top: 65px
+    }
+  
+    .screenshots-fan .screenshot:first-child {
+      left: 10px
+    }
+  
+    .screenshots-fan .screenshot:last-child {
+      left: auto;
+      right: 10px
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .screenshots-fan {
+      margin-top: 60px;
+      height: 240px
+    }
+  
+    .screenshots-fan .screenshot {
+      width: 400px
+    }
+  
+    .screenshots-fan .screenshot:first-child, .screenshots-fan .screenshot:last-child {
+      width: 300px
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .screenshots-fan {
+      margin-top: 80px;
+      height: 380px
+    }
+  
+    .screenshots-fan .screenshot {
+      width: 550px
+    }
+  
+    .screenshots-fan .screenshot:first-child, .screenshots-fan .screenshot:last-child {
+      width: 450px
+    }
+  }
+
+.img-snapshot1 {
+  background-image: url("./images/snapshot-1.png");
+  background-repeat: no-repeat;
+  /* height: 50px;
+  width: 50px; */
+  display: inline-block;
+}
+
+.img-snapshot2 {
+  background-image: url("./images/snapshot-2.png");
+  background-repeat: no-repeat;
+  /* height: 50px;
+  width: 50px; */
+  display: inline-block;
+}
+
+.img-snapshot3 {
+  background-image: url("./images/snapshot-3.png");
+  background-repeat: no-repeat;
+  /* height: 50px;
+  width: 50px; */
+  display: inline-block;
+}

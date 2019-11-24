@@ -29,7 +29,9 @@ bower_components/
 # Terraform
 /terraform/.terraform
 
-/docs/
-/dist/
-/build/
+/_target
 /src/diff2html-templates.*
+/docs/
+/bundles/
+/lib/
+/lib-esm/

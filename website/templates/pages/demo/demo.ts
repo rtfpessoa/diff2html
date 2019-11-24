@@ -1,5 +1,9 @@
-/* global global */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Diff2HtmlUI, defaultDiff2HtmlUIConfig, Diff2HtmlUIConfig } from "../../../../src/ui/js/diff2html-ui";
+
+import "../../../main.ts";
+import "../../../main.css";
+import "./demo.css";
+import "../../../../src/ui/css/diff2html.css";
 
 /*
  * Example URLs:
@@ -14,33 +18,46 @@
  * https://bitbucket.org/atlassian/amps/pull-requests/236
  */
 
+type URLParams = {
+  diff?: string;
+  [key: string]: string | boolean | number | undefined;
+};
+
 const searchParam = "diff";
 
-function getParamsFromSearch(search) {
-  const map = {};
+function getParamsFromSearch(search: string): URLParams {
   try {
-    search
+    return search
       .split("?")[1]
       .split("&")
-      .forEach(e => {
+      .reduce((urlParams, e) => {
         const values = e.split("=");
-        map[values[0]] = values[1];
-      });
-  } catch (_ignore) {}
-
-  return map;
+        return {
+          ...urlParams,
+          [values[0]]: values[1]
+        };
+      }, {});
+  } catch (_ignore) {
+    return {};
+  }
 }
 
-function validateUrl(url) {
+function validateUrl(url: string): boolean {
   return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
     url
   );
 }
 
-function prepareRequest(url) {
+type Request = {
+  url: string;
+  headers: Headers;
+};
+
+function prepareRequest(url: string): Request {
   if (!validateUrl(url)) {
-    console.error("Invalid url provided!");
-    return;
+    const errorMsg = "Invalid url provided!";
+    console.error(errorMsg);
+    throw new Error(errorMsg);
   }
 
   let fetchUrl;
@@ -55,18 +72,18 @@ function prepareRequest(url) {
   const bitbucketCommitUrl = /^https?:\/\/(?:www\.)?bitbucket\.org\/(.*?)\/(.*?)\/commits\/(.*?)(?:\/raw)?(?:\/.*)?$/;
   const bitbucketPrUrl = /^https?:\/\/(?:www\.)?bitbucket\.org\/(.*?)\/(.*?)\/pull-requests\/(.*?)(?:\/.*)?$/;
 
-  function gitLabUrlGen(userName, projectName, type, value) {
+  function gitLabUrlGen(userName: string, projectName: string, type: string, value: string): string {
     return (
       "https://crossorigin.me/https://gitlab.com/" + userName + "/" + projectName + "/" + type + "/" + value + ".diff"
     );
   }
 
-  function gitHubUrlGen(userName, projectName, type, value) {
+  function gitHubUrlGen(userName: string, projectName: string, type: string, value: string): string {
     headers.append("Accept", "application/vnd.github.v3.diff");
     return "https://api.github.com/repos/" + userName + "/" + projectName + "/" + type + "/" + value;
   }
 
-  function bitbucketUrlGen(userName, projectName, type, value) {
+  function bitbucketUrlGen(userName: string, projectName: string, type: string, value: string): string {
     const baseUrl = "https://bitbucket.org/api/2.0/repositories/";
     if (type === "pullrequests") {
       return baseUrl + userName + "/" + projectName + "/pullrequests/" + value + "/diff";
@@ -98,40 +115,42 @@ function prepareRequest(url) {
   };
 }
 
-function getConfiguration(urlParams) {
+function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
   // Removing `diff` form `urlParams` to avoid being inserted
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { diff, ...urlParamsRest } = urlParams;
-  const config = {
-    ...global.defaultDiff2HtmlUIConfig,
+  const config: URLParams = {
+    ...defaultDiff2HtmlUIConfig,
     ...urlParamsRest
   };
 
   return Object.entries(config).reduce((object, [k, v]) => {
     const newObject = !Number.isNaN(Number(v))
       ? { [k]: Number(v) }
-      : v === "true" && v === "false"
+      : v === "true" || v === "false"
       ? { [k]: Boolean(v) }
       : { [k]: v };
     return { ...object, ...newObject };
   }, {});
 }
 
-function getDiff(request) {
-  return fetch(request.url, {
-    method: "GET",
-    headers: request.headers,
-    mode: "cors",
-    cache: "default"
-  })
-    .then(res => {
-      return res.text();
-    })
-    .catch(error => console.error("Failed to retrieve diff", error));
+async function getDiff(request: Request): Promise<string> {
+  try {
+    const result = await fetch(request.url, {
+      method: "GET",
+      headers: request.headers,
+      mode: "cors",
+      cache: "default"
+    });
+    return result.text();
+  } catch (error) {
+    console.error("Failed to retrieve diff", error);
+    throw error;
+  }
 }
 
-function draw(diffString, config, elements) {
-  const diff2htmlUi = new global.Diff2HtmlUI(diffString, elements.structure.diffTarget, config);
+function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements): void {
+  const diff2htmlUi = new Diff2HtmlUI(diffString, elements.structure.diffTarget, config);
 
   if (config.outputFormat === "side-by-side") {
     elements.structure.container.style.width = "100%";
@@ -142,7 +161,7 @@ function draw(diffString, config, elements) {
   diff2htmlUi.draw();
 }
 
-async function prepareInitialState(elements) {
+async function prepareInitialState(elements: Elements): Promise<[Diff2HtmlUIConfig, string]> {
   const urlParams = getParamsFromSearch(window.location.search);
   const currentUrl = (urlParams && urlParams[searchParam]) || "https://github.com/rtfpessoa/diff2html/pull/106";
 
@@ -156,7 +175,7 @@ async function prepareInitialState(elements) {
   return [initialConfiguration, initialDiff];
 }
 
-function updateBrowserUrl(config, newDiffUrl) {
+function updateBrowserUrl(config: Diff2HtmlUIConfig, newDiffUrl: string): void {
   if (history.pushState) {
     const paramString = Object.entries(config)
       .map(([k, v]) => k + "=" + v)
@@ -176,56 +195,82 @@ function updateBrowserUrl(config, newDiffUrl) {
   }
 }
 
+type Elements = {
+  structure: {
+    container: HTMLElement;
+    diffTarget: HTMLElement;
+  };
+  url: {
+    input: HTMLInputElement;
+    button: HTMLElement;
+  };
+  options: {
+    outputFormat: HTMLInputElement;
+    matching: HTMLInputElement;
+    wordsThreshold: HTMLInputElement;
+    matchingMaxComparisons: HTMLInputElement;
+  };
+  checkboxes: {
+    drawFileList: HTMLInputElement;
+  };
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Improves browser compatibility
   require("whatwg-fetch");
 
-  const drawAndUpdateUrl = async (diffUrl, diffString, config, elements) => {
+  const drawAndUpdateUrl = async (
+    diffUrl: string,
+    diffString: string,
+    config: Diff2HtmlUIConfig,
+    elements: Elements
+  ): Promise<void> => {
     updateBrowserUrl(config, diffUrl);
     const newRequest = prepareRequest(diffUrl);
     diffString = await getDiff(newRequest);
     draw(diffString, config, elements);
   };
 
-  const elements = {
+  const elements: Elements = {
     structure: {
-      container: document.getElementsByClassName("container")[0],
-      diffTarget: document.getElementById("url-diff-container")
+      container: document.getElementsByClassName("container")[0] as HTMLElement,
+      diffTarget: document.getElementById("url-diff-container") as HTMLElement
     },
     url: {
-      input: document.getElementById("url"),
-      button: document.getElementById("url-btn")
+      input: document.getElementById("url") as HTMLInputElement,
+      button: document.getElementById("url-btn") as HTMLElement
     },
     options: {
-      outputFormat: document.getElementById("diff-url-options-output-format"),
-      matching: document.getElementById("diff-url-options-matching"),
-      wordsThreshold: document.getElementById("diff-url-options-match-words-threshold"),
-      matchingMaxComparisons: document.getElementById("diff-url-options-matching-max-comparisons")
+      outputFormat: document.getElementById("diff-url-options-output-format") as HTMLInputElement,
+      matching: document.getElementById("diff-url-options-matching") as HTMLInputElement,
+      wordsThreshold: document.getElementById("diff-url-options-match-words-threshold") as HTMLInputElement,
+      matchingMaxComparisons: document.getElementById("diff-url-options-matching-max-comparisons") as HTMLInputElement
     },
     checkboxes: {
-      drawFileList: document.getElementById("diff-url-options-show-files")
+      drawFileList: document.getElementById("diff-url-options-show-files") as HTMLInputElement
     }
   };
 
   let [config, diffString] = await prepareInitialState(elements);
 
   // Update HTML inputs from any changes in URL
-  elements.options.outputFormat.value = config.outputFormat;
-  elements.checkboxes.drawFileList.checked = config.drawFileList;
-  elements.options.matching.value = config.matching;
-  elements.options.wordsThreshold.value = config.wordsThreshold;
-  elements.options.matchingMaxComparisons.value = config.matchingMaxComparisons;
+  config.outputFormat && (elements.options.outputFormat.value = config.outputFormat);
+  config.drawFileList && (elements.checkboxes.drawFileList.checked = config.drawFileList);
+  config.matching && (elements.options.matching.value = config.matching);
+  config.matchWordsThreshold && (elements.options.wordsThreshold.value = config.matchWordsThreshold.toString());
+  config.matchingMaxComparisons &&
+    (elements.options.matchingMaxComparisons.value = config.matchingMaxComparisons.toString());
 
   Object.entries(elements.options).forEach(([option, element]) =>
     element.addEventListener("change", () => {
-      config[option] = element.value;
+      config = { ...config, [option]: element.value };
       drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
     })
   );
 
   Object.entries(elements.checkboxes).forEach(([option, checkbox]) =>
     checkbox.addEventListener("change", () => {
-      config[option] = checkbox.checked;
+      config = { ...config, [option]: checkbox.checked };
       drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
     })
   );
@@ -240,5 +285,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   return drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
 });
-
-/* eslint-enable @typescript-eslint/explicit-function-return-type */

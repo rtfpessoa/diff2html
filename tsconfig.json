@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "./build/commonjs-node",
+    "outDir": "./_target",
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": ["es5", "es6", "es7", "esnext", "dom", "dom.iterable"],
-    // TODO: Change to true after migration to TS is complete
-    "allowJs": true,
-    "declaration": false,
-    "declarationMap": false,
-    /////////////////////////////////////////////////////////
+    "lib": ["es2015", "dom"],
+    "allowJs": false,
+    "declaration": true,
+    "declarationMap": true,
     "strictNullChecks": true,
     "removeComments": true,
     "preserveConstEnums": true,

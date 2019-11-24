@@ -1,7 +1,10 @@
 # Skip build results
+_target/**
 coverage/**
-build/**
+bundles/**
 docs/**
+lib/**
+lib-esm/**
 node_modules/**
 src/diff2html-templates.*
 typings/**

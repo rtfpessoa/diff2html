@@ -124,7 +124,10 @@ export default class SideBySideRenderer {
 
         const comparisons = oldLines.length * newLines.length;
 
-        const maxLineSizeInBlock = Math.max.apply(null, oldLines.concat(newLines).map(elem => elem.content.length));
+        const maxLineSizeInBlock = Math.max.apply(
+          null,
+          oldLines.concat(newLines).map(elem => elem.content.length)
+        );
 
         const doMatching =
           comparisons < this.config.matchingMaxComparisons &&

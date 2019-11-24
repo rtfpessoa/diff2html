@@ -48,10 +48,11 @@ diff2html generates pretty HTML diffs from git or unified diff output.
 - [Node CLI](https://www.npmjs.org/package/diff2html-cli)
 - Manually download and import:
   - Browser
-    - [build/browser/diff2html.min.js](./build/browser/diff2html.min.js) - includes the diff parser and html generator
-    - [build/browser/diff2html-ui.min.js](./build/browser/diff2html-ui.min.js) - includes the wrapper of diff2html that adds highlight, synchronized scroll, and other nice features
+    - [bundles/js/diff2html.min.js](./bundles/js/diff2html.min.js) - includes the diff parser and html generator
+    - [bundles/js/diff2html-ui.min.js](./bundles/js/diff2html-ui.min.js) - includes the wrapper of diff2html that adds highlight, synchronized scroll, and other nice features
   - Node.js
-    - [build/commonjs-node/diff2html.js](./build/commonjs-node/diff2html.js) - includes the diff parser and html generator
+    - [lib/diff2html.js](./lib/diff2html.js) - targeted for es5, includes the diff parser and html generator
+    - [lib-esm/diff2html.js](./lib-esm/diff2html.js) - targeted for es6 - includes the diff parser and html generator
 
 ## How to use
 
@@ -61,7 +62,7 @@ Import the stylesheet
 
 ```html
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="dist/diff2html.css" />
+<link rel="stylesheet" type="text/css" href="bundles/css/diff2html.min.css" />
 ```
 
 You can also refer to it from a CDN like [CDNJS](https://cdnjs.com/libraries/diff2html).
@@ -72,13 +73,13 @@ Import the stylesheet and the library code
 
 ```html
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="build/css/diff2html.min.css" />
+<link rel="stylesheet" type="text/css" href="bundles/css/diff2html.min.css" />
 
 <!-- Javascripts -->
-<script type="text/javascript" src="build/browser/diff2html.min.js"></script>
+<script type="text/javascript" src="bundles/js/diff2html.min.js"></script>
 ```
 
-It will now be available as a global variable named `global.Diff2Html`.
+It will now be available as a global variable named `Diff2Html`.
 
 ```js
 document.addEventListener("DOMContentLoaded", () => {
@@ -156,7 +157,7 @@ export class AppDiffComponent implements OnInit {
 
 <script>
 import * as Diff2Html from "diff2html";
-import "diff2html/build/css/diff2html.min.css";
+import "diff2html/bundles/css/diff2html.min.css";
 
 export default {
   data() {
@@ -230,10 +231,10 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
 ```html
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="build/css/diff2html.min.css" />
+<link rel="stylesheet" type="text/css" href="bundles/css/diff2html.min.css" />
 
 <!-- Javascripts -->
-<script type="text/javascript" src="build/browser/diff2html-ui.min.js"></script>
+<script type="text/javascript" src="bundles/js/diff2html-ui.min.js"></script>
 ```
 
 #### Init
@@ -242,9 +243,9 @@ The HTML output accepts a Javascript object with configuration. Possible options
 const targetElement = document.getElementById("destination-elem-id");
 const configuration = { drawFileList: true, matching: "lines" };
 
-const diff2htmlUi = new global.Diff2HtmlUI(diffString, targetElement, configuration);
+const diff2htmlUi = new Diff2HtmlUI(diffString, targetElement, configuration);
 // or
-const diff2htmlUi = new global.Diff2HtmlUI(diffJson, targetElement, configuration);
+const diff2htmlUi = new Diff2HtmlUI(diffJson, targetElement, configuration);
 ```
 
 #### Draw
@@ -258,10 +259,10 @@ diff2htmlUi.draw();
 ```html
 <!-- Stylesheet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css" />
-<link rel="stylesheet" type="text/css" href="build/css/diff2html.min.css" />
+<link rel="stylesheet" type="text/css" href="bundles/css/diff2html.min.css" />
 
 <!-- Javascripts -->
-<script type="text/javascript" src="build/browser/diff2html-ui.min.js"></script>
+<script type="text/javascript" src="bundles/js/diff2html-ui.min.js"></script>
 ```
 
 > Pass the option `highlight` with value true or invoke `diff2htmlUi.highlightCode()` after `diff2htmlUi.draw()`.
@@ -277,7 +278,7 @@ index 0000001..0ddf2ba
 +console.log("Hello from Diff2Html!")`;
   const targetElement = document.getElementById("myDiffElement");
   const configuration = { inputFormat: "json", drawFileList: true, matching: "lines", highlight: true };
-  const diff2htmlUi = new global.Diff2HtmlUI(diffString, targetElement, configuration);
+  const diff2htmlUi = new Diff2HtmlUI(diffString, targetElement, configuration);
   diff2htmlUi.draw();
   diff2htmlUi.highlightCode();
 });
@@ -289,7 +290,7 @@ index 0000001..0ddf2ba
 
 ```html
 <!-- Javascripts -->
-<script type="text/javascript" src="build/browser/diff2html-ui.min.js"></script>
+<script type="text/javascript" src="bundles/js/diff2html-ui.min.js"></script>
 ```
 
 > Invoke the Diff2HtmlUI helper
@@ -298,7 +299,7 @@ index 0000001..0ddf2ba
 ```js
 document.addEventListener("DOMContentLoaded", () => {
   const targetElement = document.getElementById("myDiffElement");
-  var diff2htmlUi = new global.Diff2HtmlUI(lineDiffExample, targetElement, { drawFileList: true, matching: "lines" });
+  var diff2htmlUi = new Diff2HtmlUI(lineDiffExample, targetElement, { drawFileList: true, matching: "lines" });
   diff2htmlUi.draw();
   diff2htmlUi.fileListToggle(false);
 });
