@@ -429,7 +429,7 @@ describe("DiffParser", () => {
         expect(file1.newName).toEqual("sample.js");
         expect(file1.blocks.length).toEqual(1);
 
-        const linesContent = file1.blocks[0].lines.map(function(line) {
+        const linesContent = file1.blocks[0].lines.map(line => {
           return line.content;
         });
         expect(["-test", "+test1r", "+test2r"]).toEqual(linesContent);
@@ -449,7 +449,7 @@ describe("DiffParser", () => {
       expect(file1.newName).toEqual("sample.js");
       expect(file1.blocks.length).toEqual(1);
 
-      const linesContent = file1.blocks[0].lines.map(function(line) {
+      const linesContent = file1.blocks[0].lines.map(line => {
         return line.content;
       });
       expect(["-test", "+test1r", "+test2r"]).toEqual(linesContent);
@@ -478,12 +478,12 @@ describe("DiffParser", () => {
       expect(file1.newName).toEqual("sample.js");
       expect(file1.blocks.length).toEqual(2);
 
-      const linesContent1 = file1.blocks[0].lines.map(function(line) {
+      const linesContent1 = file1.blocks[0].lines.map(line => {
         return line.content;
       });
       expect(["-test"]).toEqual(linesContent1);
 
-      const linesContent2 = file1.blocks[1].lines.map(function(line) {
+      const linesContent2 = file1.blocks[1].lines.map(line => {
         return line.content;
       });
       expect(["+test"]).toEqual(linesContent2);
@@ -495,7 +495,7 @@ describe("DiffParser", () => {
       expect(file2.newName).toEqual("sample1.js");
       expect(file2.blocks.length).toEqual(1);
 
-      const linesContent = file2.blocks[0].lines.map(function(line) {
+      const linesContent = file2.blocks[0].lines.map(line => {
         return line.content;
       });
       expect(["+test1"]).toEqual(linesContent);
@@ -525,7 +525,7 @@ describe("DiffParser", () => {
       expect(file1.newName).toEqual("sample.js");
       expect(file1.blocks.length).toEqual(1);
 
-      const linesContent = file1.blocks[0].lines.map(function(line) {
+      const linesContent = file1.blocks[0].lines.map(line => {
         return line.content;
       });
       expect([" test", " ", "-- 1", "--- 1", "---- 1", " ", "++ 2", "+++ 2", "++++ 2"]).toEqual(linesContent);
@@ -543,7 +543,7 @@ describe("DiffParser", () => {
       expect(file1.newName).toEqual("sample.js");
       expect(file1.blocks.length).toEqual(1);
 
-      const linesContent = file1.blocks[0].lines.map(function(line) {
+      const linesContent = file1.blocks[0].lines.map(line => {
         return line.content;
       });
       expect([" test"]).toEqual(linesContent);
@@ -594,7 +594,7 @@ describe("DiffParser", () => {
       expect(file1.newName).toEqual("src/test-baz.js");
       expect(file1.blocks.length).toEqual(1);
       expect(file1.blocks[0].lines.length).toEqual(5);
-      const linesContent = file1.blocks[0].lines.map(function(line) {
+      const linesContent = file1.blocks[0].lines.map(line => {
         return line.content;
       });
       expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
@@ -667,7 +667,7 @@ describe("DiffParser", () => {
       expect(file3.newName).toEqual("src/test-baz.js");
       expect(file3.blocks.length).toEqual(1);
       expect(file3.blocks[0].lines.length).toEqual(5);
-      const linesContent = file3.blocks[0].lines.map(function(line) {
+      const linesContent = file3.blocks[0].lines.map(line => {
         return line.content;
       });
       expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
@@ -723,7 +723,7 @@ describe("DiffParser", () => {
       expect(file2.newName).toEqual("src/test-baz.js");
       expect(file2.blocks.length).toEqual(1);
       expect(file2.blocks[0].lines.length).toEqual(5);
-      const linesContent = file2.blocks[0].lines.map(function(line) {
+      const linesContent = file2.blocks[0].lines.map(line => {
         return line.content;
       });
       expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
