@@ -106,14 +106,14 @@ export default class SideBySideRenderer {
         this.applyLineGroupping(block).forEach(([contextLines, oldLines, newLines]) => {
           if (oldLines.length && newLines.length && !contextLines.length) {
             this.applyRematchMatching(oldLines, newLines, matcher).map(([oldLines, newLines]) => {
-              const { left, right } = this.applyLineDiff(file, oldLines, newLines);
+              const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
               fileHtml.left += left;
               fileHtml.right += right;
             });
           } else if (contextLines.length) {
             contextLines.forEach(line => {
               const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
-              const { left, right } = this.generateSingleLineHtml(
+              const { left, right } = this.generateLineHtml(
                 {
                   type: renderUtils.CSSLineClass.CONTEXT,
                   prefix: prefix,
@@ -131,7 +131,7 @@ export default class SideBySideRenderer {
               fileHtml.right += right;
             });
           } else if (oldLines.length || newLines.length) {
-            const { left, right } = this.processLines(file.isCombined, oldLines, newLines);
+            const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
             fileHtml.left += left;
             fileHtml.right += right;
           } else {
@@ -207,54 +207,6 @@ export default class SideBySideRenderer {
     return matches;
   }
 
-  applyLineDiff(file: DiffFile, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
-    const fileHtml = {
-      left: "",
-      right: ""
-    };
-
-    const common = Math.min(oldLines.length, newLines.length);
-
-    // Matched lines
-    for (let j = 0; j < common; j++) {
-      const oldLine = oldLines[j];
-      const newLine = newLines[j];
-
-      const diff = renderUtils.diffHighlight(oldLine.content, newLine.content, file.isCombined, this.config);
-
-      const preparedOldLine =
-        oldLine.oldNumber !== undefined
-          ? {
-              type: renderUtils.CSSLineClass.DELETE_CHANGES,
-              prefix: diff.oldLine.prefix,
-              content: diff.oldLine.content,
-              number: oldLine.oldNumber
-            }
-          : undefined;
-
-      const preparedNewLine =
-        newLine.newNumber !== undefined
-          ? {
-              type: renderUtils.CSSLineClass.INSERT_CHANGES,
-              prefix: diff.newLine.prefix,
-              content: diff.newLine.content,
-              number: newLine.newNumber
-            }
-          : undefined;
-
-      const { left, right } = this.generateSingleLineHtml(preparedOldLine, preparedNewLine);
-      fileHtml.left += left;
-      fileHtml.right += right;
-    }
-
-    // Remaining lines
-    const { left, right } = this.processLines(file.isCombined, oldLines.slice(common), newLines.slice(common));
-    fileHtml.left += left;
-    fileHtml.right += right;
-
-    return fileHtml;
-  }
-
   // TODO: Make this private after improving tests
   makeHeaderHtml(blockHeader: string): string {
     return this.hoganUtils.render(genericTemplatesPath, "block-header", {
@@ -266,7 +218,7 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
-  processLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
+  processChangedLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
     const fileHtml = {
       right: "",
       left: ""
@@ -277,11 +229,24 @@ export default class SideBySideRenderer {
       const oldLine = oldLines[i];
       const newLine = newLines[i];
 
+      const diff =
+        oldLine !== undefined && newLine !== undefined
+          ? renderUtils.diffHighlight(oldLine.content, newLine.content, isCombined, this.config)
+          : undefined;
+
       const preparedOldLine =
         oldLine !== undefined && oldLine.oldNumber !== undefined
           ? {
-              ...renderUtils.deconstructLine(oldLine.content, isCombined),
-              type: renderUtils.toCSSClass(oldLine.type),
+              ...(diff !== undefined
+                ? {
+                    prefix: diff.oldLine.prefix,
+                    content: diff.oldLine.content,
+                    type: renderUtils.CSSLineClass.DELETE_CHANGES
+                  }
+                : {
+                    ...renderUtils.deconstructLine(oldLine.content, isCombined),
+                    type: renderUtils.toCSSClass(oldLine.type)
+                  }),
               number: oldLine.oldNumber
             }
           : undefined;
@@ -289,13 +254,21 @@ export default class SideBySideRenderer {
       const preparedNewLine =
         newLine !== undefined && newLine.newNumber !== undefined
           ? {
-              ...renderUtils.deconstructLine(newLine.content, isCombined),
-              type: renderUtils.toCSSClass(newLine.type),
+              ...(diff !== undefined
+                ? {
+                    prefix: diff.newLine.prefix,
+                    content: diff.newLine.content,
+                    type: renderUtils.CSSLineClass.INSERT_CHANGES
+                  }
+                : {
+                    ...renderUtils.deconstructLine(newLine.content, isCombined),
+                    type: renderUtils.toCSSClass(newLine.type)
+                  }),
               number: newLine.newNumber
             }
           : undefined;
 
-      const { left, right } = this.generateSingleLineHtml(preparedOldLine, preparedNewLine);
+      const { left, right } = this.generateLineHtml(preparedOldLine, preparedNewLine);
       fileHtml.left += left;
       fileHtml.right += right;
     }
@@ -304,28 +277,25 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
-  generateSingleLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
+  generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
+    return {
+      left: this.generateSingleHtml(oldLine),
+      right: this.generateSingleHtml(newLine)
+    };
+  }
+
+  generateSingleHtml(line?: DiffPreparedLine): string {
     const lineClass = "d2h-code-side-linenumber";
     const contentClass = "d2h-code-side-line";
 
-    return {
-      left: this.hoganUtils.render(genericTemplatesPath, "line", {
-        type: oldLine?.type || `${renderUtils.CSSLineClass.CONTEXT} d2h-emptyplaceholder`,
-        lineClass: oldLine !== undefined ? lineClass : `${lineClass} d2h-code-side-emptyplaceholder`,
-        contentClass: oldLine !== undefined ? contentClass : `${contentClass} d2h-code-side-emptyplaceholder`,
-        prefix: oldLine?.prefix === " " ? "&nbsp;" : oldLine?.prefix || "&nbsp;",
-        content: oldLine?.content || "&nbsp;",
-        lineNumber: oldLine?.number
-      }),
-      right: this.hoganUtils.render(genericTemplatesPath, "line", {
-        type: newLine?.type || `${renderUtils.CSSLineClass.CONTEXT} d2h-emptyplaceholder`,
-        lineClass: newLine !== undefined ? lineClass : `${lineClass} d2h-code-side-emptyplaceholder`,
-        contentClass: newLine !== undefined ? contentClass : `${contentClass} d2h-code-side-emptyplaceholder`,
-        prefix: newLine?.prefix === " " ? "&nbsp;" : newLine?.prefix || "&nbsp;",
-        content: newLine?.content || "&nbsp;",
-        lineNumber: newLine?.number
-      })
-    };
+    return this.hoganUtils.render(genericTemplatesPath, "line", {
+      type: line?.type || `${renderUtils.CSSLineClass.CONTEXT} d2h-emptyplaceholder`,
+      lineClass: line !== undefined ? lineClass : `${lineClass} d2h-code-side-emptyplaceholder`,
+      contentClass: line !== undefined ? contentClass : `${contentClass} d2h-code-side-emptyplaceholder`,
+      prefix: line?.prefix === " " ? "&nbsp;" : line?.prefix || "&nbsp;",
+      content: line?.content || "&nbsp;",
+      lineNumber: line?.number
+    });
   }
 }
 
@@ -343,6 +313,6 @@ type DiffPreparedLine = {
 };
 
 type FileHtml = {
-  right: string;
   left: string;
+  right: string;
 };

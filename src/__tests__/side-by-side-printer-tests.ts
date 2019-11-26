@@ -163,7 +163,7 @@ describe("SideBySideRenderer", () => {
     it("should work for insertions", () => {
       const hoganUtils = new HoganJsUtils({});
       const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
-      const fileHtml = sideBySideRenderer.generateSingleLineHtml(undefined, {
+      const fileHtml = sideBySideRenderer.generateLineHtml(undefined, {
         type: CSSLineClass.INSERTS,
         prefix: "+",
         content: "test",
@@ -178,6 +178,8 @@ describe("SideBySideRenderer", () => {
           "    </td>\n" +
           '    <td class="d2h-cntx d2h-emptyplaceholder">\n' +
           '        <div class="d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder">\n' +
+          '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
+          '            <span class="d2h-code-line-ctn">&nbsp;</span>\n' +
           "        </div>\n" +
           "    </td>\n" +
           "</tr>",
@@ -200,7 +202,7 @@ describe("SideBySideRenderer", () => {
     it("should work for deletions", () => {
       const hoganUtils = new HoganJsUtils({});
       const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
-      const fileHtml = sideBySideRenderer.generateSingleLineHtml(
+      const fileHtml = sideBySideRenderer.generateLineHtml(
         {
           type: CSSLineClass.DELETES,
           prefix: "-",
@@ -229,6 +231,8 @@ describe("SideBySideRenderer", () => {
           "    </td>\n" +
           '    <td class="d2h-cntx d2h-emptyplaceholder">\n' +
           '        <div class="d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder">\n' +
+          '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
+          '            <span class="d2h-code-line-ctn">&nbsp;</span>\n' +
           "        </div>\n" +
           "    </td>\n" +
           "</tr>"
@@ -426,35 +430,35 @@ describe("SideBySideRenderer", () => {
 
       const hoganUtils = new HoganJsUtils({});
       const sideBySideRenderer = new SideBySideRenderer(hoganUtils, { matching: LineMatchingType.LINES });
-      const html = sideBySideRenderer.processLines(false, oldLines, newLines);
-      const expectedLeft =
-        "<tr>\n" +
-        '    <td class="d2h-code-side-linenumber d2h-del">\n' +
-        "      1\n" +
-        "    </td>\n" +
-        '    <td class="d2h-del">\n' +
-        '        <div class="d2h-code-side-line d2h-del">\n' +
-        '            <span class="d2h-code-line-prefix">-</span>\n' +
-        '            <span class="d2h-code-line-ctn">test</span>\n' +
-        "        </div>\n" +
-        "    </td>\n" +
-        "</tr>";
+      const html = sideBySideRenderer.processChangedLines(false, oldLines, newLines);
+      const expected = {
+        left:
+          "<tr>\n" +
+          '    <td class="d2h-code-side-linenumber d2h-del d2h-change">\n' +
+          "      1\n" +
+          "    </td>\n" +
+          '    <td class="d2h-del d2h-change">\n' +
+          '        <div class="d2h-code-side-line d2h-del d2h-change">\n' +
+          '            <span class="d2h-code-line-prefix">-</span>\n' +
+          '            <span class="d2h-code-line-ctn"><del>test</del></span>\n' +
+          "        </div>\n" +
+          "    </td>\n" +
+          "</tr>",
+        right:
+          "<tr>\n" +
+          '    <td class="d2h-code-side-linenumber d2h-ins d2h-change">\n' +
+          "      1\n" +
+          "    </td>\n" +
+          '    <td class="d2h-ins d2h-change">\n' +
+          '        <div class="d2h-code-side-line d2h-ins d2h-change">\n' +
+          '            <span class="d2h-code-line-prefix">+</span>\n' +
+          '            <span class="d2h-code-line-ctn"><ins>test1r</ins></span>\n' +
+          "        </div>\n" +
+          "    </td>\n" +
+          "</tr>"
+      };
 
-      const expectedRight =
-        "<tr>\n" +
-        '    <td class="d2h-code-side-linenumber d2h-ins">\n' +
-        "      1\n" +
-        "    </td>\n" +
-        '    <td class="d2h-ins">\n' +
-        '        <div class="d2h-code-side-line d2h-ins">\n' +
-        '            <span class="d2h-code-line-prefix">+</span>\n' +
-        '            <span class="d2h-code-line-ctn">test1r</span>\n' +
-        "        </div>\n" +
-        "    </td>\n" +
-        "</tr>";
-
-      expect(html.left).toEqual(expectedLeft);
-      expect(html.right).toEqual(expectedRight);
+      expect(html).toEqual(expected);
     });
   });
 });

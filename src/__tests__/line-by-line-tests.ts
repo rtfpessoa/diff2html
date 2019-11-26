@@ -26,7 +26,13 @@ describe("LineByLineRenderer", () => {
     it("should work for insertions", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.INSERTS, "+", "test", undefined, 30);
+      let fileHtml = lineByLineRenderer.generateSingleLineHtml({
+        type: CSSLineClass.INSERTS,
+        prefix: "+",
+        content: "test",
+        oldNumber: undefined,
+        newNumber: 30
+      });
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -48,7 +54,13 @@ describe("LineByLineRenderer", () => {
     it("should work for deletions", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.DELETES, "-", "test", 30, undefined);
+      let fileHtml = lineByLineRenderer.generateSingleLineHtml({
+        type: CSSLineClass.DELETES,
+        prefix: "-",
+        content: "test",
+        oldNumber: 30,
+        newNumber: undefined
+      });
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -70,7 +82,13 @@ describe("LineByLineRenderer", () => {
     it("should convert indents into non breakin spaces (2 white spaces)", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.INSERTS, "+", "  test", undefined, 30);
+      let fileHtml = lineByLineRenderer.generateSingleLineHtml({
+        type: CSSLineClass.INSERTS,
+        prefix: "+",
+        content: "  test",
+        oldNumber: undefined,
+        newNumber: 30
+      });
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -92,7 +110,13 @@ describe("LineByLineRenderer", () => {
     it("should convert indents into non breakin spaces (4 white spaces)", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.INSERTS, "+", "    test", undefined, 30);
+      let fileHtml = lineByLineRenderer.generateSingleLineHtml({
+        type: CSSLineClass.INSERTS,
+        prefix: "+",
+        content: "    test",
+        oldNumber: undefined,
+        newNumber: 30
+      });
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -114,7 +138,13 @@ describe("LineByLineRenderer", () => {
     it("should preserve tabs", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.INSERTS, "+", "\ttest", undefined, 30);
+      let fileHtml = lineByLineRenderer.generateSingleLineHtml({
+        type: CSSLineClass.INSERTS,
+        prefix: "+",
+        content: "\ttest",
+        oldNumber: undefined,
+        newNumber: 30
+      });
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +

@@ -1,7 +1,16 @@
 import HoganJsUtils from "./hoganjs-utils";
 import * as Rematch from "./rematch";
 import * as renderUtils from "./render-utils";
-import { DiffFile, DiffLine, LineType, DiffBlock } from "./types";
+import {
+  DiffFile,
+  DiffLine,
+  LineType,
+  DiffBlock,
+  DiffLineDeleted,
+  DiffLineContent,
+  DiffLineContext,
+  DiffLineInserted
+} from "./types";
 
 export interface LineByLineRendererConfig extends renderUtils.RenderConfig {
   renderNothingWhenEmpty?: boolean;
@@ -95,23 +104,26 @@ export default class LineByLineRenderer {
 
         this.applyLineGroupping(block).forEach(([contextLines, oldLines, newLines]) => {
           if (oldLines.length && newLines.length && !contextLines.length) {
-            lines += this.applyRematchMatching(oldLines, newLines, matcher)
-              .map(([oldLines, newLines]) => this.applyLineDiff(file, oldLines, newLines))
-              .join("");
-          } else if (oldLines.length || newLines.length || contextLines.length) {
-            lines += (contextLines || [])
-              .concat((oldLines || []).concat(newLines || []))
-              .map(line => {
-                const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
-                return this.makeLineHtml(
-                  renderUtils.toCSSClass(line.type),
-                  prefix,
-                  content,
-                  line.oldNumber,
-                  line.newNumber
-                );
-              })
-              .join("");
+            this.applyRematchMatching(oldLines, newLines, matcher).map(([oldLines, newLines]) => {
+              const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
+              lines += left;
+              lines += right;
+            });
+          } else if (contextLines.length) {
+            contextLines.forEach(line => {
+              const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
+              lines += this.generateSingleLineHtml({
+                type: renderUtils.CSSLineClass.CONTEXT,
+                prefix: prefix,
+                content: content,
+                oldNumber: line.oldNumber,
+                newNumber: line.newNumber
+              });
+            });
+          } else if (oldLines.length || newLines.length) {
+            const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
+            lines += left;
+            lines += right;
           } else {
             console.error("Unknown state reached while processing groups of lines", contextLines, oldLines, newLines);
           }
@@ -122,11 +134,11 @@ export default class LineByLineRenderer {
       .join("\n");
   }
 
-  applyLineGroupping(block: DiffBlock): DiffLine[][][] {
-    const blockLinesGroups: DiffLine[][][] = [];
+  applyLineGroupping(block: DiffBlock): DiffLineGroups {
+    const blockLinesGroups: DiffLineGroups = [];
 
-    let oldLines: DiffLine[] = [];
-    let newLines: DiffLine[] = [];
+    let oldLines: (DiffLineDeleted & DiffLineContent)[] = [];
+    let newLines: (DiffLineInserted & DiffLineContent)[] = [];
 
     for (let i = 0; i < block.lines.length; i++) {
       const diffLine = block.lines[i];
@@ -180,67 +192,109 @@ export default class LineByLineRenderer {
     return matches;
   }
 
-  applyLineDiff(file: DiffFile, oldLines: DiffLine[], newLines: DiffLine[]): string {
-    let oldLinesHtml = "";
-    let newLinesHtml = "";
+  // TODO: Make this private after improving tests
+  processChangedLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
+    const fileHtml = {
+      right: "",
+      left: ""
+    };
 
-    const common = Math.min(oldLines.length, newLines.length);
+    const maxLinesNumber = Math.max(oldLines.length, newLines.length);
+    for (let i = 0; i < maxLinesNumber; i++) {
+      const oldLine = oldLines[i];
+      const newLine = newLines[i];
 
-    let oldLine, newLine;
-    for (let j = 0; j < common; j++) {
-      oldLine = oldLines[j];
-      newLine = newLines[j];
+      const diff =
+        oldLine !== undefined && newLine !== undefined
+          ? renderUtils.diffHighlight(oldLine.content, newLine.content, isCombined, this.config)
+          : undefined;
 
-      const diff = renderUtils.diffHighlight(oldLine.content, newLine.content, file.isCombined, this.config);
+      const preparedOldLine =
+        oldLine !== undefined && oldLine.oldNumber !== undefined
+          ? {
+              ...(diff !== undefined
+                ? {
+                    prefix: diff.oldLine.prefix,
+                    content: diff.oldLine.content,
+                    type: renderUtils.CSSLineClass.DELETE_CHANGES
+                  }
+                : {
+                    ...renderUtils.deconstructLine(oldLine.content, isCombined),
+                    type: renderUtils.toCSSClass(oldLine.type)
+                  }),
+              oldNumber: oldLine.oldNumber,
+              newNumber: oldLine.newNumber
+            }
+          : undefined;
 
-      oldLinesHtml += this.makeLineHtml(
-        renderUtils.CSSLineClass.DELETE_CHANGES,
-        diff.oldLine.prefix,
-        diff.oldLine.content,
-        oldLine.oldNumber,
-        oldLine.newNumber
-      );
-      newLinesHtml += this.makeLineHtml(
-        renderUtils.CSSLineClass.INSERT_CHANGES,
-        diff.newLine.prefix,
-        diff.newLine.content,
-        newLine.oldNumber,
-        newLine.newNumber
-      );
+      const preparedNewLine =
+        newLine !== undefined && newLine.newNumber !== undefined
+          ? {
+              ...(diff !== undefined
+                ? {
+                    prefix: diff.newLine.prefix,
+                    content: diff.newLine.content,
+                    type: renderUtils.CSSLineClass.INSERT_CHANGES
+                  }
+                : {
+                    ...renderUtils.deconstructLine(newLine.content, isCombined),
+                    type: renderUtils.toCSSClass(newLine.type)
+                  }),
+              oldNumber: newLine.oldNumber,
+              newNumber: newLine.newNumber
+            }
+          : undefined;
+
+      const { left, right } = this.generateLineHtml(preparedOldLine, preparedNewLine);
+      fileHtml.left += left;
+      fileHtml.right += right;
     }
 
-    const remainingLines = oldLines
-      .slice(common)
-      .concat(newLines.slice(common))
-      .map(line => {
-        const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
-        return this.makeLineHtml(renderUtils.toCSSClass(line.type), prefix, content, line.oldNumber, line.newNumber);
-      })
-      .join("");
-
-    return oldLinesHtml + newLinesHtml + remainingLines;
+    return fileHtml;
   }
 
   // TODO: Make this private after improving tests
-  makeLineHtml(
-    type: renderUtils.CSSLineClass,
-    prefix: string,
-    content: string,
-    oldNumber?: number,
-    newNumber?: number
-  ): string {
+  generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
+    return {
+      left: this.generateSingleLineHtml(oldLine),
+      right: this.generateSingleLineHtml(newLine)
+    };
+  }
+
+  generateSingleLineHtml(line?: DiffPreparedLine): string {
+    if (line === undefined) return "";
+
     const lineNumberHtml = this.hoganUtils.render(baseTemplatesPath, "numbers", {
-      oldNumber: oldNumber || "",
-      newNumber: newNumber || ""
+      oldNumber: line.oldNumber || "",
+      newNumber: line.newNumber || ""
     });
 
     return this.hoganUtils.render(genericTemplatesPath, "line", {
-      type: type,
+      type: line.type,
       lineClass: "d2h-code-linenumber",
       contentClass: "d2h-code-line",
-      prefix: prefix === " " ? "&nbsp;" : prefix,
-      content: content,
+      prefix: line.prefix === " " ? "&nbsp;" : line.prefix,
+      content: line.content,
       lineNumber: lineNumberHtml
     });
   }
 }
+
+type DiffLineGroups = [
+  (DiffLineContext & DiffLineContent)[],
+  (DiffLineDeleted & DiffLineContent)[],
+  (DiffLineInserted & DiffLineContent)[]
+][];
+
+type DiffPreparedLine = {
+  type: renderUtils.CSSLineClass;
+  prefix: string;
+  content: string;
+  oldNumber?: number;
+  newNumber?: number;
+};
+
+type FileHtml = {
+  left: string;
+  right: string;
+};
