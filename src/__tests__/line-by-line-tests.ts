@@ -327,18 +327,6 @@ describe("LineByLineRenderer", () => {
     });
   });
 
-  describe("makeLineByLineHtmlWrapper", () => {
-    it("should work for simple content", () => {
-      const hoganUtils = new HoganJsUtils({});
-      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      const fileHtml = lineByLineRenderer.makeLineByLineHtmlWrapper("<span>Random Html</span>");
-
-      const expected = '<div class="d2h-wrapper">\n' + "    <span>Random Html</span>\n" + "</div>";
-
-      expect(fileHtml).toEqual(expected);
-    });
-  });
-
   describe("generateLineByLineJsonHtml", () => {
     it("should work for list of files", () => {
       const exampleJson: DiffFile[] = [

@@ -32,17 +32,19 @@ export default class LineByLineRenderer {
   }
 
   render(diffFiles: DiffFile[]): string | undefined {
-    const htmlDiffs = diffFiles.map(file => {
-      let diffs;
-      if (file.blocks.length) {
-        diffs = this.generateFileHtml(file);
-      } else {
-        diffs = this.generateEmptyDiff();
-      }
-      return this.makeFileDiffHtml(file, diffs);
-    });
+    const diffsHtml = diffFiles
+      .map(file => {
+        let diffs;
+        if (file.blocks.length) {
+          diffs = this.generateFileHtml(file);
+        } else {
+          diffs = this.generateEmptyDiff();
+        }
+        return this.makeFileDiffHtml(file, diffs);
+      })
+      .join("\n");
 
-    return this.makeLineByLineHtmlWrapper(htmlDiffs.join("\n"));
+    return this.hoganUtils.render(genericTemplatesPath, "wrapper", { content: diffsHtml });
   }
 
   // TODO: Make this private after improving tests
@@ -68,11 +70,6 @@ export default class LineByLineRenderer {
         }
       )
     });
-  }
-
-  // TODO: Make this private after improving tests
-  makeLineByLineHtmlWrapper(content: string): string {
-    return this.hoganUtils.render(genericTemplatesPath, "wrapper", { content: content });
   }
 
   // TODO: Make this private after improving tests

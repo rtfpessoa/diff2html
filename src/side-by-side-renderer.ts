@@ -17,11 +17,6 @@ export const defaultSideBySideRendererConfig = {
   maxLineSizeInBlockForComparison: 200
 };
 
-type FileHtml = {
-  right: string;
-  left: string;
-};
-
 const genericTemplatesPath = "generic";
 const baseTemplatesPath = "side-by-side";
 const iconsBaseTemplatesPath = "icon";
@@ -37,7 +32,7 @@ export default class SideBySideRenderer {
   }
 
   render(diffFiles: DiffFile[]): string | undefined {
-    const content = diffFiles
+    const diffsHtml = diffFiles
       .map(file => {
         let diffs;
         if (file.blocks.length) {
@@ -45,12 +40,11 @@ export default class SideBySideRenderer {
         } else {
           diffs = this.generateEmptyDiff();
         }
-
-        return this.makeDiffHtml(file, diffs);
+        return this.makeFileDiffHtml(file, diffs);
       })
       .join("\n");
 
-    return this.hoganUtils.render(genericTemplatesPath, "wrapper", { content: content });
+    return this.hoganUtils.render(genericTemplatesPath, "wrapper", { content: diffsHtml });
   }
 
   // TODO: Make this private after improving tests
@@ -66,7 +60,7 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
-  makeDiffHtml(file: DiffFile, diffs: FileHtml): string {
+  makeFileDiffHtml(file: DiffFile, diffs: FileHtml): string {
     const fileDiffTemplate = this.hoganUtils.template(baseTemplatesPath, "file-diff");
     const filePathTemplate = this.hoganUtils.template(genericTemplatesPath, "file-path");
     const fileIconTemplate = this.hoganUtils.template(iconsBaseTemplatesPath, "file");
@@ -307,8 +301,6 @@ export default class SideBySideRenderer {
           newLine.newNumber,
           newPrefix
         );
-      } else {
-        console.error("How did it get here?");
       }
     }
 
@@ -355,3 +347,8 @@ export default class SideBySideRenderer {
     });
   }
 }
+
+type FileHtml = {
+  right: string;
+  left: string;
+};
