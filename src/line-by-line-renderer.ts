@@ -87,7 +87,7 @@ export default class LineByLineRenderer {
 
     return file.blocks
       .map(block => {
-        let lines = this.hoganUtils.render(genericTemplatesPath, "column-line-number", {
+        let lines = this.hoganUtils.render(genericTemplatesPath, "block-header", {
           CSSLineClass: renderUtils.CSSLineClass,
           blockHeader: block.header,
           lineClass: "d2h-code-linenumber",
@@ -95,75 +95,6 @@ export default class LineByLineRenderer {
         });
         let oldLines: DiffLine[] = [];
         let newLines: DiffLine[] = [];
-
-        const processChangeBlock = (): void => {
-          let matches;
-          let insertType: renderUtils.CSSLineClass;
-          let deleteType: renderUtils.CSSLineClass;
-
-          const comparisons = oldLines.length * newLines.length;
-
-          const maxLineSizeInBlock = Math.max.apply(
-            null,
-            [0].concat(oldLines.concat(newLines).map(elem => elem.content.length))
-          );
-
-          const doMatching =
-            comparisons < this.config.matchingMaxComparisons &&
-            maxLineSizeInBlock < this.config.maxLineSizeInBlockForComparison &&
-            (this.config.matching === "lines" || this.config.matching === "words");
-
-          if (doMatching) {
-            matches = matcher(oldLines, newLines);
-            insertType = renderUtils.CSSLineClass.INSERT_CHANGES;
-            deleteType = renderUtils.CSSLineClass.DELETE_CHANGES;
-          } else {
-            matches = [[oldLines, newLines]];
-            insertType = renderUtils.CSSLineClass.INSERTS;
-            deleteType = renderUtils.CSSLineClass.DELETES;
-          }
-
-          matches.forEach(match => {
-            oldLines = match[0];
-            newLines = match[1];
-
-            let processedOldLines = "";
-            let processedNewLines = "";
-
-            const common = Math.min(oldLines.length, newLines.length);
-
-            let oldLine, newLine;
-            for (let j = 0; j < common; j++) {
-              oldLine = oldLines[j];
-              newLine = newLines[j];
-
-              const diff = renderUtils.diffHighlight(oldLine.content, newLine.content, file.isCombined, this.config);
-
-              processedOldLines += this.makeLineHtml(
-                file.isCombined,
-                deleteType,
-                diff.oldLine.content,
-                oldLine.oldNumber,
-                oldLine.newNumber,
-                diff.oldLine.prefix
-              );
-              processedNewLines += this.makeLineHtml(
-                file.isCombined,
-                insertType,
-                diff.newLine.content,
-                newLine.oldNumber,
-                newLine.newNumber,
-                diff.newLine.prefix
-              );
-            }
-
-            lines += processedOldLines + processedNewLines;
-            lines += this.processLines(file.isCombined, oldLines.slice(common), newLines.slice(common));
-          });
-
-          oldLines = [];
-          newLines = [];
-        };
 
         for (let i = 0; i < block.lines.length; i++) {
           const diffLine = block.lines[i];
@@ -173,19 +104,12 @@ export default class LineByLineRenderer {
             diffLine.type !== LineType.INSERT &&
             (newLines.length > 0 || (diffLine.type !== LineType.DELETE && oldLines.length > 0))
           ) {
-            processChangeBlock();
+            lines += this.processChangeBlock(file, oldLines, newLines, matcher);
+            oldLines = [];
+            newLines = [];
           }
 
-          if (diffLine.type === LineType.CONTEXT) {
-            lines += this.makeLineHtml(
-              file.isCombined,
-              renderUtils.toCSSClass(diffLine.type),
-              content,
-              diffLine.oldNumber,
-              diffLine.newNumber,
-              prefix
-            );
-          } else if (diffLine.type === LineType.INSERT && !oldLines.length) {
+          if (diffLine.type === LineType.CONTEXT || (diffLine.type === LineType.INSERT && !oldLines.length)) {
             lines += this.makeLineHtml(
               file.isCombined,
               renderUtils.toCSSClass(diffLine.type),
@@ -200,15 +124,81 @@ export default class LineByLineRenderer {
             newLines.push(diffLine);
           } else {
             console.error("Unknown state in html line-by-line generator");
-            processChangeBlock();
+            lines += this.processChangeBlock(file, oldLines, newLines, matcher);
+            oldLines = [];
+            newLines = [];
           }
         }
 
-        processChangeBlock();
+        lines += this.processChangeBlock(file, oldLines, newLines, matcher);
+        oldLines = [];
+        newLines = [];
 
         return lines;
       })
       .join("\n");
+  }
+
+  processChangeBlock(
+    file: DiffFile,
+    oldLines: DiffLine[],
+    newLines: DiffLine[],
+    matcher: Rematch.MatcherFn<DiffLine>
+  ): string {
+    const comparisons = oldLines.length * newLines.length;
+    const maxLineSizeInBlock = Math.max.apply(
+      null,
+      [0].concat(oldLines.concat(newLines).map(elem => elem.content.length))
+    );
+    const doMatching =
+      comparisons < this.config.matchingMaxComparisons &&
+      maxLineSizeInBlock < this.config.maxLineSizeInBlockForComparison &&
+      (this.config.matching === "lines" || this.config.matching === "words");
+
+    const [matches, insertType, deleteType] = doMatching
+      ? [matcher(oldLines, newLines), renderUtils.CSSLineClass.INSERT_CHANGES, renderUtils.CSSLineClass.DELETE_CHANGES]
+      : [[[oldLines, newLines]], renderUtils.CSSLineClass.INSERTS, renderUtils.CSSLineClass.DELETES];
+
+    let lines = "";
+    matches.forEach(match => {
+      oldLines = match[0];
+      newLines = match[1];
+
+      let processedOldLines = "";
+      let processedNewLines = "";
+
+      const common = Math.min(oldLines.length, newLines.length);
+
+      let oldLine, newLine;
+      for (let j = 0; j < common; j++) {
+        oldLine = oldLines[j];
+        newLine = newLines[j];
+
+        const diff = renderUtils.diffHighlight(oldLine.content, newLine.content, file.isCombined, this.config);
+
+        processedOldLines += this.makeLineHtml(
+          file.isCombined,
+          deleteType,
+          diff.oldLine.content,
+          oldLine.oldNumber,
+          oldLine.newNumber,
+          diff.oldLine.prefix
+        );
+        processedNewLines += this.makeLineHtml(
+          file.isCombined,
+          insertType,
+          diff.newLine.content,
+          newLine.oldNumber,
+          newLine.newNumber,
+          diff.newLine.prefix
+        );
+      }
+
+      lines += processedOldLines + processedNewLines;
+      lines += this.processLines(file.isCombined, oldLines.slice(common), newLines.slice(common));
+    });
+
+    return lines;
   }
 
   // TODO: Make this private after improving tests

@@ -223,7 +223,7 @@ export default class SideBySideRenderer {
 
   // TODO: Make this private after improving tests
   makeSideHtml(blockHeader: string): string {
-    return this.hoganUtils.render(genericTemplatesPath, "column-line-number", {
+    return this.hoganUtils.render(genericTemplatesPath, "block-header", {
       CSSLineClass: renderUtils.CSSLineClass,
       blockHeader: blockHeader,
       lineClass: "d2h-code-side-linenumber",
