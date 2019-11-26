@@ -240,19 +240,13 @@ export function diffHighlight(
 
   const changedWords: jsDiff.Change[] = [];
   if (diffStyle === "word" && matching === "words") {
-    let treshold = 0.25;
-
-    if (typeof matchWordsThreshold !== "undefined") {
-      treshold = matchWordsThreshold;
-    }
-
     const removed = diff.filter(element => element.removed);
     const added = diff.filter(element => element.added);
     const chunks = matcher(added, removed);
     chunks.forEach(chunk => {
       if (chunk[0].length === 1 && chunk[1].length === 1) {
         const dist = distance(chunk[0][0], chunk[1][0]);
-        if (dist < treshold) {
+        if (dist < matchWordsThreshold) {
           changedWords.push(chunk[0][0]);
           changedWords.push(chunk[1][0]);
         }

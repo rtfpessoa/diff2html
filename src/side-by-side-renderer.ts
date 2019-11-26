@@ -331,15 +331,11 @@ export default class SideBySideRenderer {
       lineWithoutPrefix = lineWithPrefix.content;
     }
 
-    if (prefix === " ") {
-      prefix = "&nbsp;";
-    }
-
     return this.hoganUtils.render(genericTemplatesPath, "line", {
       type: preparedType,
       lineClass: lineClass,
       contentClass: contentClass,
-      prefix: prefix,
+      prefix: prefix === " " ? "&nbsp;" : prefix,
       content: lineWithoutPrefix,
       lineNumber: number
     });

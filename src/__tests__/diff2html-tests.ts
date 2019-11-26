@@ -89,23 +89,23 @@ const htmlLineExample1 =
   '        <div class="d2h-code-line d2h-info">@@ -1 +1 @@</div>\n' +
   "    </td>\n" +
   "</tr><tr>\n" +
-  '    <td class="d2h-code-linenumber d2h-del">\n' +
+  '    <td class="d2h-code-linenumber d2h-del d2h-change">\n' +
   '      <div class="line-num1">1</div>\n' +
   '<div class="line-num2"></div>\n' +
   "    </td>\n" +
-  '    <td class="d2h-del">\n' +
-  '        <div class="d2h-code-line d2h-del">\n' +
+  '    <td class="d2h-del d2h-change">\n' +
+  '        <div class="d2h-code-line d2h-del d2h-change">\n' +
   '            <span class="d2h-code-line-prefix">-</span>\n' +
   '            <span class="d2h-code-line-ctn"><del>test</del></span>\n' +
   "        </div>\n" +
   "    </td>\n" +
   "</tr><tr>\n" +
-  '    <td class="d2h-code-linenumber d2h-ins">\n' +
+  '    <td class="d2h-code-linenumber d2h-ins d2h-change">\n' +
   '      <div class="line-num1"></div>\n' +
   '<div class="line-num2">1</div>\n' +
   "    </td>\n" +
-  '    <td class="d2h-ins">\n' +
-  '        <div class="d2h-code-line d2h-ins">\n' +
+  '    <td class="d2h-ins d2h-change">\n' +
+  '        <div class="d2h-code-line d2h-ins d2h-change">\n' +
   '            <span class="d2h-code-line-prefix">+</span>\n' +
   '            <span class="d2h-code-line-ctn"><ins>test1</ins></span>\n' +
   "        </div>\n" +
@@ -446,23 +446,23 @@ describe("Diff2Html", () => {
         "        </div>\n" +
         "    </td>\n" +
         "</tr><tr>\n" +
-        '    <td class="d2h-code-linenumber d2h-del">\n' +
+        '    <td class="d2h-code-linenumber d2h-del d2h-change">\n' +
         '      <div class="line-num1">14</div>\n' +
         '<div class="line-num2"></div>\n' +
         "    </td>\n" +
-        '    <td class="d2h-del">\n' +
-        '        <div class="d2h-code-line d2h-del">\n' +
+        '    <td class="d2h-del d2h-change">\n' +
+        '        <div class="d2h-code-line d2h-del d2h-change">\n' +
         '            <span class="d2h-code-line-prefix">-</span>\n' +
         '            <span class="d2h-code-line-ctn">    - Fix HEAD branch order when redraw [#858](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;858)</span>\n' +
         "        </div>\n" +
         "    </td>\n" +
         "</tr><tr>\n" +
-        '    <td class="d2h-code-linenumber d2h-ins">\n' +
+        '    <td class="d2h-code-linenumber d2h-ins d2h-change">\n' +
         '      <div class="line-num1"></div>\n' +
         '<div class="line-num2">13</div>\n' +
         "    </td>\n" +
-        '    <td class="d2h-ins">\n' +
-        '        <div class="d2h-code-line d2h-ins">\n' +
+        '    <td class="d2h-ins d2h-change">\n' +
+        '        <div class="d2h-code-line d2h-ins d2h-change">\n' +
         '            <span class="d2h-code-line-prefix">+</span>\n' +
         '            <span class="d2h-code-line-ctn"><ins>4</ins>    - Fix HEAD branch order when redraw [#858](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;858)</span>\n' +
         "        </div>\n" +
@@ -519,7 +519,7 @@ describe("Diff2Html", () => {
         "</div>";
 
       const result = html(diffExample2, { drawFileList: false });
-      expect(htmlExample2).toEqual(result);
+      expect(result).toEqual(htmlExample2);
     });
   });
 });

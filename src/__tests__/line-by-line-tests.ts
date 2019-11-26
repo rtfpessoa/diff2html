@@ -1,6 +1,6 @@
 import LineByLineRenderer from "../line-by-line-renderer";
 import HoganJsUtils from "../hoganjs-utils";
-import { LineType, DiffLine, DiffFile, LineMatchingType } from "../types";
+import { LineType, DiffFile, LineMatchingType } from "../types";
 import { CSSLineClass } from "../render-utils";
 
 describe("LineByLineRenderer", () => {
@@ -26,7 +26,7 @@ describe("LineByLineRenderer", () => {
     it("should work for insertions", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.INSERTS, "test", undefined, 30, "+");
+      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.INSERTS, "+", "test", undefined, 30);
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -48,7 +48,7 @@ describe("LineByLineRenderer", () => {
     it("should work for deletions", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.DELETES, "test", 30, undefined, "-");
+      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.DELETES, "-", "test", 30, undefined);
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -70,7 +70,7 @@ describe("LineByLineRenderer", () => {
     it("should convert indents into non breakin spaces (2 white spaces)", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.INSERTS, "  test", undefined, 30, "+");
+      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.INSERTS, "+", "  test", undefined, 30);
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -92,7 +92,7 @@ describe("LineByLineRenderer", () => {
     it("should convert indents into non breakin spaces (4 white spaces)", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.INSERTS, "    test", undefined, 30, "+");
+      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.INSERTS, "+", "    test", undefined, 30);
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -114,7 +114,7 @@ describe("LineByLineRenderer", () => {
     it("should preserve tabs", () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      let fileHtml = lineByLineRenderer.makeLineHtml(false, CSSLineClass.INSERTS, "\ttest", undefined, 30, "+");
+      let fileHtml = lineByLineRenderer.makeLineHtml(CSSLineClass.INSERTS, "+", "\ttest", undefined, 30);
       fileHtml = fileHtml.replace(/\n\n+/g, "\n");
       const expected =
         "<tr>\n" +
@@ -473,58 +473,6 @@ describe("LineByLineRenderer", () => {
     });
   });
 
-  describe("_processLines", () => {
-    it("should work for simple block header", () => {
-      const hoganUtils = new HoganJsUtils({});
-      const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      const oldLines: DiffLine[] = [
-        {
-          content: "-test",
-          type: LineType.DELETE,
-          oldNumber: 1,
-          newNumber: undefined
-        }
-      ];
-      const newLines: DiffLine[] = [
-        {
-          content: "+test1r",
-          type: LineType.INSERT,
-          oldNumber: undefined,
-          newNumber: 1
-        }
-      ];
-
-      const html = lineByLineRenderer.processLines(false, oldLines, newLines);
-
-      const expected =
-        "<tr>\n" +
-        '    <td class="d2h-code-linenumber d2h-del">\n' +
-        '      <div class="line-num1">1</div>\n' +
-        '<div class="line-num2"></div>\n' +
-        "    </td>\n" +
-        '    <td class="d2h-del">\n' +
-        '        <div class="d2h-code-line d2h-del">\n' +
-        '            <span class="d2h-code-line-prefix">-</span>\n' +
-        '            <span class="d2h-code-line-ctn">test</span>\n' +
-        "        </div>\n" +
-        "    </td>\n" +
-        "</tr><tr>\n" +
-        '    <td class="d2h-code-linenumber d2h-ins">\n' +
-        '      <div class="line-num1"></div>\n' +
-        '<div class="line-num2">1</div>\n' +
-        "    </td>\n" +
-        '    <td class="d2h-ins">\n' +
-        '        <div class="d2h-code-line d2h-ins">\n' +
-        '            <span class="d2h-code-line-prefix">+</span>\n' +
-        '            <span class="d2h-code-line-ctn">test1r</span>\n' +
-        "        </div>\n" +
-        "    </td>\n" +
-        "</tr>";
-
-      expect(html).toEqual(expected);
-    });
-  });
-
   describe("_generateFileHtml", () => {
     it("should work for simple file", () => {
       const hoganUtils = new HoganJsUtils({});
@@ -595,23 +543,23 @@ describe("LineByLineRenderer", () => {
         "        </div>\n" +
         "    </td>\n" +
         "</tr><tr>\n" +
-        '    <td class="d2h-code-linenumber d2h-del">\n' +
+        '    <td class="d2h-code-linenumber d2h-del d2h-change">\n' +
         '      <div class="line-num1">2</div>\n' +
         '<div class="line-num2"></div>\n' +
         "    </td>\n" +
-        '    <td class="d2h-del">\n' +
-        '        <div class="d2h-code-line d2h-del">\n' +
+        '    <td class="d2h-del d2h-change">\n' +
+        '        <div class="d2h-code-line d2h-del d2h-change">\n' +
         '            <span class="d2h-code-line-prefix">-</span>\n' +
         '            <span class="d2h-code-line-ctn"><del>test</del></span>\n' +
         "        </div>\n" +
         "    </td>\n" +
         "</tr><tr>\n" +
-        '    <td class="d2h-code-linenumber d2h-ins">\n' +
+        '    <td class="d2h-code-linenumber d2h-ins d2h-change">\n' +
         '      <div class="line-num1"></div>\n' +
         '<div class="line-num2">2</div>\n' +
         "    </td>\n" +
-        '    <td class="d2h-ins">\n' +
-        '        <div class="d2h-code-line d2h-ins">\n' +
+        '    <td class="d2h-ins d2h-change">\n' +
+        '        <div class="d2h-code-line d2h-ins d2h-change">\n' +
         '            <span class="d2h-code-line-prefix">+</span>\n' +
         '            <span class="d2h-code-line-ctn"><ins>test1r</ins></span>\n' +
         "        </div>\n" +
