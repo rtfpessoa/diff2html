@@ -27,9 +27,11 @@ export interface DiffLineContext {
   newNumber: number;
 }
 
-export type DiffLine = (DiffLineDeleted | DiffLineInserted | DiffLineContext) & {
+export type DiffLineContent = {
   content: string;
 };
+
+export type DiffLine = (DiffLineDeleted | DiffLineInserted | DiffLineContext) & DiffLineContent;
 
 export interface DiffBlock {
   oldStartLine: number;
