@@ -31,20 +31,6 @@ export function escapeForRegExp(str: string): string {
 }
 
 /**
- * Escapes all required characters for safe HTML rendering
- */
-export function escapeForHtml(str: string): string {
-  return str
-    .slice(0)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;")
-    .replace(/\//g, "&#x2F;");
-}
-
-/**
  * Converts all '\' in @path to unix style '/'
  */
 export function unifyPath(path: string): string {

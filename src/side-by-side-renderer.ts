@@ -1,4 +1,3 @@
-import * as utils from "./utils";
 import HoganJsUtils from "./hoganjs-utils";
 import * as Rematch from "./rematch";
 import * as renderUtils from "./render-utils";
@@ -48,19 +47,9 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
-  generateEmptyDiff(): FileHtml {
-    return {
-      right: "",
-      left:
-        this.hoganUtils.render(genericTemplatesPath, "empty-diff", {
-          contentClass: "d2h-code-side-line",
-          CSSLineClass: renderUtils.CSSLineClass
-        }) || ""
-    };
-  }
-
-  // TODO: Make this private after improving tests
   makeFileDiffHtml(file: DiffFile, diffs: FileHtml): string {
+    if (this.config.renderNothingWhenEmpty && Array.isArray(file.blocks) && file.blocks.length === 0) return "";
+
     const fileDiffTemplate = this.hoganUtils.template(baseTemplatesPath, "file-diff");
     const filePathTemplate = this.hoganUtils.template(genericTemplatesPath, "file-path");
     const fileIconTemplate = this.hoganUtils.template(iconsBaseTemplatesPath, "file");
@@ -83,21 +72,21 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
-  makeSideHtml(blockHeader: string): string {
-    return this.hoganUtils.render(genericTemplatesPath, "column-line-number", {
-      CSSLineClass: renderUtils.CSSLineClass,
-      blockHeader: utils.escapeForHtml(blockHeader),
-      lineClass: "d2h-code-side-linenumber",
-      contentClass: "d2h-code-side-line"
-    });
+  generateEmptyDiff(): FileHtml {
+    return {
+      right: "",
+      left: this.hoganUtils.render(genericTemplatesPath, "empty-diff", {
+        contentClass: "d2h-code-side-line",
+        CSSLineClass: renderUtils.CSSLineClass
+      })
+    };
   }
 
   // TODO: Make this private after improving tests
   generateSideBySideFileHtml(file: DiffFile): FileHtml {
-    const distance = Rematch.newDistanceFn(
-      (e: DiffLine) => renderUtils.deconstructLine(e.content, file.isCombined).content
+    const matcher = Rematch.newMatcherFn(
+      Rematch.newDistanceFn((e: DiffLine) => renderUtils.deconstructLine(e.content, file.isCombined).content)
     );
-    const matcher = Rematch.newMatcherFn(distance);
 
     const fileHtml = {
       right: "",
@@ -183,8 +172,7 @@ export default class SideBySideRenderer {
 
       for (let i = 0; i < block.lines.length; i++) {
         const diffLine = block.lines[i];
-        const { prefix, content: line } = renderUtils.deconstructLine(diffLine.content, file.isCombined);
-        const escapedLine = utils.escapeForHtml(line);
+        const { prefix, content } = renderUtils.deconstructLine(diffLine.content, file.isCombined);
 
         if (
           diffLine.type !== LineType.INSERT &&
@@ -197,14 +185,14 @@ export default class SideBySideRenderer {
           fileHtml.left += this.generateSingleLineHtml(
             file.isCombined,
             renderUtils.toCSSClass(diffLine.type),
-            escapedLine,
+            content,
             diffLine.oldNumber,
             prefix
           );
           fileHtml.right += this.generateSingleLineHtml(
             file.isCombined,
             renderUtils.toCSSClass(diffLine.type),
-            escapedLine,
+            content,
             diffLine.newNumber,
             prefix
           );
@@ -213,7 +201,7 @@ export default class SideBySideRenderer {
           fileHtml.right += this.generateSingleLineHtml(
             file.isCombined,
             renderUtils.toCSSClass(diffLine.type),
-            escapedLine,
+            content,
             diffLine.newNumber,
             prefix
           );
@@ -234,6 +222,16 @@ export default class SideBySideRenderer {
   }
 
   // TODO: Make this private after improving tests
+  makeSideHtml(blockHeader: string): string {
+    return this.hoganUtils.render(genericTemplatesPath, "column-line-number", {
+      CSSLineClass: renderUtils.CSSLineClass,
+      blockHeader: blockHeader,
+      lineClass: "d2h-code-side-linenumber",
+      contentClass: "d2h-code-side-line"
+    });
+  }
+
+  // TODO: Make this private after improving tests
   processLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
     const fileHtml = {
       right: "",
@@ -251,8 +249,8 @@ export default class SideBySideRenderer {
       let newPrefix;
 
       if (oldLine) {
-        const { prefix, content: line } = renderUtils.deconstructLine(oldLine.content, isCombined);
-        oldContent = utils.escapeForHtml(line);
+        const { prefix, content } = renderUtils.deconstructLine(oldLine.content, isCombined);
+        oldContent = content;
         oldPrefix = prefix;
       } else {
         oldContent = "";
@@ -260,8 +258,8 @@ export default class SideBySideRenderer {
       }
 
       if (newLine) {
-        const { prefix, content: line } = renderUtils.deconstructLine(newLine.content, isCombined);
-        newContent = utils.escapeForHtml(line);
+        const { prefix, content } = renderUtils.deconstructLine(newLine.content, isCombined);
+        newContent = content;
         newPrefix = prefix;
       } else {
         newContent = "";

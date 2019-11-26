@@ -299,7 +299,7 @@ describe("Diff2Html", () => {
         ' $a="<table><tr><td>\n' +
         " $a=\"<table><tr><td>- 1.1.9: Fix around ubuntu's inability to cache promises. [#877](https://github.com/FredrikNoren/ungit/pull/878)\n" +
         " - 1.1.8:\n" +
-        "@@ -11,7 +10,7 @@ $a=\"<table><tr><td>- 1.1.9: Fix around ubuntu's inability to cache promises. [#8\n" +
+        "@@ -11,7 +10,7 @@ $a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#8\n" +
         " - 1.1.7:\n" +
         "     - Fix diff flickering issue and optimization [#865](https://github.com/FredrikNoren/ungit/pull/865)\n" +
         "     - Fix credential dialog issue [#864](https://github.com/FredrikNoren/ungit/pull/864)\n" +

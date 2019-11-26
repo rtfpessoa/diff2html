@@ -1,8 +1,7 @@
-import * as utils from "./utils";
 import HoganJsUtils from "./hoganjs-utils";
 import * as Rematch from "./rematch";
 import * as renderUtils from "./render-utils";
-import { DiffFile, DiffBlock, DiffLine, LineType } from "./types";
+import { DiffFile, DiffLine, LineType } from "./types";
 
 export interface LineByLineRendererConfig extends renderUtils.RenderConfig {
   renderNothingWhenEmpty?: boolean;
@@ -73,53 +72,6 @@ export default class LineByLineRenderer {
   }
 
   // TODO: Make this private after improving tests
-  makeColumnLineNumberHtml(block: DiffBlock): string {
-    return this.hoganUtils.render(genericTemplatesPath, "column-line-number", {
-      CSSLineClass: renderUtils.CSSLineClass,
-      blockHeader: utils.escapeForHtml(block.header),
-      lineClass: "d2h-code-linenumber",
-      contentClass: "d2h-code-line"
-    });
-  }
-
-  // TODO: Make this private after improving tests
-  makeLineHtml(
-    isCombined: boolean,
-    type: renderUtils.CSSLineClass,
-    content: string,
-    oldNumber?: number,
-    newNumber?: number,
-    possiblePrefix?: string
-  ): string {
-    const lineNumberTemplate = this.hoganUtils.render(baseTemplatesPath, "numbers", {
-      oldNumber: oldNumber || "",
-      newNumber: newNumber || ""
-    });
-
-    let lineWithoutPrefix = content;
-    let prefix = possiblePrefix;
-
-    if (!prefix) {
-      const lineWithPrefix = renderUtils.deconstructLine(content, isCombined);
-      prefix = lineWithPrefix.prefix;
-      lineWithoutPrefix = lineWithPrefix.content;
-    }
-
-    if (prefix === " ") {
-      prefix = "&nbsp;";
-    }
-
-    return this.hoganUtils.render(genericTemplatesPath, "line", {
-      type: type,
-      lineClass: "d2h-code-linenumber",
-      contentClass: "d2h-code-line",
-      prefix: prefix,
-      content: lineWithoutPrefix,
-      lineNumber: lineNumberTemplate
-    });
-  }
-
-  // TODO: Make this private after improving tests
   generateEmptyDiff(): string {
     return this.hoganUtils.render(genericTemplatesPath, "empty-diff", {
       contentClass: "d2h-code-line",
@@ -128,46 +80,19 @@ export default class LineByLineRenderer {
   }
 
   // TODO: Make this private after improving tests
-  processLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): string {
-    let lines = "";
-
-    for (let i = 0; i < oldLines.length; i++) {
-      const oldLine = oldLines[i];
-      const oldEscapedLine = utils.escapeForHtml(oldLine.content);
-      lines += this.makeLineHtml(
-        isCombined,
-        renderUtils.toCSSClass(oldLine.type),
-        oldEscapedLine,
-        oldLine.oldNumber,
-        oldLine.newNumber
-      );
-    }
-
-    for (let j = 0; j < newLines.length; j++) {
-      const newLine = newLines[j];
-      const newEscapedLine = utils.escapeForHtml(newLine.content);
-      lines += this.makeLineHtml(
-        isCombined,
-        renderUtils.toCSSClass(newLine.type),
-        newEscapedLine,
-        newLine.oldNumber,
-        newLine.newNumber
-      );
-    }
-
-    return lines;
-  }
-
-  // TODO: Make this private after improving tests
   generateFileHtml(file: DiffFile): string {
-    const distance = Rematch.newDistanceFn(
-      (e: DiffLine) => renderUtils.deconstructLine(e.content, file.isCombined).content
+    const matcher = Rematch.newMatcherFn(
+      Rematch.newDistanceFn((e: DiffLine) => renderUtils.deconstructLine(e.content, file.isCombined).content)
     );
-    const matcher = Rematch.newMatcherFn(distance);
 
     return file.blocks
       .map(block => {
-        let lines = this.makeColumnLineNumberHtml(block);
+        let lines = this.hoganUtils.render(genericTemplatesPath, "column-line-number", {
+          CSSLineClass: renderUtils.CSSLineClass,
+          blockHeader: block.header,
+          lineClass: "d2h-code-linenumber",
+          contentClass: "d2h-code-line"
+        });
         let oldLines: DiffLine[] = [];
         let newLines: DiffLine[] = [];
 
@@ -242,8 +167,7 @@ export default class LineByLineRenderer {
 
         for (let i = 0; i < block.lines.length; i++) {
           const diffLine = block.lines[i];
-          const { prefix, content: line } = renderUtils.deconstructLine(diffLine.content, file.isCombined);
-          const escapedLine = utils.escapeForHtml(line);
+          const { prefix, content } = renderUtils.deconstructLine(diffLine.content, file.isCombined);
 
           if (
             diffLine.type !== LineType.INSERT &&
@@ -256,7 +180,7 @@ export default class LineByLineRenderer {
             lines += this.makeLineHtml(
               file.isCombined,
               renderUtils.toCSSClass(diffLine.type),
-              escapedLine,
+              content,
               diffLine.oldNumber,
               diffLine.newNumber,
               prefix
@@ -265,7 +189,7 @@ export default class LineByLineRenderer {
             lines += this.makeLineHtml(
               file.isCombined,
               renderUtils.toCSSClass(diffLine.type),
-              escapedLine,
+              content,
               diffLine.oldNumber,
               diffLine.newNumber,
               prefix
@@ -285,5 +209,71 @@ export default class LineByLineRenderer {
         return lines;
       })
       .join("\n");
+  }
+
+  // TODO: Make this private after improving tests
+  makeLineHtml(
+    isCombined: boolean,
+    type: renderUtils.CSSLineClass,
+    content: string,
+    oldNumber?: number,
+    newNumber?: number,
+    possiblePrefix?: string
+  ): string {
+    const lineNumberTemplate = this.hoganUtils.render(baseTemplatesPath, "numbers", {
+      oldNumber: oldNumber || "",
+      newNumber: newNumber || ""
+    });
+
+    let lineWithoutPrefix = content;
+    let prefix = possiblePrefix;
+
+    if (!prefix) {
+      const lineWithPrefix = renderUtils.deconstructLine(content, isCombined);
+      prefix = lineWithPrefix.prefix;
+      lineWithoutPrefix = lineWithPrefix.content;
+    }
+
+    if (prefix === " ") {
+      prefix = "&nbsp;";
+    }
+
+    return this.hoganUtils.render(genericTemplatesPath, "line", {
+      type: type,
+      lineClass: "d2h-code-linenumber",
+      contentClass: "d2h-code-line",
+      prefix: prefix,
+      content: lineWithoutPrefix,
+      lineNumber: lineNumberTemplate
+    });
+  }
+
+  // TODO: Make this private after improving tests
+  processLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): string {
+    let lines = "";
+
+    for (let i = 0; i < oldLines.length; i++) {
+      const oldLine = oldLines[i];
+      lines += this.makeLineHtml(
+        isCombined,
+        renderUtils.toCSSClass(oldLine.type),
+        oldLine.content,
+        oldLine.oldNumber,
+        oldLine.newNumber
+      );
+    }
+
+    for (let j = 0; j < newLines.length; j++) {
+      const newLine = newLines[j];
+      lines += this.makeLineHtml(
+        isCombined,
+        renderUtils.toCSSClass(newLine.type),
+        newLine.content,
+        newLine.oldNumber,
+        newLine.newNumber
+      );
+    }
+
+    return lines;
   }
 }

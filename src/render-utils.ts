@@ -1,6 +1,6 @@
 import * as jsDiff from "diff";
 
-import { unifyPath, escapeForHtml, hashCode } from "./utils";
+import { unifyPath, hashCode } from "./utils";
 import * as rematch from "./rematch";
 import { LineMatchingType, DiffStyleType, LineType, DiffLineParts, DiffFile, DiffFileName } from "./types";
 
@@ -76,13 +76,28 @@ function prefixLength(isCombined: boolean): number {
 }
 
 /**
+ * Escapes all required characters for safe HTML rendering
+ */
+// TODO: Test this method inside deconstructLine since it should not be used anywhere else
+export function escapeForHtml(str: string): string {
+  return str
+    .slice(0)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
+    .replace(/\//g, "&#x2F;");
+}
+
+/**
  * Deconstructs diff @line by separating the content from the prefix type
  */
 export function deconstructLine(line: string, isCombined: boolean): DiffLineParts {
   const indexToSplit = prefixLength(isCombined);
   return {
     prefix: line.substring(0, indexToSplit),
-    content: line.substring(indexToSplit)
+    content: escapeForHtml(line.substring(indexToSplit))
   };
 }
 
@@ -209,11 +224,11 @@ export function diffHighlight(
     return {
       oldLine: {
         prefix: line1.prefix,
-        content: escapeForHtml(line1.content)
+        content: line1.content
       },
       newLine: {
         prefix: line2.prefix,
-        content: escapeForHtml(line2.content)
+        content: line2.content
       }
     };
   }
@@ -248,11 +263,10 @@ export function diffHighlight(
   const highlightedLine = diff.reduce((highlightedLine, part) => {
     const elemType = part.added ? "ins" : part.removed ? "del" : null;
     const addClass = changedWords.indexOf(part) > -1 ? ' class="d2h-change"' : "";
-    const escapedValue = escapeForHtml(part.value);
 
     return elemType !== null
-      ? `${highlightedLine}<${elemType}${addClass}>${escapedValue}</${elemType}>`
-      : `${highlightedLine}${escapedValue}`;
+      ? `${highlightedLine}<${elemType}${addClass}>${part.value}</${elemType}>`
+      : `${highlightedLine}${part.value}`;
   }, "");
 
   return {
