@@ -1,16 +1,5 @@
 import { parse } from "../diff-parser";
 
-function checkDiffSample(diff: string): void {
-  const result = parse(diff);
-  const file1 = result[0];
-  expect(result.length).toEqual(1);
-  expect(file1.addedLines).toEqual(1);
-  expect(file1.deletedLines).toEqual(1);
-  expect(file1.oldName).toEqual("sample");
-  expect(file1.newName).toEqual("sample");
-  expect(file1.blocks.length).toEqual(1);
-}
-
 describe("DiffParser", () => {
   describe("generateDiffJson", () => {
     // eslint-disable-next-line jest/expect-expect
@@ -23,7 +12,44 @@ describe("DiffParser", () => {
         "@@ -1 +1 @@\n" +
         "-test\n" +
         "+test1r\n";
-      checkDiffSample(diff);
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+test1r",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0ddf2ba",
+            "checksumBefore": "0000001",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": undefined,
+            "newName": "sample",
+            "oldName": "sample",
+          },
+        ]
+      `);
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -36,7 +62,44 @@ describe("DiffParser", () => {
         "@@ -1 +1 @@\r\n" +
         "-test\r\n" +
         "+test1r\r\n";
-      checkDiffSample(diff);
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+test1r",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0ddf2ba",
+            "checksumBefore": "0000001",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": undefined,
+            "newName": "sample",
+            "oldName": "sample",
+          },
+        ]
+      `);
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -49,7 +112,44 @@ describe("DiffParser", () => {
         "@@ -1 +1 @@\r" +
         "-test\r" +
         "+test1r\r";
-      checkDiffSample(diff);
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+test1r",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0ddf2ba",
+            "checksumBefore": "0000001",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": undefined,
+            "newName": "sample",
+            "oldName": "sample",
+          },
+        ]
+      `);
     });
 
     // eslint-disable-next-line jest/expect-expect
@@ -62,7 +162,44 @@ describe("DiffParser", () => {
         "@@ -1 +1 @@\n" +
         "-test\r" +
         "+test1r\n";
-      checkDiffSample(diff);
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+test1r",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0ddf2ba",
+            "checksumBefore": "0000001",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": undefined,
+            "newName": "sample",
+            "oldName": "sample",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with special characters", () => {
@@ -75,15 +212,51 @@ describe("DiffParser", () => {
         "-cenas\n" +
         "+cenas com ananas\n" +
         "+bananas";
-
       const result = parse(diff);
-      const file1 = result[0];
-      expect(result.length).toEqual(1);
-      expect(file1.addedLines).toEqual(2);
-      expect(file1.deletedLines).toEqual(1);
-      expect(file1.oldName).toEqual("bla with \ttab.scala");
-      expect(file1.newName).toEqual("bla with \ttab.scala");
-      expect(file1.blocks.length).toEqual(1);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 2,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-cenas",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+cenas com ananas",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+bananas",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "e9bd385",
+            "checksumBefore": "4c679d7",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "scala",
+            "mode": "100644",
+            "newName": "bla with 	tab.scala",
+            "oldName": "bla with 	tab.scala",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with prefix", () => {
@@ -96,15 +269,51 @@ describe("DiffParser", () => {
         "-cenas\n" +
         "+cenas com ananas\n" +
         "+bananas";
-
-      const result = parse(diff, { srcPrefix: "\t", dstPrefix: "\t" });
-      const file1 = result[0];
-      expect(result.length).toEqual(1);
-      expect(file1.addedLines).toEqual(2);
-      expect(file1.deletedLines).toEqual(1);
-      expect(file1.oldName).toEqual("bla with \ttab.scala");
-      expect(file1.newName).toEqual("bla with \ttab.scala");
-      expect(file1.blocks.length).toEqual(1);
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 2,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-cenas",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+cenas com ananas",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+bananas",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "e9bd385",
+            "checksumBefore": "4c679d7",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "scala",
+            "mode": "100644",
+            "newName": "	bla with 	tab.scala",
+            "oldName": "	bla with 	tab.scala",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with deleted file", () => {
@@ -118,20 +327,52 @@ describe("DiffParser", () => {
         "-define(() => {\n" +
         "-  return typeof undefined;\n" +
         "-});\n";
-
       const result = parse(diff);
-      expect(result.length).toEqual(1);
-
-      const file1 = result[0];
-      expect(file1.isCombined).toEqual(false);
-      expect(file1.addedLines).toEqual(0);
-      expect(file1.deletedLines).toEqual(3);
-      expect(file1.oldName).toEqual("src/var/strundefined.js");
-      expect(file1.newName).toEqual("/dev/null");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.isDeleted).toEqual(true);
-      expect(file1.checksumBefore).toEqual("04e16b0");
-      expect(file1.checksumAfter).toEqual("0000000");
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 0,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,3 +0,0 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-define(() => {",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "-  return typeof undefined;",
+                    "newNumber": undefined,
+                    "oldNumber": 2,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "-});",
+                    "newNumber": undefined,
+                    "oldNumber": 3,
+                    "type": "delete",
+                  },
+                ],
+                "newStartLine": 0,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0000000",
+            "checksumBefore": "04e16b0",
+            "deletedFileMode": "100644",
+            "deletedLines": 3,
+            "isCombined": false,
+            "isDeleted": true,
+            "isGitDiff": true,
+            "language": "js",
+            "newName": "/dev/null",
+            "oldName": "src/var/strundefined.js",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with new file", () => {
@@ -147,21 +388,64 @@ describe("DiffParser", () => {
         "+var patchLineList = [ false, false, false, false ];\n" +
         "+\n" +
         "+console.log(parser.parsePatchDiffResult(text, patchLineList));\n";
-
       const result = parse(diff);
-      expect(result.length).toEqual(1);
-
-      const file1 = result[0];
-      expect(file1.isCombined).toEqual(false);
-      expect(file1.addedLines).toEqual(5);
-      expect(file1.deletedLines).toEqual(0);
-      expect(file1.oldName).toEqual("/dev/null");
-      expect(file1.newName).toEqual("test.js");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.isNew).toEqual(true);
-      expect(file1.newFileMode).toEqual("100644");
-      expect(file1.checksumBefore).toEqual("0000000");
-      expect(file1.checksumAfter).toEqual("e1e22ec");
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 5,
+            "blocks": Array [
+              Object {
+                "header": "@@ -0,0 +1,5 @@",
+                "lines": Array [
+                  Object {
+                    "content": "+var parser = require('./source/git-parser');",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+var patchLineList = [ false, false, false, false ];",
+                    "newNumber": 3,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+",
+                    "newNumber": 4,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+console.log(parser.parsePatchDiffResult(text, patchLineList));",
+                    "newNumber": 5,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 0,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "e1e22ec",
+            "checksumBefore": "0000000",
+            "deletedLines": 0,
+            "isCombined": false,
+            "isGitDiff": true,
+            "isNew": true,
+            "language": "js",
+            "newFileMode": "100644",
+            "newName": "test.js",
+            "oldName": "/dev/null",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with nested diff", () => {
@@ -177,20 +461,69 @@ describe("DiffParser", () => {
         "+var patchLineList = [ false, false, false, false ];\n" +
         "+\n" +
         "+console.log(parser.parsePatchDiffResult(text, patchLineList));\n";
-
       const result = parse(diff);
-      expect(result.length).toEqual(1);
-
-      const file1 = result[0];
-      expect(file1.isCombined).toEqual(false);
-      expect(file1.addedLines).toEqual(6);
-      expect(file1.deletedLines).toEqual(0);
-      expect(file1.oldName).toEqual("src/offset.js");
-      expect(file1.newName).toEqual("src/offset.js");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.blocks[0].lines.length).toEqual(6);
-      expect(file1.checksumBefore).toEqual("cc6ffb4");
-      expect(file1.checksumAfter).toEqual("fa51f18");
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 6,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,6 +1,5 @@",
+                "lines": Array [
+                  Object {
+                    "content": "+var parser = require('./source/git-parser');",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+var text = 'diff --git a/components/app/app.html b/components/app/app.html\\\\nindex ecb7a95..027bd9b 100644\\\\n--- a/components/app/app.html\\\\n+++ b/components/app/app.html\\\\n@@ -52,0 +53,3 @@\\\\n+\\\\n+\\\\n+\\\\n@@ -56,0 +60,3 @@\\\\n+\\\\n+\\\\n+\\\\n'",
+                    "newNumber": 3,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+var patchLineList = [ false, false, false, false ];",
+                    "newNumber": 4,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+",
+                    "newNumber": 5,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+console.log(parser.parsePatchDiffResult(text, patchLineList));",
+                    "newNumber": 6,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "fa51f18",
+            "checksumBefore": "cc6ffb4",
+            "deletedLines": 0,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/offset.js",
+            "oldName": "src/offset.js",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with multiple blocks", () => {
@@ -220,21 +553,155 @@ describe("DiffParser", () => {
         "         if ( this.className ) {\n" +
         "           // store className if set\n" +
         '           dataPriv.set( this, "__className__", this.className );\n';
-
       const result = parse(diff);
-      expect(result.length).toEqual(1);
-
-      const file1 = result[0];
-      expect(file1.isCombined).toEqual(false);
-      expect(file1.addedLines).toEqual(2);
-      expect(file1.deletedLines).toEqual(3);
-      expect(file1.oldName).toEqual("src/attributes/classes.js");
-      expect(file1.newName).toEqual("src/attributes/classes.js");
-      expect(file1.blocks.length).toEqual(2);
-      expect(file1.blocks[0].lines.length).toEqual(11);
-      expect(file1.blocks[1].lines.length).toEqual(8);
-      expect(file1.checksumBefore).toEqual("c617824");
-      expect(file1.checksumAfter).toEqual("c8d1393");
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 2,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,10 +1,9 @@",
+                "lines": Array [
+                  Object {
+                    "content": " define([",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"../core\\",",
+                    "newNumber": 2,
+                    "oldNumber": 2,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"../var/rnotwhite\\",",
+                    "newNumber": 3,
+                    "oldNumber": 3,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-  \\"../var/strundefined\\",",
+                    "newNumber": undefined,
+                    "oldNumber": 4,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "   \\"../data/var/dataPriv\\",",
+                    "newNumber": 4,
+                    "oldNumber": 5,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"../core/init\\"",
+                    "newNumber": 5,
+                    "oldNumber": 6,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-], function( jQuery, rnotwhite, strundefined, dataPriv ) {",
+                    "newNumber": undefined,
+                    "oldNumber": 7,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+], function( jQuery, rnotwhite, dataPriv ) {",
+                    "newNumber": 6,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 7,
+                    "oldNumber": 8,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " var rclass = /[\\\\t\\\\r\\\\n\\\\f]/g;",
+                    "newNumber": 8,
+                    "oldNumber": 9,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 9,
+                    "oldNumber": 10,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+              Object {
+                "header": "@@ -128,7 +127,7 @@ jQuery.fn.extend({",
+                "lines": Array [
+                  Object {
+                    "content": "         }",
+                    "newNumber": 127,
+                    "oldNumber": 128,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 128,
+                    "oldNumber": 129,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "       // Toggle whole class name",
+                    "newNumber": 129,
+                    "oldNumber": 130,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-      } else if ( type === strundefined || type === \\"boolean\\" ) {",
+                    "newNumber": undefined,
+                    "oldNumber": 131,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+      } else if ( value === undefined || type === \\"boolean\\" ) {",
+                    "newNumber": 130,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "         if ( this.className ) {",
+                    "newNumber": 131,
+                    "oldNumber": 132,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "           // store className if set",
+                    "newNumber": 132,
+                    "oldNumber": 133,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "           dataPriv.set( this, \\"__className__\\", this.className );",
+                    "newNumber": 133,
+                    "oldNumber": 134,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 127,
+                "oldStartLine": 128,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "c8d1393",
+            "checksumBefore": "c617824",
+            "deletedLines": 3,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/attributes/classes.js",
+            "oldName": "src/attributes/classes.js",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with multiple files", () => {
@@ -263,31 +730,139 @@ describe("DiffParser", () => {
         '   "./var/rnotwhite",\n' +
         '   "./var/hasOwn",\n' +
         '   "./var/slice",\n';
-
       const result = parse(diff);
-      expect(result.length).toEqual(2);
-
-      const file1 = result[0];
-      expect(file1.isCombined).toEqual(false);
-      expect(file1.addedLines).toEqual(1);
-      expect(file1.deletedLines).toEqual(1);
-      expect(file1.oldName).toEqual("src/core/init.js");
-      expect(file1.newName).toEqual("src/core/init.js");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.blocks[0].lines.length).toEqual(8);
-      expect(file1.checksumBefore).toEqual("e49196a");
-      expect(file1.checksumAfter).toEqual("50f310c");
-
-      const file2 = result[1];
-      expect(file2.isCombined).toEqual(false);
-      expect(file2.addedLines).toEqual(0);
-      expect(file2.deletedLines).toEqual(1);
-      expect(file2.oldName).toEqual("src/event.js");
-      expect(file2.newName).toEqual("src/event.js");
-      expect(file2.blocks.length).toEqual(1);
-      expect(file2.blocks[0].lines.length).toEqual(6);
-      expect(file2.checksumBefore).toEqual("7336f4d");
-      expect(file2.checksumAfter).toEqual("6183f70");
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -101,7 +101,7 @@ var rootjQuery,",
+                "lines": Array [
+                  Object {
+                    "content": "     // HANDLE: $(function)",
+                    "newNumber": 101,
+                    "oldNumber": 101,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "     // Shortcut for document ready",
+                    "newNumber": 102,
+                    "oldNumber": 102,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "     } else if ( jQuery.isFunction( selector ) ) {",
+                    "newNumber": 103,
+                    "oldNumber": 103,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-      return typeof rootjQuery.ready !== \\"undefined\\" ?",
+                    "newNumber": undefined,
+                    "oldNumber": 104,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+      return rootjQuery.ready !== undefined ?",
+                    "newNumber": 104,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "         rootjQuery.ready( selector ) :",
+                    "newNumber": 105,
+                    "oldNumber": 105,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "         // Execute immediately if ready is not present",
+                    "newNumber": 106,
+                    "oldNumber": 106,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "         selector( jQuery );",
+                    "newNumber": 107,
+                    "oldNumber": 107,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 101,
+                "oldStartLine": 101,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "50f310c",
+            "checksumBefore": "e49196a",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/core/init.js",
+            "oldName": "src/core/init.js",
+          },
+          Object {
+            "addedLines": 0,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,6 +1,5 @@",
+                "lines": Array [
+                  Object {
+                    "content": " define([",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"./core\\",",
+                    "newNumber": 2,
+                    "oldNumber": 2,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-  \\"./var/strundefined\\",",
+                    "newNumber": undefined,
+                    "oldNumber": 3,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "   \\"./var/rnotwhite\\",",
+                    "newNumber": 3,
+                    "oldNumber": 4,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"./var/hasOwn\\",",
+                    "newNumber": 4,
+                    "oldNumber": 5,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"./var/slice\\",",
+                    "newNumber": 5,
+                    "oldNumber": 6,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "6183f70",
+            "checksumBefore": "7336f4d",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/event.js",
+            "oldName": "src/event.js",
+          },
+        ]
+      `);
     });
 
     it("should parse combined diff", () => {
@@ -319,20 +894,167 @@ describe("DiffParser", () => {
         "   if (!initialized) {\n" +
         "       initialized = 1;\n" +
         "       for_each_ref(get_name);\n";
-
       const result = parse(diff);
-      expect(result.length).toEqual(1);
-
-      const file1 = result[0];
-      expect(file1.isCombined).toEqual(true);
-      expect(9).toEqual(file1.addedLines);
-      expect(2).toEqual(file1.deletedLines);
-      expect(file1.oldName).toEqual("describe.c");
-      expect(file1.newName).toEqual("describe.c");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.blocks[0].lines.length).toEqual(22);
-      expect(file1.checksumBefore).toEqual(["cc95eb0", "4866510"]);
-      expect(file1.checksumAfter).toEqual("fabadb8");
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 9,
+            "blocks": Array [
+              Object {
+                "header": "@@@ -98,20 -98,12 +98,20 @@@",
+                "lines": Array [
+                  Object {
+                    "content": "   return (a_date > b_date) ? -1 : (a_date == b_date) ? 0 : 1;",
+                    "newNumber": 98,
+                    "oldNumber": 98,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "  }",
+                    "newNumber": 99,
+                    "oldNumber": 99,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "  ",
+                    "newNumber": 100,
+                    "oldNumber": 100,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "- static void describe(char *arg)",
+                    "newNumber": undefined,
+                    "oldNumber": 101,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": " -static void describe(struct commit *cmit, int last_one)",
+                    "newNumber": undefined,
+                    "oldNumber": 102,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "++static void describe(char *arg, int last_one)",
+                    "newNumber": 101,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "  {",
+                    "newNumber": 102,
+                    "oldNumber": 103,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " + unsigned char sha1[20];",
+                    "newNumber": 103,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " + struct commit *cmit;",
+                    "newNumber": 104,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "   struct commit_list *list;",
+                    "newNumber": 105,
+                    "oldNumber": 104,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   static int initialized = 0;",
+                    "newNumber": 106,
+                    "oldNumber": 105,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   struct commit_name *n;",
+                    "newNumber": 107,
+                    "oldNumber": 106,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "  ",
+                    "newNumber": 108,
+                    "oldNumber": 107,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " + if (get_sha1(arg, sha1) < 0)",
+                    "newNumber": 109,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " +     usage(describe_usage);",
+                    "newNumber": 110,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " + cmit = lookup_commit_reference(sha1);",
+                    "newNumber": 111,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " + if (!cmit)",
+                    "newNumber": 112,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " +     usage(describe_usage);",
+                    "newNumber": 113,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " +",
+                    "newNumber": 114,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "   if (!initialized) {",
+                    "newNumber": 115,
+                    "oldNumber": 108,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "       initialized = 1;",
+                    "newNumber": 116,
+                    "oldNumber": 109,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "       for_each_ref(get_name);",
+                    "newNumber": 117,
+                    "oldNumber": 110,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 98,
+                "oldStartLine": 98,
+                "oldStartLine2": 98,
+              },
+            ],
+            "checksumAfter": "fabadb8",
+            "checksumBefore": Array [
+              "cc95eb0",
+              "4866510",
+            ],
+            "deletedLines": 2,
+            "isCombined": true,
+            "isGitDiff": true,
+            "language": "c",
+            "newName": "describe.c",
+            "oldName": "describe.c",
+          },
+        ]
+      `);
     });
 
     it("should parse diffs with copied files", () => {
@@ -341,18 +1063,21 @@ describe("DiffParser", () => {
         "dissimilarity index 5%\n" +
         "copy from index.js\n" +
         "copy to more-index.js\n";
-
       const result = parse(diff);
-      expect(result.length).toEqual(1);
-
-      const file1 = result[0];
-      expect(file1.addedLines).toEqual(0);
-      expect(file1.deletedLines).toEqual(0);
-      expect(file1.oldName).toEqual("index.js");
-      expect(file1.newName).toEqual("more-index.js");
-      expect(file1.blocks.length).toEqual(0);
-      expect(file1.isCopy).toEqual(true);
-      expect(file1.changedPercentage).toEqual(5);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 0,
+            "blocks": Array [],
+            "changedPercentage": 5,
+            "deletedLines": 0,
+            "isCopy": true,
+            "isGitDiff": true,
+            "newName": "more-index.js",
+            "oldName": "index.js",
+          },
+        ]
+      `);
     });
 
     it("should parse diffs with moved files", () => {
@@ -361,18 +1086,21 @@ describe("DiffParser", () => {
         "similarity index 86%\n" +
         "rename from more-index.js\n" +
         "rename to other-index.js\n";
-
       const result = parse(diff);
-      expect(result.length).toEqual(1);
-
-      const file1 = result[0];
-      expect(file1.addedLines).toEqual(0);
-      expect(file1.deletedLines).toEqual(0);
-      expect(file1.oldName).toEqual("more-index.js");
-      expect(file1.newName).toEqual("other-index.js");
-      expect(file1.blocks.length).toEqual(0);
-      expect(file1.isRename).toEqual(true);
-      expect(file1.unchangedPercentage).toEqual(86);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 0,
+            "blocks": Array [],
+            "deletedLines": 0,
+            "isGitDiff": true,
+            "isRename": true,
+            "newName": "other-index.js",
+            "oldName": "more-index.js",
+            "unchangedPercentage": 86,
+          },
+        ]
+      `);
     });
 
     it("should parse diffs correct line numbers", () => {
@@ -384,21 +1112,44 @@ describe("DiffParser", () => {
         "@@ -1 +1,2 @@\n" +
         "-test\n" +
         "+test1r\n";
-
       const result = parse(diff);
-      expect(result.length).toEqual(1);
-
-      const file1 = result[0];
-      expect(file1.addedLines).toEqual(1);
-      expect(file1.deletedLines).toEqual(1);
-      expect(file1.oldName).toEqual("sample");
-      expect(file1.newName).toEqual("sample");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.blocks[0].lines.length).toEqual(2);
-      expect(file1.blocks[0].lines[0].oldNumber).toEqual(1);
-      expect(file1.blocks[0].lines[0].newNumber).toBeUndefined();
-      expect(file1.blocks[0].lines[1].oldNumber).toBeUndefined();
-      expect(file1.blocks[0].lines[1].newNumber).toEqual(1);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+test1r",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0ddf2ba",
+            "checksumBefore": "0000001",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": undefined,
+            "newName": "sample",
+            "oldName": "sample",
+          },
+        ]
+      `);
     });
 
     it("should parse unified non git diff and strip timestamps off the headers", () => {
@@ -409,50 +1160,138 @@ describe("DiffParser", () => {
           "@@ -1 +1,2 @@\n" +
           "-test\n" +
           "+test1r\n" +
-          "+test2r\n",
+          "+test2r",
         // 2 hours behind GMT
         "--- a/sample.js 2016-10-25 11:37:14.000000000 -0200\n" +
           "+++ b/sample.js  2016-10-25 11:37:14.000000000 -0200\n" +
           "@@ -1 +1,2 @@\n" +
           "-test\n" +
           "+test1r\n" +
-          "+test2r\n"
-      ];
-
-      diffs.forEach(diff => {
-        const result = parse(diff);
-        const file1 = result[0];
-        expect(result.length).toEqual(1);
-        expect(file1.addedLines).toEqual(2);
-        expect(file1.deletedLines).toEqual(1);
-        expect(file1.oldName).toEqual("sample.js");
-        expect(file1.newName).toEqual("sample.js");
-        expect(file1.blocks.length).toEqual(1);
-
-        const linesContent = file1.blocks[0].lines.map(line => {
-          return line.content;
-        });
-        expect(["-test", "+test1r", "+test2r"]).toEqual(linesContent);
-      });
+          "+test2r"
+      ].join("\n");
+      const result = parse(diffs);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 2,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+test1r",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+test2r",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 1,
+            "isCombined": false,
+            "language": "js",
+            "newName": "sample.js",
+            "oldName": "sample.js",
+          },
+          Object {
+            "addedLines": 2,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+test1r",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+test2r",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 1,
+            "isCombined": false,
+            "language": "js",
+            "newName": "sample.js",
+            "oldName": "sample.js",
+          },
+        ]
+      `);
     });
 
     it("should parse unified non git diff", () => {
       const diff =
         "--- a/sample.js\n" + "+++ b/sample.js\n" + "@@ -1 +1,2 @@\n" + "-test\n" + "+test1r\n" + "+test2r\n";
-
       const result = parse(diff);
-      const file1 = result[0];
-      expect(result.length).toEqual(1);
-      expect(file1.addedLines).toEqual(2);
-      expect(file1.deletedLines).toEqual(1);
-      expect(file1.oldName).toEqual("sample.js");
-      expect(file1.newName).toEqual("sample.js");
-      expect(file1.blocks.length).toEqual(1);
-
-      const linesContent = file1.blocks[0].lines.map(line => {
-        return line.content;
-      });
-      expect(["-test", "+test1r", "+test2r"]).toEqual(linesContent);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 2,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+test1r",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+test2r",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 1,
+            "isCombined": false,
+            "language": "js",
+            "newName": "sample.js",
+            "oldName": "sample.js",
+          },
+        ]
+      `);
     });
 
     it("should parse unified diff with multiple hunks and files", () => {
@@ -467,38 +1306,73 @@ describe("DiffParser", () => {
         "+++ sample1.js\n" +
         "@@ -1 +1,2 @@\n" +
         "+test1";
-
       const result = parse(diff);
-      expect(result.length).toEqual(2);
-
-      const file1 = result[0];
-      expect(file1.addedLines).toEqual(1);
-      expect(file1.deletedLines).toEqual(1);
-      expect(file1.oldName).toEqual("sample.js");
-      expect(file1.newName).toEqual("sample.js");
-      expect(file1.blocks.length).toEqual(2);
-
-      const linesContent1 = file1.blocks[0].lines.map(line => {
-        return line.content;
-      });
-      expect(["-test"]).toEqual(linesContent1);
-
-      const linesContent2 = file1.blocks[1].lines.map(line => {
-        return line.content;
-      });
-      expect(["+test"]).toEqual(linesContent2);
-
-      const file2 = result[1];
-      expect(file2.addedLines).toEqual(1);
-      expect(file2.deletedLines).toEqual(0);
-      expect(file2.oldName).toEqual("sample1.js");
-      expect(file2.newName).toEqual("sample1.js");
-      expect(file2.blocks.length).toEqual(1);
-
-      const linesContent = file2.blocks[0].lines.map(line => {
-        return line.content;
-      });
-      expect(["+test1"]).toEqual(linesContent);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "-test",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+              Object {
+                "header": "@@ -10 +20,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "+test",
+                    "newNumber": 20,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 20,
+                "oldStartLine": 10,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 1,
+            "isCombined": false,
+            "language": "js",
+            "newName": "sample.js",
+            "oldName": "sample.js",
+          },
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1 +1,2 @@",
+                "lines": Array [
+                  Object {
+                    "content": "+test1",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 0,
+            "isCombined": false,
+            "language": "js",
+            "newName": "sample1.js",
+            "oldName": "sample1.js",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with --- and +++ in the context lines", () => {
@@ -515,38 +1389,116 @@ describe("DiffParser", () => {
         "++ 2\n" +
         "+++ 2\n" +
         "++++ 2";
-
       const result = parse(diff);
-      const file1 = result[0];
-      expect(result.length).toEqual(1);
-      expect(file1.addedLines).toEqual(3);
-      expect(file1.deletedLines).toEqual(3);
-      expect(file1.oldName).toEqual("sample.js");
-      expect(file1.newName).toEqual("sample.js");
-      expect(file1.blocks.length).toEqual(1);
-
-      const linesContent = file1.blocks[0].lines.map(line => {
-        return line.content;
-      });
-      expect([" test", " ", "-- 1", "--- 1", "---- 1", " ", "++ 2", "+++ 2", "++++ 2"]).toEqual(linesContent);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 3,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,8 +1,8 @@",
+                "lines": Array [
+                  Object {
+                    "content": " test",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 2,
+                    "oldNumber": 2,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-- 1",
+                    "newNumber": undefined,
+                    "oldNumber": 3,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "--- 1",
+                    "newNumber": undefined,
+                    "oldNumber": 4,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "---- 1",
+                    "newNumber": undefined,
+                    "oldNumber": 5,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 3,
+                    "oldNumber": 6,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "++ 2",
+                    "newNumber": 4,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+++ 2",
+                    "newNumber": 5,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "++++ 2",
+                    "newNumber": 6,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 3,
+            "isCombined": false,
+            "language": "js",
+            "newName": "sample.js",
+            "oldName": "sample.js",
+          },
+        ]
+      `);
     });
 
     it("should parse diff without proper hunk headers", () => {
       const diff = "--- sample.js\n" + "+++ sample.js\n" + "@@ @@\n" + " test";
-
       const result = parse(diff);
-      const file1 = result[0];
-      expect(result.length).toEqual(1);
-      expect(file1.addedLines).toEqual(0);
-      expect(file1.deletedLines).toEqual(0);
-      expect(file1.oldName).toEqual("sample.js");
-      expect(file1.newName).toEqual("sample.js");
-      expect(file1.blocks.length).toEqual(1);
-
-      const linesContent = file1.blocks[0].lines.map(line => {
-        return line.content;
-      });
-      expect([" test"]).toEqual(linesContent);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 0,
+            "blocks": Array [
+              Object {
+                "header": "@@ @@",
+                "lines": Array [
+                  Object {
+                    "content": " test",
+                    "newNumber": 0,
+                    "oldNumber": 0,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 0,
+                "oldStartLine": 0,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 0,
+            "isCombined": false,
+            "language": "js",
+            "newName": "sample.js",
+            "oldName": "sample.js",
+          },
+        ]
+      `);
     });
 
     it("should parse binary file diff", () => {
@@ -556,17 +1508,32 @@ describe("DiffParser", () => {
         "--- a/last-changes-config.png\n" +
         "+++ b/last-changes-config.png\n" +
         "Binary files differ";
-
       const result = parse(diff);
-      const file1 = result[0];
-      expect(result.length).toEqual(1);
-      expect(file1.addedLines).toEqual(0);
-      expect(file1.deletedLines).toEqual(0);
-      expect(file1.oldName).toEqual("last-changes-config.png");
-      expect(file1.newName).toEqual("last-changes-config.png");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.blocks[0].lines.length).toEqual(0);
-      expect(file1.blocks[0].header).toEqual("Binary files differ");
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 0,
+            "blocks": Array [
+              Object {
+                "header": "Binary files differ",
+                "lines": Array [],
+                "newStartLine": 0,
+                "oldStartLine": 0,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "56fc1f2",
+            "checksumBefore": "322248b",
+            "deletedLines": 0,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "png",
+            "mode": "100644",
+            "newName": "last-changes-config.png",
+            "oldName": "last-changes-config.png",
+          },
+        ]
+      `);
     });
 
     it("should parse diff with --find-renames", () => {
@@ -584,20 +1551,65 @@ describe("DiffParser", () => {
         '+var baz = "Whoops!";\n' +
         " }\n" +
         " ";
-
       const result = parse(diff);
-      const file1 = result[0];
-      expect(result.length).toEqual(1);
-      expect(file1.addedLines).toEqual(1);
-      expect(file1.deletedLines).toEqual(1);
-      expect(file1.oldName).toEqual("src/test-bar.js");
-      expect(file1.newName).toEqual("src/test-baz.js");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.blocks[0].lines.length).toEqual(5);
-      const linesContent = file1.blocks[0].lines.map(line => {
-        return line.content;
-      });
-      expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,4 +1,32 @@",
+                "lines": Array [
+                  Object {
+                    "content": " function foo() {",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-var bar = \\"Whoops!\\";",
+                    "newNumber": undefined,
+                    "oldNumber": 2,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+var baz = \\"Whoops!\\";",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " }",
+                    "newNumber": 3,
+                    "oldNumber": 3,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 4,
+                    "oldNumber": 4,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "f14a870",
+            "checksumBefore": "e01513b",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "isRename": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/test-baz.js",
+            "oldName": "src/test-bar.js",
+            "unchangedPercentage": 98,
+          },
+        ]
+      `);
     });
 
     it("should parse diff with prefix 2", () => {
@@ -643,34 +1655,209 @@ describe("DiffParser", () => {
         '+var baz = "Whoops!";\n' +
         " }\n" +
         " ";
-
-      const result = parse(diff, { srcPrefix: "\t", dstPrefix: "\t" });
-      expect(result.length).toEqual(3);
-
-      const file1 = result[0];
-      expect(file1.addedLines).toEqual(2);
-      expect(file1.deletedLines).toEqual(1);
-      expect(file1.oldName).toEqual("Test.scala");
-      expect(file1.newName).toEqual("ScalaTest.scala");
-      expect(file1.blocks.length).toEqual(2);
-      expect(file1.blocks[0].lines.length).toEqual(8);
-      expect(file1.blocks[1].lines.length).toEqual(7);
-
-      const file2 = result[1];
-      expect(file2.oldName).toEqual("/dev/null");
-      expect(file2.newName).toEqual("tardis.png");
-
-      const file3 = result[2];
-      expect(file3.addedLines).toEqual(1);
-      expect(file3.deletedLines).toEqual(1);
-      expect(file3.oldName).toEqual("src/test-bar.js");
-      expect(file3.newName).toEqual("src/test-baz.js");
-      expect(file3.blocks.length).toEqual(1);
-      expect(file3.blocks[0].lines.length).toEqual(5);
-      const linesContent = file3.blocks[0].lines.map(line => {
-        return line.content;
-      });
-      expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 2,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,6 +1,8 @@",
+                "lines": Array [
+                  Object {
+                    "content": " class Test {",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 2,
+                    "oldNumber": 2,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   def method1 = ???",
+                    "newNumber": 3,
+                    "oldNumber": 3,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "+",
+                    "newNumber": 4,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": "+  def method2 = ???",
+                    "newNumber": 5,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 6,
+                    "oldNumber": 4,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   def myMethod = ???",
+                    "newNumber": 7,
+                    "oldNumber": 5,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 8,
+                    "oldNumber": 6,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+              Object {
+                "header": "@@ -10,7 +12,6 @@ class Test {",
+                "lines": Array [
+                  Object {
+                    "content": " ",
+                    "newNumber": 12,
+                    "oldNumber": 10,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   def + = ???",
+                    "newNumber": 13,
+                    "oldNumber": 11,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 14,
+                    "oldNumber": 12,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-  def |> = ???",
+                    "newNumber": undefined,
+                    "oldNumber": 13,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 15,
+                    "oldNumber": 14,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " }",
+                    "newNumber": 16,
+                    "oldNumber": 15,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 17,
+                    "oldNumber": 16,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 12,
+                "oldStartLine": 10,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "8b13271",
+            "checksumBefore": "7d1f9bf",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "isRename": true,
+            "language": "scala",
+            "mode": "100644",
+            "newName": "	ScalaTest.scala",
+            "oldName": "	Test.scala",
+            "unchangedPercentage": 88,
+          },
+          Object {
+            "addedLines": 0,
+            "blocks": Array [
+              Object {
+                "header": "Binary file",
+                "lines": Array [],
+                "newStartLine": 0,
+                "oldStartLine": 0,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "d503a29",
+            "checksumBefore": "0000000",
+            "deletedLines": 0,
+            "isBinary": true,
+            "isCombined": false,
+            "isGitDiff": true,
+            "isNew": true,
+            "newFileMode": "100644",
+            "newName": "	tardis.png",
+            "oldName": "/dev/null",
+          },
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,4 +1,32 @@",
+                "lines": Array [
+                  Object {
+                    "content": " function foo() {",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-var bar = \\"Whoops!\\";",
+                    "newNumber": undefined,
+                    "oldNumber": 2,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+var baz = \\"Whoops!\\";",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " }",
+                    "newNumber": 3,
+                    "oldNumber": 3,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 4,
+                    "oldNumber": 4,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "f14a870",
+            "checksumBefore": "e01513b",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "isRename": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/test-baz.js",
+            "oldName": "src/test-bar.js",
+            "unchangedPercentage": 98,
+          },
+        ]
+      `);
     });
 
     it("should parse binary with content", () => {
@@ -706,27 +1893,87 @@ describe("DiffParser", () => {
         '+var baz = "Whoops!";\n' +
         " }\n" +
         " ";
-
       const result = parse(diff);
-      expect(result.length).toEqual(2);
-
-      const file1 = result[0];
-      expect(file1.oldName).toEqual("favicon.png");
-      expect(file1.newName).toEqual("favicon.png");
-      expect(file1.blocks.length).toEqual(1);
-      expect(file1.blocks[0].lines.length).toEqual(0);
-
-      const file2 = result[1];
-      expect(file2.addedLines).toEqual(1);
-      expect(file2.deletedLines).toEqual(1);
-      expect(file2.oldName).toEqual("src/test-bar.js");
-      expect(file2.newName).toEqual("src/test-baz.js");
-      expect(file2.blocks.length).toEqual(1);
-      expect(file2.blocks[0].lines.length).toEqual(5);
-      const linesContent = file2.blocks[0].lines.map(line => {
-        return line.content;
-      });
-      expect([" function foo() {", '-var bar = "Whoops!";', '+var baz = "Whoops!";', " }", " "]).toEqual(linesContent);
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 0,
+            "blocks": Array [
+              Object {
+                "header": "GIT binary patch",
+                "lines": Array [],
+                "newStartLine": 0,
+                "oldStartLine": 0,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0000000000000000000000000000000000000000",
+            "checksumBefore": "2a9d516a5647205d7be510dd0dff93a3663eff6f",
+            "deletedFileMode": "100644",
+            "deletedLines": 0,
+            "isBinary": true,
+            "isCombined": false,
+            "isDeleted": true,
+            "isGitDiff": true,
+            "newName": "favicon.png",
+            "oldName": "favicon.png",
+          },
+          Object {
+            "addedLines": 1,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,4 +1,32 @@",
+                "lines": Array [
+                  Object {
+                    "content": " function foo() {",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-var bar = \\"Whoops!\\";",
+                    "newNumber": undefined,
+                    "oldNumber": 2,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "+var baz = \\"Whoops!\\";",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  Object {
+                    "content": " }",
+                    "newNumber": 3,
+                    "oldNumber": 3,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": " ",
+                    "newNumber": 4,
+                    "oldNumber": 4,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "f14a870",
+            "checksumBefore": "e01513b",
+            "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "isRename": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/test-baz.js",
+            "oldName": "src/test-bar.js",
+            "unchangedPercentage": 98,
+          },
+        ]
+      `);
     });
   });
 });

@@ -3,22 +3,21 @@ import { CSSLineClass } from "../render-utils";
 
 describe("HoganJsUtils", () => {
   describe("render", () => {
-    const emptyDiffHtml =
-      "<tr>\n" +
-      '    <td class="d2h-info">\n' +
-      '        <div class="d2h-code-line d2h-info">\n' +
-      "            File without changes\n" +
-      "        </div>\n" +
-      "    </td>\n" +
-      "</tr>";
-
     it("should render view", () => {
       const hoganJsUtils = new HoganJsUtils({});
       const result = hoganJsUtils.render("generic", "empty-diff", {
         contentClass: "d2h-code-line",
         CSSLineClass: CSSLineClass
       });
-      expect(result).toEqual(emptyDiffHtml);
+      expect(result).toMatchInlineSnapshot(`
+        "<tr>
+            <td class=\\"d2h-info\\">
+                <div class=\\"d2h-code-line d2h-info\\">
+                    File without changes
+                </div>
+            </td>
+        </tr>"
+      `);
     });
 
     it("should render view without cache", () => {
@@ -27,7 +26,15 @@ describe("HoganJsUtils", () => {
         contentClass: "d2h-code-line",
         CSSLineClass: CSSLineClass
       });
-      expect(result).toEqual(emptyDiffHtml);
+      expect(result).toMatchInlineSnapshot(`
+        "<tr>
+            <td class=\\"d2h-info\\">
+                <div class=\\"d2h-code-line d2h-info\\">
+                    File without changes
+                </div>
+            </td>
+        </tr>"
+      `);
     });
 
     it("should throw exception if template is missing", () => {
@@ -40,7 +47,7 @@ describe("HoganJsUtils", () => {
       const hoganJsUtils = new HoganJsUtils({ compiledTemplates: { "generic-empty-diff": emptyDiffTemplate } });
 
       const result = hoganJsUtils.render("generic", "empty-diff", { myName: "Rodrigo Fernandes" });
-      expect(result).toEqual("<p>Rodrigo Fernandes</p>");
+      expect(result).toMatchInlineSnapshot(`"<p>Rodrigo Fernandes</p>"`);
     });
 
     it("should allow templates to be overridden with uncompiled templates", () => {
@@ -48,7 +55,7 @@ describe("HoganJsUtils", () => {
       const hoganJsUtils = new HoganJsUtils({ rawTemplates: { "generic-empty-diff": emptyDiffTemplate } });
 
       const result = hoganJsUtils.render("generic", "empty-diff", { myName: "Rodrigo Fernandes" });
-      expect(result).toEqual("<p>Rodrigo Fernandes</p>");
+      expect(result).toMatchInlineSnapshot(`"<p>Rodrigo Fernandes</p>"`);
     });
 
     it("should allow templates to be overridden giving priority to raw templates", () => {
@@ -60,7 +67,7 @@ describe("HoganJsUtils", () => {
       });
 
       const result = hoganJsUtils.render("generic", "empty-diff", { myName: "Rodrigo Fernandes" });
-      expect(result).toEqual("<p>Rodrigo Fernandes</p>");
+      expect(result).toMatchInlineSnapshot(`"<p>Rodrigo Fernandes</p>"`);
     });
   });
 });
