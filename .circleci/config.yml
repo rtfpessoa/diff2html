@@ -55,9 +55,14 @@ jobs:
       - image: node:11
 
   build-node_12:
-    <<: *latest-build
+    <<: *common-build
     docker:
       - image: node:12
+
+  build-node_13:
+    <<: *latest-build
+    docker:
+      - image: node:13
 
   deploy:
     machine:
@@ -75,13 +80,13 @@ workflows:
   version: 2
   build:
     jobs:
-      - build-node_8
       - build-node_10
       - build-node_11
       - build-node_12
+      - build-node_13
       - deploy:
           requires:
-            - build-node_12
+            - build-node_13
           filters:
             branches:
               only: master
