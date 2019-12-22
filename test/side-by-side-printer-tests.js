@@ -105,6 +105,8 @@ describe('SideBySidePrinter', function() {
         '    </td>\n' +
         '    <td class="d2h-cntx d2h-emptyplaceholder">\n' +
         '        <div class="d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder">\n' +
+        '            <span class="d2h-code-line-prefix">&nbsp;</span>\n' +
+        '            <span class="d2h-code-line-ctn">&nbsp;</span>\n' +
         '        </div>\n' +
         '    </td>\n' +
         '</tr>';
