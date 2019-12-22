@@ -236,9 +236,9 @@
       lineClass += ' d2h-code-side-emptyplaceholder';
       contentClass += ' d2h-code-side-emptyplaceholder';
       type += ' d2h-emptyplaceholder';
-    }
-
-    if (!prefix) {
+      prefix = '&nbsp;';
+      lineWithoutPrefix = '&nbsp;';
+    } else if (!prefix) {
       var lineWithPrefix = printerUtils.separatePrefix(isCombined, content);
       prefix = lineWithPrefix.prefix;
       lineWithoutPrefix = lineWithPrefix.line;
