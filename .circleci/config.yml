@@ -8,13 +8,13 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
-      - run: npm install
+      - run: yarn
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-      - run: npm run coverage
-      - run: npm run check-coverage
+      - run: yarn run build
+      - run: yarn run coverage
 
   build-latest: &latest-build
     docker:
@@ -29,49 +29,35 @@ jobs:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-      - run: yarn run test
+      - run: yarn run build
       - run: yarn run lint
+      - run: yarn run coverage
       - run: yarn run codacy
       - persist_to_workspace:
           root: ~/diff2html
           paths:
             - docs
-            - dist
-
-  build-node_4:
-    <<: *common-build
-    docker:
-      - image: node:4
-
-  build-node_5:
-    <<: *common-build
-    docker:
-      - image: node:5
-
-  build-node_6:
-    <<: *common-build
-    docker:
-      - image: node:6
-
-  build-node_7:
-    <<: *common-build
-    docker:
-      - image: node:7
+            - build
 
   build-node_8:
     <<: *common-build
     docker:
       - image: node:8
 
-  build-node_9:
+  build-node_10:
     <<: *common-build
     docker:
-      - image: node:9
+      - image: node:10
 
-  build-node_10:
+  build-node_11:
+    <<: *common-build
+    docker:
+      - image: node:11
+
+  build-node_12:
     <<: *latest-build
     docker:
-      - image: node:10
+      - image: node:12
 
   deploy:
     machine:
@@ -81,11 +67,6 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Prepare website sources
-          command: |
-              rm -f docs/assets
-              mv dist docs/assets
-      - run:
           name: Deploy
           working_directory: ~/diff2html/docs
           command: aws s3 sync . s3://diff2html.xyz --region eu-west-1
@@ -94,16 +75,13 @@ workflows:
   version: 2
   build:
     jobs:
-      - build-node_4
-      - build-node_5
-      - build-node_6
-      - build-node_7
       - build-node_8
-      - build-node_9
       - build-node_10
+      - build-node_11
+      - build-node_12
       - deploy:
           requires:
-            - build-node_10
+            - build-node_12
           filters:
             branches:
               only: master
