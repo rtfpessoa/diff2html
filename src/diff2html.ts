@@ -39,10 +39,5 @@ export function html(diffInput: string | DiffFile[], configuration: Diff2HtmlCon
       ? new SideBySideRenderer(hoganUtils, config).render(diffJson)
       : new LineByLineRenderer(hoganUtils, config).render(diffJson);
 
-  // TODO: Review error handling
-  if (diffOutput === undefined) {
-    throw new Error("OMG we haz no diff. Why???");
-  }
-
   return fileList + diffOutput;
 }

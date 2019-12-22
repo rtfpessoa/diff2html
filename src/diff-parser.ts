@@ -23,7 +23,7 @@ function getFilename(line: string, linePrefix?: string, extraPrefix?: string): s
     ? new RegExp(`^${escapeForRegExp(linePrefix)} "?(.+?)"?$`)
     : new RegExp('^"?(.+?)"?$');
 
-  const [, filename = ""] = FilenameRegExp.exec(line) || []; // TODO: Check if this is safe
+  const [, filename = ""] = FilenameRegExp.exec(line) || [];
   const matchingPrefix = prefixes.find(p => filename.indexOf(p) === 0);
   const fnameWithoutPrefix = matchingPrefix ? filename.slice(matchingPrefix.length) : filename;
 
@@ -132,7 +132,6 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     saveBlock();
     saveFile();
 
-    // TODO: Avoid disabling types
     // eslint-disable-next-line
     // @ts-ignore
     currentFile = {
@@ -183,7 +182,6 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     }
 
     /* Create block metadata */
-    // TODO: Avoid disabling types
     // eslint-disable-next-line
     // @ts-ignore
     currentBlock = {
@@ -198,7 +196,6 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
   function createLine(line: string): void {
     if (currentFile === null || currentBlock === null || oldLine === null || newLine === null) return;
 
-    // TODO: Avoid disabling types
     // eslint-disable-next-line
     // @ts-ignore
     const currentLine: DiffLine = {
@@ -208,7 +205,6 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     const addedPrefixes = currentFile.isCombined ? ["+ ", " +", "++"] : ["+"];
     const deletedPrefixes = currentFile.isCombined ? ["- ", " -", "--"] : ["-"];
 
-    // TODO: Check if this makes sense for combined diff
     if (startsWithAny(line, addedPrefixes)) {
       currentFile.addedLines++;
       currentLine.type = LineType.INSERT;

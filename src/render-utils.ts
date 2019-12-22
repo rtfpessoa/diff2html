@@ -113,7 +113,6 @@ export function deconstructLine(line: string, isCombined: boolean): DiffLinePart
  *        returns "my/path/{to → for}/file.js"
  */
 export function filenameDiff(file: DiffFileName): string {
-  // TODO: Review this huuuuuge piece of code, do we need this?
   // TODO: Move unify path to parsing
   const oldFilename = unifyPath(file.oldName);
   const newFilename = unifyPath(file.newName);

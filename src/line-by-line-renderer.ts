@@ -39,7 +39,7 @@ export default class LineByLineRenderer {
     this.config = { ...defaultLineByLineRendererConfig, ...config };
   }
 
-  render(diffFiles: DiffFile[]): string | undefined {
+  render(diffFiles: DiffFile[]): string {
     const diffsHtml = diffFiles
       .map(file => {
         let diffs;
@@ -55,7 +55,6 @@ export default class LineByLineRenderer {
     return this.hoganUtils.render(genericTemplatesPath, "wrapper", { content: diffsHtml });
   }
 
-  // TODO: Make this private after improving tests
   makeFileDiffHtml(file: DiffFile, diffs: string): string {
     if (this.config.renderNothingWhenEmpty && Array.isArray(file.blocks) && file.blocks.length === 0) return "";
 
@@ -80,7 +79,6 @@ export default class LineByLineRenderer {
     });
   }
 
-  // TODO: Make this private after improving tests
   generateEmptyDiff(): string {
     return this.hoganUtils.render(genericTemplatesPath, "empty-diff", {
       contentClass: "d2h-code-line",
@@ -192,7 +190,6 @@ export default class LineByLineRenderer {
     return matches;
   }
 
-  // TODO: Make this private after improving tests
   processChangedLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
     const fileHtml = {
       right: "",
@@ -253,7 +250,6 @@ export default class LineByLineRenderer {
     return fileHtml;
   }
 
-  // TODO: Make this private after improving tests
   generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
     return {
       left: this.generateSingleLineHtml(oldLine),

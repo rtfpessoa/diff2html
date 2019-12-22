@@ -39,7 +39,7 @@ export default class SideBySideRenderer {
     this.config = { ...defaultSideBySideRendererConfig, ...config };
   }
 
-  render(diffFiles: DiffFile[]): string | undefined {
+  render(diffFiles: DiffFile[]): string {
     const diffsHtml = diffFiles
       .map(file => {
         let diffs;
@@ -55,7 +55,6 @@ export default class SideBySideRenderer {
     return this.hoganUtils.render(genericTemplatesPath, "wrapper", { content: diffsHtml });
   }
 
-  // TODO: Make this private after improving tests
   makeFileDiffHtml(file: DiffFile, diffs: FileHtml): string {
     if (this.config.renderNothingWhenEmpty && Array.isArray(file.blocks) && file.blocks.length === 0) return "";
 
@@ -80,7 +79,6 @@ export default class SideBySideRenderer {
     });
   }
 
-  // TODO: Make this private after improving tests
   generateEmptyDiff(): FileHtml {
     return {
       right: "",
@@ -207,7 +205,6 @@ export default class SideBySideRenderer {
     return matches;
   }
 
-  // TODO: Make this private after improving tests
   makeHeaderHtml(blockHeader: string): string {
     return this.hoganUtils.render(genericTemplatesPath, "block-header", {
       CSSLineClass: renderUtils.CSSLineClass,
@@ -217,7 +214,6 @@ export default class SideBySideRenderer {
     });
   }
 
-  // TODO: Make this private after improving tests
   processChangedLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
     const fileHtml = {
       right: "",
@@ -276,7 +272,6 @@ export default class SideBySideRenderer {
     return fileHtml;
   }
 
-  // TODO: Make this private after improving tests
   generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
     return {
       left: this.generateSingleHtml(oldLine),
