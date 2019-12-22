@@ -1,6 +1,6 @@
 {
   "name": "diff2html",
-  "version": "2.12.1",
+  "version": "2.12.2",
   "homepage": "https://diff2html.xyz",
   "description": "Fast Diff to colorized HTML",
   "keywords": [
