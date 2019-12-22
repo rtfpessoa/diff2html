@@ -1,0 +1,142 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+      # TODO: Remove temporary release branch
+      - github-workflows
+
+jobs:
+  version:
+    runs-on: ubuntu-18.04
+    container:
+      image: codacy/git-version
+    steps:
+      - uses: actions/checkout@v1
+      - name: Configure Git
+        run: |
+          git checkout -f "${GITHUB_REF#refs/heads/}"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name "$GITHUB_ACTOR"
+      - name: Get next version
+        run: |
+          export NEXT_VERSION="$(/bin/git-version --folder=$PWD)"
+          echo "Next version is ${NEXT_VERSION}"
+          echo "${NEXT_VERSION}" > version.txt
+      - name: Save version artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: version
+          path: version.txt
+      - name: Get next npm tag name
+        run: |
+          if [ "${GITHUB_REF#refs/heads/}" = "master" ]; then
+            export PUBLISH_TAG="latest"
+          elif [ "${GITHUB_REF#refs/heads/}" = "next" ]; then
+            export PUBLISH_TAG="next"
+          else
+            export PUBLISH_TAG="pr"
+          fi
+          echo "Next tag is ${PUBLISH_TAG}"
+          echo "${PUBLISH_TAG}" > tag.txt
+      - name: Save npm tag name artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: tag
+          path: tag.txt
+
+  build:
+    runs-on: ubuntu-18.04
+    env:
+      CI: true
+    strategy:
+      matrix:
+        node-version: [13.x]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: node -v
+      - run: yarn -v
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install
+      - name: Lint
+        run: yarn run lint
+      - name: Build
+        run: yarn run build
+      - name: Test
+        run: yarn run coverage
+
+  publish:
+    needs: [version, build]
+    runs-on: ubuntu-18.04
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download version artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: version
+      - name: Download npm tag name artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: tag
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 13
+      - name: Configure Yarn version
+        run: |
+          yarn config set version-tag-prefix ""
+          yarn config set version-git-message "Release version %s"
+      - name: Configure Git
+        run: |
+          git switch -c ${GITHUB_REF#refs/heads/}
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name "$GITHUB_ACTOR"
+      - name: Install dependencies
+        run: yarn install
+      - name: Prepare version
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          yarn version --non-interactive --new-version $(cat version/version.txt)
+          git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
+          git push --tags "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 13
+          registry-url: https://registry.npmjs.org/
+      - name: Publish to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
+          echo "Going to publish version $(cat version/version.txt) to NPM"
+          yarn publish --tag $(cat tag/tag.txt) --non-interactive --new-version $(cat version/version.txt)
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 13
+          registry-url: https://npm.pkg.github.com
+          scope: "@rtfpessoa"
+      - name: Publish to GitHub
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          # HACK: Override npm package name to be able to publish in GitHub
+          (TMP_FILE=$(mktemp) && jq '.name = "@rtfpessoa/diff2html"' package.json > "${TMP_FILE}" && mv "${TMP_FILE}" package.json)
+          echo "Going to publish version $(cat version/version.txt) to GitHub"
+          yarn publish --tag $(cat tag/tag.txt) --non-interactive --new-version $(cat version/version.txt)
+          # HACK: Restore npm package name
+          (TMP_FILE=$(mktemp) && jq '.name = "diff2html"' package.json > "${TMP_FILE}" && mv "${TMP_FILE}" package.json)

@@ -50,8 +50,7 @@
     "build-website": "rm -rf docs; NODE_ENV=production WEBPACK_MINIMIZE=true webpack --mode production --config webpack.website.ts",
     "start-website": "WEBPACK_MINIFY=false NODE_ENV=dev webpack-dev-server --mode dev --config webpack.website.ts",
     "preversion": "yarn run build && yarn run lint && yarn test",
-    "version": "git add -A package.json",
-    "postversion": "git push && git push --tags"
+    "version": "git add -A package.json"
   },
   "main": "./lib/diff2html.js",
   "dependencies": {
