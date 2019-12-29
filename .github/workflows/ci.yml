@@ -1,0 +1,50 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    env:
+      CI: true
+    strategy:
+      matrix:
+        node-version: [10.x, 11.x, 12.x, 13.x]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Log environment setup
+        run: |
+          node -v
+          yarn -v
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install
+      - name: Lint
+        run: yarn run lint
+      - name: Build
+        run: yarn run build
+      - name: Test
+        run: yarn run coverage
+      - name: Push coverage to Codacy
+        if: matrix.node-version == '13.x'
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: yarn run codacy
+      - name: Save coverage report
+        if: matrix.node-version == '13.x'
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage
+          path: coverage
