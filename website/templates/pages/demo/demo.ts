@@ -1,9 +1,9 @@
-import { Diff2HtmlUI, defaultDiff2HtmlUIConfig, Diff2HtmlUIConfig } from "../../../../src/ui/js/diff2html-ui";
+import { Diff2HtmlUI, defaultDiff2HtmlUIConfig, Diff2HtmlUIConfig } from '../../../../src/ui/js/diff2html-ui-slim';
 
-import "../../../main.ts";
-import "../../../main.css";
-import "./demo.css";
-import "../../../../src/ui/css/diff2html.css";
+import '../../../main.ts';
+import '../../../main.css';
+import 'highlight.js/styles/github.css';
+import '../../../../src/ui/css/diff2html.css';
 
 /*
  * Example URLs:
@@ -23,18 +23,18 @@ type URLParams = {
   [key: string]: string | boolean | number | undefined;
 };
 
-const searchParam = "diff";
+const searchParam = 'diff';
 
 function getParamsFromSearch(search: string): URLParams {
   try {
     return search
-      .split("?")[1]
-      .split("&")
+      .split('?')[1]
+      .split('&')
       .reduce((urlParams, e) => {
-        const values = e.split("=");
+        const values = e.split('=');
         return {
           ...urlParams,
-          [values[0]]: values[1]
+          [values[0]]: values[1],
         };
       }, {});
   } catch (_ignore) {
@@ -43,8 +43,8 @@ function getParamsFromSearch(search: string): URLParams {
 }
 
 function validateUrl(url: string): boolean {
-  return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
-    url
+  return /^(?:(?:https?|ftp):)?\/\/(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4])|(?:[\da-z\u00a1-\uffff]-*)*[\da-z\u00a1-\uffff]+(?:\.(?:[\da-z\u00a1-\uffff]-*)*[\da-z\u00a1-\uffff]+)*\.[a-z\u00a1-\uffff]{2,}.?)(?::\d{2,5})?(?:[#/?]\S*)?$/i.test(
+    url,
   );
 }
 
@@ -55,7 +55,7 @@ type Request = {
 
 function prepareRequest(url: string): Request {
   if (!validateUrl(url)) {
-    const errorMsg = "Invalid url provided!";
+    const errorMsg = 'Invalid url provided!';
     console.error(errorMsg);
     throw new Error(errorMsg);
   }
@@ -74,44 +74,44 @@ function prepareRequest(url: string): Request {
 
   function gitLabUrlGen(userName: string, projectName: string, type: string, value: string): string {
     return (
-      "https://crossorigin.me/https://gitlab.com/" + userName + "/" + projectName + "/" + type + "/" + value + ".diff"
+      'https://crossorigin.me/https://gitlab.com/' + userName + '/' + projectName + '/' + type + '/' + value + '.diff'
     );
   }
 
   function gitHubUrlGen(userName: string, projectName: string, type: string, value: string): string {
-    headers.append("Accept", "application/vnd.github.v3.diff");
-    return "https://api.github.com/repos/" + userName + "/" + projectName + "/" + type + "/" + value;
+    headers.append('Accept', 'application/vnd.github.v3.diff');
+    return 'https://api.github.com/repos/' + userName + '/' + projectName + '/' + type + '/' + value;
   }
 
   function bitbucketUrlGen(userName: string, projectName: string, type: string, value: string): string {
-    const baseUrl = "https://bitbucket.org/api/2.0/repositories/";
-    if (type === "pullrequests") {
-      return baseUrl + userName + "/" + projectName + "/pullrequests/" + value + "/diff";
+    const baseUrl = 'https://bitbucket.org/api/2.0/repositories/';
+    if (type === 'pullrequests') {
+      return baseUrl + userName + '/' + projectName + '/pullrequests/' + value + '/diff';
     }
-    return baseUrl + userName + "/" + projectName + "/diff/" + value;
+    return baseUrl + userName + '/' + projectName + '/diff/' + value;
   }
 
   let values;
   if ((values = githubCommitUrl.exec(url))) {
-    fetchUrl = gitHubUrlGen(values[1], values[2], "commits", values[3]);
+    fetchUrl = gitHubUrlGen(values[1], values[2], 'commits', values[3]);
   } else if ((values = githubPrUrl.exec(url))) {
-    fetchUrl = gitHubUrlGen(values[1], values[2], "pulls", values[3]);
+    fetchUrl = gitHubUrlGen(values[1], values[2], 'pulls', values[3]);
   } else if ((values = gitlabCommitUrl.exec(url))) {
-    fetchUrl = gitLabUrlGen(values[1], values[2], "commit", values[3]);
+    fetchUrl = gitLabUrlGen(values[1], values[2], 'commit', values[3]);
   } else if ((values = gitlabPrUrl.exec(url))) {
-    fetchUrl = gitLabUrlGen(values[1], values[2], "merge_requests", values[3]);
+    fetchUrl = gitLabUrlGen(values[1], values[2], 'merge_requests', values[3]);
   } else if ((values = bitbucketCommitUrl.exec(url))) {
-    fetchUrl = bitbucketUrlGen(values[1], values[2], "commit", values[3]);
+    fetchUrl = bitbucketUrlGen(values[1], values[2], 'commit', values[3]);
   } else if ((values = bitbucketPrUrl.exec(url))) {
-    fetchUrl = bitbucketUrlGen(values[1], values[2], "pullrequests", values[3]);
+    fetchUrl = bitbucketUrlGen(values[1], values[2], 'pullrequests', values[3]);
   } else {
-    console.info("Could not parse url, using the provided url.");
-    fetchUrl = "https://crossorigin.me/" + url;
+    console.info('Could not parse url, using the provided url.');
+    fetchUrl = 'https://crossorigin.me/' + url;
   }
 
   return {
     url: fetchUrl,
-    headers: headers
+    headers: headers,
   };
 }
 
@@ -121,13 +121,13 @@ function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
   const { diff, ...urlParamsRest } = urlParams;
   const config: URLParams = {
     ...defaultDiff2HtmlUIConfig,
-    ...urlParamsRest
+    ...urlParamsRest,
   };
 
   return Object.entries(config).reduce((object, [k, v]) => {
     const newObject = !Number.isNaN(Number(v))
       ? { [k]: Number(v) }
-      : v === "true" || v === "false"
+      : v === 'true' || v === 'false'
       ? { [k]: Boolean(v) }
       : { [k]: v };
     return { ...object, ...newObject };
@@ -137,14 +137,14 @@ function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
 async function getDiff(request: Request): Promise<string> {
   try {
     const result = await fetch(request.url, {
-      method: "GET",
+      method: 'GET',
       headers: request.headers,
-      mode: "cors",
-      cache: "default"
+      mode: 'cors',
+      cache: 'default',
     });
     return result.text();
   } catch (error) {
-    console.error("Failed to retrieve diff", error);
+    console.error('Failed to retrieve diff', error);
     throw error;
   }
 }
@@ -152,10 +152,10 @@ async function getDiff(request: Request): Promise<string> {
 function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements): void {
   const diff2htmlUi = new Diff2HtmlUI(diffString, elements.structure.diffTarget, config);
 
-  if (config.outputFormat === "side-by-side") {
-    elements.structure.container.style.width = "100%";
+  if (config.outputFormat === 'side-by-side') {
+    elements.structure.container.style.width = '100%';
   } else {
-    elements.structure.container.style.width = "";
+    elements.structure.container.style.width = '';
   }
 
   diff2htmlUi.draw();
@@ -163,7 +163,7 @@ function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements)
 
 async function prepareInitialState(elements: Elements): Promise<[Diff2HtmlUIConfig, string]> {
   const urlParams = getParamsFromSearch(window.location.search);
-  const currentUrl = (urlParams && urlParams[searchParam]) || "https://github.com/rtfpessoa/diff2html/pull/106";
+  const currentUrl = (urlParams && urlParams[searchParam]) || 'https://github.com/rtfpessoa/diff2html/pull/106';
 
   if (currentUrl !== elements.url.input.value) elements.url.input.value = currentUrl;
 
@@ -178,20 +178,20 @@ async function prepareInitialState(elements: Elements): Promise<[Diff2HtmlUIConf
 function updateBrowserUrl(config: Diff2HtmlUIConfig, newDiffUrl: string): void {
   if (history.pushState) {
     const paramString = Object.entries(config)
-      .map(([k, v]) => k + "=" + v)
-      .join("&");
+      .map(([k, v]) => k + '=' + v)
+      .join('&');
     const newPageUrl =
       window.location.protocol +
-      "//" +
+      '//' +
       window.location.host +
       window.location.pathname +
-      "?" +
+      '?' +
       paramString +
-      "&" +
+      '&' +
       searchParam +
-      "=" +
+      '=' +
       newDiffUrl;
-    window.history.pushState({ path: newPageUrl }, "", newPageUrl);
+    window.history.pushState({ path: newPageUrl }, '', newPageUrl);
   }
 }
 
@@ -215,15 +215,15 @@ type Elements = {
   };
 };
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Improves browser compatibility
-  require("whatwg-fetch");
+  require('whatwg-fetch');
 
   const drawAndUpdateUrl = async (
     diffUrl: string,
     diffString: string,
     config: Diff2HtmlUIConfig,
-    elements: Elements
+    elements: Elements,
   ): Promise<void> => {
     updateBrowserUrl(config, diffUrl);
     const newRequest = prepareRequest(diffUrl);
@@ -233,22 +233,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const elements: Elements = {
     structure: {
-      container: document.getElementsByClassName("container")[0] as HTMLElement,
-      diffTarget: document.getElementById("url-diff-container") as HTMLElement
+      container: document.getElementsByClassName('container')[0] as HTMLElement,
+      diffTarget: document.getElementById('url-diff-container') as HTMLElement,
     },
     url: {
-      input: document.getElementById("url") as HTMLInputElement,
-      button: document.getElementById("url-btn") as HTMLElement
+      input: document.getElementById('url') as HTMLInputElement,
+      button: document.getElementById('url-btn') as HTMLElement,
     },
     options: {
-      outputFormat: document.getElementById("diff-url-options-output-format") as HTMLInputElement,
-      matching: document.getElementById("diff-url-options-matching") as HTMLInputElement,
-      wordsThreshold: document.getElementById("diff-url-options-match-words-threshold") as HTMLInputElement,
-      matchingMaxComparisons: document.getElementById("diff-url-options-matching-max-comparisons") as HTMLInputElement
+      outputFormat: document.getElementById('diff-url-options-output-format') as HTMLInputElement,
+      matching: document.getElementById('diff-url-options-matching') as HTMLInputElement,
+      wordsThreshold: document.getElementById('diff-url-options-match-words-threshold') as HTMLInputElement,
+      matchingMaxComparisons: document.getElementById('diff-url-options-matching-max-comparisons') as HTMLInputElement,
     },
     checkboxes: {
-      drawFileList: document.getElementById("diff-url-options-show-files") as HTMLInputElement
-    }
+      drawFileList: document.getElementById('diff-url-options-show-files') as HTMLInputElement,
+    },
   };
 
   let [config, diffString] = await prepareInitialState(elements);
@@ -262,20 +262,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     (elements.options.matchingMaxComparisons.value = config.matchingMaxComparisons.toString());
 
   Object.entries(elements.options).forEach(([option, element]) =>
-    element.addEventListener("change", () => {
+    element.addEventListener('change', () => {
       config = { ...config, [option]: element.value };
       drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
-    })
+    }),
   );
 
   Object.entries(elements.checkboxes).forEach(([option, checkbox]) =>
-    checkbox.addEventListener("change", () => {
+    checkbox.addEventListener('change', () => {
       config = { ...config, [option]: checkbox.checked };
       drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
-    })
+    }),
   );
 
-  elements.url.button.addEventListener("click", async e => {
+  elements.url.button.addEventListener('click', async e => {
     e.preventDefault();
     const newDiffUrl = elements.url.input.value;
     const newRequest = prepareRequest(newDiffUrl);

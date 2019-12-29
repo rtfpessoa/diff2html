@@ -1,6 +1,6 @@
-import * as Hogan from "hogan.js";
+import * as Hogan from 'hogan.js';
 
-import { defaultTemplates } from "./diff2html-templates";
+import { defaultTemplates } from './diff2html-templates';
 
 export interface RawTemplates {
   [name: string]: string;
@@ -24,7 +24,7 @@ export default class HoganJsUtils {
         const compiledTemplate: Hogan.Template = Hogan.compile(templateString, { asString: false });
         return { ...previousTemplates, [name]: compiledTemplate };
       },
-      {}
+      {},
     );
 
     this.preCompiledTemplates = { ...defaultTemplates, ...compiledTemplates, ...compiledRawTemplates };

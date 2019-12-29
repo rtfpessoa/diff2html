@@ -2,20 +2,19 @@
 
 [![Codacy Quality Badge](https://api.codacy.com/project/badge/Grade/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/rtfpessoa/diff2html?utm_source=github.com&utm_medium=referral&utm_content=rtfpessoa/diff2html&utm_campaign=Badge_Grade)
 [![Codacy Coverage Badge](https://api.codacy.com/project/badge/Coverage/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/rtfpessoa/diff2html?utm_source=github.com&utm_medium=referral&utm_content=rtfpessoa/diff2html&utm_campaign=Badge_Coverage)
-![GitHub CI](https://github.com/rtfpessoa/diff2html/workflows/CI/badge.svg)
+[![GitHub CI](https://github.com/rtfpessoa/diff2html/workflows/CI/badge.svg?branch=master)](https://github.com/rtfpessoa/diff2html/actions?query=branch%3Amaster)
 
 [![npm](https://img.shields.io/npm/v/diff2html.svg)](https://www.npmjs.com/package/diff2html)
 [![Dependency Status](https://david-dm.org/rtfpessoa/diff2html.svg)](https://david-dm.org/rtfpessoa/diff2html)
 [![devDependency Status](https://david-dm.org/rtfpessoa/diff2html/dev-status.svg)](https://david-dm.org/rtfpessoa/diff2html#info=devDependencies)
 [![cdnjs](https://img.shields.io/cdnjs/v/diff2html)](https://cdnjs.com/libraries/diff2html)
 
-[![node](https://img.shields.io/node/v/diff2html.svg)]()
-[![npm](https://img.shields.io/npm/l/diff2html.svg)]()
+[![node](https://img.shields.io/node/v/diff2html.svg)]() [![npm](https://img.shields.io/npm/l/diff2html.svg)]()
 [![npm](https://img.shields.io/npm/dm/diff2html.svg)](https://www.npmjs.com/package/diff2html)
 [![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors-)
 [![Gitter](https://badges.gitter.im/rtfpessoa/diff2html.svg)](https://gitter.im/rtfpessoa/diff2html?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-diff2html generates pretty HTML diffs from git or unified diff output.
+diff2html generates pretty HTML diffs from git diff or unified diff output.
 
 [![NPM](https://nodei.co/npm/diff2html.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/diff2html/)
 
@@ -29,7 +28,7 @@ diff2html generates pretty HTML diffs from git or unified diff output.
 
 - Inserted and removed lines
 
-- GitHub like style
+- GitHub like visual style
 
 - Code syntax highlight
 
@@ -44,17 +43,39 @@ diff2html generates pretty HTML diffs from git or unified diff output.
 ## Distributions
 
 - [WebJar](http://www.webjars.org/)
-- [Node Module](https://www.npmjs.org/package/diff2html)
-- [Node CLI](https://www.npmjs.org/package/diff2html-cli)
+- [Node Library](https://www.npmjs.org/package/diff2html)
+- [NPM CLI](https://www.npmjs.org/package/diff2html-cli)
 - Manually download and import:
-  - Browser
-    - [bundles/js/diff2html.min.js](./bundles/js/diff2html.min.js) - includes the diff parser and html generator
-    - [bundles/js/diff2html-ui.min.js](./bundles/js/diff2html-ui.min.js) - includes the wrapper of diff2html that adds highlight, synchronized scroll, and other nice features
-  - Node.js
-    - [lib/diff2html.js](./lib/diff2html.js) - targeted for es5, includes the diff parser and html generator
-    - [lib-esm/diff2html.js](./lib-esm/diff2html.js) - targeted for es6 - includes the diff parser and html generator
+  - Browser / Bundle
+    - Parser and HTML Generator
+      - [bundles/js/diff2html.min.js](./bundles/js/diff2html.min.js) - includes the diff parser and html generator
+    - Wrapper and helper adding syntax highlight, synchronized scroll, and other nice features
+      - [bundles/js/diff2html-ui.min.js](./bundles/js/diff2html-ui.min.js) - includes the wrapper of diff2html with
+        highlight for all `highlight.js` supported languages
+      - [bundles/js/diff2html-ui-slim.min.js](./bundles/js/diff2html-ui-slim.min.js) - includes the wrapper of diff2html
+        with "the most common" `highlight.js` supported languages
+      - [bundles/js/diff2html-ui-base.min.js](./bundles/js/diff2html-ui-base.min.js) - includes the wrapper of diff2html
+        without including a `highlight.js` implementation. You can use it without syntax highlight or by passing your
+        own implementation with the languages you prefer
+  - NPM / Node.js library
+    - ES5
+      - [lib/diff2html.js](./lib/diff2html.js) - includes the diff parser and html generator
+      - [lib/ui/js/diff2html-ui.js](./lib/ui/js/diff2html-ui.js) - includes the wrapper of diff2html with highlight for
+        all `highlight.js` supported languages
+      - [lib/ui/js/diff2html-ui-slim.js](./lib/ui/js/diff2html-ui-slim.js) - includes the wrapper of diff2html with "the
+        most common" `highlight.js` supported languages
+      - [lib/ui/js/diff2html-ui-base.js](./lib/ui/js/diff2html-ui-base.js)
+    - ES6
+      - [lib-esm/diff2html.js](./lib-esm/diff2html.js) - includes the diff parser and html generator
+      - [lib/ui/js/diff2html-ui.js](./lib/ui/js/diff2html-ui.js) - includes the wrapper of diff2html with highlight for
+        all `highlight.js` supported languages
+      - [lib/ui/js/diff2html-ui-slim.js](./lib/ui/js/diff2html-ui-slim.js) - includes the wrapper of diff2html with "the
+        most common" `highlight.js` supported languages
+      - [lib/ui/js/diff2html-ui-base.js](./lib/ui/js/diff2html-ui-base.js) - includes the wrapper of diff2html without
+        including a `highlight.js` implementation. You can use it without syntax highlight or by passing your own
+        implementation with the languages you prefer
 
-## How to use
+## Diff2Html Usage
 
 To load correctly in the Browser you always need to include the stylesheet in the final HTML.
 
@@ -67,7 +88,41 @@ Import the stylesheet
 
 You can also refer to it from a CDN like [CDNJS](https://cdnjs.com/libraries/diff2html).
 
-### Browser Library
+### Diff2Html API
+
+> JSON representation of the diff
+
+    function parse(diffInput: string, configuration: Diff2HtmlConfig = {}): DiffFile[]
+
+> Pretty HTML representation of the diff
+
+    function html(diffInput: string | DiffFile[], configuration: Diff2HtmlConfig = {}): string
+
+> Check out the [docs/demo.html](./docs/demo.html) for a demo example.
+
+### Diff2Html Configuration
+
+The HTML output accepts a Javascript object with configuration. Possible options:
+
+- `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
+- `drawFileList`: show a file list before the diff: `true` or `false`, default is `false`
+- `diffStyle`: show differences level in each line: `word` or `char`, default is `word`
+- `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default
+  is `none`
+- `matchWordsThreshold`: similarity threshold for word matching, default is 0.25
+- `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is
+  `2500`
+- `maxLineSizeInBlockForComparison`: maximum number os characters of the bigger line in a block to apply comparison,
+  default is `200`
+- `maxLineLengthHighlight`: only perform diff changes highlight if lines are smaller than this, default is `10000`
+- `renderNothingWhenEmpty`: render nothing if the diff shows no change in its comparison: `true` or `false`, default is
+  `false`
+- `compiledTemplates`: object with previously compiled templates to replace parts of the html
+- `rawTemplates`: object with raw not compiled templates to replace parts of the html
+  > For more information regarding the possible templates look into
+  > [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
+
+### Diff2Html Browser
 
 Import the stylesheet and the library code
 
@@ -82,32 +137,34 @@ Import the stylesheet and the library code
 It will now be available as a global variable named `Diff2Html`.
 
 ```js
-document.addEventListener("DOMContentLoaded", () => {
-  var diffHtml = global.Diff2Html.html("<Unified Diff String>", {
+document.addEventListener('DOMContentLoaded', () => {
+  var diffHtml = global.Diff2Html.html('<Unified Diff String>', {
     drawFileList: true,
-    matching: "lines",
-    outputFormat: "side-by-side"
+    matching: 'lines',
+    outputFormat: 'side-by-side',
   });
-  document.getElementById("destination-elem-id").innerHTML = diffHtml;
+  document.getElementById('destination-elem-id').innerHTML = diffHtml;
 });
 ```
 
-### Node Module
+### Diff2Html NPM / Node.js Library
 
 ```js
-const Diff2html = require("diff2html");
-const diffJson = Diff2html.parse("<Unified Diff String>");
+const Diff2html = require('diff2html');
+const diffJson = Diff2html.parse('<Unified Diff String>');
 const diffHtml = Diff2html.html(diffJson, { drawFileList: true });
-document.getElementById("destination-elem-id").innerHTML = diffHtml;
+document.getElementById('destination-elem-id').innerHTML = diffHtml;
 ```
 
-### Angular
+### Diff2Html Examples
+
+#### Diff2Html Angular Example
 
 - Typescript
 
 ```typescript
-import * as Diff2Html from "diff2html";
-import { Component, OnInit } from "@angular/core";
+import * as Diff2Html from 'diff2html';
+import { Component, OnInit } from '@angular/core';
 
 export class AppDiffComponent implements OnInit {
   outputHtml: string;
@@ -119,8 +176,8 @@ export class AppDiffComponent implements OnInit {
 
   init() {
     let strInput =
-      "--- a/server/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go\n+++ b/server/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go\n@@ -1035,6 +1035,17 @@ func Prctl(option int, arg2 uintptr, arg3 uintptr, arg4 uintptr, arg5 uintptr) (\n \n // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT\n \n+func Pselect(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timespec, sigmask *Sigset_t) (n int, err error) {\n+\tr0, _, e1 := Syscall6(SYS_PSELECT6, uintptr(nfd), uintptr(unsafe.Pointer(r)), uintptr(unsafe.Pointer(w)), uintptr(unsafe.Pointer(e)), uintptr(unsafe.Pointer(timeout)), uintptr(unsafe.Pointer(sigmask)))\n+\tn = int(r0)\n+\tif e1 != 0 {\n+\t\terr = errnoErr(e1)\n+\t}\n+\treturn\n+}\n+\n+// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT\n+\n func read(fd int, p []byte) (n int, err error) {\n \tvar _p0 unsafe.Pointer\n \tif len(p) > 0 {\n";
-    let outputHtml = Diff2Html.html(strInput, { drawFileList: true, matching: "lines" });
+      '--- a/server/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go\n+++ b/server/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go\n@@ -1035,6 +1035,17 @@ func Prctl(option int, arg2 uintptr, arg3 uintptr, arg4 uintptr, arg5 uintptr) (\n \n // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT\n \n+func Pselect(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timespec, sigmask *Sigset_t) (n int, err error) {\n+\tr0, _, e1 := Syscall6(SYS_PSELECT6, uintptr(nfd), uintptr(unsafe.Pointer(r)), uintptr(unsafe.Pointer(w)), uintptr(unsafe.Pointer(e)), uintptr(unsafe.Pointer(timeout)), uintptr(unsafe.Pointer(sigmask)))\n+\tn = int(r0)\n+\tif e1 != 0 {\n+\t\terr = errnoErr(e1)\n+\t}\n+\treturn\n+}\n+\n+// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT\n+\n func read(fd int, p []byte) (n int, err error) {\n \tvar _p0 unsafe.Pointer\n \tif len(p) > 0 {\n';
+    let outputHtml = Diff2Html.html(strInput, { drawFileList: true, matching: 'lines' });
     this.outputHtml = outputHtml;
   }
 }
@@ -148,7 +205,7 @@ export class AppDiffComponent implements OnInit {
 ]
 ```
 
-### Vue.js
+#### Diff2Html Vue.js Example
 
 ```vue
 <template>
@@ -156,67 +213,30 @@ export class AppDiffComponent implements OnInit {
 </template>
 
 <script>
-import * as Diff2Html from "diff2html";
-import "diff2html/bundles/css/diff2html.min.css";
+import * as Diff2Html from 'diff2html';
+import 'diff2html/bundles/css/diff2html.min.css';
 
 export default {
   data() {
     return {
       diffs:
-        "--- a/server/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go\n+++ b/server/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go\n@@ -1035,6 +1035,17 @@ func Prctl(option int, arg2 uintptr, arg3 uintptr, arg4 uintptr, arg5 uintptr) (\n \n // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT\n \n+func Pselect(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timespec, sigmask *Sigset_t) (n int, err error) {\n+\tr0, _, e1 := Syscall6(SYS_PSELECT6, uintptr(nfd), uintptr(unsafe.Pointer(r)), uintptr(unsafe.Pointer(w)), uintptr(unsafe.Pointer(e)), uintptr(unsafe.Pointer(timeout)), uintptr(unsafe.Pointer(sigmask)))\n+\tn = int(r0)\n+\tif e1 != 0 {\n+\t\terr = errnoErr(e1)\n+\t}\n+\treturn\n+}\n+\n+// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT\n+\n func read(fd int, p []byte) (n int, err error) {\n \tvar _p0 unsafe.Pointer\n \tif len(p) > 0 {\n"
+        '--- a/server/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go\n+++ b/server/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go\n@@ -1035,6 +1035,17 @@ func Prctl(option int, arg2 uintptr, arg3 uintptr, arg4 uintptr, arg5 uintptr) (\n \n // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT\n \n+func Pselect(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timespec, sigmask *Sigset_t) (n int, err error) {\n+\tr0, _, e1 := Syscall6(SYS_PSELECT6, uintptr(nfd), uintptr(unsafe.Pointer(r)), uintptr(unsafe.Pointer(w)), uintptr(unsafe.Pointer(e)), uintptr(unsafe.Pointer(timeout)), uintptr(unsafe.Pointer(sigmask)))\n+\tn = int(r0)\n+\tif e1 != 0 {\n+\t\terr = errnoErr(e1)\n+\t}\n+\treturn\n+}\n+\n+// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT\n+\n func read(fd int, p []byte) (n int, err error) {\n \tvar _p0 unsafe.Pointer\n \tif len(p) > 0 {\n',
     };
   },
   computed: {
     prettyHtml() {
-      return Diff2Html.getPrettyHtml(this.diffs, {
-        inputFormat: "diff",
+      return Diff2Html.html(this.diffs, {
         drawFileList: true,
-        matching: "lines",
-        outputFormat: "side-by-side"
+        matching: 'lines',
+        outputFormat: 'side-by-side',
       });
-    }
-  }
+    },
+  },
 };
 </script>
 ```
 
-## API
-
-> Intermediate Json From Git Word Diff Output
-
-    getJsonFromDiff(input: string, configuration?: Options): Result[]
-
-> Pretty HTML diff
-
-    getPrettyHtml(input: any, configuration?: Options): string
-
-> Check out the [docs/demo.html](./docs/demo.html) for a demo example.
-
-## Configuration
-
-The HTML output accepts a Javascript object with configuration. Possible options:
-
-- `inputFormat`: the format of the input data: `'diff'` or `'json'`, default is `'diff'`
-- `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
-- `drawFileList`: show a file list before the diff: `true` or `false`, default is `false`
-- `diffStyle`: show differences level in each line: `word` or `char`, default is `word`
-- `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default is `none`
-- `matchWordsThreshold`: similarity threshold for word matching, default is 0.25
-- `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is `2500`
-- `maxLineSizeInBlockForComparison`: maximum number os characters of the bigger line in a block to apply comparison, default is `200`
-- `maxLineLengthHighlight`: only perform diff changes highlight if lines are smaller than this, default is `10000`
-- `compiledTemplates`: object with previously compiled templates to replace parts of the html
-- `rawTemplates`: object with raw not compiled templates to replace parts of the html
-- `renderNothingWhenEmpty`: render nothing if the diff shows no change in its comparison: `true` or `false`, default is `false`
-  > For more information regarding the possible templates look into [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
-
-** Diff2HtmlUI Helper Options **
-
-- `synchronisedScroll`: scroll both panes in side-by-side mode: `true` or `false`, default is `false`
-
-> For more information regarding the possible templates look into [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
-
-## Diff2HtmlUI Helper
+## Diff2HtmlUI
 
 > Simple wrapper to ease simple tasks in the browser such as: code highlight and js effects
 
@@ -225,7 +245,41 @@ The HTML output accepts a Javascript object with configuration. Possible options
 - Enable collapsible file summary list
 - Enable syntax highlight of the code in the diffs
 
-### How to use
+### Diff2HtmlUI API
+
+> Create a Diff2HtmlUI instance
+
+```ts
+constructor(diffInput: string | DiffFile[], target: HTMLElement) // diff2html-ui, diff2html-ui-slim
+constructor(diffInput: string | DiffFile[], target: HTMLElement, config: Diff2HtmlUIConfig = {}, hljs?: HighlightJS) // diff2html-ui-base
+```
+
+> Generate and inject in the document the Pretty HTML representation of the diff
+
+```ts
+draw(): void
+```
+
+> Enable extra features
+
+```ts
+synchronisedScroll(): void
+fileListToggle(startVisible: boolean): void
+highlightCode(): void
+```
+
+> Check out the [docs/demo.html](./docs/demo.html) for a demo example.
+
+### Diff2HtmlUI Configuration
+
+- `synchronisedScroll`: scroll both panes in side-by-side mode: `true` or `false`, default is `true`
+- `highlight`: syntax highlight the code on the diff: `true` or `false`, default is `true`
+- `fileListToggle`: allow the file summary list to be toggled: `true` or `false`, default is `true`
+- `fileListStartVisible`: choose if the file summary list starts visible: `true` or `false`, default is `false`
+- `smartSelection`: allow selection of the code without including line numbers of line prefixes: `true` or `false`,
+  default is `true`
+
+### Diff2HtmlUI Browser
 
 #### Mandatory HTML resource imports
 
@@ -240,8 +294,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
 #### Init
 
 ```js
-const targetElement = document.getElementById("destination-elem-id");
-const configuration = { drawFileList: true, matching: "lines" };
+const targetElement = document.getElementById('destination-elem-id');
+const configuration = { drawFileList: true, matching: 'lines' };
 
 const diff2htmlUi = new Diff2HtmlUI(diffString, targetElement, configuration);
 // or
@@ -268,7 +322,7 @@ diff2htmlUi.draw();
 > Pass the option `highlight` with value true or invoke `diff2htmlUi.highlightCode()` after `diff2htmlUi.draw()`.
 
 ```js
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   const diffString = `diff --git a/sample.js b/sample.js
 index 0000001..0ddf2ba
 --- a/sample.js
@@ -276,8 +330,8 @@ index 0000001..0ddf2ba
 @@ -1 +1 @@
 -console.log("Hello World!")
 +console.log("Hello from Diff2Html!")`;
-  const targetElement = document.getElementById("myDiffElement");
-  const configuration = { inputFormat: "json", drawFileList: true, matching: "lines", highlight: true };
+  const targetElement = document.getElementById('myDiffElement');
+  const configuration = { inputFormat: 'json', drawFileList: true, matching: 'lines', highlight: true };
   const diff2htmlUi = new Diff2HtmlUI(diffString, targetElement, configuration);
   diff2htmlUi.draw();
   diff2htmlUi.highlightCode();
@@ -293,19 +347,19 @@ index 0000001..0ddf2ba
 <script type="text/javascript" src="bundles/js/diff2html-ui.min.js"></script>
 ```
 
-> Invoke the Diff2HtmlUI helper
-> Pass the option `fileListToggle` with value true or invoke `diff2htmlUi.fileListToggle()` after `diff2htmlUi.draw()`.
+> Invoke the Diff2HtmlUI helper Pass the option `fileListToggle` with value true or invoke
+> `diff2htmlUi.fileListToggle()` after `diff2htmlUi.draw()`.
 
 ```js
-document.addEventListener("DOMContentLoaded", () => {
-  const targetElement = document.getElementById("myDiffElement");
-  var diff2htmlUi = new Diff2HtmlUI(lineDiffExample, targetElement, { drawFileList: true, matching: "lines" });
+document.addEventListener('DOMContentLoaded', () => {
+  const targetElement = document.getElementById('myDiffElement');
+  var diff2htmlUi = new Diff2HtmlUI(lineDiffExample, targetElement, { drawFileList: true, matching: 'lines' });
   diff2htmlUi.draw();
   diff2htmlUi.fileListToggle(false);
 });
 ```
 
-# Troubleshooting
+## Troubleshooting
 
 ### 1. Out of memory or Slow execution
 
@@ -320,9 +374,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ## Contributions
 
-This is a developer friendly project, all the contributions are welcome.
-To contribute just send a pull request with your changes following the guidelines described in `CONTRIBUTING.md`.
-I will try to review them as soon as possible.
+This is a developer friendly project, all the contributions are welcome. To contribute just send a pull request with
+your changes following the guidelines described in `CONTRIBUTING.md`. I will try to review them as soon as possible.
 
 ## Contributors ✨
 
@@ -369,14 +422,16 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
+Contributions of any kind welcome!
 
 ## License
 
-Copyright 2014-2016 Rodrigo Fernandes. Released under the terms of the MIT license.
+Copyright 2014-present Rodrigo Fernandes. Released under the terms of the MIT license.
 
 ## Thanks
 
-This project is inspired in [pretty-diff](https://github.com/scottgonzalez/pretty-diff) by [Scott González](https://github.com/scottgonzalez).
+This project is inspired in [pretty-diff](https://github.com/scottgonzalez/pretty-diff) by
+[Scott González](https://github.com/scottgonzalez).
 
 ---

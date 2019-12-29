@@ -1,7 +1,8 @@
 name: Release
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - master
 
@@ -12,6 +13,7 @@ jobs:
       image: codacy/git-version
     steps:
       - uses: actions/checkout@v1
+        if: github.event.pull_request.merged
       - name: Configure Git
         run: |
           git checkout -f "${GITHUB_REF#refs/heads/}"
@@ -46,7 +48,7 @@ jobs:
           path: tag.txt
 
   publish:
-    needs: [version, build]
+    needs: [version]
     runs-on: ubuntu-18.04
     env:
       CI: true
@@ -84,7 +86,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
       - name: Install dependencies
-        run: yarn install
+        run: yarn
       - name: Prepare version
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

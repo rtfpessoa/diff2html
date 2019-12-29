@@ -1,15 +1,22 @@
 module.exports = {
   verbose: true,
-  preset: "ts-jest",
-  testEnvironment: "node",
-  coverageDirectory: "./coverage",
-  coverageReporters: ["lcov", "text", "html"],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  coverageDirectory: './coverage',
+  coverageReporters: ['lcov', 'text', 'html'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/ui/**',
+    '!src/diff2html-templates.ts',
+    '!src/__tests__/**',
+    '!node_modules/**',
+  ],
   coverageThreshold: {
     global: {
-      statements: 94,
-      branches: 85,
+      statements: 93,
+      branches: 86,
       functions: 98,
-      lines: 93
-    }
-  }
+      lines: 93,
+    },
+  },
 };

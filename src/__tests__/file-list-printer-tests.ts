@@ -1,14 +1,14 @@
-import { render } from "../file-list-renderer";
-import HoganJsUtils from "../hoganjs-utils";
+import { render } from '../file-list-renderer';
+import HoganJsUtils from '../hoganjs-utils';
 
-describe("FileListPrinter", () => {
-  describe("generateFileList", () => {
-    it("should expose old and new files to templates", () => {
+describe('FileListPrinter', () => {
+  describe('generateFileList', () => {
+    it('should expose old and new files to templates', () => {
       const hoganUtils = new HoganJsUtils({
         rawTemplates: {
-          "file-summary-wrapper": "{{{files}}}",
-          "file-summary-line": "{{oldName}}, {{newName}}, {{fileName}}"
-        }
+          'file-summary-wrapper': '{{{files}}}',
+          'file-summary-line': '{{oldName}}, {{newName}}, {{fileName}}',
+        },
       });
       const files = [
         {
@@ -17,9 +17,9 @@ describe("FileListPrinter", () => {
           blocks: [],
           addedLines: 12,
           deletedLines: 41,
-          language: "js",
-          oldName: "my/file/name.js",
-          newName: "my/file/name.js"
+          language: 'js',
+          oldName: 'my/file/name.js',
+          newName: 'my/file/name.js',
         },
         {
           isCombined: false,
@@ -27,9 +27,9 @@ describe("FileListPrinter", () => {
           blocks: [],
           addedLines: 12,
           deletedLines: 41,
-          language: "js",
-          oldName: "my/file/name1.js",
-          newName: "my/file/name2.js"
+          language: 'js',
+          oldName: 'my/file/name1.js',
+          newName: 'my/file/name2.js',
         },
         {
           isCombined: false,
@@ -37,10 +37,10 @@ describe("FileListPrinter", () => {
           blocks: [],
           addedLines: 12,
           deletedLines: 0,
-          language: "js",
-          oldName: "dev/null",
-          newName: "my/file/name.js",
-          isNew: true
+          language: 'js',
+          oldName: 'dev/null',
+          newName: 'my/file/name.js',
+          isNew: true,
         },
         {
           isCombined: false,
@@ -48,11 +48,11 @@ describe("FileListPrinter", () => {
           blocks: [],
           addedLines: 0,
           deletedLines: 41,
-          language: "js",
-          oldName: "my/file/name.js",
-          newName: "dev/null",
-          isDeleted: true
-        }
+          language: 'js',
+          oldName: 'my/file/name.js',
+          newName: 'dev/null',
+          isDeleted: true,
+        },
       ];
 
       const fileHtml = render(files, hoganUtils);
@@ -65,7 +65,7 @@ describe("FileListPrinter", () => {
       `);
     });
 
-    it("should work for all kinds of files", () => {
+    it('should work for all kinds of files', () => {
       const hoganUtils = new HoganJsUtils({});
       const files = [
         {
@@ -74,9 +74,9 @@ describe("FileListPrinter", () => {
           blocks: [],
           addedLines: 12,
           deletedLines: 41,
-          language: "js",
-          oldName: "my/file/name.js",
-          newName: "my/file/name.js"
+          language: 'js',
+          oldName: 'my/file/name.js',
+          newName: 'my/file/name.js',
         },
         {
           isCombined: false,
@@ -84,9 +84,9 @@ describe("FileListPrinter", () => {
           blocks: [],
           addedLines: 12,
           deletedLines: 41,
-          language: "js",
-          oldName: "my/file/name1.js",
-          newName: "my/file/name2.js"
+          language: 'js',
+          oldName: 'my/file/name1.js',
+          newName: 'my/file/name2.js',
         },
         {
           isCombined: false,
@@ -94,10 +94,10 @@ describe("FileListPrinter", () => {
           blocks: [],
           addedLines: 12,
           deletedLines: 0,
-          language: "js",
-          oldName: "dev/null",
-          newName: "my/file/name.js",
-          isNew: true
+          language: 'js',
+          oldName: 'dev/null',
+          newName: 'my/file/name.js',
+          isNew: true,
         },
         {
           isCombined: false,
@@ -105,11 +105,11 @@ describe("FileListPrinter", () => {
           blocks: [],
           addedLines: 0,
           deletedLines: 41,
-          language: "js",
-          oldName: "my/file/name.js",
-          newName: "dev/null",
-          isDeleted: true
-        }
+          language: 'js',
+          oldName: 'my/file/name.js',
+          newName: 'dev/null',
+          isDeleted: true,
+        },
       ];
       const fileHtml = render(files, hoganUtils);
       expect(fileHtml).toMatchInlineSnapshot(`

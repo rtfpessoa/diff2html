@@ -1,7 +1,8 @@
 name: Website
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - master
 
@@ -15,6 +16,7 @@ jobs:
         node-version: [13.x]
     steps:
       - uses: actions/checkout@v1
+        if: github.event.pull_request.merged
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -31,13 +33,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install dependencies
-        run: yarn install
-      - name: Lint
-        run: yarn run lint
-      - name: Build
-        run: yarn run build
-      - name: Test
-        run: yarn run coverage
+        run: yarn
+      - name: Build website
+        run: |
+          yarn run build:templates
+          yarn run build:website
       - name: Save website artifact
         if: matrix.node-version == '13.x'
         uses: actions/upload-artifact@v1
@@ -59,5 +59,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          cd docs
+          cd website
           aws s3 sync . s3://diff2html.xyz --region eu-west-1

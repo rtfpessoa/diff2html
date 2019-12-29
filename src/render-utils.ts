@@ -1,16 +1,16 @@
-import * as jsDiff from "diff";
+import * as jsDiff from 'diff';
 
-import { unifyPath, hashCode } from "./utils";
-import * as rematch from "./rematch";
-import { LineMatchingType, DiffStyleType, LineType, DiffLineParts, DiffFile, DiffFileName } from "./types";
+import { unifyPath, hashCode } from './utils';
+import * as rematch from './rematch';
+import { LineMatchingType, DiffStyleType, LineType, DiffLineParts, DiffFile, DiffFileName } from './types';
 
 export enum CSSLineClass {
-  INSERTS = "d2h-ins",
-  DELETES = "d2h-del",
-  CONTEXT = "d2h-cntx",
-  INFO = "d2h-info",
-  INSERT_CHANGES = "d2h-ins d2h-change",
-  DELETE_CHANGES = "d2h-del d2h-change"
+  INSERTS = 'd2h-ins',
+  DELETES = 'd2h-del',
+  CONTEXT = 'd2h-cntx',
+  INFO = 'd2h-info',
+  INSERT_CHANGES = 'd2h-ins d2h-change',
+  DELETE_CHANGES = 'd2h-del d2h-change',
 }
 
 export type HighlightedLines = {
@@ -35,23 +35,23 @@ export const defaultRenderConfig = {
   matching: LineMatchingType.NONE,
   matchWordsThreshold: 0.25,
   maxLineLengthHighlight: 10000,
-  diffStyle: DiffStyleType.WORD
+  diffStyle: DiffStyleType.WORD,
 };
 
-const separator = "/";
+const separator = '/';
 const distance = rematch.newDistanceFn((change: jsDiff.Change) => change.value);
 const matcher = rematch.newMatcherFn(distance);
 
 function isDevNullName(name: string): boolean {
-  return name.indexOf("dev/null") !== -1;
+  return name.indexOf('dev/null') !== -1;
 }
 
 function removeInsElements(line: string): string {
-  return line.replace(/(<ins[^>]*>((.|\n)*?)<\/ins>)/g, "");
+  return line.replace(/(<ins[^>]*>((.|\n)*?)<\/ins>)/g, '');
 }
 
 function removeDelElements(line: string): string {
-  return line.replace(/(<del[^>]*>((.|\n)*?)<\/del>)/g, "");
+  return line.replace(/(<del[^>]*>((.|\n)*?)<\/del>)/g, '');
 }
 
 /**
@@ -82,12 +82,12 @@ function prefixLength(isCombined: boolean): number {
 export function escapeForHtml(str: string): string {
   return str
     .slice(0)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;")
-    .replace(/\//g, "&#x2F;");
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;');
 }
 
 /**
@@ -97,7 +97,7 @@ export function deconstructLine(line: string, isCombined: boolean): DiffLinePart
   const indexToSplit = prefixLength(isCombined);
   return {
     prefix: line.substring(0, indexToSplit),
-    content: escapeForHtml(line.substring(indexToSplit))
+    content: escapeForHtml(line.substring(indexToSplit)),
   };
 }
 
@@ -158,15 +158,15 @@ export function filenameDiff(file: DiffFileName): string {
 
     if (finalPrefix.length && finalSuffix.length) {
       return (
-        finalPrefix + separator + "{" + oldRemainingPath + " → " + newRemainingPath + "}" + separator + finalSuffix
+        finalPrefix + separator + '{' + oldRemainingPath + ' → ' + newRemainingPath + '}' + separator + finalSuffix
       );
     } else if (finalPrefix.length) {
-      return finalPrefix + separator + "{" + oldRemainingPath + " → " + newRemainingPath + "}";
+      return finalPrefix + separator + '{' + oldRemainingPath + ' → ' + newRemainingPath + '}';
     } else if (finalSuffix.length) {
-      return "{" + oldRemainingPath + " → " + newRemainingPath + "}" + separator + finalSuffix;
+      return '{' + oldRemainingPath + ' → ' + newRemainingPath + '}' + separator + finalSuffix;
     }
 
-    return oldFilename + " → " + newFilename;
+    return oldFilename + ' → ' + newFilename;
   } else if (!isDevNullName(newFilename)) {
     return newFilename;
   } else {
@@ -187,19 +187,19 @@ export function getHtmlId(file: DiffFileName): string {
  * Selects the correct icon name for the file
  */
 export function getFileIcon(file: DiffFile): string {
-  let templateName = "file-changed";
+  let templateName = 'file-changed';
 
   if (file.isRename) {
-    templateName = "file-renamed";
+    templateName = 'file-renamed';
   } else if (file.isCopy) {
-    templateName = "file-renamed";
+    templateName = 'file-renamed';
   } else if (file.isNew) {
-    templateName = "file-added";
+    templateName = 'file-added';
   } else if (file.isDeleted) {
-    templateName = "file-deleted";
+    templateName = 'file-deleted';
   } else if (file.newName !== file.oldName) {
     // If file is not Added, not Deleted and the names changed it must be a rename :)
-    templateName = "file-renamed";
+    templateName = 'file-renamed';
   }
 
   return templateName;
@@ -212,7 +212,7 @@ export function diffHighlight(
   diffLine1: string,
   diffLine2: string,
   isCombined: boolean,
-  config: RenderConfig = {}
+  config: RenderConfig = {},
 ): HighlightedLines {
   const { matching, maxLineLengthHighlight, matchWordsThreshold, diffStyle } = { ...defaultRenderConfig, ...config };
 
@@ -223,22 +223,22 @@ export function diffHighlight(
     return {
       oldLine: {
         prefix: line1.prefix,
-        content: line1.content
+        content: line1.content,
       },
       newLine: {
         prefix: line2.prefix,
-        content: line2.content
-      }
+        content: line2.content,
+      },
     };
   }
 
   const diff =
-    diffStyle === "char"
+    diffStyle === 'char'
       ? jsDiff.diffChars(line1.content, line2.content)
       : jsDiff.diffWordsWithSpace(line1.content, line2.content);
 
   const changedWords: jsDiff.Change[] = [];
-  if (diffStyle === "word" && matching === "words") {
+  if (diffStyle === 'word' && matching === 'words') {
     const removed = diff.filter(element => element.removed);
     const added = diff.filter(element => element.added);
     const chunks = matcher(added, removed);
@@ -254,22 +254,22 @@ export function diffHighlight(
   }
 
   const highlightedLine = diff.reduce((highlightedLine, part) => {
-    const elemType = part.added ? "ins" : part.removed ? "del" : null;
-    const addClass = changedWords.indexOf(part) > -1 ? ' class="d2h-change"' : "";
+    const elemType = part.added ? 'ins' : part.removed ? 'del' : null;
+    const addClass = changedWords.indexOf(part) > -1 ? ' class="d2h-change"' : '';
 
     return elemType !== null
       ? `${highlightedLine}<${elemType}${addClass}>${part.value}</${elemType}>`
       : `${highlightedLine}${part.value}`;
-  }, "");
+  }, '');
 
   return {
     oldLine: {
       prefix: line1.prefix,
-      content: removeInsElements(highlightedLine)
+      content: removeInsElements(highlightedLine),
     },
     newLine: {
       prefix: line2.prefix,
-      content: removeDelElements(highlightedLine)
-    }
+      content: removeDelElements(highlightedLine),
+    },
   };
 }

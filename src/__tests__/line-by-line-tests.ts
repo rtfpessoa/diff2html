@@ -1,11 +1,11 @@
-import LineByLineRenderer from "../line-by-line-renderer";
-import HoganJsUtils from "../hoganjs-utils";
-import { LineType, DiffFile, LineMatchingType } from "../types";
-import { CSSLineClass } from "../render-utils";
+import LineByLineRenderer from '../line-by-line-renderer';
+import HoganJsUtils from '../hoganjs-utils';
+import { LineType, DiffFile, LineMatchingType } from '../types';
+import { CSSLineClass } from '../render-utils';
 
-describe("LineByLineRenderer", () => {
-  describe("_generateEmptyDiff", () => {
-    it("should return an empty diff", () => {
+describe('LineByLineRenderer', () => {
+  describe('_generateEmptyDiff', () => {
+    it('should return an empty diff', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
       const fileHtml = lineByLineRenderer.generateEmptyDiff();
@@ -21,16 +21,16 @@ describe("LineByLineRenderer", () => {
     });
   });
 
-  describe("makeLineHtml", () => {
-    it("should work for insertions", () => {
+  describe('makeLineHtml', () => {
+    it('should work for insertions', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
       const fileHtml = lineByLineRenderer.generateSingleLineHtml({
         type: CSSLineClass.INSERTS,
-        prefix: "+",
-        content: "test",
+        prefix: '+',
+        content: 'test',
         oldNumber: undefined,
-        newNumber: 30
+        newNumber: 30,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
         "<tr>
@@ -48,15 +48,15 @@ describe("LineByLineRenderer", () => {
       `);
     });
 
-    it("should work for deletions", () => {
+    it('should work for deletions', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
       const fileHtml = lineByLineRenderer.generateSingleLineHtml({
         type: CSSLineClass.DELETES,
-        prefix: "-",
-        content: "test",
+        prefix: '-',
+        content: 'test',
         oldNumber: 30,
-        newNumber: undefined
+        newNumber: undefined,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
         "<tr>
@@ -74,15 +74,15 @@ describe("LineByLineRenderer", () => {
       `);
     });
 
-    it("should convert indents into non breakin spaces (2 white spaces)", () => {
+    it('should convert indents into non breakin spaces (2 white spaces)', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
       const fileHtml = lineByLineRenderer.generateSingleLineHtml({
         type: CSSLineClass.INSERTS,
-        prefix: "+",
-        content: "  test",
+        prefix: '+',
+        content: '  test',
         oldNumber: undefined,
-        newNumber: 30
+        newNumber: 30,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
         "<tr>
@@ -100,15 +100,15 @@ describe("LineByLineRenderer", () => {
       `);
     });
 
-    it("should convert indents into non breakin spaces (4 white spaces)", () => {
+    it('should convert indents into non breakin spaces (4 white spaces)', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
       const fileHtml = lineByLineRenderer.generateSingleLineHtml({
         type: CSSLineClass.INSERTS,
-        prefix: "+",
-        content: "    test",
+        prefix: '+',
+        content: '    test',
         oldNumber: undefined,
-        newNumber: 30
+        newNumber: 30,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
         "<tr>
@@ -126,15 +126,15 @@ describe("LineByLineRenderer", () => {
       `);
     });
 
-    it("should preserve tabs", () => {
+    it('should preserve tabs', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
       const fileHtml = lineByLineRenderer.generateSingleLineHtml({
         type: CSSLineClass.INSERTS,
-        prefix: "+",
-        content: "\ttest",
+        prefix: '+',
+        content: '\ttest',
         oldNumber: undefined,
-        newNumber: 30
+        newNumber: 30,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
         "<tr>
@@ -153,22 +153,22 @@ describe("LineByLineRenderer", () => {
     });
   });
 
-  describe("makeFileDiffHtml", () => {
-    it("should work for simple file", () => {
+  describe('makeFileDiffHtml', () => {
+    it('should work for simple file', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
 
       const file = {
         addedLines: 12,
         deletedLines: 41,
-        language: "js",
-        oldName: "my/file/name.js",
-        newName: "my/file/name.js",
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'my/file/name.js',
         isCombined: false,
         isGitDiff: false,
-        blocks: []
+        blocks: [],
       };
-      const diffs = "<span>Random Html</span>";
+      const diffs = '<span>Random Html</span>';
 
       const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
@@ -193,22 +193,22 @@ describe("LineByLineRenderer", () => {
         </div>"
       `);
     });
-    it("should work for simple added file", () => {
+    it('should work for simple added file', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
 
       const file = {
         addedLines: 12,
         deletedLines: 0,
-        language: "js",
-        oldName: "dev/null",
-        newName: "my/file/name.js",
+        language: 'js',
+        oldName: 'dev/null',
+        newName: 'my/file/name.js',
         isNew: true,
         isCombined: false,
         isGitDiff: false,
-        blocks: []
+        blocks: [],
       };
-      const diffs = "<span>Random Html</span>";
+      const diffs = '<span>Random Html</span>';
 
       const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
@@ -233,22 +233,22 @@ describe("LineByLineRenderer", () => {
         </div>"
       `);
     });
-    it("should work for simple deleted file", () => {
+    it('should work for simple deleted file', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
 
       const file = {
         addedLines: 0,
         deletedLines: 41,
-        language: "js",
-        oldName: "my/file/name.js",
-        newName: "dev/null",
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'dev/null',
         isDeleted: true,
         isCombined: false,
         isGitDiff: false,
-        blocks: []
+        blocks: [],
       };
-      const diffs = "<span>Random Html</span>";
+      const diffs = '<span>Random Html</span>';
 
       const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
@@ -273,22 +273,22 @@ describe("LineByLineRenderer", () => {
         </div>"
       `);
     });
-    it("should work for simple renamed file", () => {
+    it('should work for simple renamed file', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
 
       const file = {
         addedLines: 12,
         deletedLines: 41,
-        language: "js",
-        oldName: "my/file/name1.js",
-        newName: "my/file/name2.js",
+        language: 'js',
+        oldName: 'my/file/name1.js',
+        newName: 'my/file/name2.js',
         isRename: true,
         isCombined: false,
         isGitDiff: false,
-        blocks: []
+        blocks: [],
       };
-      const diffs = "<span>Random Html</span>";
+      const diffs = '<span>Random Html</span>';
 
       const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
@@ -313,25 +313,25 @@ describe("LineByLineRenderer", () => {
         </div>"
       `);
     });
-    it("should return empty when option renderNothingWhenEmpty is true and file blocks not present", () => {
+    it('should return empty when option renderNothingWhenEmpty is true and file blocks not present', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {
-        renderNothingWhenEmpty: true
+        renderNothingWhenEmpty: true,
       });
 
       const file = {
         addedLines: 0,
         deletedLines: 0,
-        language: "js",
-        oldName: "my/file/name1.js",
-        newName: "my/file/name2.js",
+        language: 'js',
+        oldName: 'my/file/name1.js',
+        newName: 'my/file/name2.js',
         isRename: true,
         isCombined: false,
         isGitDiff: false,
-        blocks: []
+        blocks: [],
       };
 
-      const diffs = "<span>Random Html</span>";
+      const diffs = '<span>Random Html</span>';
 
       const fileHtml = lineByLineRenderer.makeFileDiffHtml(file, diffs);
 
@@ -339,47 +339,47 @@ describe("LineByLineRenderer", () => {
     });
   });
 
-  describe("generateLineByLineJsonHtml", () => {
-    it("should work for list of files", () => {
+  describe('generateLineByLineJsonHtml', () => {
+    it('should work for list of files', () => {
       const exampleJson: DiffFile[] = [
         {
           blocks: [
             {
               lines: [
                 {
-                  content: "-test",
+                  content: '-test',
                   type: LineType.DELETE,
                   oldNumber: 1,
-                  newNumber: undefined
+                  newNumber: undefined,
                 },
                 {
-                  content: "+test1r",
+                  content: '+test1r',
                   type: LineType.INSERT,
                   oldNumber: undefined,
-                  newNumber: 1
-                }
+                  newNumber: 1,
+                },
               ],
               oldStartLine: 1,
               oldStartLine2: undefined,
               newStartLine: 1,
-              header: "@@ -1 +1 @@"
-            }
+              header: '@@ -1 +1 @@',
+            },
           ],
           deletedLines: 1,
           addedLines: 1,
-          checksumBefore: "0000001",
-          checksumAfter: "0ddf2ba",
-          oldName: "sample",
-          newName: "sample",
-          language: "txt",
+          checksumBefore: '0000001',
+          checksumAfter: '0ddf2ba',
+          oldName: 'sample',
+          newName: 'sample',
+          language: 'txt',
           isCombined: false,
-          isGitDiff: true
-        }
+          isGitDiff: true,
+        },
       ];
 
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {
-        matching: LineMatchingType.LINES
+        matching: LineMatchingType.LINES,
       });
       const html = lineByLineRenderer.render(exampleJson);
       expect(html).toMatchInlineSnapshot(`
@@ -433,23 +433,23 @@ describe("LineByLineRenderer", () => {
       `);
     });
 
-    it("should work for empty blocks", () => {
+    it('should work for empty blocks', () => {
       const exampleJson = [
         {
           blocks: [],
           deletedLines: 0,
           addedLines: 0,
-          oldName: "sample",
-          language: "js",
-          newName: "sample",
+          oldName: 'sample',
+          language: 'js',
+          newName: 'sample',
           isCombined: false,
-          isGitDiff: false
-        }
+          isGitDiff: false,
+        },
       ];
 
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {
-        renderNothingWhenEmpty: false
+        renderNothingWhenEmpty: false,
       });
       const html = lineByLineRenderer.render(exampleJson);
       expect(html).toMatchInlineSnapshot(`
@@ -483,8 +483,8 @@ describe("LineByLineRenderer", () => {
     });
   });
 
-  describe("_generateFileHtml", () => {
-    it("should work for simple file", () => {
+  describe('_generateFileHtml', () => {
+    it('should work for simple file', () => {
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
       const file: DiffFile = {
@@ -492,45 +492,45 @@ describe("LineByLineRenderer", () => {
           {
             lines: [
               {
-                content: " one context line",
+                content: ' one context line',
                 type: LineType.CONTEXT,
                 oldNumber: 1,
-                newNumber: 1
+                newNumber: 1,
               },
               {
-                content: "-test",
+                content: '-test',
                 type: LineType.DELETE,
                 oldNumber: 2,
-                newNumber: undefined
+                newNumber: undefined,
               },
               {
-                content: "+test1r",
+                content: '+test1r',
                 type: LineType.INSERT,
                 oldNumber: undefined,
-                newNumber: 2
+                newNumber: 2,
               },
               {
-                content: "+test2r",
+                content: '+test2r',
                 type: LineType.INSERT,
                 oldNumber: undefined,
-                newNumber: 3
-              }
+                newNumber: 3,
+              },
             ],
             oldStartLine: 1,
             oldStartLine2: undefined,
             newStartLine: 1,
-            header: "@@ -1 +1 @@"
-          }
+            header: '@@ -1 +1 @@',
+          },
         ],
         deletedLines: 1,
         addedLines: 1,
-        checksumBefore: "0000001",
-        checksumAfter: "0ddf2ba",
-        oldName: "sample",
-        language: "txt",
-        newName: "sample",
+        checksumBefore: '0000001',
+        checksumAfter: '0ddf2ba',
+        oldName: 'sample',
+        language: 'txt',
+        newName: 'sample',
         isCombined: false,
-        isGitDiff: true
+        isGitDiff: true,
       };
 
       const html = lineByLineRenderer.generateFileHtml(file);
