@@ -1,6 +1,6 @@
 {
   "name": "diff2html",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-githubworkflows.950a8d2",
   "homepage": "https://diff2html.xyz",
   "description": "Fast Diff to colorized HTML",
   "keywords": [
