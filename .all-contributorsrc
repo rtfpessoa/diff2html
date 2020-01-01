@@ -207,6 +207,35 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "extend1994",
+      "name": "Ann",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/13430892?v=4",
+      "profile": "https://github.com/extend1994",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "escitalopram",
+      "name": "escitalopram",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1155220?v=4",
+      "profile": "https://github.com/escitalopram",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "dependabot[bot]",
+      "name": "dependabot[bot]",
+      "avatar_url": "https://avatars0.githubusercontent.com/in/29110?v=4",
+      "profile": "https://github.com/apps/dependabot",
+      "contributions": [
+        "security",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7
