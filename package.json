@@ -99,7 +99,7 @@
     "@types/mkdirp": "0.5.2",
     "@types/node": "13.1.1",
     "@types/nopt": "3.0.29",
-    "@types/webpack": "4.41.0",
+    "@types/webpack": "4.41.1",
     "@typescript-eslint/eslint-plugin": "2.13.0",
     "@typescript-eslint/parser": "2.13.0",
     "autoprefixer": "9.7.3",
