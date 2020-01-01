@@ -1,15 +1,15 @@
 /*
- * Copied from Highlight.js Private API
- * Will be removed when this part of the API is exposed
+ * Adapted Highlight.js Internal APIs
+ * Used to highlight selected html elements using context
  */
 
 /* Utility functions */
 
 function escape(value: string): string {
   return value
-    .replace(/&/gm, "&amp;")
-    .replace(/</gm, "&lt;")
-    .replace(/>/gm, "&gt;");
+    .replace(/&/gm, '&amp;')
+    .replace(/</gm, '&lt;')
+    .replace(/>/gm, '&gt;');
 }
 
 function tag(node: Node): string {
@@ -19,7 +19,7 @@ function tag(node: Node): string {
 /* Stream merging */
 
 type NodeEvent = {
-  event: "start" | "stop";
+  event: 'start' | 'stop';
   offset: number;
   node: Node;
 };
@@ -33,9 +33,9 @@ export function nodeStream(node: Node): NodeEvent[] {
         offset += child.nodeValue.length;
       } else if (child.nodeType === 1) {
         result.push({
-          event: "start",
+          event: 'start',
           offset: offset,
-          node: child
+          node: child,
         });
         offset = nodeStream(child, offset);
         // Prevent void elements from having an end tag that would actually
@@ -43,9 +43,9 @@ export function nodeStream(node: Node): NodeEvent[] {
         // but we list only those realistically expected in code display.
         if (!tag(child).match(/br|hr|img|input/)) {
           result.push({
-            event: "stop",
+            event: 'stop',
             offset: offset,
-            node: child
+            node: child,
           });
         }
       }
@@ -60,7 +60,7 @@ export function nodeStream(node: Node): NodeEvent[] {
 
 export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], value: string): string {
   let processed = 0;
-  let result = "";
+  let result = '';
   const nodeStack = [];
 
   function selectStream(): NodeEvent[] {
@@ -84,22 +84,22 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
        return highlighted;
        ... which is collapsed to:
        */
-    return highlighted[0].event === "start" ? original : highlighted;
+    return highlighted[0].event === 'start' ? original : highlighted;
   }
 
   function open(node: Node): void {
     const htmlNode = node as HTMLElement;
     result += `<${tag(node)} ${[].map
       .call(htmlNode.attributes, (attr: Attr) => `${attr.nodeName}="${escape(attr.value)}"`)
-      .join(" ")}>`;
+      .join(' ')}>`;
   }
 
   function close(node: Node): void {
-    result += "</" + tag(node) + ">";
+    result += '</' + tag(node) + '>';
   }
 
   function render(event: NodeEvent): void {
-    (event.event === "start" ? open : close)(event.node);
+    (event.event === 'start' ? open : close)(event.node);
   }
 
   while (original.length || highlighted.length) {
@@ -120,7 +120,7 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
       } while (stream === original && stream.length && stream[0].offset === processed);
       nodeStack.reverse().forEach(open);
     } else {
-      if (stream[0].event === "start") {
+      if (stream[0].event === 'start') {
         nodeStack.push(stream[0].node);
       } else {
         nodeStack.pop();
@@ -130,5 +130,3 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
   }
   return result + escape(value.substr(processed));
 }
-
-/* **** Highlight.js Private API **** */

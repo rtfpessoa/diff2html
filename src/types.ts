@@ -4,9 +4,9 @@ export type DiffLineParts = {
 };
 
 export enum LineType {
-  INSERT = "insert",
-  DELETE = "delete",
-  CONTEXT = "context"
+  INSERT = 'insert',
+  DELETE = 'delete',
+  CONTEXT = 'context',
 }
 
 export interface DiffLineDeleted {
@@ -70,17 +70,17 @@ export interface DiffFile extends DiffFileName {
 }
 
 export enum OutputFormatType {
-  LINE_BY_LINE = "line-by-line",
-  SIDE_BY_SIDE = "side-by-side"
+  LINE_BY_LINE = 'line-by-line',
+  SIDE_BY_SIDE = 'side-by-side',
 }
 
 export enum LineMatchingType {
-  LINES = "lines",
-  WORDS = "words",
-  NONE = "none"
+  LINES = 'lines',
+  WORDS = 'words',
+  NONE = 'none',
 }
 
 export enum DiffStyleType {
-  WORD = "word",
-  CHAR = "char"
+  WORD = 'word',
+  CHAR = 'char',
 }

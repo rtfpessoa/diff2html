@@ -1,12 +1,11 @@
 # Credits
 
-This is the list of all the kind people that have contributed to the diff2html project.
-This list is ordered by first contribution.
+This is the list of all the kind people that have contributed to the diff2html project. This list is ordered by first
+contribution.
 
-Thanks,
-@rtfpessoa
+Thanks, @rtfpessoa
 
-----------
+---
 
 Rodrigo Fernandes, [@rtfpessoa](https://github.com/rtfpessoa)
 

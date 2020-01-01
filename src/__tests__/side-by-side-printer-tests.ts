@@ -1,11 +1,11 @@
-import SideBySideRenderer from "../side-by-side-renderer";
-import HoganJsUtils from "../hoganjs-utils";
-import { LineType, DiffLine, DiffFile, LineMatchingType } from "../types";
-import { CSSLineClass } from "../render-utils";
+import SideBySideRenderer from '../side-by-side-renderer';
+import HoganJsUtils from '../hoganjs-utils';
+import { LineType, DiffLine, DiffFile, LineMatchingType } from '../types';
+import { CSSLineClass } from '../render-utils';
 
-describe("SideBySideRenderer", () => {
-  describe("generateEmptyDiff", () => {
-    it("should return an empty diff", () => {
+describe('SideBySideRenderer', () => {
+  describe('generateEmptyDiff', () => {
+    it('should return an empty diff', () => {
       const hoganUtils = new HoganJsUtils({});
       const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
       const fileHtml = sideBySideRenderer.generateEmptyDiff();
@@ -24,8 +24,8 @@ describe("SideBySideRenderer", () => {
     });
   });
 
-  describe("generateSideBySideFileHtml", () => {
-    it("should generate lines with the right prefixes", () => {
+  describe('generateSideBySideFileHtml', () => {
+    it('should generate lines with the right prefixes', () => {
       const hoganUtils = new HoganJsUtils({});
       const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
 
@@ -35,44 +35,44 @@ describe("SideBySideRenderer", () => {
           {
             lines: [
               {
-                content: " context",
+                content: ' context',
                 type: LineType.CONTEXT,
                 oldNumber: 19,
-                newNumber: 19
+                newNumber: 19,
               },
               {
-                content: "-removed",
+                content: '-removed',
                 type: LineType.DELETE,
                 oldNumber: 20,
-                newNumber: undefined
+                newNumber: undefined,
               },
               {
-                content: "+added",
+                content: '+added',
                 type: LineType.INSERT,
                 oldNumber: undefined,
-                newNumber: 20
+                newNumber: 20,
               },
               {
-                content: "+another added",
+                content: '+another added',
                 type: LineType.INSERT,
                 oldNumber: undefined,
-                newNumber: 21
-              }
+                newNumber: 21,
+              },
             ],
             oldStartLine: 19,
             newStartLine: 19,
-            header: "@@ -19,7 +19,7 @@"
-          }
+            header: '@@ -19,7 +19,7 @@',
+          },
         ],
         deletedLines: 1,
         addedLines: 2,
-        checksumBefore: "fc56817",
-        checksumAfter: "e8e7e49",
-        mode: "100644",
-        oldName: "coverage.init",
-        language: "init",
-        newName: "coverage.init",
-        isCombined: false
+        checksumBefore: 'fc56817',
+        checksumAfter: 'e8e7e49',
+        mode: '100644',
+        oldName: 'coverage.init',
+        language: 'init',
+        newName: 'coverage.init',
+        isCombined: false,
       };
 
       const fileHtml = sideBySideRenderer.generateFileHtml(file);
@@ -156,15 +156,15 @@ describe("SideBySideRenderer", () => {
     });
   });
 
-  describe("generateSingleLineHtml", () => {
-    it("should work for insertions", () => {
+  describe('generateSingleLineHtml', () => {
+    it('should work for insertions', () => {
       const hoganUtils = new HoganJsUtils({});
       const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
       const fileHtml = sideBySideRenderer.generateLineHtml(undefined, {
         type: CSSLineClass.INSERTS,
-        prefix: "+",
-        content: "test",
-        number: 30
+        prefix: '+',
+        content: 'test',
+        number: 30,
       });
 
       expect(fileHtml).toMatchInlineSnapshot(`
@@ -194,17 +194,17 @@ describe("SideBySideRenderer", () => {
         }
       `);
     });
-    it("should work for deletions", () => {
+    it('should work for deletions', () => {
       const hoganUtils = new HoganJsUtils({});
       const sideBySideRenderer = new SideBySideRenderer(hoganUtils, {});
       const fileHtml = sideBySideRenderer.generateLineHtml(
         {
           type: CSSLineClass.DELETES,
-          prefix: "-",
-          content: "test",
-          number: 30
+          prefix: '-',
+          content: 'test',
+          number: 30,
         },
-        undefined
+        undefined,
       );
 
       expect(fileHtml).toMatchInlineSnapshot(`
@@ -236,42 +236,42 @@ describe("SideBySideRenderer", () => {
     });
   });
 
-  describe("generateSideBySideJsonHtml", () => {
-    it("should work for list of files", () => {
+  describe('generateSideBySideJsonHtml', () => {
+    it('should work for list of files', () => {
       const exampleJson: DiffFile[] = [
         {
           blocks: [
             {
               lines: [
                 {
-                  content: "-test",
+                  content: '-test',
                   type: LineType.DELETE,
                   oldNumber: 1,
-                  newNumber: undefined
+                  newNumber: undefined,
                 },
                 {
-                  content: "+test1r",
+                  content: '+test1r',
                   type: LineType.INSERT,
                   oldNumber: undefined,
-                  newNumber: 1
-                }
+                  newNumber: 1,
+                },
               ],
               oldStartLine: 1,
               oldStartLine2: undefined,
               newStartLine: 1,
-              header: "@@ -1 +1 @@"
-            }
+              header: '@@ -1 +1 @@',
+            },
           ],
           deletedLines: 1,
           addedLines: 1,
-          checksumBefore: "0000001",
-          checksumAfter: "0ddf2ba",
-          oldName: "sample",
-          language: "txt",
-          newName: "sample",
+          checksumBefore: '0000001',
+          checksumAfter: '0ddf2ba',
+          oldName: 'sample',
+          language: 'txt',
+          newName: 'sample',
           isCombined: false,
-          isGitDiff: true
-        }
+          isGitDiff: true,
+        },
       ];
 
       const hoganUtils = new HoganJsUtils({});
@@ -341,18 +341,18 @@ describe("SideBySideRenderer", () => {
         </div>"
       `);
     });
-    it("should work for files without blocks", () => {
+    it('should work for files without blocks', () => {
       const exampleJson: DiffFile[] = [
         {
           blocks: [],
-          oldName: "sample",
-          language: "js",
-          newName: "sample",
+          oldName: 'sample',
+          language: 'js',
+          newName: 'sample',
           isCombined: false,
           addedLines: 0,
           deletedLines: 0,
-          isGitDiff: false
-        }
+          isGitDiff: false,
+        },
       ];
 
       const hoganUtils = new HoganJsUtils({});
@@ -400,24 +400,24 @@ describe("SideBySideRenderer", () => {
     });
   });
 
-  describe("processLines", () => {
-    it("should process file lines", () => {
+  describe('processLines', () => {
+    it('should process file lines', () => {
       const oldLines: DiffLine[] = [
         {
-          content: "-test",
+          content: '-test',
           type: LineType.DELETE,
           oldNumber: 1,
-          newNumber: undefined
-        }
+          newNumber: undefined,
+        },
       ];
 
       const newLines: DiffLine[] = [
         {
-          content: "+test1r",
+          content: '+test1r',
           type: LineType.INSERT,
           oldNumber: undefined,
-          newNumber: 1
-        }
+          newNumber: 1,
+        },
       ];
 
       const hoganUtils = new HoganJsUtils({});

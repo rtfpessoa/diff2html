@@ -1,4 +1,4 @@
-import hljs from 'highlight.js';
+import { hljs } from './highlight.js-slim';
 
 import { DiffFile } from '../../types';
 import { Diff2HtmlUI as Diff2HtmlUIBase, Diff2HtmlUIConfig, defaultDiff2HtmlUIConfig } from './diff2html-ui-base';

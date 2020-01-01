@@ -1,14 +1,14 @@
-import { parse, html } from "../diff2html";
-import { DiffFile, LineType, OutputFormatType } from "../types";
+import { parse, html } from '../diff2html';
+import { DiffFile, LineType, OutputFormatType } from '../types';
 
 const diffExample1 =
-  "diff --git a/sample b/sample\n" +
-  "index 0000001..0ddf2ba\n" +
-  "--- a/sample\n" +
-  "+++ b/sample\n" +
-  "@@ -1 +1 @@\n" +
-  "-test\n" +
-  "+test1\n";
+  'diff --git a/sample b/sample\n' +
+  'index 0000001..0ddf2ba\n' +
+  '--- a/sample\n' +
+  '+++ b/sample\n' +
+  '@@ -1 +1 @@\n' +
+  '-test\n' +
+  '+test1\n';
 
 const jsonExample1: DiffFile[] = [
   {
@@ -16,47 +16,47 @@ const jsonExample1: DiffFile[] = [
       {
         lines: [
           {
-            content: "-test",
+            content: '-test',
             type: LineType.DELETE,
             oldNumber: 1,
-            newNumber: undefined
+            newNumber: undefined,
           },
           {
-            content: "+test1",
+            content: '+test1',
             type: LineType.INSERT,
             oldNumber: undefined,
-            newNumber: 1
-          }
+            newNumber: 1,
+          },
         ],
         oldStartLine: 1,
         oldStartLine2: undefined,
         newStartLine: 1,
-        header: "@@ -1 +1 @@"
-      }
+        header: '@@ -1 +1 @@',
+      },
     ],
     deletedLines: 1,
     addedLines: 1,
-    checksumBefore: "0000001",
-    checksumAfter: "0ddf2ba",
-    oldName: "sample",
-    newName: "sample",
-    language: "",
+    checksumBefore: '0000001',
+    checksumAfter: '0ddf2ba',
+    oldName: 'sample',
+    newName: 'sample',
+    language: '',
     isCombined: false,
-    isGitDiff: true
-  }
+    isGitDiff: true,
+  },
 ];
 
-describe("Diff2Html", () => {
-  describe("getJsonFromDiff", () => {
-    it("should parse simple diff to json", () => {
+describe('Diff2Html', () => {
+  describe('getJsonFromDiff', () => {
+    it('should parse simple diff to json', () => {
       const diff =
-        "diff --git a/sample b/sample\n" +
-        "index 0000001..0ddf2ba\n" +
-        "--- a/sample\n" +
-        "+++ b/sample\n" +
-        "@@ -1 +1 @@\n" +
-        "-test\n" +
-        "+test1\n";
+        'diff --git a/sample b/sample\n' +
+        'index 0000001..0ddf2ba\n' +
+        '--- a/sample\n' +
+        '+++ b/sample\n' +
+        '@@ -1 +1 @@\n' +
+        '-test\n' +
+        '+test1\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
         Array [
@@ -98,23 +98,23 @@ describe("Diff2Html", () => {
     });
 
     // Test case for issue #49
-    it("should parse diff with added EOF", () => {
+    it('should parse diff with added EOF', () => {
       const diff =
-        "diff --git a/sample.scala b/sample.scala\n" +
-        "index b583263..8b2fc3e 100644\n" +
-        "--- a/b583263..8b2fc3e\n" +
-        "+++ b/8b2fc3e\n" +
-        "@@ -50,5 +50,7 @@ case class Response[+A](value: Option[A],\n" +
-        " object ResponseErrorCode extends JsonEnumeration {\n" +
-        "  val NoError, ServiceError, JsonError,\n" +
-        "  InvalidPermissions, MissingPermissions, GenericError,\n" +
-        "-  TokenRevoked, MissingToken = Value\n" +
-        "-}\n" +
-        "\\ No newline at end of file\n" +
-        "+  TokenRevoked, MissingToken,\n" +
-        "+  IndexLock, RepositoryError, NotValidRepo, PullRequestNotMergeable, BranchError,\n" +
-        "+  PluginError, CodeParserError, EngineError = Value\n" +
-        "+}\n";
+        'diff --git a/sample.scala b/sample.scala\n' +
+        'index b583263..8b2fc3e 100644\n' +
+        '--- a/b583263..8b2fc3e\n' +
+        '+++ b/8b2fc3e\n' +
+        '@@ -50,5 +50,7 @@ case class Response[+A](value: Option[A],\n' +
+        ' object ResponseErrorCode extends JsonEnumeration {\n' +
+        '  val NoError, ServiceError, JsonError,\n' +
+        '  InvalidPermissions, MissingPermissions, GenericError,\n' +
+        '-  TokenRevoked, MissingToken = Value\n' +
+        '-}\n' +
+        '\\ No newline at end of file\n' +
+        '+  TokenRevoked, MissingToken,\n' +
+        '+  IndexLock, RepositoryError, NotValidRepo, PullRequestNotMergeable, BranchError,\n' +
+        '+  PluginError, CodeParserError, EngineError = Value\n' +
+        '+}\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
         Array [
@@ -198,7 +198,7 @@ describe("Diff2Html", () => {
       `);
     });
 
-    it("should generate pretty line by line html from diff", () => {
+    it('should generate pretty line by line html from diff', () => {
       const result = html(diffExample1, { drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
         "<div class=\\"d2h-wrapper\\">
@@ -251,7 +251,7 @@ describe("Diff2Html", () => {
       `);
     });
 
-    it("should generate pretty line by line html from json", () => {
+    it('should generate pretty line by line html from json', () => {
       const result = html(jsonExample1, { drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
         "<div class=\\"d2h-wrapper\\">
@@ -304,7 +304,7 @@ describe("Diff2Html", () => {
       `);
     });
 
-    it("should generate pretty diff with files summary", () => {
+    it('should generate pretty diff with files summary', () => {
       const result = html(diffExample1, { drawFileList: true });
       expect(result).toMatchInlineSnapshot(`
         "<div class=\\"d2h-file-list-wrapper\\">
@@ -377,7 +377,7 @@ describe("Diff2Html", () => {
       `);
     });
 
-    it("should generate pretty side by side html from diff", () => {
+    it('should generate pretty side by side html from diff', () => {
       const result = html(diffExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
         "<div class=\\"d2h-wrapper\\">
@@ -444,7 +444,7 @@ describe("Diff2Html", () => {
       `);
     });
 
-    it("should generate pretty side by side html from json", () => {
+    it('should generate pretty side by side html from json', () => {
       const result = html(jsonExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
         "<div class=\\"d2h-wrapper\\">
@@ -511,7 +511,7 @@ describe("Diff2Html", () => {
       `);
     });
 
-    it("should generate pretty side by side html from diff 2", () => {
+    it('should generate pretty side by side html from diff 2', () => {
       const result = html(diffExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: true });
       expect(result).toMatchInlineSnapshot(`
         "<div class=\\"d2h-file-list-wrapper\\">
@@ -598,30 +598,30 @@ describe("Diff2Html", () => {
       `);
     });
 
-    it("should generate pretty side by side html from diff with html on headers", () => {
+    it('should generate pretty side by side html from diff with html on headers', () => {
       const diffExample2 =
-        "diff --git a/CHANGELOG.md b/CHANGELOG.md\n" +
-        "index fc3e3f4..b486d10 100644\n" +
-        "--- a/CHANGELOG.md\n" +
-        "+++ b/CHANGELOG.md\n" +
-        "@@ -1,7 +1,6 @@\n" +
-        " # Change Log\n" +
-        " All notable changes to this project will be documented in this file.\n" +
-        " This project adheres to [Semantic Versioning](http://semver.org/).\n" +
+        'diff --git a/CHANGELOG.md b/CHANGELOG.md\n' +
+        'index fc3e3f4..b486d10 100644\n' +
+        '--- a/CHANGELOG.md\n' +
+        '+++ b/CHANGELOG.md\n' +
+        '@@ -1,7 +1,6 @@\n' +
+        ' # Change Log\n' +
+        ' All notable changes to this project will be documented in this file.\n' +
+        ' This project adheres to [Semantic Versioning](http://semver.org/).\n' +
         '-$a="<table><tr><td>Use the following format for additions: ` - VERSION: [feature/patch (if applicable)] Short description of change. Links to relevant issues/PRs.`\n' +
         ' $a="<table><tr><td>\n' +
-        " $a=\"<table><tr><td>- 1.1.9: Fix around ubuntu's inability to cache promises. [#877](https://github.com/FredrikNoren/ungit/pull/878)\n" +
-        " - 1.1.8:\n" +
-        "@@ -11,7 +10,7 @@ $a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#8\n" +
-        " - 1.1.7:\n" +
-        "     - Fix diff flickering issue and optimization [#865](https://github.com/FredrikNoren/ungit/pull/865)\n" +
-        "     - Fix credential dialog issue [#864](https://github.com/FredrikNoren/ungit/pull/864)\n" +
-        "-    - Fix HEAD branch order when redraw [#858](https://github.com/FredrikNoren/ungit/issues/858)\n" +
-        "+4    - Fix HEAD branch order when redraw [#858](https://github.com/FredrikNoren/ungit/issues/858)\n" +
-        " - 1.1.6: Fix path auto complete [#861](https://github.com/FredrikNoren/ungit/issues/861)\n" +
+        ' $a="<table><tr><td>- 1.1.9: Fix around ubuntu\'s inability to cache promises. [#877](https://github.com/FredrikNoren/ungit/pull/878)\n' +
+        ' - 1.1.8:\n' +
+        '@@ -11,7 +10,7 @@ $a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#8\n' +
+        ' - 1.1.7:\n' +
+        '     - Fix diff flickering issue and optimization [#865](https://github.com/FredrikNoren/ungit/pull/865)\n' +
+        '     - Fix credential dialog issue [#864](https://github.com/FredrikNoren/ungit/pull/864)\n' +
+        '-    - Fix HEAD branch order when redraw [#858](https://github.com/FredrikNoren/ungit/issues/858)\n' +
+        '+4    - Fix HEAD branch order when redraw [#858](https://github.com/FredrikNoren/ungit/issues/858)\n' +
+        ' - 1.1.6: Fix path auto complete [#861](https://github.com/FredrikNoren/ungit/issues/861)\n' +
         ' - 1.1.5: Update "Toggle all" button after commit or changing selected files [#859](https://github.com/FredrikNoren/ungit/issues/859)\n' +
-        " - 1.1.4: [patch] Promise refactoring\n" +
-        " \n";
+        ' - 1.1.4: [patch] Promise refactoring\n' +
+        ' \n';
       const result = html(diffExample2, { drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
         "<div class=\\"d2h-wrapper\\">

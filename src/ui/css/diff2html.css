@@ -51,7 +51,7 @@
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 15px;
 }
 
@@ -70,7 +70,7 @@
 .d2h-diff-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: "Menlo", "Consolas", monospace;
+  font-family: 'Menlo', 'Consolas', monospace;
   font-size: 13px;
 }
 

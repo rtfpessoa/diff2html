@@ -53,8 +53,8 @@ export function levenshtein(a: string, b: string): number {
           matrix[i - 1][j - 1] + 1, // Substitution
           Math.min(
             matrix[i][j - 1] + 1, // Insertion
-            matrix[i - 1][j] + 1
-          )
+            matrix[i - 1][j] + 1,
+          ),
         ); // Deletion
       }
     }
@@ -70,9 +70,7 @@ export function newDistanceFn<T>(str: (value: T) => string): DistanceFn<T> {
     const xValue = str(x).trim();
     const yValue = str(y).trim();
     const lev = levenshtein(xValue, yValue);
-    const score = lev / (xValue.length + yValue.length);
-
-    return score;
+    return lev / (xValue.length + yValue.length);
   };
 }
 
