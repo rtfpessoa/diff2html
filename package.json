@@ -100,7 +100,7 @@
     "@types/node": "13.1.1",
     "@types/nopt": "3.0.29",
     "@types/webpack": "4.41.0",
-    "@typescript-eslint/eslint-plugin": "2.13.0",
+    "@typescript-eslint/eslint-plugin": "2.14.0",
     "@typescript-eslint/parser": "2.13.0",
     "autoprefixer": "9.7.3",
     "bootstrap": "3.4.1",
