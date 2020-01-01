@@ -92,11 +92,15 @@ You can also refer to it from a CDN like [CDNJS](https://cdnjs.com/libraries/dif
 
 > JSON representation of the diff
 
-    function parse(diffInput: string, configuration: Diff2HtmlConfig = {}): DiffFile[]
+```ts
+function parse(diffInput: string, configuration: Diff2HtmlConfig = {}): DiffFile[];
+```
 
 > Pretty HTML representation of the diff
 
-    function html(diffInput: string | DiffFile[], configuration: Diff2HtmlConfig = {}): string
+```ts
+function html(diffInput: string | DiffFile[], configuration: Diff2HtmlConfig = {}): string;
+```
 
 > Check out the [docs/demo.html](./docs/demo.html) for a demo example.
 

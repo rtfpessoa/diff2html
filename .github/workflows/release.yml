@@ -8,12 +8,14 @@ on:
 
 jobs:
   version:
+    if:
+      github.event.pull_request.merged && "!contains(github.event.head_commit.message, 'skip ci')" &&
+      "!contains(github.event.head_commit.message, 'skip release')"
     runs-on: ubuntu-18.04
     container:
       image: codacy/git-version
     steps:
       - uses: actions/checkout@v1
-        if: github.event.pull_request.merged
       - name: Configure Git
         run: |
           git checkout -f "${GITHUB_REF#refs/heads/}"
@@ -107,7 +109,7 @@ jobs:
         with:
           node-version: 13
           registry-url: https://npm.pkg.github.com
-          scope: "@rtfpessoa"
+          scope: '@rtfpessoa'
       - name: Publish to GitHub
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
