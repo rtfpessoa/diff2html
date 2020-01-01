@@ -103,7 +103,7 @@
     "@typescript-eslint/eslint-plugin": "2.14.0",
     "@typescript-eslint/parser": "2.14.0",
     "autoprefixer": "9.7.3",
-    "bootstrap": "3.4.1",
+    "bootstrap": "4.1.2",
     "clipboard": "2.0.4",
     "codacy-coverage": "3.4.0",
     "copy-webpack-plugin": "5.1.1",
