@@ -283,6 +283,8 @@ highlightCode(): void
 - `smartSelection`: allow selection of the code without including line numbers of line prefixes: `true` or `false`,
   default is `true`
 
+> NOTE: All the options from Diff2Html are also valid configurations in Diff2HtmlUI
+
 ### Diff2HtmlUI Browser
 
 #### Mandatory HTML resource imports
