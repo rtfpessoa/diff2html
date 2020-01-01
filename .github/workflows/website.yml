@@ -9,8 +9,8 @@ on:
 jobs:
   build:
     if:
-      github.event.pull_request.merged && "!contains(github.event.head_commit.message, 'skip ci')" &&
-      "!contains(github.event.head_commit.message, 'skip release')"
+      "github.event.pull_request.merged && !contains(github.event.head_commit.message, 'skip ci') &&
+      !contains(github.event.head_commit.message, 'skip release')"
     runs-on: ubuntu-18.04
     env:
       CI: true
