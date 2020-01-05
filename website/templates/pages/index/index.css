@@ -1,115 +1,58 @@
-.screenshot {
+.image img.hero-img {
+  background-image: url(images/snapshot-3.png);
   display: block;
-  overflow: hidden;
+  height: auto;
+  width: 70%;
+  max-width: 1100px;
+  margin: 0 auto;
+  margin-top: 1.5rem;
 }
 
-.screenshot > img {
+.hero-booticon {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  margin: 0 auto 30px;
   width: 100%;
-}
-
-.screenshots-fan {
-  margin-top: 50px;
-}
-
-.screenshots-fan .screenshot {
-  position: relative;
-  width: auto;
-  display: inline-block;
+  font-size: 8vw;
+  display: block;
+  font-weight: 500;
   text-align: center;
+  cursor: default;
 }
 
-.screenshots-fan .screenshot:last-child,
-.screenshots-fan .screenshot:first-child {
-  z-index: 2;
+.code-example {
+  position: relative;
+  font-family: monospace;
+  background: #272b38;
+  color: #48d8a0;
+  border-radius: 8px;
+  padding: 1.5rem;
 }
 
-.screenshots-fan .screenshot {
-  z-index: 3;
+.button.clipboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #fff;
+  background-color: #767676;
+  border-color: #767676;
+  border-radius: 0 4px 0 4px;
+  cursor: pointer;
 }
 
-@media (min-width: 768px) {
-  .screenshots-fan {
-    position: relative;
-    overflow: hidden;
-    margin-top: 60px;
-    height: 200px;
-  }
-
-  .screenshots-fan .screenshot {
-    height: auto;
-    top: 10px;
-    width: 350px;
-  }
-
-  .screenshots-fan .screenshot:first-child,
-  .screenshots-fan .screenshot:last-child {
-    width: 250px;
-    position: absolute;
-    top: 65px;
-  }
-
-  .screenshots-fan .screenshot:first-child {
-    left: 10px;
-  }
-
-  .screenshots-fan .screenshot:last-child {
-    left: auto;
-    right: 10px;
-  }
+.button.clipboard:hover {
+  color: #000;
+  background-color: #dcdfe4;
 }
 
-@media (min-width: 992px) {
-  .screenshots-fan {
-    margin-top: 60px;
-    height: 240px;
-  }
-
-  .screenshots-fan .screenshot {
-    width: 400px;
-  }
-
-  .screenshots-fan .screenshot:first-child,
-  .screenshots-fan .screenshot:last-child {
-    width: 300px;
-  }
+#users .columns .column {
+  display: flex;
+  flex-direction: column;
 }
 
-@media (min-width: 1200px) {
-  .screenshots-fan {
-    margin-top: 80px;
-    height: 380px;
-  }
-
-  .screenshots-fan .screenshot {
-    width: 550px;
-  }
-
-  .screenshots-fan .screenshot:first-child,
-  .screenshots-fan .screenshot:last-child {
-    width: 450px;
-  }
-}
-
-.img-snapshot1 {
-  background-image: url('./images/snapshot-1.png');
-  background-repeat: no-repeat;
-  /* height: 50px;
-  width: 50px; */
-  display: inline-block;
-}
-
-.img-snapshot2 {
-  background-image: url('./images/snapshot-2.png');
-  background-repeat: no-repeat;
-  /* height: 50px;
-  width: 50px; */
-  display: inline-block;
-}
-
-.img-snapshot3 {
-  background-image: url('./images/snapshot-3.png');
-  background-repeat: no-repeat;
-  /* height: 50px;
-  width: 50px; */
-  display: inline-block;
+#users .columns .column section {
+  height: 100%;
 }

@@ -4,6 +4,7 @@ import '../../../main.ts';
 import '../../../main.css';
 import 'highlight.js/styles/github.css';
 import '../../../../src/ui/css/diff2html.css';
+import './demo.css';
 
 /*
  * Example URLs:
@@ -151,13 +152,6 @@ async function getDiff(request: Request): Promise<string> {
 
 function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements): void {
   const diff2htmlUi = new Diff2HtmlUI(diffString, elements.structure.diffTarget, config);
-
-  if (config.outputFormat === 'side-by-side') {
-    elements.structure.container.style.width = '100%';
-  } else {
-    elements.structure.container.style.width = '';
-  }
-
   diff2htmlUi.draw();
 }
 
@@ -197,7 +191,6 @@ function updateBrowserUrl(config: Diff2HtmlUIConfig, newDiffUrl: string): void {
 
 type Elements = {
   structure: {
-    container: HTMLElement;
     diffTarget: HTMLElement;
   };
   url: {
@@ -233,7 +226,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const elements: Elements = {
     structure: {
-      container: document.getElementsByClassName('container')[0] as HTMLElement,
       diffTarget: document.getElementById('url-diff-container') as HTMLElement,
     },
     url: {
