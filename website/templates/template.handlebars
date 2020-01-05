@@ -39,79 +39,50 @@
     </script>
 </head>
 
-<body class="template-index">
-    <div class="swag-line">
-
+<body>
+    <nav class="navbar is-transparent is-spaced">
         <div class="container">
-            <nav class="navbar navbar-default navbar-tall navbar-full" role="navigation">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#global-nav">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="index.html">diff2html</a>
+            <div class="navbar-brand">
+                <a class="navbar-item" href="index.html">
+                    diff2html
+                </a>
+                <span class="navbar-burger burger" data-target="navbarMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item" href="index.html#install">Getting Started</a>
+                    <a class="navbar-item" href="index.html#cli">CLI</a>
+                    <a class="navbar-item" href="demo.html">Demo</a>
+                    <a class="navbar-item" href="https://github.com/rtfpessoa/diff2html#how-to-use"
+                        target="_blank">Docs</a>
+                    <a class="navbar-item" href="https://github.com/rtfpessoa/diff2html/issues/new"
+                        target="_blank">Support</a>
                 </div>
-
-                <div class="collapse navbar-collapse" id="global-nav">
-                    <div class="navbar-right">
-                        <ul class="nav navbar-nav">
-
-                            <li>
-                                <a href="index.html#install">Getting Started</a>
-                            </li>
-
-                            <li>
-                                <a href="index.html#cli">CLI</a>
-                            </li>
-
-                            <li>
-                                <a href="demo.html">Demo</a>
-                            </li>
-
-                            <li>
-                                <a href="https://github.com/rtfpessoa/diff2html#how-to-use" target="_blank">Docs</a>
-                            </li>
-
-                            <li>
-                                <a href="https://github.com/rtfpessoa/diff2html/issues/new" target="_blank">Support</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            {{#block "content"}}{{/block}}
+            </div>
         </div>
+    </nav>
 
-        <footer class="footer clearfix">
-            <p class="col-xs-10 col-xs-offset-1">
-                Website originally designed and built by
-                <a href="https://twitter.com/mdo" target="_blank">@mdo</a>,
-                <a href="https://twitter.com/fat" target="_blank">@fat</a>, and
-                <a href="https://twitter.com/dhg" target="_blank">@dhg</a>,
-                adapted with <span class="hero-red">❤</span> by
+    {{#block "content"}}{{/block}}
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                Designed and built with <span class="hero-red">❤</span> by
                 <a href="https://twitter.com/rtfpessoa" target="_blank">@rtfpessoa</a>.
             </p>
-            <ul class="footer-list col-xs-10 col-xs-offset-1">
+            <p>
+                <a class="footer-list-link" href="https://github.com/rtfpessoa/diff2html#how-to-use"
+                    target="_blank">FAQ</a>
+                -
+                <a class="footer-list-link" href="https://diff2html.xyz">diff2html</a>
+            </p>
+        </div>
+    </footer>
 
-                <li class="footer-list-item">
-                    <a class="footer-list-link" href="https://github.com/rtfpessoa/diff2html#how-to-use"
-                        target="_blank">FAQ</a>
-                </li>
-
-                <li class="footer-list-item">
-                    <a class="footer-list-link" href="https://diff2html.xyz">diff2html</a>
-                </li>
-
-            </ul>
-        </footer>
-
-    </div>
-
-    <!-- General JavaScript -->
     <script type="application/ld+json">
 {
   "@context": "http://schema.org/",
@@ -126,7 +97,6 @@
   "mainEntityOfPage": "https://diff2html.xyz/"
 }
 </script>
-
 </body>
 
 </html>
