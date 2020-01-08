@@ -93,11 +93,11 @@ export function escapeForHtml(str: string): string {
 /**
  * Deconstructs diff @line by separating the content from the prefix type
  */
-export function deconstructLine(line: string, isCombined: boolean): DiffLineParts {
+export function deconstructLine(line: string, isCombined: boolean, escape = true): DiffLineParts {
   const indexToSplit = prefixLength(isCombined);
   return {
     prefix: line.substring(0, indexToSplit),
-    content: escapeForHtml(line.substring(indexToSplit)),
+    content: escape ? escapeForHtml(line.substring(indexToSplit)) : line.substring(indexToSplit),
   };
 }
 
@@ -216,8 +216,8 @@ export function diffHighlight(
 ): HighlightedLines {
   const { matching, maxLineLengthHighlight, matchWordsThreshold, diffStyle } = { ...defaultRenderConfig, ...config };
 
-  const line1 = deconstructLine(diffLine1, isCombined);
-  const line2 = deconstructLine(diffLine2, isCombined);
+  const line1 = deconstructLine(diffLine1, isCombined, false);
+  const line2 = deconstructLine(diffLine2, isCombined, false);
 
   if (line1.content.length > maxLineLengthHighlight || line2.content.length > maxLineLengthHighlight) {
     return {
@@ -256,10 +256,11 @@ export function diffHighlight(
   const highlightedLine = diff.reduce((highlightedLine, part) => {
     const elemType = part.added ? 'ins' : part.removed ? 'del' : null;
     const addClass = changedWords.indexOf(part) > -1 ? ' class="d2h-change"' : '';
+    const escapedValue = escapeForHtml(part.value);
 
     return elemType !== null
-      ? `${highlightedLine}<${elemType}${addClass}>${part.value}</${elemType}>`
-      : `${highlightedLine}${part.value}`;
+      ? `${highlightedLine}<${elemType}${addClass}>${escapedValue}</${elemType}>`
+      : `${highlightedLine}${escapedValue}`;
   }, '');
 
   return {

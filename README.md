@@ -254,8 +254,8 @@ export default {
 > Create a Diff2HtmlUI instance
 
 ```ts
-constructor(diffInput: string | DiffFile[], target: HTMLElement) // diff2html-ui, diff2html-ui-slim
-constructor(diffInput: string | DiffFile[], target: HTMLElement, config: Diff2HtmlUIConfig = {}, hljs?: HighlightJS) // diff2html-ui-base
+constructor(target: HTMLElement, diffInput?: string | DiffFile[]) // diff2html-ui, diff2html-ui-slim
+constructor(target: HTMLElement, diffInput?: string | DiffFile[], config: Diff2HtmlUIConfig = {}, hljs?: HighlightJS) // diff2html-ui-base
 ```
 
 > Generate and inject in the document the Pretty HTML representation of the diff
@@ -270,6 +270,7 @@ draw(): void
 synchronisedScroll(): void
 fileListToggle(startVisible: boolean): void
 highlightCode(): void
+smartSelection(): void
 ```
 
 > Check out the [docs/demo.html](./docs/demo.html) for a demo example.
@@ -303,9 +304,9 @@ highlightCode(): void
 const targetElement = document.getElementById('destination-elem-id');
 const configuration = { drawFileList: true, matching: 'lines' };
 
-const diff2htmlUi = new Diff2HtmlUI(diffString, targetElement, configuration);
+const diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
 // or
-const diff2htmlUi = new Diff2HtmlUI(diffJson, targetElement, configuration);
+const diff2htmlUi = new Diff2HtmlUI(targetElement, diffJson, configuration);
 ```
 
 #### Draw
@@ -338,7 +339,7 @@ index 0000001..0ddf2ba
 +console.log("Hello from Diff2Html!")`;
   const targetElement = document.getElementById('myDiffElement');
   const configuration = { inputFormat: 'json', drawFileList: true, matching: 'lines', highlight: true };
-  const diff2htmlUi = new Diff2HtmlUI(diffString, targetElement, configuration);
+  const diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
   diff2htmlUi.draw();
   diff2htmlUi.highlightCode();
 });
@@ -359,7 +360,7 @@ index 0000001..0ddf2ba
 ```js
 document.addEventListener('DOMContentLoaded', () => {
   const targetElement = document.getElementById('myDiffElement');
-  var diff2htmlUi = new Diff2HtmlUI(lineDiffExample, targetElement, { drawFileList: true, matching: 'lines' });
+  var diff2htmlUi = new Diff2HtmlUI(targetElement, lineDiffExample, { drawFileList: true, matching: 'lines' });
   diff2htmlUi.draw();
   diff2htmlUi.fileListToggle(false);
 });

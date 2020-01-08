@@ -29,16 +29,21 @@ export class Diff2HtmlUI {
 
   currentSelectionColumnId = -1;
 
-  constructor(diffInput: string | DiffFile[], target: HTMLElement, config: Diff2HtmlUIConfig = {}, hljs?: HighlightJS) {
+  constructor(
+    target: HTMLElement,
+    diffInput?: string | DiffFile[],
+    config: Diff2HtmlUIConfig = {},
+    hljs?: HighlightJS,
+  ) {
     this.config = { ...defaultDiff2HtmlUIConfig, ...config };
-    this.diffHtml = html(diffInput, this.config);
+    this.diffHtml = diffInput !== undefined ? html(diffInput, this.config) : target.innerHTML;
     this.targetElement = target;
     if (hljs !== undefined) this.hljs = hljs;
   }
 
   draw(): void {
     this.targetElement.innerHTML = this.diffHtml;
-    if (this.config.smartSelection) this.initSelection();
+    if (this.config.smartSelection) this.smartSelection();
     if (this.config.synchronisedScroll) this.synchronisedScroll();
     if (this.config.highlight) this.highlightCode();
     if (this.config.fileListToggle) this.fileListToggle(this.config.fileListStartVisible);
@@ -142,29 +147,13 @@ export class Diff2HtmlUI {
         }
 
         line.classList.add('hljs');
-        line.classList.add('result.language');
+        line.classList.add(result.language);
         line.innerHTML = result.value;
       });
     });
   }
 
-  private instanceOfIHighlightResult(object: IHighlightResult | IAutoHighlightResult): object is IHighlightResult {
-    return 'top' in object;
-  }
-
-  private getHashTag(): string | null {
-    const docUrl = document.URL;
-    const hashTagIndex = docUrl.indexOf('#');
-
-    let hashTag = null;
-    if (hashTagIndex !== -1) {
-      hashTag = docUrl.substr(hashTagIndex + 1);
-    }
-
-    return hashTag;
-  }
-
-  private initSelection(): void {
+  smartSelection(): void {
     const body = document.getElementsByTagName('body')[0];
     const diffTable = body.getElementsByClassName('d2h-diff-table')[0];
 
@@ -198,6 +187,22 @@ export class Diff2HtmlUI {
       clipboardData.setData('text', text);
       event.preventDefault();
     });
+  }
+
+  private instanceOfIHighlightResult(object: IHighlightResult | IAutoHighlightResult): object is IHighlightResult {
+    return 'top' in object;
+  }
+
+  private getHashTag(): string | null {
+    const docUrl = document.URL;
+    const hashTagIndex = docUrl.indexOf('#');
+
+    let hashTag = null;
+    if (hashTagIndex !== -1) {
+      hashTag = docUrl.substr(hashTagIndex + 1);
+    }
+
+    return hashTag;
   }
 
   private getSelectedText(): string | undefined {
