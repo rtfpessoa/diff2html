@@ -151,7 +151,7 @@ async function getDiff(request: Request): Promise<string> {
 }
 
 function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements): void {
-  const diff2htmlUi = new Diff2HtmlUI(diffString, elements.structure.diffTarget, config);
+  const diff2htmlUi = new Diff2HtmlUI(elements.structure.diffTarget, diffString, config);
   diff2htmlUi.draw();
 }
 

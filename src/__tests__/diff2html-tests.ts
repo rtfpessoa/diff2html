@@ -832,5 +832,109 @@ describe('Diff2Html', () => {
         </div>"
       `);
     });
+
+    it('should generate html correctly without escaping twice', () => {
+      const diff =
+        '--- src/index.html\n' +
+        '+++ src/index.html\n' +
+        '@@ -1,2 +1,2 @@\n' +
+        '-<!-- commented code -->\n' +
+        '-</div>\n' +
+        '+<html>\n' +
+        '+<body>';
+
+      const result = html(diff);
+      expect(result).toMatchInlineSnapshot(`
+        "<div class=\\"d2h-file-list-wrapper\\">
+            <div class=\\"d2h-file-list-header\\">
+                <span class=\\"d2h-file-list-title\\">Files changed (1)</span>
+                <a class=\\"d2h-file-switch d2h-hide\\">hide</a>
+                <a class=\\"d2h-file-switch d2h-show\\">show</a>
+            </div>
+            <ol class=\\"d2h-file-list\\">
+            <li class=\\"d2h-file-list-line\\">
+            <span class=\\"d2h-file-name-wrapper\\">
+              <svg aria-hidden=\\"true\\" class=\\"d2h-icon d2h-changed\\" height=\\"16\\" title=\\"modified\\" version=\\"1.1\\"
+                   viewBox=\\"0 0 14 16\\" width=\\"14\\">
+                  <path d=\\"M13 1H1C0.45 1 0 1.45 0 2v12c0 0.55 0.45 1 1 1h12c0.55 0 1-0.45 1-1V2c0-0.55-0.45-1-1-1z m0 13H1V2h12v12zM4 8c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3z\\"></path>
+              </svg>      <a href=\\"#d2h-597266\\" class=\\"d2h-file-name\\">src/index.html</a>
+              <span class=\\"d2h-file-stats\\">
+                  <span class=\\"d2h-lines-added\\">+2</span>
+                  <span class=\\"d2h-lines-deleted\\">-2</span>
+              </span>
+            </span>
+        </li>
+            </ol>
+        </div><div class=\\"d2h-wrapper\\">
+            <div id=\\"d2h-597266\\" class=\\"d2h-file-wrapper\\" data-lang=\\"html\\">
+            <div class=\\"d2h-file-header\\">
+            <span class=\\"d2h-file-name-wrapper\\">
+            <svg aria-hidden=\\"true\\" class=\\"d2h-icon\\" height=\\"16\\" version=\\"1.1\\" viewBox=\\"0 0 12 16\\" width=\\"12\\">
+                <path d=\\"M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z\\"></path>
+            </svg>    <span class=\\"d2h-file-name\\">src/index.html</span>
+            <span class=\\"d2h-tag d2h-changed d2h-changed-tag\\">CHANGED</span></span>
+            </div>
+            <div class=\\"d2h-file-diff\\">
+                <div class=\\"d2h-code-wrapper\\">
+                    <table class=\\"d2h-diff-table\\">
+                        <tbody class=\\"d2h-diff-tbody\\">
+                        <tr>
+            <td class=\\"d2h-code-linenumber d2h-info\\"></td>
+            <td class=\\"d2h-info\\">
+                <div class=\\"d2h-code-line d2h-info\\">@@ -1,2 +1,2 @@</div>
+            </td>
+        </tr><tr>
+            <td class=\\"d2h-code-linenumber d2h-del d2h-change\\">
+              <div class=\\"line-num1\\">1</div>
+        <div class=\\"line-num2\\"></div>
+            </td>
+            <td class=\\"d2h-del d2h-change\\">
+                <div class=\\"d2h-code-line d2h-del d2h-change\\">
+                    <span class=\\"d2h-code-line-prefix\\">-</span>
+                    <span class=\\"d2h-code-line-ctn\\"><del>&lt;!-- commented code --&gt;</del></span>
+                </div>
+            </td>
+        </tr><tr>
+            <td class=\\"d2h-code-linenumber d2h-del d2h-change\\">
+              <div class=\\"line-num1\\">2</div>
+        <div class=\\"line-num2\\"></div>
+            </td>
+            <td class=\\"d2h-del d2h-change\\">
+                <div class=\\"d2h-code-line d2h-del d2h-change\\">
+                    <span class=\\"d2h-code-line-prefix\\">-</span>
+                    <span class=\\"d2h-code-line-ctn\\"><del>&lt;&#x2F;div</del>&gt;</span>
+                </div>
+            </td>
+        </tr><tr>
+            <td class=\\"d2h-code-linenumber d2h-ins d2h-change\\">
+              <div class=\\"line-num1\\"></div>
+        <div class=\\"line-num2\\">1</div>
+            </td>
+            <td class=\\"d2h-ins d2h-change\\">
+                <div class=\\"d2h-code-line d2h-ins d2h-change\\">
+                    <span class=\\"d2h-code-line-prefix\\">+</span>
+                    <span class=\\"d2h-code-line-ctn\\"><ins>&lt;html&gt;</ins></span>
+                </div>
+            </td>
+        </tr><tr>
+            <td class=\\"d2h-code-linenumber d2h-ins d2h-change\\">
+              <div class=\\"line-num1\\"></div>
+        <div class=\\"line-num2\\">2</div>
+            </td>
+            <td class=\\"d2h-ins d2h-change\\">
+                <div class=\\"d2h-code-line d2h-ins d2h-change\\">
+                    <span class=\\"d2h-code-line-prefix\\">+</span>
+                    <span class=\\"d2h-code-line-ctn\\"><ins>&lt;body</ins>&gt;</span>
+                </div>
+            </td>
+        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>"
+      `);
+    });
   });
 });
