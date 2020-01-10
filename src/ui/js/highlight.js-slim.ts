@@ -1,18 +1,8 @@
-import { HighlightJS } from './highlight.js-interface';
-
-/* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @typescript-eslint/interface-name-prefix */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/*
- * Adapted Highlight.js External APIs
- * Used to avoid importing all the languages
- */
 
 // Require the highlight.js library without languages
-const highlightJS = require('highlight.js/lib/highlight.js');
+import highlightJS from 'highlight.js/lib/highlight.js';
+
 // Separately require languages
 // highlightJS.registerLanguage('1c', require('highlight.js/lib/languages/1c'));
 // highlightJS.registerLanguage('abnf', require('highlight.js/lib/languages/abnf'));
@@ -200,4 +190,4 @@ highlightJS.registerLanguage('vim', require('highlight.js/lib/languages/vim'));
 // highlightJS.registerLanguage('xquery', require('highlight.js/lib/languages/xquery'));
 // highlightJS.registerLanguage('zephir', require('highlight.js/lib/languages/zephir'));
 
-export const hljs: HighlightJS = highlightJS as HighlightJS;
+export const hljs = highlightJS;

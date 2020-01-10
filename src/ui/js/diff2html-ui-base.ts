@@ -1,4 +1,5 @@
-import { HighlightJS, ICompiledMode, IHighlightResult, IAutoHighlightResult } from './highlight.js-interface';
+import { HighlightJS } from 'highlight.js/lib/highlight.js';
+import { ICompiledMode, IHighlightResult, IAutoHighlightResult } from 'highlight.js';
 import { nodeStream, mergeStreams } from './highlight.js-helpers';
 
 import { html, Diff2HtmlConfig, defaultDiff2HtmlConfig } from '../../diff2html';
