@@ -1,4 +1,4 @@
-import { HighlightJS } from 'highlight.js/lib/highlight.js';
+import * as HighlightJS from 'highlight.js/lib/highlight.js';
 import { ICompiledMode, IHighlightResult, IAutoHighlightResult } from 'highlight.js';
 import { nodeStream, mergeStreams } from './highlight.js-helpers';
 
@@ -26,7 +26,7 @@ export class Diff2HtmlUI {
   readonly config: typeof defaultDiff2HtmlUIConfig;
   readonly diffHtml: string;
   readonly targetElement: HTMLElement;
-  readonly hljs: HighlightJS | null = null;
+  readonly hljs: typeof HighlightJS | null = null;
 
   currentSelectionColumnId = -1;
 
@@ -34,7 +34,7 @@ export class Diff2HtmlUI {
     target: HTMLElement,
     diffInput?: string | DiffFile[],
     config: Diff2HtmlUIConfig = {},
-    hljs?: HighlightJS,
+    hljs?: typeof HighlightJS,
   ) {
     this.config = { ...defaultDiff2HtmlUIConfig, ...config };
     this.diffHtml = diffInput !== undefined ? html(diffInput, this.config) : target.innerHTML;
