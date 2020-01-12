@@ -62,4 +62,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           cd website
-          aws s3 sync . s3://diff2html.xyz --region eu-west-1
+          aws s3 sync --region eu-west-1 --delete . s3://diff2html.xyz --metadata-directive REPLACE --cache-control max-age=31557600
+          aws cloudfront create-invalidation --region eu-west-1 --distribution-id ${{ secrets.AWS_CF_DISTRIBUTION_ID }} --paths '/index.html /demo.html'
