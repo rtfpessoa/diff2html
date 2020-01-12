@@ -31,21 +31,6 @@ const config: webpack.Configuration[] = pages.map(page => {
           exclude: /node_modules/,
         },
         {
-          test: /\.handlebars$/,
-          loader: 'handlebars-loader',
-          options: {
-            precompileOptions: {
-              knownHelpersOnly: false,
-            },
-            helperDirs: [path.join(__dirname, 'website/templates/helpers')],
-            partialDirs: [path.join(__dirname, 'website/templates')],
-          },
-        },
-        {
-          test: /\.(css)$/,
-          use: [MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader'],
-        },
-        {
           test: /\.(html)$/,
           use: {
             loader: 'html-loader',
@@ -55,30 +40,26 @@ const config: webpack.Configuration[] = pages.map(page => {
           },
         },
         {
-          test: /\.woff(2)?(\?v=\d\.\d\.\d)?$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1000,
-                mimetype: 'application/font-woff',
-              },
+          test: /\.handlebars$/,
+          loader: 'handlebars-loader',
+          options: {
+            inlineRequires: '/images/',
+            precompileOptions: {
+              knownHelpersOnly: false,
             },
-          ],
+            helperDirs: [path.join(__dirname, 'website/templates/helpers')],
+            partialDirs: [path.join(__dirname, 'website/templates')],
+          },
         },
         {
-          test: /\.(ttf|eot|svg)(\?v=\d\.\d\.\d)?$/,
-          loader: 'file-loader',
-        },
-        {
-          test: /\.(jpeg|jpg|png|gif)$/,
+          test: /\.(gif|png|jpe?g|webp)$/i,
           use: [
             {
               loader: 'file-loader',
               options: {
-                name: '[name].[ext]',
-                outputPath: 'images/',
-                useRelativePath: true,
+                name: '[name].[ext]?[hash]',
+                outputPath: 'images',
+                esModule: false,
               },
             },
             {
@@ -104,6 +85,26 @@ const config: webpack.Configuration[] = pages.map(page => {
               },
             },
           ],
+        },
+        {
+          test: /\.(css)$/,
+          use: [MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader'],
+        },
+        {
+          test: /\.woff(2)?(\?v=\d\.\d\.\d)?$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 1000,
+                mimetype: 'application/font-woff',
+              },
+            },
+          ],
+        },
+        {
+          test: /\.(ttf|eot|svg)(\?v=\d\.\d\.\d)?$/,
+          loader: 'file-loader',
         },
       ],
     },

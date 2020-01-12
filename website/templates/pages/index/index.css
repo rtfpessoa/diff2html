@@ -1,5 +1,4 @@
 .image img.hero-img {
-  background-image: url(images/snapshot-3.png);
   display: block;
   height: auto;
   width: 70%;
@@ -43,16 +42,10 @@
   cursor: pointer;
 }
 
-.button.clipboard:hover {
-  color: #000;
-  background-color: #dcdfe4;
+.is-fullwidth {
+  flex-grow: 1;
 }
 
-#users .columns .column {
-  display: flex;
+.is-vertical {
   flex-direction: column;
-}
-
-#users .columns .column section {
-  height: 100%;
 }
