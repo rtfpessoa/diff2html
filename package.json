@@ -131,7 +131,7 @@
     "mkdirp": "0.5.1",
     "nopt": "4.0.1",
     "postcss": "7.0.26",
-    "postcss-cli": "6.1.3",
+    "postcss-cli": "7.1.0",
     "postcss-import": "12.0.1",
     "postcss-loader": "3.0.0",
     "postcss-preset-env": "6.7.0",
