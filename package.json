@@ -48,6 +48,8 @@
     "build:css": "rm -rf ./bundles/css; postcss --config ./postcss.config.js --no-map -o ./bundles/css/diff2html.min.css ./src/ui/css/diff2html.css",
     "build:templates": "ts-node ./scripts/hulk.ts --wrapper ts --variable 'defaultTemplates' ./src/templates/*.mustache > ./src/diff2html-templates.ts",
     "build:website": "rm -rf docs; webpack ---display-reasons --display-modules --mode production --config webpack.website.ts",
+    "build:toc-base": "markdown-toc --maxdepth 3 --bullets='-' -i",
+    "build:toc": "yarn run build:toc-base README.md",
     "test": "is-ci 'test:coverage' 'test:watch'",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
@@ -77,6 +79,10 @@
     ],
     "**/*.+(css|html|md|mdx)": [
       "prettier --write",
+      "git add"
+    ],
+    "README.md": [
+      "yarn run build:toc-base",
       "git add"
     ]
   },
@@ -127,6 +133,7 @@
     "is-ci-cli": "2.0.0",
     "jest": "24.9.0",
     "lint-staged": "9.5.0",
+    "markdown-toc": "^1.2.0",
     "mini-css-extract-plugin": "0.9.0",
     "mkdirp": "0.5.1",
     "nopt": "4.0.1",

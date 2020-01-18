@@ -18,6 +18,32 @@ diff2html generates pretty HTML diffs from git diff or unified diff output.
 
 [![NPM](https://nodei.co/npm/diff2html.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/diff2html/)
 
+## Table of Contents
+
+<!-- toc -->
+
+- [Features](#features)
+- [Online Example](#online-example)
+- [Distributions](#distributions)
+- [Diff2Html Usage](#diff2html-usage)
+  - [Diff2Html API](#diff2html-api)
+  - [Diff2Html Configuration](#diff2html-configuration)
+  - [Diff2Html Browser](#diff2html-browser)
+  - [Diff2Html NPM / Node.js Library](#diff2html-npm--nodejs-library)
+  - [Diff2Html Examples](#diff2html-examples)
+- [Diff2HtmlUI](#diff2htmlui)
+  - [Diff2HtmlUI API](#diff2htmlui-api)
+  - [Diff2HtmlUI Configuration](#diff2htmlui-configuration)
+  - [Diff2HtmlUI Browser](#diff2htmlui-browser)
+- [Troubleshooting](#troubleshooting)
+  - [1. Out of memory or Slow execution](#1-out-of-memory-or-slow-execution)
+- [Contribute](#contribute)
+- [Contributors](#contributors)
+- [License](#license)
+- [Thanks](#thanks)
+
+<!-- tocstop -->
+
 ## Features
 
 - Supports git and unified diffs
@@ -379,12 +405,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 - Disable the line matching algorithm, by setting the option `{"matching": "none"}` when invoking diff2html
 
-## Contributions
+## Contribute
 
 This is a developer friendly project, all the contributions are welcome. To contribute just send a pull request with
 your changes following the guidelines described in `CONTRIBUTING.md`. I will try to review them as soon as possible.
 
-## Contributors ✨
+## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
