@@ -424,6 +424,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/extend1994"><img src="https://avatars2.githubusercontent.com/u/13430892?v=4" width="100px;" alt=""/><br /><sub><b>Ann</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=extend1994" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/escitalopram"><img src="https://avatars0.githubusercontent.com/u/1155220?v=4" width="100px;" alt=""/><br /><sub><b>escitalopram</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/issues?q=author%3Aescitalopram" title="Bug reports">🐛</a> <a href="https://github.com/rtfpessoa/diff2html/commits?author=escitalopram" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/apps/dependabot"><img src="https://avatars0.githubusercontent.com/in/29110?v=4" width="100px;" alt=""/><br /><sub><b>dependabot[bot]</b></sub></a><br /><a href="#security-dependabot[bot]" title="Security">🛡️</a> <a href="#maintenance-dependabot[bot]" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="http://www.joshuakgoldberg.com"><img src="https://avatars1.githubusercontent.com/u/3335181?v=4" width="100px;" alt=""/><br /><sub><b>Josh Goldberg</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=JoshuaKGoldberg" title="Code">💻</a></td>
   </tr>
 </table>
 
