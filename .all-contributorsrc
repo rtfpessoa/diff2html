@@ -236,6 +236,15 @@
         "security",
         "maintenance"
       ]
+    },
+    {
+      "login": "JoshuaKGoldberg",
+      "name": "Josh Goldberg",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3335181?v=4",
+      "profile": "http://www.joshuakgoldberg.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
