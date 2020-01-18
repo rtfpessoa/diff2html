@@ -1,0 +1,210 @@
+version: 2.1
+
+jobs:
+  checkout-and-version:
+    docker:
+      - image: codacy/git-version
+    working_directory: ~/workdir
+    steps:
+      - checkout
+      - run:
+          name: Get next version
+          command: |
+            # Hack: Set a unique fake name for the release branch to avoid releasing master as the new 3.x major release for now
+            export NEXT_VERSION="$(/bin/git-version --folder=$PWD --release-branch=FAKE-RELEASE-BRANCH-NAME)"
+            echo "Next version is ${NEXT_VERSION}"
+            echo "${NEXT_VERSION}" > .version
+      - run:
+          name: Get next npm tag name
+          command: |
+            if [ "${GITHUB_REF#refs/heads/}" = "master" ]; then
+              export PUBLISH_TAG="latest"
+            elif [ "${GITHUB_REF#refs/heads/}" = "next" ]; then
+              export PUBLISH_TAG="next"
+            else
+              export PUBLISH_TAG="pr"
+            fi
+            echo "Next tag is ${PUBLISH_TAG}"
+            echo "${PUBLISH_TAG}" > .tag
+      - persist_to_workspace:
+          root: ~/workdir
+          paths:
+            - '*'
+
+  build-common: &common-build
+    docker:
+      - image: node
+    working_directory: ~/workdir
+    steps:
+      - attach_workspace:
+          at: ~/workdir
+      - restore_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Log environment setup
+          command: |
+            node -v
+            yarn -v
+      - run:
+          name: Install dependencies
+          command: yarn
+      - save_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - /usr/local/share/.cache/yarn
+      - run: yarn run validate
+      - store_artifacts:
+          path: coverage
+      - store_test_results:
+          path: coverage
+
+  build-latest: &latest-build
+    docker:
+      - image: node
+    working_directory: ~/workdir
+    steps:
+      - attach_workspace:
+          at: ~/workdir
+      - restore_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Log environment setup
+          command: |
+            node -v
+            yarn -v
+      - run:
+          name: Install dependencies
+          command: yarn
+      - save_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - /usr/local/share/.cache/yarn
+      - run: yarn run validate
+      - store_artifacts:
+          path: coverage
+      - store_test_results:
+          path: coverage
+      - run: yarn run coverage:push
+      - persist_to_workspace:
+          root: ~/workdir
+          paths:
+            - '*'
+
+  build-node-10:
+    <<: *common-build
+    docker:
+      - image: node:10
+
+  build-node-11:
+    <<: *common-build
+    docker:
+      - image: node:11
+
+  build-node-12:
+    <<: *common-build
+    docker:
+      - image: node:12
+
+  build-node-13:
+    <<: *latest-build
+    docker:
+      - image: node:13
+
+  publish_library:
+    docker:
+      - image: node:13
+    working_directory: ~/workdir
+    steps:
+      - attach_workspace:
+          at: ~/workdir
+      - run:
+          name: Configure Yarn version
+          command: |
+            yarn config set version-tag-prefix ""
+            yarn config set version-git-message "Release version %s"
+      - run:
+          name: Configure Git
+          command: |
+            git config user.email "circleci@users.noreply.github.com"
+            git config user.name "CircleCI"
+      - run:
+          name: Version package
+          command: |
+            # Update version in packages to publish
+            yarn version --non-interactive --new-version $(cat .version)
+      - run:
+          name: Setup npm credentials
+          command: |
+            rm -f .npmrc
+            touch .npmrc
+            echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+            echo "registry=https://registry.npmjs.org/" >> .npmrc
+            echo "access=public" >> .npmrc
+            echo "save-exact=true" >> .npmrc
+      - run:
+          name: Publish npm package
+          command: |
+            # Publish package versions to npmjs.org
+            yarn publish --tag $(cat .tag) --non-interactive --new-version $(cat .version)
+      - run:
+          name: Setup gpr credentials
+          command: |
+            rm -f .npmrc
+            touch .npmrc
+            echo "//npm.pkg.github.com/:_authToken=${GPR_AUTH_TOKEN}" >> .npmrc
+            echo "@rtfpessoa:registry=https://npm.pkg.github.com/" >> .npmrc
+            echo "access=public" >> .npmrc
+            echo "save-exact=true" >> .npmrc
+      - run:
+          name: Publish gpr package
+          command: |
+            # HACK: Override npm package name to be able to publish in GitHub
+            sed -i 's/^  "name":.*/  "name": "@rtfpessoa\/diff2html",/g' package.json
+            echo "Going to publish version $(cat .version) to GitHub"
+            yarn publish --tag $(cat .tag) --non-interactive --new-version $(cat .version)
+            # HACK: Restore npm package name
+            sed -i 's/^  "name":.*/  "name": "diff2html",/g' package.json
+
+  publish_website:
+    machine:
+      enabled: true
+    working_directory: ~/workdir
+    steps:
+      - attach_workspace:
+          at: ~/workdir
+      - run:
+          name: Deploy
+          working_directory: ~/workdir/docs
+          command: |
+            aws s3 sync --region eu-west-1 --delete . s3://diff2html.xyz --metadata-directive REPLACE --cache-control max-age=31557600
+            aws cloudfront create-invalidation --region eu-west-1 --distribution-id $AWS_CF_DISTRIBUTION_ID --paths /index.html /demo.html /sitemap.xml /robots.txt
+
+workflows:
+  validate-and-publish:
+    jobs:
+      - checkout-and-version
+      - build-node-10:
+          requires:
+            - checkout-and-version
+      - build-node-11:
+          requires:
+            - checkout-and-version
+      - build-node-12:
+          requires:
+            - checkout-and-version
+      - build-node-13:
+          requires:
+            - checkout-and-version
+      - publish_approval:
+          type: approval
+          requires:
+            - build-node-10
+            - build-node-11
+            - build-node-12
+            - build-node-13
+      - publish_library:
+          requires:
+            - publish_approval
+      - publish_website:
+          requires:
+            - publish_approval
