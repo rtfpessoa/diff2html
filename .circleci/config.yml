@@ -10,16 +10,15 @@ jobs:
       - run:
           name: Get next version
           command: |
-            # Hack: Set a unique fake name for the release branch to avoid releasing master as the new 3.x major release for now
-            export NEXT_VERSION="$(/bin/git-version --folder=$PWD --release-branch=FAKE-RELEASE-BRANCH-NAME)"
+            export NEXT_VERSION="$(/bin/git-version --folder=$PWD --release-branch=master)"
             echo "Next version is ${NEXT_VERSION}"
             echo "${NEXT_VERSION}" > .version
       - run:
           name: Get next npm tag name
           command: |
-            if [ "${GITHUB_REF#refs/heads/}" = "master" ]; then
+            if [ "${CIRCLE_BRANCH}" = "master" ]; then
               export PUBLISH_TAG="latest"
-            elif [ "${GITHUB_REF#refs/heads/}" = "next" ]; then
+            elif [ "${CIRCLE_BRANCH}" = "next" ]; then
               export PUBLISH_TAG="next"
             else
               export PUBLISH_TAG="pr"

@@ -11,7 +11,7 @@
 
 [![node](https://img.shields.io/node/v/diff2html.svg)]() [![npm](https://img.shields.io/npm/l/diff2html.svg)]()
 [![npm](https://img.shields.io/npm/dm/diff2html.svg)](https://www.npmjs.com/package/diff2html)
-[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors)
 [![Gitter](https://badges.gitter.im/rtfpessoa/diff2html.svg)](https://gitter.im/rtfpessoa/diff2html?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 diff2html generates pretty HTML diffs from git diff or unified diff output.
@@ -25,13 +25,14 @@ diff2html generates pretty HTML diffs from git diff or unified diff output.
 - [Features](#features)
 - [Online Example](#online-example)
 - [Distributions](#distributions)
+- [Usage](#usage)
 - [Diff2Html Usage](#diff2html-usage)
   - [Diff2Html API](#diff2html-api)
   - [Diff2Html Configuration](#diff2html-configuration)
   - [Diff2Html Browser](#diff2html-browser)
   - [Diff2Html NPM / Node.js Library](#diff2html-npm--nodejs-library)
   - [Diff2Html Examples](#diff2html-examples)
-- [Diff2HtmlUI](#diff2htmlui)
+- [Diff2HtmlUI Usage](#diff2htmlui-usage)
   - [Diff2HtmlUI API](#diff2htmlui-api)
   - [Diff2HtmlUI Configuration](#diff2htmlui-configuration)
   - [Diff2HtmlUI Browser](#diff2htmlui-browser)
@@ -100,6 +101,17 @@ diff2html generates pretty HTML diffs from git diff or unified diff output.
       - [lib/ui/js/diff2html-ui-base.js](./lib/ui/js/diff2html-ui-base.js) - includes the wrapper of diff2html without
         including a `highlight.js` implementation. You can use it without syntax highlight or by passing your own
         implementation with the languages you prefer
+
+## Usage
+
+Diff2Html can be used in various ways as listed in the [distributions](#distributions) section. The two main ways are:
+
+- [Diff2Html](#diff2html-usage): using the parser and html generator directly from the library gives you complete
+  control about what you can do with the json or html generated.
+- [Diff2HtmlUI](#diff2htmlui-usage): using this wrapper makes it easy to inject the html in the DOM and adds some nice
+  features to the diff, like syntax highlight.
+
+Bellow you can find more details and exemples about each option.
 
 ## Diff2Html Usage
 
@@ -266,7 +278,7 @@ export default {
 </script>
 ```
 
-## Diff2HtmlUI
+## Diff2HtmlUI Usage
 
 > Simple wrapper to ease simple tasks in the browser such as: code highlight and js effects
 
