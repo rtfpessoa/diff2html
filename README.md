@@ -147,7 +147,7 @@ function html(diffInput: string | DiffFile[], configuration: Diff2HtmlConfig = {
 The HTML output accepts a Javascript object with configuration. Possible options:
 
 - `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
-- `drawFileList`: show a file list before the diff: `true` or `false`, default is `false`
+- `drawFileList`: show a file list before the diff: `true` or `false`, default is `true`
 - `diffStyle`: show differences level in each line: `word` or `char`, default is `word`
 - `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default
   is `none`
