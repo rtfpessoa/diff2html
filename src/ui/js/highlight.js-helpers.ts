@@ -63,6 +63,10 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
   let result = '';
   const nodeStack = [];
 
+  function isElement(arg?: unknown): arg is Element {
+    return arg !== null && (arg as Element)?.attributes !== undefined;
+  }
+
   function selectStream(): NodeEvent[] {
     if (!original.length || !highlighted.length) {
       return original.length ? original : highlighted;
@@ -88,9 +92,12 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
   }
 
   function open(node: Node): void {
-    const htmlNode = node as HTMLElement;
-    result += `<${tag(node)} ${[].map
-      .call(htmlNode.attributes, (attr: Attr) => `${attr.nodeName}="${escape(attr.value)}"`)
+    if (!isElement(node)) {
+      throw new Error('Node is not an Element');
+    }
+
+    result += `<${tag(node)} ${Array<Attr>()
+      .map.call(node.attributes, attr => `${attr.nodeName}="${escape(attr.value)}"`)
       .join(' ')}>`;
   }
 

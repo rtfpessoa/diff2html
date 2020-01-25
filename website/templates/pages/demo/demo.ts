@@ -208,6 +208,30 @@ type Elements = {
   };
 };
 
+function isHTMLInputElement(arg?: unknown): arg is HTMLInputElement {
+  return arg !== null && (arg as HTMLInputElement)?.value !== undefined;
+}
+
+function getHTMLInputElementById(id: string): HTMLInputElement {
+  const element = document.getElementById(id);
+
+  if (!isHTMLInputElement(element)) {
+    throw new Error(`Could not find html input element with id '${id}'`);
+  }
+
+  return element;
+}
+
+function getHTMLElementById(id: string): HTMLElement {
+  const element = document.getElementById(id);
+
+  if (element === null) {
+    throw new Error(`Could not find html element with id '${id}'`);
+  }
+
+  return element;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Improves browser compatibility
   require('whatwg-fetch');
@@ -226,20 +250,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const elements: Elements = {
     structure: {
-      diffTarget: document.getElementById('url-diff-container') as HTMLElement,
+      diffTarget: getHTMLElementById('url-diff-container'),
     },
     url: {
-      input: document.getElementById('url') as HTMLInputElement,
-      button: document.getElementById('url-btn') as HTMLElement,
+      input: getHTMLInputElementById('url'),
+      button: getHTMLElementById('url-btn'),
     },
     options: {
-      outputFormat: document.getElementById('diff-url-options-output-format') as HTMLInputElement,
-      matching: document.getElementById('diff-url-options-matching') as HTMLInputElement,
-      wordsThreshold: document.getElementById('diff-url-options-match-words-threshold') as HTMLInputElement,
-      matchingMaxComparisons: document.getElementById('diff-url-options-matching-max-comparisons') as HTMLInputElement,
+      outputFormat: getHTMLInputElementById('diff-url-options-output-format'),
+      matching: getHTMLInputElementById('diff-url-options-matching'),
+      wordsThreshold: getHTMLInputElementById('diff-url-options-match-words-threshold'),
+      matchingMaxComparisons: getHTMLInputElementById('diff-url-options-matching-max-comparisons'),
     },
     checkboxes: {
-      drawFileList: document.getElementById('diff-url-options-show-files') as HTMLInputElement,
+      drawFileList: getHTMLInputElementById('diff-url-options-show-files'),
     },
   };
 
