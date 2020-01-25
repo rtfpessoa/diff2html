@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://www.github.com/rtfpessoa/diff2html.git"
+    "url": "git://github.com/rtfpessoa/diff2html.git"
   },
   "bugs": {
     "url": "https://www.github.com/rtfpessoa/diff2html/issues"

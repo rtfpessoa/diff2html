@@ -207,3 +207,7 @@ workflows:
       - publish_website:
           requires:
             - publish_approval
+          filters:
+            branches:
+              only:
+                - master
