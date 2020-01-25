@@ -4,14 +4,22 @@ import { unifyPath, hashCode } from './utils';
 import * as rematch from './rematch';
 import { LineMatchingType, DiffStyleType, LineType, DiffLineParts, DiffFile, DiffFileName } from './types';
 
-export enum CSSLineClass {
-  INSERTS = 'd2h-ins',
-  DELETES = 'd2h-del',
-  CONTEXT = 'd2h-cntx',
-  INFO = 'd2h-info',
-  INSERT_CHANGES = 'd2h-ins d2h-change',
-  DELETE_CHANGES = 'd2h-del d2h-change',
-}
+export type CSSLineClass =
+  | 'd2h-ins'
+  | 'd2h-del'
+  | 'd2h-cntx'
+  | 'd2h-info'
+  | 'd2h-ins d2h-change'
+  | 'd2h-del d2h-change';
+
+export const CSSLineClass: { [_: string]: CSSLineClass } = {
+  INSERTS: 'd2h-ins',
+  DELETES: 'd2h-del',
+  CONTEXT: 'd2h-cntx',
+  INFO: 'd2h-info',
+  INSERT_CHANGES: 'd2h-ins d2h-change',
+  DELETE_CHANGES: 'd2h-del d2h-change',
+};
 
 export type HighlightedLines = {
   oldLine: {

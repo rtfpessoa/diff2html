@@ -69,18 +69,24 @@ export interface DiffFile extends DiffFileName {
   mode?: string;
 }
 
-export enum OutputFormatType {
-  LINE_BY_LINE = 'line-by-line',
-  SIDE_BY_SIDE = 'side-by-side',
-}
+export type OutputFormatType = 'line-by-line' | 'side-by-side';
 
-export enum LineMatchingType {
-  LINES = 'lines',
-  WORDS = 'words',
-  NONE = 'none',
-}
+export const OutputFormatType: { [_: string]: OutputFormatType } = {
+  LINE_BY_LINE: 'line-by-line',
+  SIDE_BY_SIDE: 'side-by-side',
+};
 
-export enum DiffStyleType {
-  WORD = 'word',
-  CHAR = 'char',
-}
+export type LineMatchingType = 'lines' | 'words' | 'none';
+
+export const LineMatchingType: { [_: string]: LineMatchingType } = {
+  LINES: 'lines',
+  WORDS: 'words',
+  NONE: 'none',
+};
+
+export type DiffStyleType = 'word' | 'char';
+
+export const DiffStyleType: { [_: string]: DiffStyleType } = {
+  WORD: 'word',
+  CHAR: 'char',
+};
