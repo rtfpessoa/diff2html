@@ -130,8 +130,8 @@ jobs:
           name: Version package
           command: |
             # Update version in packages to publish
-            yarn version --non-interactive --new-version $(cat .version)
             git push --tags "https://rtfpessoa:$GPR_AUTH_TOKEN@github.com/rtfpessoa/diff2html"
+            yarn version --non-interactive --new-version $(cat .version)
       - run:
           name: Setup npm credentials
           command: |
