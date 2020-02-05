@@ -109,6 +109,24 @@ jobs:
     docker:
       - image: node:13
 
+  tag_version:
+    docker:
+      - image: node:13
+    working_directory: ~/workdir
+    steps:
+      - attach_workspace:
+          at: ~/workdir
+      - run:
+          name: Configure Git
+          command: |
+            git config user.email "circleci@users.noreply.github.com"
+            git config user.name "CircleCI"
+      - run:
+          name: Tag version
+          command: |
+            git tag "$(cat .version)"
+            git push --tags "https://rtfpessoa:$GPR_AUTH_TOKEN@github.com/rtfpessoa/diff2html"
+
   publish_library:
     docker:
       - image: node:13
@@ -131,7 +149,6 @@ jobs:
           command: |
             # Update version in packages to publish
             yarn version --non-interactive --new-version $(cat .version)
-            git push --tags "https://rtfpessoa:$GPR_AUTH_TOKEN@github.com/rtfpessoa/diff2html"
       - run:
           name: Setup npm credentials
           command: |
@@ -202,12 +219,15 @@ workflows:
             - build-node-11
             - build-node-12
             - build-node-13
+      - tag_version:
+          requires:
+            - publish_approval
       - publish_library:
           requires:
-            - publish_approval
+            - tag_version
       - publish_website:
           requires:
-            - publish_approval
+            - tag_version
           filters:
             branches:
               only:
