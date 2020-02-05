@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://www.github.com/rtfpessoa/diff2html.git"
+    "url": "git://github.com/rtfpessoa/diff2html.git"
   },
   "bugs": {
     "url": "https://www.github.com/rtfpessoa/diff2html/issues"
@@ -48,8 +48,9 @@
     "build:css": "rm -rf ./bundles/css; postcss --config ./postcss.config.js --no-map -o ./bundles/css/diff2html.min.css ./src/ui/css/diff2html.css",
     "build:templates": "ts-node ./scripts/hulk.ts --wrapper ts --variable 'defaultTemplates' ./src/templates/*.mustache > ./src/diff2html-templates.ts",
     "build:website": "rm -rf docs; webpack ---display-reasons --display-modules --mode production --config webpack.website.ts",
-    "build:toc-base": "markdown-toc --maxdepth 3 --bullets='-' -i",
-    "build:toc": "yarn run build:toc-base README.md",
+    "gen": "yarn run gen:toc",
+    "gen:toc-base": "markdown-toc --maxdepth 3 --bullets='-' -i",
+    "gen:toc": "yarn run gen:toc-base README.md",
     "test": "is-ci 'test:coverage' 'test:watch'",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
@@ -74,16 +75,13 @@
   "lint-staged": {
     "**/*.+(js|jsx|ts|tsx|json)": [
       "prettier --write",
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ],
     "**/*.+(css|html|md|mdx)": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "README.md": [
-      "yarn run build:toc-base",
-      "git add"
+      "yarn run gen:toc-base"
     ]
   },
   "dependencies": {
@@ -91,7 +89,7 @@
     "hogan.js": "3.0.2"
   },
   "optionalDependencies": {
-    "highlight.js": "9.17.1"
+    "highlight.js": "9.18.1"
   },
   "devDependencies": {
     "@types/clipboard": "2.0.1",
@@ -99,15 +97,15 @@
     "@types/diff": "4.0.2",
     "@types/highlight.js": "9.12.3",
     "@types/hogan.js": "3.0.0",
-    "@types/html-webpack-plugin": "3.2.1",
-    "@types/jest": "24.9.0",
+    "@types/html-webpack-plugin": "3.2.2",
+    "@types/jest": "25.1.1",
     "@types/mini-css-extract-plugin": "0.9.0",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "13.1.8",
+    "@types/node": "13.7.0",
     "@types/nopt": "3.0.29",
-    "@types/webpack": "4.41.2",
-    "@typescript-eslint/eslint-plugin": "2.16.0",
-    "@typescript-eslint/parser": "2.16.0",
+    "@types/webpack": "4.41.5",
+    "@typescript-eslint/eslint-plugin": "2.19.0",
+    "@typescript-eslint/parser": "2.19.0",
     "autoprefixer": "9.7.4",
     "bulma": "^0.8.0",
     "clipboard": "2.0.4",
@@ -116,8 +114,8 @@
     "css-loader": "3.4.2",
     "cssnano": "4.1.10",
     "eslint": "6.8.0",
-    "eslint-config-prettier": "6.9.0",
-    "eslint-plugin-import": "2.20.0",
+    "eslint-config-prettier": "6.10.0",
+    "eslint-plugin-import": "2.20.1",
     "eslint-plugin-jest": "23.6.0",
     "eslint-plugin-json": "2.0.1",
     "eslint-plugin-node": "11.0.0",
@@ -125,17 +123,17 @@
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-sonarjs": "0.5.0",
     "file-loader": "5.0.2",
-    "handlebars": "4.7.2",
+    "handlebars": "4.7.3",
     "handlebars-loader": "1.7.1",
     "html-webpack-plugin": "3.2.0",
-    "husky": "4.0.10",
+    "husky": "4.2.1",
     "image-webpack-loader": "6.0.0",
     "is-ci-cli": "2.0.0",
-    "jest": "24.9.0",
-    "lint-staged": "9.5.0",
+    "jest": "25.1.0",
+    "lint-staged": "10.0.7",
     "markdown-toc": "^1.2.0",
     "mini-css-extract-plugin": "0.9.0",
-    "mkdirp": "0.5.1",
+    "mkdirp": "1.0.3",
     "nopt": "4.0.1",
     "postcss": "7.0.26",
     "postcss-cli": "7.1.0",
@@ -143,14 +141,14 @@
     "postcss-loader": "3.0.0",
     "postcss-preset-env": "6.7.0",
     "prettier": "1.19.1",
-    "ts-jest": "24.3.0",
+    "ts-jest": "25.2.0",
     "ts-loader": "6.2.1",
     "ts-node": "8.6.2",
     "typescript": "3.7.5",
     "url-loader": "3.0.0",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.10",
-    "webpack-dev-server": "3.10.1",
+    "webpack-dev-server": "3.10.3",
     "whatwg-fetch": "3.0.0"
   },
   "resolutions": {
