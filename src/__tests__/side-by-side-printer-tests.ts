@@ -78,81 +78,81 @@ describe('SideBySideRenderer', () => {
       const fileHtml = sideBySideRenderer.generateFileHtml(file);
 
       expect(fileHtml).toMatchInlineSnapshot(`
-        Object {
-          "left": "<tr>
-            <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
-            <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\">@@ -19,7 +19,7 @@</div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-side-linenumber d2h-cntx\\">
-              19
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-side-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">context</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-side-linenumber d2h-del d2h-change\\">
-              20
-            </td>
-            <td class=\\"d2h-del d2h-change\\">
-                <div class=\\"d2h-code-side-line d2h-del d2h-change\\">
-                    <span class=\\"d2h-code-line-prefix\\">-</span>
-                    <span class=\\"d2h-code-line-ctn\\"><del>removed</del></span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
-              
-            </td>
-            <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
-                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">&nbsp;</span>
-                </div>
-            </td>
-        </tr>",
-          "right": "<tr>
-            <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
-            <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\"></div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-side-linenumber d2h-cntx\\">
-              19
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-side-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">context</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-side-linenumber d2h-ins d2h-change\\">
-              20
-            </td>
-            <td class=\\"d2h-ins d2h-change\\">
-                <div class=\\"d2h-code-side-line d2h-ins d2h-change\\">
-                    <span class=\\"d2h-code-line-prefix\\">+</span>
-                    <span class=\\"d2h-code-line-ctn\\"><ins>added</ins></span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-side-linenumber d2h-ins\\">
-              21
-            </td>
-            <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-side-line d2h-ins\\">
-                    <span class=\\"d2h-code-line-prefix\\">+</span>
-                    <span class=\\"d2h-code-line-ctn\\">another added</span>
-                </div>
-            </td>
-        </tr>",
-        }
-      `);
+Object {
+  "left": "<tr>
+    <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
+    <td class=\\"d2h-info\\">
+        <div class=\\"d2h-code-side-line d2h-info\\">@@ -19,7 +19,7 @@</div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-side-linenumber d2h-cntx\\">
+      19
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-side-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">context</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-side-linenumber d2h-del d2h-change\\">
+      20
+    </td>
+    <td class=\\"d2h-del d2h-change\\">
+        <div class=\\"d2h-code-side-line d2h-del d2h-change\\">
+            <span class=\\"d2h-code-line-prefix\\">-</span>
+            <span class=\\"d2h-code-line-ctn\\"><del>removed</del></span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+      
+    </td>
+    <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
+        <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\"><br></span>
+        </div>
+    </td>
+</tr>",
+  "right": "<tr>
+    <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
+    <td class=\\"d2h-info\\">
+        <div class=\\"d2h-code-side-line d2h-info\\"></div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-side-linenumber d2h-cntx\\">
+      19
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-side-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">context</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-side-linenumber d2h-ins d2h-change\\">
+      20
+    </td>
+    <td class=\\"d2h-ins d2h-change\\">
+        <div class=\\"d2h-code-side-line d2h-ins d2h-change\\">
+            <span class=\\"d2h-code-line-prefix\\">+</span>
+            <span class=\\"d2h-code-line-ctn\\"><ins>added</ins></span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-side-linenumber d2h-ins\\">
+      21
+    </td>
+    <td class=\\"d2h-ins\\">
+        <div class=\\"d2h-code-side-line d2h-ins\\">
+            <span class=\\"d2h-code-line-prefix\\">+</span>
+            <span class=\\"d2h-code-line-ctn\\">another added</span>
+        </div>
+    </td>
+</tr>",
+}
+`);
     });
   });
 
@@ -168,31 +168,31 @@ describe('SideBySideRenderer', () => {
       });
 
       expect(fileHtml).toMatchInlineSnapshot(`
-        Object {
-          "left": "<tr>
-            <td class=\\"d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
-              
-            </td>
-            <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
-                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">&nbsp;</span>
-                </div>
-            </td>
-        </tr>",
-          "right": "<tr>
-            <td class=\\"d2h-code-side-linenumber d2h-ins\\">
-              30
-            </td>
-            <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-side-line d2h-ins\\">
-                    <span class=\\"d2h-code-line-prefix\\">+</span>
-                    <span class=\\"d2h-code-line-ctn\\">test</span>
-                </div>
-            </td>
-        </tr>",
-        }
-      `);
+Object {
+  "left": "<tr>
+    <td class=\\"d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+      
+    </td>
+    <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
+        <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\"><br></span>
+        </div>
+    </td>
+</tr>",
+  "right": "<tr>
+    <td class=\\"d2h-code-side-linenumber d2h-ins\\">
+      30
+    </td>
+    <td class=\\"d2h-ins\\">
+        <div class=\\"d2h-code-side-line d2h-ins\\">
+            <span class=\\"d2h-code-line-prefix\\">+</span>
+            <span class=\\"d2h-code-line-ctn\\">test</span>
+        </div>
+    </td>
+</tr>",
+}
+`);
     });
     it('should work for deletions', () => {
       const hoganUtils = new HoganJsUtils({});
@@ -208,31 +208,31 @@ describe('SideBySideRenderer', () => {
       );
 
       expect(fileHtml).toMatchInlineSnapshot(`
-        Object {
-          "left": "<tr>
-            <td class=\\"d2h-code-side-linenumber d2h-del\\">
-              30
-            </td>
-            <td class=\\"d2h-del\\">
-                <div class=\\"d2h-code-side-line d2h-del\\">
-                    <span class=\\"d2h-code-line-prefix\\">-</span>
-                    <span class=\\"d2h-code-line-ctn\\">test</span>
-                </div>
-            </td>
-        </tr>",
-          "right": "<tr>
-            <td class=\\"d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
-              
-            </td>
-            <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
-                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">&nbsp;</span>
-                </div>
-            </td>
-        </tr>",
-        }
-      `);
+Object {
+  "left": "<tr>
+    <td class=\\"d2h-code-side-linenumber d2h-del\\">
+      30
+    </td>
+    <td class=\\"d2h-del\\">
+        <div class=\\"d2h-code-side-line d2h-del\\">
+            <span class=\\"d2h-code-line-prefix\\">-</span>
+            <span class=\\"d2h-code-line-ctn\\">test</span>
+        </div>
+    </td>
+</tr>",
+  "right": "<tr>
+    <td class=\\"d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+      
+    </td>
+    <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
+        <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\"><br></span>
+        </div>
+    </td>
+</tr>",
+}
+`);
     });
   });
 

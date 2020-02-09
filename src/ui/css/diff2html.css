@@ -207,7 +207,8 @@
 
 .d2h-code-linenumber,
 .d2h-code-side-linenumber,
-.d2h-code-line-prefix {
+.d2h-code-line-prefix,
+.d2h-emptyplaceholder {
   user-select: none;
 }
 

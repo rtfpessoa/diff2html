@@ -285,8 +285,8 @@ export default class SideBySideRenderer {
       type: line?.type || `${renderUtils.CSSLineClass.CONTEXT} d2h-emptyplaceholder`,
       lineClass: line !== undefined ? lineClass : `${lineClass} d2h-code-side-emptyplaceholder`,
       contentClass: line !== undefined ? contentClass : `${contentClass} d2h-code-side-emptyplaceholder`,
-      prefix: line?.prefix === ' ' ? '&nbsp;' : line?.prefix || '&nbsp;',
-      content: line?.content || '&nbsp;',
+      prefix: line?.prefix === ' ' ? '&nbsp;' : line?.prefix,
+      content: line?.content,
       lineNumber: line?.number,
     });
   }
