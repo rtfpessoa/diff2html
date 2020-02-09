@@ -10,6 +10,10 @@ export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
   highlight?: boolean;
   fileListToggle?: boolean;
   fileListStartVisible?: boolean;
+  /**
+   * @deprecated since version 3.1.0
+   * Smart selection is now enabled by default with vanilla CSS
+   */
   smartSelection?: boolean;
 }
 
@@ -19,6 +23,10 @@ export const defaultDiff2HtmlUIConfig = {
   highlight: true,
   fileListToggle: true,
   fileListStartVisible: false,
+  /**
+   * @deprecated since version 3.1.0
+   * Smart selection is now enabled by default with vanilla CSS
+   */
   smartSelection: true,
 };
 
@@ -44,7 +52,6 @@ export class Diff2HtmlUI {
 
   draw(): void {
     this.targetElement.innerHTML = this.diffHtml;
-    if (this.config.smartSelection) this.smartSelection();
     if (this.config.synchronisedScroll) this.synchronisedScroll();
     if (this.config.highlight) this.highlightCode();
     if (this.config.fileListToggle) this.fileListToggle(this.config.fileListStartVisible);
@@ -156,38 +163,11 @@ export class Diff2HtmlUI {
     });
   }
 
+  /**
+   * @deprecated since version 3.1.0
+   */
   smartSelection(): void {
-    const body = document.getElementsByTagName('body')[0];
-    const diffTable = body.getElementsByClassName('d2h-diff-table')[0];
-
-    diffTable.addEventListener('mousedown', event => {
-      if (event === null || !this.isElement(event.target)) return;
-
-      const table = event.target.closest('.d2h-diff-table');
-      if (table !== null) {
-        if (event.target.closest('.d2h-code-line,.d2h-code-side-line') !== null) {
-          table.classList.remove('selecting-left');
-          table.classList.add('selecting-right');
-          this.currentSelectionColumnId = 1;
-        } else if (event.target.closest('.d2h-code-linenumber,.d2h-code-side-linenumber') !== null) {
-          table.classList.remove('selecting-right');
-          table.classList.add('selecting-left');
-          this.currentSelectionColumnId = 0;
-        }
-      }
-    });
-
-    diffTable.addEventListener('copy', event => {
-      if (!this.isClipboardEvent(event)) return;
-
-      const clipboardData = event.clipboardData;
-      const text = this.getSelectedText();
-
-      if (clipboardData === null || text === undefined) return;
-
-      clipboardData.setData('text', text);
-      event.preventDefault();
-    });
+    console.warn('Smart selection is now enabled by default with CSS. No need to call this method anymore.');
   }
 
   private instanceOfIHighlightResult(object: IHighlightResult | IAutoHighlightResult): object is IHighlightResult {
@@ -206,37 +186,7 @@ export class Diff2HtmlUI {
     return hashTag;
   }
 
-  private getSelectedText(): string | undefined {
-    const sel = window.getSelection();
-
-    if (sel === null) return;
-
-    const range = sel.getRangeAt(0);
-    const doc = range.cloneContents();
-    const nodes = doc.querySelectorAll('tr');
-    const idx = this.currentSelectionColumnId;
-
-    let text = '';
-    if (nodes.length === 0) {
-      text = doc.textContent || '';
-    } else {
-      nodes.forEach((tr, i) => {
-        const td = tr.cells[tr.cells.length === 1 ? 0 : idx];
-
-        if (td === undefined || td.textContent === null) return;
-
-        text += (i ? '\n' : '') + td.textContent.replace(/\r\n|\r|\n/g, '');
-      });
-    }
-
-    return text;
-  }
-
   private isElement(arg?: unknown): arg is Element {
     return arg !== null && (arg as Element)?.classList !== undefined;
-  }
-
-  private isClipboardEvent(arg?: unknown): arg is ClipboardEvent {
-    return arg !== null && (arg as ClipboardEvent)?.clipboardData !== undefined;
   }
 }
