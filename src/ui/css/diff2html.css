@@ -192,6 +192,7 @@
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 0 0.5em 0 0.5em;
 }
 
 .d2h-code-side-linenumber:after {
@@ -202,6 +203,17 @@
 .d2h-emptyplaceholder {
   background-color: #f1f1f1;
   border-color: #e1e1e1;
+}
+
+.d2h-code-linenumber,
+.d2h-code-side-linenumber,
+.d2h-code-line-prefix {
+  user-select: none;
+}
+
+.d2h-code-linenumber,
+.d2h-code-side-linenumber {
+  direction: rtl;
 }
 
 /*
@@ -333,10 +345,4 @@
 
 .d2h-moved-tag {
   border: #3572b0 1px solid;
-}
-
-.d2h-code-linenumber,
-.d2h-code-side-linenumber,
-.d2h-code-line-prefix {
-  user-select: none;
 }
