@@ -624,213 +624,214 @@ describe('Diff2Html', () => {
         ' \n';
       const result = html(diffExample2, { drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
-        "<div class=\\"d2h-wrapper\\">
-            <div id=\\"d2h-211439\\" class=\\"d2h-file-wrapper\\" data-lang=\\"md\\">
-            <div class=\\"d2h-file-header\\">
-            <span class=\\"d2h-file-name-wrapper\\">
-            <svg aria-hidden=\\"true\\" class=\\"d2h-icon\\" height=\\"16\\" version=\\"1.1\\" viewBox=\\"0 0 12 16\\" width=\\"12\\">
-                <path d=\\"M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z\\"></path>
-            </svg>    <span class=\\"d2h-file-name\\">CHANGELOG.md</span>
-            <span class=\\"d2h-tag d2h-changed d2h-changed-tag\\">CHANGED</span></span>
-            </div>
-            <div class=\\"d2h-file-diff\\">
-                <div class=\\"d2h-code-wrapper\\">
-                    <table class=\\"d2h-diff-table\\">
-                        <tbody class=\\"d2h-diff-tbody\\">
-                        <tr>
-            <td class=\\"d2h-code-linenumber d2h-info\\"></td>
-            <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-line d2h-info\\">@@ -1,7 +1,6 @@</div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">1</div>
-        <div class=\\"line-num2\\">1</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\"># Change Log</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">2</div>
-        <div class=\\"line-num2\\">2</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">All notable changes to this project will be documented in this file.</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">3</div>
-        <div class=\\"line-num2\\">3</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">This project adheres to [Semantic Versioning](http:&#x2F;&#x2F;semver.org&#x2F;).</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-del\\">
-              <div class=\\"line-num1\\">4</div>
-        <div class=\\"line-num2\\"></div>
-            </td>
-            <td class=\\"d2h-del\\">
-                <div class=\\"d2h-code-line d2h-del\\">
-                    <span class=\\"d2h-code-line-prefix\\">-</span>
-                    <span class=\\"d2h-code-line-ctn\\">$a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;Use the following format for additions: \` - VERSION: [feature&#x2F;patch (if applicable)] Short description of change. Links to relevant issues&#x2F;PRs.\`</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">5</div>
-        <div class=\\"line-num2\\">4</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">$a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">6</div>
-        <div class=\\"line-num2\\">5</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">$a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#877](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;878)</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">7</div>
-        <div class=\\"line-num2\\">6</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">- 1.1.8:</span>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class=\\"d2h-code-linenumber d2h-info\\"></td>
-            <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-line d2h-info\\">@@ -11,7 +10,7 @@ $a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#8</div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">11</div>
-        <div class=\\"line-num2\\">10</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">- 1.1.7:</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">12</div>
-        <div class=\\"line-num2\\">11</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">    - Fix diff flickering issue and optimization [#865](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;865)</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">13</div>
-        <div class=\\"line-num2\\">12</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">    - Fix credential dialog issue [#864](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;864)</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-del d2h-change\\">
-              <div class=\\"line-num1\\">14</div>
-        <div class=\\"line-num2\\"></div>
-            </td>
-            <td class=\\"d2h-del d2h-change\\">
-                <div class=\\"d2h-code-line d2h-del d2h-change\\">
-                    <span class=\\"d2h-code-line-prefix\\">-</span>
-                    <span class=\\"d2h-code-line-ctn\\">    - Fix HEAD branch order when redraw [#858](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;858)</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-ins d2h-change\\">
-              <div class=\\"line-num1\\"></div>
-        <div class=\\"line-num2\\">13</div>
-            </td>
-            <td class=\\"d2h-ins d2h-change\\">
-                <div class=\\"d2h-code-line d2h-ins d2h-change\\">
-                    <span class=\\"d2h-code-line-prefix\\">+</span>
-                    <span class=\\"d2h-code-line-ctn\\"><ins>4</ins>    - Fix HEAD branch order when redraw [#858](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;858)</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">15</div>
-        <div class=\\"line-num2\\">14</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">- 1.1.6: Fix path auto complete [#861](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;861)</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">16</div>
-        <div class=\\"line-num2\\">15</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">- 1.1.5: Update &quot;Toggle all&quot; button after commit or changing selected files [#859](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;859)</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">17</div>
-        <div class=\\"line-num2\\">16</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                    <span class=\\"d2h-code-line-ctn\\">- 1.1.4: [patch] Promise refactoring</span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class=\\"d2h-code-linenumber d2h-cntx\\">
-              <div class=\\"line-num1\\">18</div>
-        <div class=\\"line-num2\\">17</div>
-            </td>
-            <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
-                    <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
-                </div>
-            </td>
-        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+"<div class=\\"d2h-wrapper\\">
+    <div id=\\"d2h-211439\\" class=\\"d2h-file-wrapper\\" data-lang=\\"md\\">
+    <div class=\\"d2h-file-header\\">
+    <span class=\\"d2h-file-name-wrapper\\">
+    <svg aria-hidden=\\"true\\" class=\\"d2h-icon\\" height=\\"16\\" version=\\"1.1\\" viewBox=\\"0 0 12 16\\" width=\\"12\\">
+        <path d=\\"M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z\\"></path>
+    </svg>    <span class=\\"d2h-file-name\\">CHANGELOG.md</span>
+    <span class=\\"d2h-tag d2h-changed d2h-changed-tag\\">CHANGED</span></span>
+    </div>
+    <div class=\\"d2h-file-diff\\">
+        <div class=\\"d2h-code-wrapper\\">
+            <table class=\\"d2h-diff-table\\">
+                <tbody class=\\"d2h-diff-tbody\\">
+                <tr>
+    <td class=\\"d2h-code-linenumber d2h-info\\"></td>
+    <td class=\\"d2h-info\\">
+        <div class=\\"d2h-code-line d2h-info\\">@@ -1,7 +1,6 @@</div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">1</div>
+<div class=\\"line-num2\\">1</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\"># Change Log</span>
         </div>
-        </div>"
-      `);
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">2</div>
+<div class=\\"line-num2\\">2</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">All notable changes to this project will be documented in this file.</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">3</div>
+<div class=\\"line-num2\\">3</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">This project adheres to [Semantic Versioning](http:&#x2F;&#x2F;semver.org&#x2F;).</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-del\\">
+      <div class=\\"line-num1\\">4</div>
+<div class=\\"line-num2\\"></div>
+    </td>
+    <td class=\\"d2h-del\\">
+        <div class=\\"d2h-code-line d2h-del\\">
+            <span class=\\"d2h-code-line-prefix\\">-</span>
+            <span class=\\"d2h-code-line-ctn\\">$a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;Use the following format for additions: \` - VERSION: [feature&#x2F;patch (if applicable)] Short description of change. Links to relevant issues&#x2F;PRs.\`</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">5</div>
+<div class=\\"line-num2\\">4</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">$a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">6</div>
+<div class=\\"line-num2\\">5</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">$a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#877](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;878)</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">7</div>
+<div class=\\"line-num2\\">6</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">- 1.1.8:</span>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class=\\"d2h-code-linenumber d2h-info\\"></td>
+    <td class=\\"d2h-info\\">
+        <div class=\\"d2h-code-line d2h-info\\">@@ -11,7 +10,7 @@ $a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#8</div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">11</div>
+<div class=\\"line-num2\\">10</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">- 1.1.7:</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">12</div>
+<div class=\\"line-num2\\">11</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">    - Fix diff flickering issue and optimization [#865](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;865)</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">13</div>
+<div class=\\"line-num2\\">12</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">    - Fix credential dialog issue [#864](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;pull&#x2F;864)</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-del d2h-change\\">
+      <div class=\\"line-num1\\">14</div>
+<div class=\\"line-num2\\"></div>
+    </td>
+    <td class=\\"d2h-del d2h-change\\">
+        <div class=\\"d2h-code-line d2h-del d2h-change\\">
+            <span class=\\"d2h-code-line-prefix\\">-</span>
+            <span class=\\"d2h-code-line-ctn\\">    - Fix HEAD branch order when redraw [#858](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;858)</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-ins d2h-change\\">
+      <div class=\\"line-num1\\"></div>
+<div class=\\"line-num2\\">13</div>
+    </td>
+    <td class=\\"d2h-ins d2h-change\\">
+        <div class=\\"d2h-code-line d2h-ins d2h-change\\">
+            <span class=\\"d2h-code-line-prefix\\">+</span>
+            <span class=\\"d2h-code-line-ctn\\"><ins>4</ins>    - Fix HEAD branch order when redraw [#858](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;858)</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">15</div>
+<div class=\\"line-num2\\">14</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">- 1.1.6: Fix path auto complete [#861](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;861)</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">16</div>
+<div class=\\"line-num2\\">15</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">- 1.1.5: Update &quot;Toggle all&quot; button after commit or changing selected files [#859](https:&#x2F;&#x2F;github.com&#x2F;FredrikNoren&#x2F;ungit&#x2F;issues&#x2F;859)</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">17</div>
+<div class=\\"line-num2\\">16</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\">- 1.1.4: [patch] Promise refactoring</span>
+        </div>
+    </td>
+</tr><tr>
+    <td class=\\"d2h-code-linenumber d2h-cntx\\">
+      <div class=\\"line-num1\\">18</div>
+<div class=\\"line-num2\\">17</div>
+    </td>
+    <td class=\\"d2h-cntx\\">
+        <div class=\\"d2h-code-line d2h-cntx\\">
+            <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
+            <span class=\\"d2h-code-line-ctn\\"><br></span>
+        </div>
+    </td>
+</tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>"
+`);
     });
 
     it('should generate html correctly without escaping twice', () => {
