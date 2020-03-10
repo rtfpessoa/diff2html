@@ -7,7 +7,7 @@
 [![npm](https://img.shields.io/npm/v/diff2html.svg)](https://www.npmjs.com/package/diff2html)
 [![Dependency Status](https://david-dm.org/rtfpessoa/diff2html.svg)](https://david-dm.org/rtfpessoa/diff2html)
 [![devDependency Status](https://david-dm.org/rtfpessoa/diff2html/dev-status.svg)](https://david-dm.org/rtfpessoa/diff2html#info=devDependencies)
-[![cdnjs](https://img.shields.io/cdnjs/v/diff2html)](https://cdnjs.com/libraries/diff2html)
+[![jsdelivr CDN Downloads](https://data.jsdelivr.com/v1/package/npm/diff2html/badge)](https://www.jsdelivr.com/package/npm/diff2html)
 
 [![node](https://img.shields.io/node/v/diff2html.svg)]() [![npm](https://img.shields.io/npm/l/diff2html.svg)]()
 [![npm](https://img.shields.io/npm/dm/diff2html.svg)](https://www.npmjs.com/package/diff2html)
@@ -65,42 +65,46 @@ diff2html generates pretty HTML diffs from git diff or unified diff output.
 
 ## Online Example
 
-> Go to [diff2html](https://diff2html.xyz/)
+> Go to [diff2html](https://diff2html.xyz/demo.html)
 
 ## Distributions
 
+- [jsdelivr CDN](https://www.jsdelivr.com/package/npm/diff2html)
 - [WebJar](http://www.webjars.org/)
 - [Node Library](https://www.npmjs.org/package/diff2html)
 - [NPM CLI](https://www.npmjs.org/package/diff2html-cli)
-- Manually download and import:
+- Manually use from jsdelivr or build the project:
   - Browser / Bundle
     - Parser and HTML Generator
-      - [bundles/js/diff2html.min.js](./bundles/js/diff2html.min.js) - includes the diff parser and html generator
+      - [bundles/js/diff2html.min.js](https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html.min.js) - includes the
+        diff parser and html generator
     - Wrapper and helper adding syntax highlight, synchronized scroll, and other nice features
-      - [bundles/js/diff2html-ui.min.js](./bundles/js/diff2html-ui.min.js) - includes the wrapper of diff2html with
-        highlight for all `highlight.js` supported languages
-      - [bundles/js/diff2html-ui-slim.min.js](./bundles/js/diff2html-ui-slim.min.js) - includes the wrapper of diff2html
-        with "the most common" `highlight.js` supported languages
-      - [bundles/js/diff2html-ui-base.min.js](./bundles/js/diff2html-ui-base.min.js) - includes the wrapper of diff2html
-        without including a `highlight.js` implementation. You can use it without syntax highlight or by passing your
-        own implementation with the languages you prefer
+      - [bundles/js/diff2html-ui.min.js](https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js) -
+        includes the wrapper of diff2html with highlight for all `highlight.js` supported languages
+      - [bundles/js/diff2html-ui-slim.min.js](https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui-slim.min.js) -
+        includes the wrapper of diff2html with "the most common" `highlight.js` supported languages
+      - [bundles/js/diff2html-ui-base.min.js](https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui-base.min.js) -
+        includes the wrapper of diff2html without including a `highlight.js` implementation. You can use it without
+        syntax highlight or by passing your own implementation with the languages you prefer
   - NPM / Node.js library
     - ES5
-      - [lib/diff2html.js](./lib/diff2html.js) - includes the diff parser and html generator
-      - [lib/ui/js/diff2html-ui.js](./lib/ui/js/diff2html-ui.js) - includes the wrapper of diff2html with highlight for
-        all `highlight.js` supported languages
-      - [lib/ui/js/diff2html-ui-slim.js](./lib/ui/js/diff2html-ui-slim.js) - includes the wrapper of diff2html with "the
-        most common" `highlight.js` supported languages
-      - [lib/ui/js/diff2html-ui-base.js](./lib/ui/js/diff2html-ui-base.js)
+      - [lib/diff2html.js](https://cdn.jsdelivr.net/npm/diff2html/lib/diff2html.js) - includes the diff parser and html
+        generator
+      - [lib/ui/js/diff2html-ui.js](https://cdn.jsdelivr.net/npm/diff2html/lib/ui/js/diff2html-ui.js) - includes the
+        wrapper of diff2html with highlight for all `highlight.js` supported languages
+      - [lib/ui/js/diff2html-ui-slim.js](https://cdn.jsdelivr.net/npm/diff2html/lib/ui/js/diff2html-ui-slim.js) -
+        includes the wrapper of diff2html with "the most common" `highlight.js` supported languages
+      - [lib/ui/js/diff2html-ui-base.js](https://cdn.jsdelivr.net/npm/diff2html/lib/ui/js/diff2html-ui-base.js)
     - ES6
-      - [lib-esm/diff2html.js](./lib-esm/diff2html.js) - includes the diff parser and html generator
-      - [lib/ui/js/diff2html-ui.js](./lib/ui/js/diff2html-ui.js) - includes the wrapper of diff2html with highlight for
-        all `highlight.js` supported languages
-      - [lib/ui/js/diff2html-ui-slim.js](./lib/ui/js/diff2html-ui-slim.js) - includes the wrapper of diff2html with "the
-        most common" `highlight.js` supported languages
-      - [lib/ui/js/diff2html-ui-base.js](./lib/ui/js/diff2html-ui-base.js) - includes the wrapper of diff2html without
-        including a `highlight.js` implementation. You can use it without syntax highlight or by passing your own
-        implementation with the languages you prefer
+      - [lib-esm/diff2html.js](https://cdn.jsdelivr.net/npm/diff2html/lib-esm/diff2html.js) - includes the diff parser
+        and html generator
+      - [lib/ui/js/diff2html-ui.js](https://cdn.jsdelivr.net/npm/diff2html/lib/ui/js/diff2html-ui.js) - includes the
+        wrapper of diff2html with highlight for all `highlight.js` supported languages
+      - [lib/ui/js/diff2html-ui-slim.js](https://cdn.jsdelivr.net/npm/diff2html/lib/ui/js/diff2html-ui-slim.js) -
+        includes the wrapper of diff2html with "the most common" `highlight.js` supported languages
+      - [lib/ui/js/diff2html-ui-base.js](https://cdn.jsdelivr.net/npm/diff2html/lib/ui/js/diff2html-ui-base.js) -
+        includes the wrapper of diff2html without including a `highlight.js` implementation. You can use it without
+        syntax highlight or by passing your own implementation with the languages you prefer
 
 ## Usage
 
@@ -121,10 +125,8 @@ Import the stylesheet
 
 ```html
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="bundles/css/diff2html.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
 ```
-
-You can also refer to it from a CDN like [CDNJS](https://cdnjs.com/libraries/diff2html).
 
 ### Diff2Html API
 
@@ -139,8 +141,6 @@ function parse(diffInput: string, configuration: Diff2HtmlConfig = {}): DiffFile
 ```ts
 function html(diffInput: string | DiffFile[], configuration: Diff2HtmlConfig = {}): string;
 ```
-
-> Check out the [docs/demo.html](./docs/demo.html) for a demo example.
 
 ### Diff2Html Configuration
 
@@ -170,10 +170,10 @@ Import the stylesheet and the library code
 
 ```html
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="bundles/css/diff2html.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
 
 <!-- Javascripts -->
-<script type="text/javascript" src="bundles/js/diff2html.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html.min.js"></script>
 ```
 
 It will now be available as a global variable named `Diff2Html`.
@@ -310,8 +310,6 @@ fileListToggle(startVisible: boolean): void
 highlightCode(): void
 ```
 
-> Check out the [docs/demo.html](./docs/demo.html) for a demo example.
-
 ### Diff2HtmlUI Configuration
 
 - `synchronisedScroll`: scroll both panes in side-by-side mode: `true` or `false`, default is `true`
@@ -327,10 +325,10 @@ highlightCode(): void
 
 ```html
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="bundles/css/diff2html.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
 
 <!-- Javascripts -->
-<script type="text/javascript" src="bundles/js/diff2html-ui.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
 ```
 
 #### Init
@@ -355,10 +353,10 @@ diff2htmlUi.draw();
 ```html
 <!-- Stylesheet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css" />
-<link rel="stylesheet" type="text/css" href="bundles/css/diff2html.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
 
 <!-- Javascripts -->
-<script type="text/javascript" src="bundles/js/diff2html-ui.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
 ```
 
 > Pass the option `highlight` with value true or invoke `diff2htmlUi.highlightCode()` after `diff2htmlUi.draw()`.
@@ -386,7 +384,7 @@ index 0000001..0ddf2ba
 
 ```html
 <!-- Javascripts -->
-<script type="text/javascript" src="bundles/js/diff2html-ui.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
 ```
 
 > Invoke the Diff2HtmlUI helper Pass the option `fileListToggle` with value true or invoke
