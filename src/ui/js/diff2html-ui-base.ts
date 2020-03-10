@@ -80,7 +80,7 @@ export class Diff2HtmlUI {
   }
 
   fileListToggle(startVisible: boolean): void {
-    const showBtn: HTMLElement | null = this.targetElement.querySelector('d2h-show');
+    const showBtn: HTMLElement | null = this.targetElement.querySelector('.d2h-show');
     const hideBtn: HTMLElement | null = this.targetElement.querySelector('.d2h-hide');
     const fileList: HTMLElement | null = this.targetElement.querySelector('.d2h-file-list');
 
