@@ -182,12 +182,16 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     }
 
     /* Create block metadata */
-    // eslint-disable-next-line
-    // @ts-ignore
     currentBlock = {
       lines: [],
+      // eslint-disable-next-line
+      // @ts-ignore
       oldStartLine: oldLine,
+      // eslint-disable-next-line
+      // @ts-ignore
       oldStartLine2: oldLine2,
+      // eslint-disable-next-line
+      // @ts-ignore
       newStartLine: newLine,
       header: line,
     };
