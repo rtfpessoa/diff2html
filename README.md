@@ -115,7 +115,7 @@ Diff2Html can be used in various ways as listed in the [distributions](#distribu
 - [Diff2HtmlUI](#diff2htmlui-usage): using this wrapper makes it easy to inject the html in the DOM and adds some nice
   features to the diff, like syntax highlight.
 
-Bellow you can find more details and exemples about each option.
+Bellow you can find more details and examples about each option.
 
 ## Diff2Html Usage
 
