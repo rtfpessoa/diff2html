@@ -5,11 +5,8 @@
 
 /* Utility functions */
 
-function escape(value: string): string {
-  return value
-    .replace(/&/gm, '&amp;')
-    .replace(/</gm, '&lt;')
-    .replace(/>/gm, '&gt;');
+function escapeHTML(value: string): string {
+  return value.replace(/&/gm, '&amp;').replace(/</gm, '&lt;').replace(/>/gm, '&gt;');
 }
 
 function tag(node: Node): string {
@@ -97,7 +94,7 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
     }
 
     result += `<${tag(node)} ${Array<Attr>()
-      .map.call(node.attributes, attr => `${attr.nodeName}="${escape(attr.value)}"`)
+      .map.call(node.attributes, attr => `${attr.nodeName}="${escapeHTML(attr.value).replace(/"/g, '&quot;')}"`)
       .join(' ')}>`;
   }
 
@@ -111,7 +108,7 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
 
   while (original.length || highlighted.length) {
     let stream = selectStream();
-    result += escape(value.substring(processed, stream[0].offset));
+    result += escapeHTML(value.substring(processed, stream[0].offset));
     processed = stream[0].offset;
     if (stream === original) {
       /*
@@ -135,5 +132,6 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
       render(stream.splice(0, 1)[0]);
     }
   }
-  return result + escape(value.substr(processed));
+
+  return result + escapeHTML(value.substr(processed));
 }
