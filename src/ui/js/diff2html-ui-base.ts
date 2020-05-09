@@ -1,4 +1,4 @@
-import * as HighlightJS from 'highlight.js/lib/highlight.js';
+import * as HighlightJS from 'highlight.js/lib/core';
 import { ICompiledMode, IHighlightResult, IAutoHighlightResult } from 'highlight.js';
 import { nodeStream, mergeStreams } from './highlight.js-helpers';
 

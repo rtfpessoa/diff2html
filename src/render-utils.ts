@@ -186,9 +186,7 @@ export function filenameDiff(file: DiffFileName): string {
  * Generates a unique string numerical identifier based on the names of the file diff
  */
 export function getHtmlId(file: DiffFileName): string {
-  return `d2h-${hashCode(filenameDiff(file))
-    .toString()
-    .slice(-6)}`;
+  return `d2h-${hashCode(filenameDiff(file)).toString().slice(-6)}`;
 }
 
 /**
