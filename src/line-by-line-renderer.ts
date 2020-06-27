@@ -95,7 +95,7 @@ export default class LineByLineRenderer {
       .map(block => {
         let lines = this.hoganUtils.render(genericTemplatesPath, 'block-header', {
           CSSLineClass: renderUtils.CSSLineClass,
-          blockHeader: block.header,
+          blockHeader: renderUtils.escapeForHtml(block.header),
           lineClass: 'd2h-code-linenumber',
           contentClass: 'd2h-code-line',
         });

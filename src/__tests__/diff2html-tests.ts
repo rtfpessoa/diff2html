@@ -723,7 +723,7 @@ describe('Diff2Html', () => {
 <tr>
     <td class=\\"d2h-code-linenumber d2h-info\\"></td>
     <td class=\\"d2h-info\\">
-        <div class=\\"d2h-code-line d2h-info\\">@@ -11,7 +10,7 @@ $a=&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;- 1.1.9: Fix around ubuntu&#x27;s inability to cache promises. [#8</div>
+        <div class=\\"d2h-code-line d2h-info\\">@@ -11,7 +10,7 @@ $a=&amp;quot;&amp;lt;table&amp;gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;- 1.1.9: Fix around ubuntu&amp;#x27;s inability to cache promises. [#8</div>
     </td>
 </tr><tr>
     <td class=\\"d2h-code-linenumber d2h-cntx\\">

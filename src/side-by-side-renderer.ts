@@ -206,7 +206,7 @@ export default class SideBySideRenderer {
   makeHeaderHtml(blockHeader: string): string {
     return this.hoganUtils.render(genericTemplatesPath, 'block-header', {
       CSSLineClass: renderUtils.CSSLineClass,
-      blockHeader: blockHeader,
+      blockHeader: renderUtils.escapeForHtml(blockHeader),
       lineClass: 'd2h-code-side-linenumber',
       contentClass: 'd2h-code-side-line',
     });
