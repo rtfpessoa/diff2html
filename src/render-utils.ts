@@ -229,11 +229,11 @@ export function diffHighlight(
     return {
       oldLine: {
         prefix: line1.prefix,
-        content: line1.content,
+        content: escapeForHtml(line1.content),
       },
       newLine: {
         prefix: line2.prefix,
-        content: line2.content,
+        content: escapeForHtml(line2.content),
       },
     };
   }
