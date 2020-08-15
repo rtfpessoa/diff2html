@@ -7,6 +7,44 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const pages = ['index', 'demo'];
 
+function plugins(page: string): webpack.Plugin[] {
+  return [
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+    new HtmlWebpackPlugin({
+      hash: true,
+      inject: true,
+      title: `${page} page`,
+      filename: `${page}.html`,
+      template: `./website/templates/pages/${page}/${page}.handlebars`,
+      minify: {
+        html5: true,
+        collapseWhitespace: true,
+        caseSensitive: true,
+        removeEmptyElements: false,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'website/favicon.ico', to: 'favicon.ico' },
+        { from: 'website/robots.txt', to: 'robots.txt' },
+        { from: 'website/sitemap.xml', to: 'sitemap.xml' },
+      ],
+    }),
+  ];
+}
+
 const config: webpack.Configuration[] = pages.map(page => {
   return {
     devServer: {
@@ -108,39 +146,7 @@ const config: webpack.Configuration[] = pages.map(page => {
         },
       ],
     },
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
-      }),
-      new HtmlWebpackPlugin({
-        hash: true,
-        inject: true,
-        title: `${page} page`,
-        filename: `${page}.html`,
-        template: `./website/templates/pages/${page}/${page}.handlebars`,
-        minify: {
-          html5: true,
-          collapseWhitespace: true,
-          caseSensitive: true,
-          removeEmptyElements: false,
-          removeComments: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeStyleLinkTypeAttributes: true,
-          keepClosingSlash: true,
-          minifyJS: true,
-          minifyCSS: true,
-          minifyURLs: true,
-        },
-      }),
-      new CopyWebpackPlugin([
-        { from: 'website/favicon.ico', to: 'favicon.ico' },
-        { from: 'website/robots.txt', to: 'robots.txt' },
-        { from: 'website/sitemap.xml', to: 'sitemap.xml' },
-      ]),
-    ],
+    plugins: plugins(page),
   };
 });
 

@@ -170,23 +170,21 @@ async function prepareInitialState(elements: Elements): Promise<[Diff2HtmlUIConf
 }
 
 function updateBrowserUrl(config: Diff2HtmlUIConfig, newDiffUrl: string): void {
-  if (history.pushState) {
-    const paramString = Object.entries(config)
-      .map(([k, v]) => k + '=' + v)
-      .join('&');
-    const newPageUrl =
-      window.location.protocol +
-      '//' +
-      window.location.host +
-      window.location.pathname +
-      '?' +
-      paramString +
-      '&' +
-      searchParam +
-      '=' +
-      newDiffUrl;
-    window.history.pushState({ path: newPageUrl }, '', newPageUrl);
-  }
+  const paramString = Object.entries(config)
+    .map(([k, v]) => k + '=' + v)
+    .join('&');
+  const newPageUrl =
+    window.location.protocol +
+    '//' +
+    window.location.host +
+    window.location.pathname +
+    '?' +
+    paramString +
+    '&' +
+    searchParam +
+    '=' +
+    newDiffUrl;
+  window.history.pushState({ path: newPageUrl }, '', newPageUrl);
 }
 
 type Elements = {
