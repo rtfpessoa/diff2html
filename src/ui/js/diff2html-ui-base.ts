@@ -1,5 +1,5 @@
 import * as HighlightJS from 'highlight.js/lib/core';
-import { ICompiledMode, IHighlightResult, IAutoHighlightResult } from 'highlight.js';
+// import { CompiledMode, HighlightResult, AutoHighlightResult } from 'highlight.js/lib/core.js';
 import { nodeStream, mergeStreams } from './highlight.js-helpers';
 
 import { html, Diff2HtmlConfig, defaultDiff2HtmlConfig } from '../../diff2html';
@@ -116,8 +116,8 @@ export class Diff2HtmlUI {
     // Collect all the diff files and execute the highlight on their lines
     const files = this.targetElement.querySelectorAll('.d2h-file-wrapper');
     files.forEach(file => {
-      let oldLinesState: ICompiledMode;
-      let newLinesState: ICompiledMode;
+      let oldLinesState: CompiledMode | Language | undefined;
+      let newLinesState: CompiledMode | Language | undefined;
 
       // Collect all the code lines and execute the highlight on them
       const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
@@ -133,12 +133,12 @@ export class Diff2HtmlUI {
         const lineState = lineParent.classList.contains('d2h-del') ? oldLinesState : newLinesState;
 
         const language = file.getAttribute('data-lang');
-        const result =
+        const result: HighlightResult =
           language && this.hljs.getLanguage(language)
             ? this.hljs.highlight(language, text, true, lineState)
             : this.hljs.highlightAuto(text);
 
-        if (this.instanceOfIHighlightResult(result)) {
+        if (this.instanceOfHighlightResult(result)) {
           if (lineParent.classList.contains('d2h-del')) {
             oldLinesState = result.top;
           } else if (lineParent.classList.contains('d2h-ins')) {
@@ -157,7 +157,9 @@ export class Diff2HtmlUI {
         }
 
         line.classList.add('hljs');
-        line.classList.add(result.language);
+        if (result.language) {
+          line.classList.add(result.language);
+        }
         line.innerHTML = result.value;
       });
     });
@@ -170,7 +172,7 @@ export class Diff2HtmlUI {
     console.warn('Smart selection is now enabled by default with CSS. No need to call this method anymore.');
   }
 
-  private instanceOfIHighlightResult(object: IHighlightResult | IAutoHighlightResult): object is IHighlightResult {
+  private instanceOfHighlightResult(object: HighlightResult | AutoHighlightResult): object is HighlightResult {
     return 'top' in object;
   }
 
