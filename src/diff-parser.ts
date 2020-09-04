@@ -290,8 +290,8 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     if (
       !currentFile || // If we do not have a file yet, we should crete one
       (!currentFile.isGitDiff &&
-      currentFile && // If we already have some file in progress and
-      line.startsWith(oldFileNameHeader) && // If we get to an old file path header line
+        currentFile && // If we already have some file in progress and
+        line.startsWith(oldFileNameHeader) && // If we get to an old file path header line
         // And is followed by the new file path header line and the hunk header line
         nxtLine.startsWith(newFileNameHeader) &&
         afterNxtLine.startsWith(hunkHeaderPrefix))
