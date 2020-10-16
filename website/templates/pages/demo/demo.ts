@@ -106,8 +106,7 @@ function prepareRequest(url: string): Request {
   } else if ((values = bitbucketPrUrl.exec(url))) {
     fetchUrl = bitbucketUrlGen(values[1], values[2], 'pullrequests', values[3]);
   } else {
-    console.info('Could not parse url, using the provided url.');
-    fetchUrl = 'https://crossorigin.me/' + url;
+    fetchUrl = url;
   }
 
   return {
