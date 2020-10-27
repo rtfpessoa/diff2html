@@ -107,6 +107,18 @@
   padding: 0 4.5em;
 }
 
+.d2h-code-line,
+.d2h-code-side-line {
+  user-select: none;
+  width: 100%;
+}
+
+.d2h-code-line-ctn {
+  display: inline-block;
+  user-select: text;
+  width: 100%;
+}
+
 .d2h-code-line del,
 .d2h-code-side-line del {
   display: inline-block;
