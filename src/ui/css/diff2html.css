@@ -96,6 +96,8 @@
 .d2h-code-line {
   display: inline-block;
   white-space: nowrap;
+  user-select: none;
+  width: 100%;
   /* Compensate for the absolute positioning of the line numbers */
   padding: 0 8em;
 }
@@ -103,8 +105,21 @@
 .d2h-code-side-line {
   display: inline-block;
   white-space: nowrap;
+  user-select: none;
+  width: 100%;
   /* Compensate for the absolute positioning of the line numbers */
   padding: 0 4.5em;
+}
+
+.d2h-code-line-ctn {
+  display: inline-block;
+  background: none;
+  padding: 0;
+  word-wrap: normal;
+  white-space: pre;
+  user-select: text;
+  width: 100%;
+  vertical-align: middle;
 }
 
 .d2h-code-line del,
@@ -114,6 +129,7 @@
   text-decoration: none;
   background-color: #ffb6ba;
   border-radius: 0.2em;
+  vertical-align: middle;
 }
 
 .d2h-code-line ins,
@@ -124,17 +140,10 @@
   background-color: #97f295;
   border-radius: 0.2em;
   text-align: left;
+  vertical-align: middle;
 }
 
 .d2h-code-line-prefix {
-  display: inline;
-  background: none;
-  padding: 0;
-  word-wrap: normal;
-  white-space: pre;
-}
-
-.d2h-code-line-ctn {
   display: inline;
   background: none;
   padding: 0;
