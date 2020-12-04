@@ -89,7 +89,7 @@
     "hogan.js": "3.0.2"
   },
   "optionalDependencies": {
-    "highlight.js": "10.2.1"
+    "highlight.js": "10.4.1"
   },
   "devDependencies": {
     "@types/clipboard": "2.0.1",
