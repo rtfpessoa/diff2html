@@ -118,8 +118,10 @@ export class Diff2HtmlUI {
           .closest('.d2h-file-wrapper')
           ?.querySelector(selector);
 
-        if (fileContents !== null && fileContents !== undefined)
-          fileContents.style.display = fileContents.style.display === 'none' ? '' : 'none';
+        if (fileContents !== null && fileContents !== undefined) {
+          fileContentToggleBtn.classList.toggle('d2h-selected');
+          fileContents.classList.toggle('d2h-d-none');
+        }
       };
 
       const toggleHandler: (e: Event) => void = e => {

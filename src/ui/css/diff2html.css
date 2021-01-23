@@ -5,6 +5,10 @@
  *
  */
 
+.d2h-d-none {
+  display: none;
+}
+
 .d2h-wrapper {
   text-align: left;
 }
@@ -77,6 +81,10 @@
   border-radius: 3px;
   border: 1px solid #ddd;
   padding: 4px 8px;
+}
+
+.d2h-file-collapse.d2h-selected {
+  background-color: #c8e1ff;
 }
 
 .d2h-file-collapse-input {
