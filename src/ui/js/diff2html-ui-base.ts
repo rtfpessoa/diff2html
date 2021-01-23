@@ -15,6 +15,7 @@ export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
    * Smart selection is now enabled by default with vanilla CSS
    */
   smartSelection?: boolean;
+  fileContentToggle?: boolean;
 }
 
 export const defaultDiff2HtmlUIConfig = {
@@ -28,6 +29,7 @@ export const defaultDiff2HtmlUIConfig = {
    * Smart selection is now enabled by default with vanilla CSS
    */
   smartSelection: true,
+  fileContentToggle: true,
 };
 
 export class Diff2HtmlUI {
@@ -55,6 +57,7 @@ export class Diff2HtmlUI {
     if (this.config.synchronisedScroll) this.synchronisedScroll();
     if (this.config.highlight) this.highlightCode();
     if (this.config.fileListToggle) this.fileListToggle(this.config.fileListStartVisible);
+    if (this.config.fileContentToggle) this.fileContentToggle();
   }
 
   synchronisedScroll(): void {
@@ -106,6 +109,29 @@ export class Diff2HtmlUI {
     else if (hashTag === 'files-summary-hide') hide();
     else if (startVisible) show();
     else hide();
+  }
+
+  fileContentToggle(): void {
+    this.targetElement.querySelectorAll('.d2h-file-collapse').forEach(fileContentToggleBtn => {
+      const toggle: (e: Event) => void = e => {
+        if (fileContentToggleBtn === e.target) return;
+
+        const fileContentLineByLine: HTMLElement | null | undefined = fileContentToggleBtn
+          .closest('.d2h-file-wrapper')
+          ?.querySelector('.d2h-file-diff');
+        const fileContentSideBySide: HTMLElement | null | undefined = fileContentToggleBtn
+          .closest('.d2h-file-wrapper')
+          ?.querySelector('.d2h-files-diff');
+
+        if (fileContentLineByLine !== null && fileContentLineByLine !== undefined)
+          fileContentLineByLine.style.display = fileContentLineByLine.style.display === 'none' ? '' : 'none';
+
+        if (fileContentSideBySide !== null && fileContentSideBySide !== undefined)
+          fileContentSideBySide.style.display = fileContentSideBySide.style.display === 'none' ? '' : 'none';
+      };
+
+      fileContentToggleBtn.addEventListener('click', e => toggle(e));
+    });
   }
 
   highlightCode(): void {
