@@ -15,6 +15,7 @@
   padding: 5px 10px;
   border-bottom: 1px solid #d8d8d8;
   background-color: #f7f7f7;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .d2h-file-stats {
@@ -52,7 +53,6 @@
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 15px;
 }
 
@@ -72,7 +72,6 @@
   justify-content: flex-end;
   display: flex;
   cursor: pointer;
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 12px;
   align-items: center;
   border-radius: 3px;
