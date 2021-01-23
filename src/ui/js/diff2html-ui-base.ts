@@ -113,24 +113,23 @@ export class Diff2HtmlUI {
 
   fileContentToggle(): void {
     this.targetElement.querySelectorAll('.d2h-file-collapse').forEach(fileContentToggleBtn => {
-      const toggle: (e: Event) => void = e => {
-        if (fileContentToggleBtn === e.target) return;
-
-        const fileContentLineByLine: HTMLElement | null | undefined = fileContentToggleBtn
+      const toggleFileContents: (selector: string) => void = selector => {
+        const fileContents: HTMLElement | null | undefined = fileContentToggleBtn
           .closest('.d2h-file-wrapper')
-          ?.querySelector('.d2h-file-diff');
-        const fileContentSideBySide: HTMLElement | null | undefined = fileContentToggleBtn
-          .closest('.d2h-file-wrapper')
-          ?.querySelector('.d2h-files-diff');
+          ?.querySelector(selector);
 
-        if (fileContentLineByLine !== null && fileContentLineByLine !== undefined)
-          fileContentLineByLine.style.display = fileContentLineByLine.style.display === 'none' ? '' : 'none';
-
-        if (fileContentSideBySide !== null && fileContentSideBySide !== undefined)
-          fileContentSideBySide.style.display = fileContentSideBySide.style.display === 'none' ? '' : 'none';
+        if (fileContents !== null && fileContents !== undefined)
+          fileContents.style.display = fileContents.style.display === 'none' ? '' : 'none';
       };
 
-      fileContentToggleBtn.addEventListener('click', e => toggle(e));
+      const toggleHandler: (e: Event) => void = e => {
+        if (fileContentToggleBtn === e.target) return;
+
+        toggleFileContents('.d2h-file-diff');
+        toggleFileContents('.d2h-files-diff');
+      };
+
+      fileContentToggleBtn.addEventListener('click', e => toggleHandler(e));
     });
   }
 
