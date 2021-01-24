@@ -5,15 +5,21 @@
  *
  */
 
+.d2h-d-none {
+  display: none;
+}
+
 .d2h-wrapper {
   text-align: left;
 }
 
 .d2h-file-header {
+  display: flex;
   height: 35px;
   padding: 5px 10px;
   border-bottom: 1px solid #d8d8d8;
   background-color: #f7f7f7;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .d2h-file-stats {
@@ -51,7 +57,6 @@
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 15px;
 }
 
@@ -65,6 +70,25 @@
   border: 1px solid #ddd;
   border-radius: 3px;
   margin-bottom: 1em;
+}
+
+.d2h-file-collapse {
+  justify-content: flex-end;
+  display: flex;
+  cursor: pointer;
+  font-size: 12px;
+  align-items: center;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+}
+
+.d2h-file-collapse.d2h-selected {
+  background-color: #c8e1ff;
+}
+
+.d2h-file-collapse-input {
+  margin: 0 4px 0 0;
 }
 
 .d2h-diff-table {

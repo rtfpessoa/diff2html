@@ -316,6 +316,7 @@ highlightCode(): void
 - `highlight`: syntax highlight the code on the diff: `true` or `false`, default is `true`
 - `fileListToggle`: allow the file summary list to be toggled: `true` or `false`, default is `true`
 - `fileListStartVisible`: choose if the file summary list starts visible: `true` or `false`, default is `false`
+- `fileContentToggle`: allow each file contents to be toggled: `true` or `false`, default is `true`
 
 > NOTE: All the options from Diff2Html are also valid configurations in Diff2HtmlUI
 

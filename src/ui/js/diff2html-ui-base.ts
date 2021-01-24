@@ -15,6 +15,7 @@ export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
    * Smart selection is now enabled by default with vanilla CSS
    */
   smartSelection?: boolean;
+  fileContentToggle?: boolean;
 }
 
 export const defaultDiff2HtmlUIConfig = {
@@ -28,6 +29,7 @@ export const defaultDiff2HtmlUIConfig = {
    * Smart selection is now enabled by default with vanilla CSS
    */
   smartSelection: true,
+  fileContentToggle: true,
 };
 
 export class Diff2HtmlUI {
@@ -55,6 +57,7 @@ export class Diff2HtmlUI {
     if (this.config.synchronisedScroll) this.synchronisedScroll();
     if (this.config.highlight) this.highlightCode();
     if (this.config.fileListToggle) this.fileListToggle(this.config.fileListStartVisible);
+    if (this.config.fileContentToggle) this.fileContentToggle();
   }
 
   synchronisedScroll(): void {
@@ -106,6 +109,30 @@ export class Diff2HtmlUI {
     else if (hashTag === 'files-summary-hide') hide();
     else if (startVisible) show();
     else hide();
+  }
+
+  fileContentToggle(): void {
+    this.targetElement.querySelectorAll('.d2h-file-collapse').forEach(fileContentToggleBtn => {
+      const toggleFileContents: (selector: string) => void = selector => {
+        const fileContents: HTMLElement | null | undefined = fileContentToggleBtn
+          .closest('.d2h-file-wrapper')
+          ?.querySelector(selector);
+
+        if (fileContents !== null && fileContents !== undefined) {
+          fileContentToggleBtn.classList.toggle('d2h-selected');
+          fileContents.classList.toggle('d2h-d-none');
+        }
+      };
+
+      const toggleHandler: (e: Event) => void = e => {
+        if (fileContentToggleBtn === e.target) return;
+
+        toggleFileContents('.d2h-file-diff');
+        toggleFileContents('.d2h-files-diff');
+      };
+
+      fileContentToggleBtn.addEventListener('click', e => toggleHandler(e));
+    });
   }
 
   highlightCode(): void {
