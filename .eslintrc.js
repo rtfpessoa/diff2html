@@ -30,8 +30,6 @@ module.exports = {
     'plugin:jest/recommended',
     'plugin:jest/style',
     'prettier',
-    'prettier/@typescript-eslint',
-    'prettier/babel',
   ],
   plugins: ['@typescript-eslint', 'json', 'promise', 'import', 'node', 'sonarjs', 'jest', 'optimize-regex'],
   rules: {
