@@ -4,6 +4,7 @@ import { escapeForRegExp } from './utils';
 export interface DiffParserConfig {
   srcPrefix?: string;
   dstPrefix?: string;
+  diffMaxChanges?: number;
 }
 
 function getExtension(filename: string, language: string): string {
@@ -225,6 +226,13 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       currentLine.newNumber = newLine++;
     }
     currentBlock.lines.push(currentLine);
+    if (
+      typeof config.diffMaxChanges === 'number' &&
+      currentFile.addedLines + currentFile.deletedLines > config.diffMaxChanges
+    ) {
+      currentFile.isTooBig = true;
+      currentFile.blocks = [];
+    }
   }
 
   /*
@@ -297,6 +305,11 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
         afterNxtLine.startsWith(hunkHeaderPrefix))
     ) {
       startFile();
+    }
+
+    // Ignore remaining diff for current file if marked as too big
+    if (currentFile?.isTooBig) {
+      return;
     }
 
     /*
