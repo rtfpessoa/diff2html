@@ -21,6 +21,7 @@ import './demo.css';
 
 type URLParams = {
   diff?: string;
+  diffTooBigMessage?: string;
   [key: string]: string | boolean | number | undefined;
 };
 
@@ -116,13 +117,13 @@ function prepareRequest(url: string): Request {
 }
 
 function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
-  // Removing `diff` form `urlParams` to avoid being inserted
+  // Removing `diff` and `diffTooBigMessage` form `urlParams` to avoid being inserted
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { diff, ...urlParamsRest } = urlParams;
-  const config: URLParams = {
+  const { diff, diffTooBigMessage, ...urlParamsRest } = urlParams;
+  const config = ({
     ...defaultDiff2HtmlUIConfig,
     ...urlParamsRest,
-  };
+  } as unknown) as URLParams;
 
   return Object.entries(config).reduce((object, [k, v]) => {
     const newObject = !Number.isNaN(Number(v))
