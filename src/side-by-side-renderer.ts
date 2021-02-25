@@ -41,9 +41,11 @@ export default class SideBySideRenderer {
 
   render(diffFiles: DiffFile[]): string {
     const diffsHtml = diffFiles
-      .map(file => {
+      .map((file, fileIndex) => {
         let diffs;
-        if (file.blocks.length) {
+        if (file.isTooBig) {
+          diffs = this.generateTooBigDiff(fileIndex);
+        } else if (file.blocks.length) {
           diffs = this.generateFileHtml(file);
         } else {
           diffs = this.generateEmptyDiff();
@@ -77,6 +79,17 @@ export default class SideBySideRenderer {
         },
       ),
     });
+  }
+
+  generateTooBigDiff(fileIndex: number): FileHtml {
+    return {
+      right: '',
+      left: this.hoganUtils.render(genericTemplatesPath, 'too-big-diff', {
+        contentClass: 'd2h-code-side-line',
+        CSSLineClass: renderUtils.CSSLineClass,
+        message: this.config.diffTooBigMessage(fileIndex),
+      }),
+    };
   }
 
   generateEmptyDiff(): FileHtml {

@@ -36,6 +36,7 @@ export interface RenderConfig {
   matching?: LineMatchingType;
   matchWordsThreshold?: number;
   maxLineLengthHighlight?: number;
+  diffTooBigMessage?: (fileIndex: number) => string;
   diffStyle?: DiffStyleType;
 }
 
@@ -44,6 +45,8 @@ export const defaultRenderConfig = {
   matchWordsThreshold: 0.25,
   maxLineLengthHighlight: 10000,
   diffStyle: DiffStyleType.WORD,
+  // eslint-disable-next-line
+  diffTooBigMessage: (_fileIndex: number): string => 'Diff too big to be displayed',
 };
 
 const separator = '/';
