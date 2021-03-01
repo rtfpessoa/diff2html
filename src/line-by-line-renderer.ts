@@ -41,11 +41,9 @@ export default class LineByLineRenderer {
 
   render(diffFiles: DiffFile[]): string {
     const diffsHtml = diffFiles
-      .map((file, fileIndex) => {
+      .map(file => {
         let diffs;
-        if (file.isTooBig) {
-          diffs = this.generateTooBigDiff(fileIndex);
-        } else if (file.blocks.length) {
+        if (file.blocks.length) {
           diffs = this.generateFileHtml(file);
         } else {
           diffs = this.generateEmptyDiff();
@@ -81,14 +79,6 @@ export default class LineByLineRenderer {
     });
   }
 
-  generateTooBigDiff(fileIndex: number): string {
-    return this.hoganUtils.render(genericTemplatesPath, 'too-big-diff', {
-      contentClass: 'd2h-code-line',
-      CSSLineClass: renderUtils.CSSLineClass,
-      message: this.config.diffTooBigMessage(fileIndex),
-    });
-  }
-
   generateEmptyDiff(): string {
     return this.hoganUtils.render(genericTemplatesPath, 'empty-diff', {
       contentClass: 'd2h-code-line',
@@ -105,7 +95,7 @@ export default class LineByLineRenderer {
       .map(block => {
         let lines = this.hoganUtils.render(genericTemplatesPath, 'block-header', {
           CSSLineClass: renderUtils.CSSLineClass,
-          blockHeader: renderUtils.escapeForHtml(block.header),
+          blockHeader: file.isTooBig ? block.header : renderUtils.escapeForHtml(block.header),
           lineClass: 'd2h-code-linenumber',
           contentClass: 'd2h-code-line',
         });

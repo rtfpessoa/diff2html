@@ -120,10 +120,10 @@ function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
   // Removing `diff` and `diffTooBigMessage` form `urlParams` to avoid being inserted
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { diff, diffTooBigMessage, ...urlParamsRest } = urlParams;
-  const config = ({
+  const config: URLParams = {
     ...defaultDiff2HtmlUIConfig,
     ...urlParamsRest,
-  } as unknown) as URLParams;
+  };
 
   return Object.entries(config).reduce((object, [k, v]) => {
     const newObject = !Number.isNaN(Number(v))
