@@ -1976,7 +1976,7 @@ describe('DiffParser', () => {
       `);
     });
 
-    it('should stop parsing file and mark it as `isTooBig` if `diffMaxChanges` is set and excedeed', () => {
+    it('should work when `diffMaxChanges` is set and excedeed', () => {
       const diff =
         'diff --git a/src/core/init.js b/src/core/init.js\n' +
         'index e49196a..50f310c 100644\n' +
@@ -2006,50 +2006,132 @@ describe('DiffParser', () => {
       expect(result).toMatchInlineSnapshot(`
         Array [
           Object {
-            "addedLines": 1,
+            "addedLines": 0,
             "blocks": Array [
               Object {
-                "header": "@@ -101,7 +101,7 @@ var rootjQuery,",
-                "lines": Array [
-                  Object {
-                    "content": "     // HANDLE: $(function)",
-                    "newNumber": 101,
-                    "oldNumber": 101,
-                    "type": "context",
-                  },
-                  Object {
-                    "content": "     // Shortcut for document ready",
-                    "newNumber": 102,
-                    "oldNumber": 102,
-                    "type": "context",
-                  },
-                  Object {
-                    "content": "     } else if ( jQuery.isFunction( selector ) ) {",
-                    "newNumber": 103,
-                    "oldNumber": 103,
-                    "type": "context",
-                  },
-                  Object {
-                    "content": "-      return typeof rootjQuery.ready !== \\"undefined\\" ?",
-                    "newNumber": undefined,
-                    "oldNumber": 104,
-                    "type": "delete",
-                  },
-                  Object {
-                    "content": "+      return rootjQuery.ready !== undefined ?",
-                    "newNumber": 104,
-                    "oldNumber": undefined,
-                    "type": "insert",
-                  },
-                ],
-                "newStartLine": 101,
-                "oldStartLine": 101,
+                "header": "Diff too big to be displayed",
+                "lines": Array [],
+                "newStartLine": 0,
+                "oldStartLine": 0,
                 "oldStartLine2": null,
               },
             ],
             "checksumAfter": "50f310c",
             "checksumBefore": "e49196a",
+            "deletedLines": 0,
+            "isCombined": false,
+            "isGitDiff": true,
+            "isTooBig": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/core/init.js",
+            "oldName": "src/core/init.js",
+          },
+          Object {
+            "addedLines": 0,
+            "blocks": Array [
+              Object {
+                "header": "@@ -1,6 +1,5 @@",
+                "lines": Array [
+                  Object {
+                    "content": " define([",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"./core\\",",
+                    "newNumber": 2,
+                    "oldNumber": 2,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "-  \\"./var/strundefined\\",",
+                    "newNumber": undefined,
+                    "oldNumber": 3,
+                    "type": "delete",
+                  },
+                  Object {
+                    "content": "   \\"./var/rnotwhite\\",",
+                    "newNumber": 3,
+                    "oldNumber": 4,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"./var/hasOwn\\",",
+                    "newNumber": 4,
+                    "oldNumber": 5,
+                    "type": "context",
+                  },
+                  Object {
+                    "content": "   \\"./var/slice\\",",
+                    "newNumber": 5,
+                    "oldNumber": 6,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "6183f70",
+            "checksumBefore": "7336f4d",
             "deletedLines": 1,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "js",
+            "mode": "100644",
+            "newName": "src/event.js",
+            "oldName": "src/event.js",
+          },
+        ]
+      `);
+    });
+
+    it('should work when `diffMaxChanges` is set and excedeed, and `diffTooBigMessage` is set', () => {
+      const diff =
+        'diff --git a/src/core/init.js b/src/core/init.js\n' +
+        'index e49196a..50f310c 100644\n' +
+        '--- a/src/core/init.js\n' +
+        '+++ b/src/core/init.js\n' +
+        '@@ -101,7 +101,7 @@ var rootjQuery,\n' +
+        '     // HANDLE: $(function)\n' +
+        '     // Shortcut for document ready\n' +
+        '     } else if ( jQuery.isFunction( selector ) ) {\n' +
+        '-      return typeof rootjQuery.ready !== "undefined" ?\n' +
+        '+      return rootjQuery.ready !== undefined ?\n' +
+        '         rootjQuery.ready( selector ) :\n' +
+        '         // Execute immediately if ready is not present\n' +
+        '         selector( jQuery );\n' +
+        'diff --git a/src/event.js b/src/event.js\n' +
+        'index 7336f4d..6183f70 100644\n' +
+        '--- a/src/event.js\n' +
+        '+++ b/src/event.js\n' +
+        '@@ -1,6 +1,5 @@\n' +
+        ' define([\n' +
+        '   "./core",\n' +
+        '-  "./var/strundefined",\n' +
+        '   "./var/rnotwhite",\n' +
+        '   "./var/hasOwn",\n' +
+        '   "./var/slice",\n';
+      const result = parse(diff, { diffMaxChanges: 1, diffTooBigMessage: (i: number) => `Custom ${i}` });
+      expect(result).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "addedLines": 0,
+            "blocks": Array [
+              Object {
+                "header": "Custom 0",
+                "lines": Array [],
+                "newStartLine": 0,
+                "oldStartLine": 0,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "50f310c",
+            "checksumBefore": "e49196a",
+            "deletedLines": 0,
             "isCombined": false,
             "isGitDiff": true,
             "isTooBig": true,
