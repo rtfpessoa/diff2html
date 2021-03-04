@@ -112,7 +112,9 @@ export class Diff2HtmlUI {
   }
 
   fileContentToggle(): void {
-    this.targetElement.querySelectorAll('.d2h-file-collapse').forEach(fileContentToggleBtn => {
+    this.targetElement.querySelectorAll<HTMLElement>('.d2h-file-collapse').forEach(fileContentToggleBtn => {
+      fileContentToggleBtn.style.display = 'flex';
+
       const toggleFileContents: (selector: string) => void = selector => {
         const fileContents: HTMLElement | null | undefined = fileContentToggleBtn
           .closest('.d2h-file-wrapper')
