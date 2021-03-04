@@ -97,7 +97,7 @@ export default class SideBySideRenderer {
     return file.blocks
       .map(block => {
         const fileHtml = {
-          left: this.makeHeaderHtml(block.header),
+          left: this.makeHeaderHtml(block.header, file),
           right: this.makeHeaderHtml(''),
         };
 
@@ -203,10 +203,10 @@ export default class SideBySideRenderer {
     return doMatching ? matcher(oldLines, newLines) : [[oldLines, newLines]];
   }
 
-  makeHeaderHtml(blockHeader: string): string {
+  makeHeaderHtml(blockHeader: string, file?: DiffFile): string {
     return this.hoganUtils.render(genericTemplatesPath, 'block-header', {
       CSSLineClass: renderUtils.CSSLineClass,
-      blockHeader: renderUtils.escapeForHtml(blockHeader),
+      blockHeader: file?.isTooBig ? blockHeader : renderUtils.escapeForHtml(blockHeader),
       lineClass: 'd2h-code-side-linenumber',
       contentClass: 'd2h-code-side-line',
     });

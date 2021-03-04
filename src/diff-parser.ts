@@ -4,6 +4,8 @@ import { escapeForRegExp } from './utils';
 export interface DiffParserConfig {
   srcPrefix?: string;
   dstPrefix?: string;
+  diffMaxChanges?: number;
+  diffTooBigMessage?: (fileIndex: number) => string;
 }
 
 function getExtension(filename: string, language: string): string {
@@ -297,6 +299,30 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
         afterNxtLine.startsWith(hunkHeaderPrefix))
     ) {
       startFile();
+    }
+
+    // Ignore remaining diff for current file if marked as too big
+    if (currentFile?.isTooBig) {
+      return;
+    }
+
+    if (
+      currentFile &&
+      typeof config.diffMaxChanges === 'number' &&
+      currentFile.addedLines + currentFile.deletedLines > config.diffMaxChanges
+    ) {
+      currentFile.isTooBig = true;
+      currentFile.addedLines = 0;
+      currentFile.deletedLines = 0;
+      currentFile.blocks = [];
+      currentBlock = null;
+
+      const message =
+        typeof config.diffTooBigMessage === 'function'
+          ? config.diffTooBigMessage(files.length)
+          : 'Diff too big to be displayed';
+      startBlock(message);
+      return;
     }
 
     /*

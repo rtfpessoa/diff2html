@@ -62,6 +62,7 @@ export interface DiffFile extends DiffFileName {
   isCopy?: boolean;
   isRename?: boolean;
   isBinary?: boolean;
+  isTooBig?: boolean;
   unchangedPercentage?: number;
   changedPercentage?: number;
   checksumBefore?: string | string[];
