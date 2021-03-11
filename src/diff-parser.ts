@@ -5,6 +5,7 @@ export interface DiffParserConfig {
   srcPrefix?: string;
   dstPrefix?: string;
   diffMaxChanges?: number;
+  diffMaxLineLength?: number;
   diffTooBigMessage?: (fileIndex: number) => string;
 }
 
@@ -303,6 +304,21 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
 
     // Ignore remaining diff for current file if marked as too big
     if (currentFile?.isTooBig) {
+      return;
+    }
+
+    if (currentFile && typeof config.diffMaxLineLength === 'number' && line.length > config.diffMaxLineLength) {
+      currentFile.isTooBig = true;
+      currentFile.addedLines = 0;
+      currentFile.deletedLines = 0;
+      currentFile.blocks = [];
+      currentBlock = null;
+
+      const message =
+        typeof config.diffTooBigMessage === 'function'
+          ? config.diffTooBigMessage(files.length)
+          : 'Diff too big to be displayed';
+      startBlock(message);
       return;
     }
 
