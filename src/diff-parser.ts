@@ -307,25 +307,11 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       return;
     }
 
-    if (currentFile && typeof config.diffMaxLineLength === 'number' && line.length > config.diffMaxLineLength) {
-      currentFile.isTooBig = true;
-      currentFile.addedLines = 0;
-      currentFile.deletedLines = 0;
-      currentFile.blocks = [];
-      currentBlock = null;
-
-      const message =
-        typeof config.diffTooBigMessage === 'function'
-          ? config.diffTooBigMessage(files.length)
-          : 'Diff too big to be displayed';
-      startBlock(message);
-      return;
-    }
-
     if (
       currentFile &&
-      typeof config.diffMaxChanges === 'number' &&
-      currentFile.addedLines + currentFile.deletedLines > config.diffMaxChanges
+      ((typeof config.diffMaxChanges === 'number' &&
+        currentFile.addedLines + currentFile.deletedLines > config.diffMaxChanges) ||
+        (typeof config.diffMaxLineLength === 'number' && line.length > config.diffMaxLineLength))
     ) {
       currentFile.isTooBig = true;
       currentFile.addedLines = 0;
