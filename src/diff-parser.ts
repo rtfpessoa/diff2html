@@ -5,6 +5,7 @@ export interface DiffParserConfig {
   srcPrefix?: string;
   dstPrefix?: string;
   diffMaxChanges?: number;
+  diffMaxLineLength?: number;
   diffTooBigMessage?: (fileIndex: number) => string;
 }
 
@@ -308,8 +309,9 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
 
     if (
       currentFile &&
-      typeof config.diffMaxChanges === 'number' &&
-      currentFile.addedLines + currentFile.deletedLines > config.diffMaxChanges
+      ((typeof config.diffMaxChanges === 'number' &&
+        currentFile.addedLines + currentFile.deletedLines > config.diffMaxChanges) ||
+        (typeof config.diffMaxLineLength === 'number' && line.length > config.diffMaxLineLength))
     ) {
       currentFile.isTooBig = true;
       currentFile.addedLines = 0;

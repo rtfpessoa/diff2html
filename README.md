@@ -151,8 +151,10 @@ The HTML output accepts a Javascript object with configuration. Possible options
 - `diffStyle`: show differences level in each line: `word` or `char`, default is `word`
 - `diffMaxChanges`: number of changed lines after which a file diff is deemed as too big and not displayed, default is
   `undefined`
-- `diffTooBigMessage`: function allowing to customize the message in case of file diff too big (if `diffMaxChanges` is
-  set)
+- `diffMaxLineLength`: number of characters in a diff line after which a file diff is deemed as too big and not
+  displayed, default is `undefined`
+- `diffTooBigMessage`: function allowing to customize the message in case of file diff too big (if `diffMaxChanges` or
+  `diffMaxLineLength` is set)
 - `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default
   is `none`
 - `matchWordsThreshold`: similarity threshold for word matching, default is `0.25`
