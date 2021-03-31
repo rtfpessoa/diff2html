@@ -206,7 +206,55 @@ document.getElementById('destination-elem-id').innerHTML = diffHtml;
 
 ### Diff2Html Examples
 
-#### Diff2Html Angular Example
+#### Diff2Html Example using plain HTML/JS 
+
+```html
+<!DOCTYPE html>
+<html lang="en-us"><head>
+<meta charset="utf-8">
+   <!--Make sure to load the CSS file in that order-->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/styles/github.min.css" />
+   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
+   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
+</head>
+
+<script>
+   const diffString = `diff --git a/sample.js b/sample.js
+index 0000001..0ddf2ba
+--- a/sample.js
++++ b/sample.js
+@@ -1 +1 @@
+-console.log("Hello World!")
++console.log("Hello from Diff2Html!")`;
+
+   document.addEventListener('DOMContentLoaded', function () {
+     var targetElement = document.getElementById('myDiffElement');
+     var configuration = { 
+         inputFormat: 'json', 
+         drawFileList: true,
+         fileListToggle: false,
+         fileListStartVisible: false,
+         fileContentToggle: false,
+         matching: 'lines', 
+         outputFormat: 'side-by-side',
+         synchronisedScroll: true,
+         highlight: true,
+         renderNothingWhenEmpty: false };
+     var diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
+     diff2htmlUi.draw();
+     diff2htmlUi.highlightCode();
+   });
+</script>
+
+<body>
+
+<div id="myDiffElement"></div>
+
+</body>
+</html>
+```
+
+#### Diff2Html Example using Angular
 
 - Typescript
 
@@ -253,7 +301,7 @@ export class AppDiffComponent implements OnInit {
 ]
 ```
 
-#### Diff2Html Vue.js Example
+#### Diff2Html Example using Vue.js
 
 ```vue
 <template>
