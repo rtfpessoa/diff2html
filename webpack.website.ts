@@ -7,7 +7,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const pages = ['index', 'demo'];
 
-function plugins(page: string): webpack.Plugin[] {
+function plugins(page: string): webpack.WebpackPluginInstance[] {
   return [
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -47,11 +47,6 @@ function plugins(page: string): webpack.Plugin[] {
 
 const config: webpack.Configuration[] = pages.map(page => {
   return {
-    devServer: {
-      port: 3000,
-      open: true,
-      contentBase: path.join(__dirname, './website'),
-    },
     entry: {
       [page]: `./website/templates/pages/${page}/${page}.ts`,
     },

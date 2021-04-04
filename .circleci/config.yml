@@ -30,7 +30,7 @@ jobs:
           paths:
             - '*'
 
-  build-common: &common-build
+  build-common: &build-common
     docker:
       - image: node
     working_directory: ~/workdir
@@ -51,9 +51,14 @@ jobs:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - /usr/local/share/.cache/yarn
-      - run: yarn run build:templates && yarn run build
+      - run:
+          name: Build templates
+          command: yarn run build:templates
+      - run:
+          name: Build library
+          command: yarn run build
 
-  build-latest: &latest-build
+  build-stable: &build-stable
     docker:
       - image: node
     working_directory: ~/workdir
@@ -74,7 +79,9 @@ jobs:
           key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - /usr/local/share/.cache/yarn
-      - run: yarn run validate
+      - run:
+          name: Validate & Build
+          command: yarn run validate
       - store_artifacts:
           path: coverage
       - store_test_results:
@@ -85,18 +92,18 @@ jobs:
           paths:
             - '*'
 
-  build-node-10:
-    <<: *common-build
-    docker:
-      - image: node:11
-
   build-node-12:
-    <<: *common-build
+    <<: *build-common
     docker:
       - image: node:12
 
+  build-node-15:
+    <<: *build-common
+    docker:
+      - image: node:15
+
   build-node-14:
-    <<: *latest-build
+    <<: *build-stable
     docker:
       - image: node:14
 
@@ -175,7 +182,7 @@ jobs:
 
   publish_website:
     machine:
-      enabled: true
+      image: ubuntu-1604:202004-01
     working_directory: ~/workdir
     steps:
       - attach_workspace:
@@ -191,21 +198,21 @@ workflows:
   validate-and-publish:
     jobs:
       - checkout-and-version
-      - build-node-10:
-          requires:
-            - checkout-and-version
       - build-node-12:
           requires:
             - checkout-and-version
       - build-node-14:
           requires:
             - checkout-and-version
+      - build-node-15:
+          requires:
+            - checkout-and-version
       - publish_approval:
           type: approval
           requires:
-            - build-node-10
             - build-node-12
             - build-node-14
+            - build-node-15
       - tag_version:
           requires:
             - publish_approval
