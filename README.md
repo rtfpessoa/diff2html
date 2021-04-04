@@ -4,7 +4,7 @@
 [![Codacy Coverage Badge](https://api.codacy.com/project/badge/Coverage/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/rtfpessoa/diff2html?utm_source=github.com&utm_medium=referral&utm_content=rtfpessoa/diff2html&utm_campaign=Badge_Coverage)
 [![CircleCI](https://circleci.com/gh/rtfpessoa/diff2html.svg?style=svg)](https://circleci.com/gh/rtfpessoa/diff2html)
 
-[![npm](https://img.shields.io/npm/v/diff2html.svg)](https://www.npmjs.com/package/diff2html)
+[![npm](https://img.shields.io/npm/v/diff2html?style=flat)](https://www.npmjs.com/package/diff2html)
 [![Dependency Status](https://david-dm.org/rtfpessoa/diff2html.svg)](https://david-dm.org/rtfpessoa/diff2html)
 [![devDependency Status](https://david-dm.org/rtfpessoa/diff2html/dev-status.svg)](https://david-dm.org/rtfpessoa/diff2html#info=devDependencies)
 [![jsdelivr CDN Downloads](https://data.jsdelivr.com/v1/package/npm/diff2html/badge)](https://www.jsdelivr.com/package/npm/diff2html)
@@ -26,16 +26,17 @@ diff2html generates pretty HTML diffs from git diff or unified diff output.
 - [Online Example](#online-example)
 - [Distributions](#distributions)
 - [Usage](#usage)
+- [Diff2HtmlUI Usage](#diff2htmlui-usage)
+  - [Diff2HtmlUI API](#diff2htmlui-api)
+  - [Diff2HtmlUI Configuration](#diff2htmlui-configuration)
+  - [Diff2HtmlUI Browser](#diff2htmlui-browser)
+  - [Diff2HtmlUI Examples](#diff2htmlui-examples)
 - [Diff2Html Usage](#diff2html-usage)
   - [Diff2Html API](#diff2html-api)
   - [Diff2Html Configuration](#diff2html-configuration)
   - [Diff2Html Browser](#diff2html-browser)
   - [Diff2Html NPM / Node.js Library](#diff2html-npm--nodejs-library)
   - [Diff2Html Examples](#diff2html-examples)
-- [Diff2HtmlUI Usage](#diff2htmlui-usage)
-  - [Diff2HtmlUI API](#diff2htmlui-api)
-  - [Diff2HtmlUI Configuration](#diff2htmlui-configuration)
-  - [Diff2HtmlUI Browser](#diff2htmlui-browser)
 - [Troubleshooting](#troubleshooting)
   - [1. Out of memory or Slow execution](#1-out-of-memory-or-slow-execution)
 - [Contribute](#contribute)
@@ -110,23 +111,189 @@ diff2html generates pretty HTML diffs from git diff or unified diff output.
 
 Diff2Html can be used in various ways as listed in the [distributions](#distributions) section. The two main ways are:
 
-- [Diff2Html](#diff2html-usage): using the parser and html generator directly from the library gives you complete
-  control about what you can do with the json or html generated.
 - [Diff2HtmlUI](#diff2htmlui-usage): using this wrapper makes it easy to inject the html in the DOM and adds some nice
   features to the diff, like syntax highlight.
+- [Diff2Html](#diff2html-usage): using the parser and html generator directly from the library gives you complete
+  control about what you can do with the json or html generated.
 
 Bellow you can find more details and examples about each option.
 
-## Diff2Html Usage
+## Diff2HtmlUI Usage
 
-To load correctly in the Browser you always need to include the stylesheet in the final HTML.
+> Simple wrapper to ease simple tasks in the browser such as: code highlight and js effects
 
-Import the stylesheet
+- Invoke Diff2html
+- Inject output in DOM element
+- Enable collapsible file summary list
+- Enable syntax highlight of the code in the diffs
+
+### Diff2HtmlUI API
+
+> Create a Diff2HtmlUI instance
+
+```ts
+constructor(target: HTMLElement, diffInput?: string | DiffFile[]) // diff2html-ui, diff2html-ui-slim
+constructor(target: HTMLElement, diffInput?: string | DiffFile[], config: Diff2HtmlUIConfig = {}, hljs?: HighlightJS) // diff2html-ui-base
+```
+
+> Generate and inject in the document the Pretty HTML representation of the diff
+
+```ts
+draw(): void
+```
+
+> Enable extra features
+
+```ts
+synchronisedScroll(): void
+fileListToggle(startVisible: boolean): void
+highlightCode(): void
+```
+
+### Diff2HtmlUI Configuration
+
+- `synchronisedScroll`: scroll both panes in side-by-side mode: `true` or `false`, default is `true`
+- `highlight`: syntax highlight the code on the diff: `true` or `false`, default is `true`
+- `fileListToggle`: allow the file summary list to be toggled: `true` or `false`, default is `true`
+- `fileListStartVisible`: choose if the file summary list starts visible: `true` or `false`, default is `false`
+- `fileContentToggle`: allow each file contents to be toggled: `true` or `false`, default is `true`
+- [All the options](#diff2html-configuration) from Diff2Html are also valid configurations in Diff2HtmlUI
+
+### Diff2HtmlUI Browser
+
+#### Mandatory HTML resource imports
 
 ```html
 <!-- CSS -->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
+
+<!-- Javascripts -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
 ```
+
+#### Init
+
+```js
+const targetElement = document.getElementById('destination-elem-id');
+const configuration = { drawFileList: true, matching: 'lines' };
+
+const diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
+// or
+const diff2htmlUi = new Diff2HtmlUI(targetElement, diffJson, configuration);
+```
+
+#### Draw
+
+```js
+diff2htmlUi.draw();
+```
+
+#### Syntax Highlight
+
+**NOTE:** The highlight.js css should come before the diff2html css
+
+```html
+<!-- Stylesheet -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
+
+<!-- Javascripts -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
+```
+
+> Pass the option `highlight` with value true or invoke `diff2htmlUi.highlightCode()` after `diff2htmlUi.draw()`.
+
+```js
+document.addEventListener('DOMContentLoaded', () => {
+  const diffString = `diff --git a/sample.js b/sample.js
+  index 0000001..0ddf2ba
+  --- a/sample.js
+  +++ b/sample.js
+  @@ -1 +1 @@
+  -console.log("Hello World!")
+  +console.log("Hello from Diff2Html!")`;
+  const targetElement = document.getElementById('myDiffElement');
+  const configuration = { inputFormat: 'json', drawFileList: true, matching: 'lines', highlight: true };
+  const diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
+  diff2htmlUi.draw();
+  diff2htmlUi.highlightCode();
+});
+```
+
+#### Collapsable File Summary List
+
+> Add the dependencies.
+
+```html
+<!-- Javascripts -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
+```
+
+> Invoke the Diff2HtmlUI helper Pass the option `fileListToggle` with value true or invoke
+> `diff2htmlUi.fileListToggle()` after `diff2htmlUi.draw()`.
+
+```js
+document.addEventListener('DOMContentLoaded', () => {
+  const targetElement = document.getElementById('myDiffElement');
+  var diff2htmlUi = new Diff2HtmlUI(targetElement, lineDiffExample, { drawFileList: true, matching: 'lines' });
+  diff2htmlUi.draw();
+  diff2htmlUi.fileListToggle(false);
+});
+```
+
+### Diff2HtmlUI Examples
+
+#### Example with plain HTML+CSS+JS
+
+```html
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Make sure to load the highlight.js CSS file before the Diff2Html CSS file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/styles/github.min.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css"
+    />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
+  </head>
+  <script>
+    const diffString = `diff --git a/sample.js b/sample.js
+      index 0000001..0ddf2ba
+      --- a/sample.js
+      +++ b/sample.js
+      @@ -1 +1 @@
+      -console.log("Hello World!")
+      +console.log("Hello from Diff2Html!")`;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var targetElement = document.getElementById('myDiffElement');
+      var configuration = {
+        inputFormat: 'json',
+        drawFileList: true,
+        fileListToggle: false,
+        fileListStartVisible: false,
+        fileContentToggle: false,
+        matching: 'lines',
+        outputFormat: 'side-by-side',
+        synchronisedScroll: true,
+        highlight: true,
+        renderNothingWhenEmpty: false,
+      };
+      var diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
+      diff2htmlUi.draw();
+      diff2htmlUi.highlightCode();
+    });
+  </script>
+  <body>
+    <div id="myDiffElement"></div>
+  </body>
+</html>
+```
+
+## Diff2Html Usage
 
 ### Diff2Html API
 
@@ -172,7 +339,9 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
 ### Diff2Html Browser
 
-Import the stylesheet and the library code
+Import the stylesheet and the library code.
+
+To load correctly in the Browser you need to include the stylesheet in the final HTML.
 
 ```html
 <!-- CSS -->
@@ -186,7 +355,7 @@ It will now be available as a global variable named `Diff2Html`.
 
 ```js
 document.addEventListener('DOMContentLoaded', () => {
-  var diffHtml = global.Diff2Html.html('<Unified Diff String>', {
+  var diffHtml = Diff2Html.html('<Unified Diff String>', {
     drawFileList: true,
     matching: 'lines',
     outputFormat: 'side-by-side',
@@ -201,60 +370,12 @@ document.addEventListener('DOMContentLoaded', () => {
 const Diff2html = require('diff2html');
 const diffJson = Diff2html.parse('<Unified Diff String>');
 const diffHtml = Diff2html.html(diffJson, { drawFileList: true });
-document.getElementById('destination-elem-id').innerHTML = diffHtml;
+console.log(diffHtml);
 ```
 
 ### Diff2Html Examples
 
-#### Diff2Html Example using plain HTML/JS 
-
-```html
-<!DOCTYPE html>
-<html lang="en-us"><head>
-<meta charset="utf-8">
-   <!--Make sure to load the CSS file in that order-->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/styles/github.min.css" />
-   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
-   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
-</head>
-
-<script>
-   const diffString = `diff --git a/sample.js b/sample.js
-index 0000001..0ddf2ba
---- a/sample.js
-+++ b/sample.js
-@@ -1 +1 @@
--console.log("Hello World!")
-+console.log("Hello from Diff2Html!")`;
-
-   document.addEventListener('DOMContentLoaded', function () {
-     var targetElement = document.getElementById('myDiffElement');
-     var configuration = { 
-         inputFormat: 'json', 
-         drawFileList: true,
-         fileListToggle: false,
-         fileListStartVisible: false,
-         fileContentToggle: false,
-         matching: 'lines', 
-         outputFormat: 'side-by-side',
-         synchronisedScroll: true,
-         highlight: true,
-         renderNothingWhenEmpty: false };
-     var diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
-     diff2htmlUi.draw();
-     diff2htmlUi.highlightCode();
-   });
-</script>
-
-<body>
-
-<div id="myDiffElement"></div>
-
-</body>
-</html>
-```
-
-#### Diff2Html Example using Angular
+#### Example with Angular
 
 - Typescript
 
@@ -301,7 +422,7 @@ export class AppDiffComponent implements OnInit {
 ]
 ```
 
-#### Diff2Html Example using Vue.js
+#### Example with Vue.js
 
 ```vue
 <template>
@@ -330,128 +451,6 @@ export default {
   },
 };
 </script>
-```
-
-## Diff2HtmlUI Usage
-
-> Simple wrapper to ease simple tasks in the browser such as: code highlight and js effects
-
-- Invoke Diff2html
-- Inject output in DOM element
-- Enable collapsible file summary list
-- Enable syntax highlight of the code in the diffs
-
-### Diff2HtmlUI API
-
-> Create a Diff2HtmlUI instance
-
-```ts
-constructor(target: HTMLElement, diffInput?: string | DiffFile[]) // diff2html-ui, diff2html-ui-slim
-constructor(target: HTMLElement, diffInput?: string | DiffFile[], config: Diff2HtmlUIConfig = {}, hljs?: HighlightJS) // diff2html-ui-base
-```
-
-> Generate and inject in the document the Pretty HTML representation of the diff
-
-```ts
-draw(): void
-```
-
-> Enable extra features
-
-```ts
-synchronisedScroll(): void
-fileListToggle(startVisible: boolean): void
-highlightCode(): void
-```
-
-### Diff2HtmlUI Configuration
-
-- `synchronisedScroll`: scroll both panes in side-by-side mode: `true` or `false`, default is `true`
-- `highlight`: syntax highlight the code on the diff: `true` or `false`, default is `true`
-- `fileListToggle`: allow the file summary list to be toggled: `true` or `false`, default is `true`
-- `fileListStartVisible`: choose if the file summary list starts visible: `true` or `false`, default is `false`
-- `fileContentToggle`: allow each file contents to be toggled: `true` or `false`, default is `true`
-
-> NOTE: All the options from Diff2Html are also valid configurations in Diff2HtmlUI
-
-### Diff2HtmlUI Browser
-
-#### Mandatory HTML resource imports
-
-```html
-<!-- CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
-
-<!-- Javascripts -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
-```
-
-#### Init
-
-```js
-const targetElement = document.getElementById('destination-elem-id');
-const configuration = { drawFileList: true, matching: 'lines' };
-
-const diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
-// or
-const diff2htmlUi = new Diff2HtmlUI(targetElement, diffJson, configuration);
-```
-
-#### Draw
-
-```js
-diff2htmlUi.draw();
-```
-
-#### Syntax Highlight
-
-```html
-<!-- Stylesheet -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
-
-<!-- Javascripts -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
-```
-
-> Pass the option `highlight` with value true or invoke `diff2htmlUi.highlightCode()` after `diff2htmlUi.draw()`.
-
-```js
-document.addEventListener('DOMContentLoaded', () => {
-  const diffString = `diff --git a/sample.js b/sample.js
-index 0000001..0ddf2ba
---- a/sample.js
-+++ b/sample.js
-@@ -1 +1 @@
--console.log("Hello World!")
-+console.log("Hello from Diff2Html!")`;
-  const targetElement = document.getElementById('myDiffElement');
-  const configuration = { inputFormat: 'json', drawFileList: true, matching: 'lines', highlight: true };
-  const diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
-  diff2htmlUi.draw();
-  diff2htmlUi.highlightCode();
-});
-```
-
-#### Collapsable File Summary List
-
-> Add the dependencies.
-
-```html
-<!-- Javascripts -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
-```
-
-> Invoke the Diff2HtmlUI helper Pass the option `fileListToggle` with value true or invoke
-> `diff2htmlUi.fileListToggle()` after `diff2htmlUi.draw()`.
-
-```js
-document.addEventListener('DOMContentLoaded', () => {
-  const targetElement = document.getElementById('myDiffElement');
-  var diff2htmlUi = new Diff2HtmlUI(targetElement, lineDiffExample, { drawFileList: true, matching: 'lines' });
-  diff2htmlUi.draw();
-  diff2htmlUi.fileListToggle(false);
-});
 ```
 
 ## Troubleshooting
