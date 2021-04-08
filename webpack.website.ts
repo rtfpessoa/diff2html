@@ -7,7 +7,9 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const pages = ['index', 'demo'];
 
-function plugins(page: string): webpack.WebpackPluginInstance[] {
+type Plugin = ((this: webpack.Compiler, compiler: webpack.Compiler) => void) | webpack.WebpackPluginInstance;
+
+function plugins(page: string): Plugin[] {
   return [
     new MiniCssExtractPlugin({
       filename: '[name].css',
