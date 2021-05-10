@@ -314,8 +314,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
 - `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
 - `drawFileList`: show a file list before the diff: `true` or `false`, default is `true`
-- `srcPrefix`: add a prefix to all source (before changes) filepaths, default is `''`
-- `dstPrefix`: add a prefix to all destination (after changes) filepaths, default is `''`
+- `srcPrefix`: add a prefix to all source (before changes) filepaths, default is `''`. Should match the prefix used when [generating the diff](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---src-prefixltprefixgt).
+- `dstPrefix`: add a prefix to all destination (after changes) filepaths, default is `''`. Should match the prefix used when [generating the diff](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---dst-prefixltprefixgt)
 - `diffMaxChanges`: number of changed lines after which a file diff is deemed as too big and not displayed, default is
   `undefined`
 - `diffMaxLineLength`: number of characters in a diff line after which a file diff is deemed as too big and not
@@ -333,8 +333,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
   `2500`
 - `maxLineSizeInBlockForComparison`: maximum number os characters of the bigger line in a block to apply comparison,
   default is `200`
-- `compiledTemplates`: object (Hogan template values) with previously compiled templates to replace parts of the html,
-  default is `{}`
+- `compiledTemplates`: object ([Hogan.js](https://github.com/twitter/hogan.js/) template values) with previously compiled templates to replace parts of the html, default is `{}`.
+  For example: `{ "tag-file-changed": Hogan.compile("<span class="d2h-tag d2h-changed d2h-changed-tag">MODIFIED</span>") }`
 - `rawTemplates`: object (string values) with raw not compiled templates to replace parts of the html, default is `{}`.
   For example: `{ "tag-file-changed": "<span class="d2h-tag d2h-changed d2h-changed-tag">MODIFIED</span>" }`
   > For more information regarding the possible templates look into
