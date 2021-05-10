@@ -127,7 +127,7 @@
     "mini-css-extract-plugin": "1.4.1",
     "mkdirp": "1.0.4",
     "nopt": "5.0.0",
-    "postcss": "8.2.9",
+    "postcss": "8.2.10",
     "postcss-cli": "8.3.1",
     "postcss-import": "14.0.1",
     "postcss-loader": "5.2.0",
