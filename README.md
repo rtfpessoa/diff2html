@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
   -console.log("Hello World!")
   +console.log("Hello from Diff2Html!")`;
   const targetElement = document.getElementById('myDiffElement');
-  const configuration = { inputFormat: 'json', drawFileList: true, matching: 'lines', highlight: true };
+  const configuration = { drawFileList: true, matching: 'lines', highlight: true };
   const diff2htmlUi = new Diff2HtmlUI(targetElement, diffString, configuration);
   diff2htmlUi.draw();
   diff2htmlUi.highlightCode();
@@ -271,7 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('DOMContentLoaded', function () {
       var targetElement = document.getElementById('myDiffElement');
       var configuration = {
-        inputFormat: 'json',
         drawFileList: true,
         fileListToggle: false,
         fileListStartVisible: false,
@@ -315,25 +314,29 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
 - `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
 - `drawFileList`: show a file list before the diff: `true` or `false`, default is `true`
-- `diffStyle`: show differences level in each line: `word` or `char`, default is `word`
+- `srcPrefix`: add a prefix to all source (before changes) filepaths, default is `''`. Should match the prefix used when [generating the diff](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---src-prefixltprefixgt).
+- `dstPrefix`: add a prefix to all destination (after changes) filepaths, default is `''`. Should match the prefix used when [generating the diff](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---dst-prefixltprefixgt)
 - `diffMaxChanges`: number of changed lines after which a file diff is deemed as too big and not displayed, default is
   `undefined`
 - `diffMaxLineLength`: number of characters in a diff line after which a file diff is deemed as too big and not
   displayed, default is `undefined`
 - `diffTooBigMessage`: function allowing to customize the message in case of file diff too big (if `diffMaxChanges` or
-  `diffMaxLineLength` is set)
+  `diffMaxLineLength` is set). Will be given a file index as a number and should return a string.
 - `matching`: matching level: `'lines'` for matching lines, `'words'` for matching lines and words or `'none'`, default
   is `none`
 - `matchWordsThreshold`: similarity threshold for word matching, default is `0.25`
+- `maxLineLengthHighlight`: only perform diff changes highlight if lines are smaller than this, default is `10000`
+- `diffStyle`: show differences level in each line: `'word'` or `'char'`, default is `'word'`
+- `renderNothingWhenEmpty`: render nothing if the diff shows no change in its comparison: `true` or `false`, default is
+  `false`
 - `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is
   `2500`
 - `maxLineSizeInBlockForComparison`: maximum number os characters of the bigger line in a block to apply comparison,
   default is `200`
-- `maxLineLengthHighlight`: only perform diff changes highlight if lines are smaller than this, default is `10000`
-- `renderNothingWhenEmpty`: render nothing if the diff shows no change in its comparison: `true` or `false`, default is
-  `false`
-- `compiledTemplates`: object with previously compiled templates to replace parts of the html
-- `rawTemplates`: object with raw not compiled templates to replace parts of the html
+- `compiledTemplates`: object ([Hogan.js](https://github.com/twitter/hogan.js/) template values) with previously compiled templates to replace parts of the html, default is `{}`.
+  For example: `{ "tag-file-changed": Hogan.compile("<span class="d2h-tag d2h-changed d2h-changed-tag">MODIFIED</span>") }`
+- `rawTemplates`: object (string values) with raw not compiled templates to replace parts of the html, default is `{}`.
+  For example: `{ "tag-file-changed": "<span class="d2h-tag d2h-changed d2h-changed-tag">MODIFIED</span>" }`
   > For more information regarding the possible templates look into
   > [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
 
