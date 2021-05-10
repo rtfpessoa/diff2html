@@ -1,6 +1,5 @@
 import * as HighlightJS from 'highlight.js/lib/core';
-// import { CompiledMode, HighlightResult, AutoHighlightResult } from 'highlight.js/lib/core.js';
-import { nodeStream, mergeStreams } from './highlight.js-helpers';
+import { closeTags, nodeStream, mergeStreams } from './highlight.js-helpers';
 
 import { html, Diff2HtmlConfig, defaultDiff2HtmlConfig } from '../../diff2html';
 import { DiffFile } from '../../types';
@@ -145,9 +144,6 @@ export class Diff2HtmlUI {
     // Collect all the diff files and execute the highlight on their lines
     const files = this.targetElement.querySelectorAll('.d2h-file-wrapper');
     files.forEach(file => {
-      let oldLinesState: CompiledMode | Language | undefined;
-      let newLinesState: CompiledMode | Language | undefined;
-
       // Collect all the code lines and execute the highlight on them
       const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
       codeLines.forEach(line => {
@@ -159,24 +155,15 @@ export class Diff2HtmlUI {
 
         if (text === null || lineParent === null || !this.isElement(lineParent)) return;
 
-        const lineState = lineParent.classList.contains('d2h-del') ? oldLinesState : newLinesState;
-
-        const language = file.getAttribute('data-lang');
-        const result: HighlightResult =
-          language && this.hljs.getLanguage(language)
-            ? this.hljs.highlight(language, text, true, lineState)
-            : this.hljs.highlightAuto(text);
-
-        if (this.instanceOfHighlightResult(result)) {
-          if (lineParent.classList.contains('d2h-del')) {
-            oldLinesState = result.top;
-          } else if (lineParent.classList.contains('d2h-ins')) {
-            newLinesState = result.top;
-          } else {
-            oldLinesState = result.top;
-            newLinesState = result.top;
-          }
-        }
+        const language = file.getAttribute('data-lang') || 'plaintext';
+        const result: HighlightResult = this.hljs.getLanguage(language)
+          ? closeTags(
+              this.hljs.highlight(text, {
+                language,
+                ignoreIllegals: true,
+              }),
+            )
+          : closeTags(this.hljs.highlightAuto(text));
 
         const originalStream = nodeStream(line);
         if (originalStream.length) {
@@ -199,10 +186,6 @@ export class Diff2HtmlUI {
    */
   smartSelection(): void {
     console.warn('Smart selection is now enabled by default with CSS. No need to call this method anymore.');
-  }
-
-  private instanceOfHighlightResult(object: HighlightResult | AutoHighlightResult): object is HighlightResult {
-    return 'top' in object;
   }
 
   private getHashTag(): string | null {

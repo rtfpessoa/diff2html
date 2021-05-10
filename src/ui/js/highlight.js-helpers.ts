@@ -135,3 +135,24 @@ export function mergeStreams(original: NodeEvent[], highlighted: NodeEvent[], va
 
   return result + escapeHTML(value.substr(processed));
 }
+
+// https://github.com/hexojs/hexo-util/blob/979873b63a725377c2bd6ad834d790023496130d/lib/highlight.js#L123
+export function closeTags(res: HighlightResult): HighlightResult {
+  const tokenStack = new Array<string>();
+
+  res.value = res.value
+    .split('\n')
+    .map(line => {
+      const prepend = tokenStack.map(token => `<span class="${token}">`).join('');
+      const matches = line.matchAll(/(<span class="(.*?)">|<\/span>)/g);
+      Array.from(matches).forEach(match => {
+        if (match[0] === '</span>') tokenStack.shift();
+        else tokenStack.unshift(match[2]);
+      });
+      const append = '</span>'.repeat(tokenStack.length);
+      return prepend + line + append;
+    })
+    .join('\n');
+
+  return res;
+}
