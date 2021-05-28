@@ -12,7 +12,7 @@ describe('LineByLineRenderer', () => {
       expect(fileHtml).toMatchInlineSnapshot(`
         "<tr>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-line d2h-info\\">
+                <div class=\\"d2h-code-line\\">
                     File without changes
                 </div>
             </td>
@@ -39,7 +39,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\">30</div>
             </td>
             <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-line d2h-ins\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\">test</span>
                 </div>
@@ -65,7 +65,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\"></div>
             </td>
             <td class=\\"d2h-del\\">
-                <div class=\\"d2h-code-line d2h-del\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">-</span>
                     <span class=\\"d2h-code-line-ctn\\">test</span>
                 </div>
@@ -91,7 +91,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\">30</div>
             </td>
             <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-line d2h-ins\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\">  test</span>
                 </div>
@@ -117,7 +117,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\">30</div>
             </td>
             <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-line d2h-ins\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\">    test</span>
                 </div>
@@ -143,7 +143,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\">30</div>
             </td>
             <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-line d2h-ins\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\">	test</span>
                 </div>
@@ -419,7 +419,7 @@ describe('LineByLineRenderer', () => {
                         <tr>
             <td class=\\"d2h-code-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-line d2h-info\\">@@ -1 +1 @@</div>
+                <div class=\\"d2h-code-line\\">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
             <td class=\\"d2h-code-linenumber d2h-del d2h-change\\">
@@ -427,7 +427,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\"></div>
             </td>
             <td class=\\"d2h-del d2h-change\\">
-                <div class=\\"d2h-code-line d2h-del d2h-change\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">-</span>
                     <span class=\\"d2h-code-line-ctn\\"><del>test</del></span>
                 </div>
@@ -438,7 +438,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\">1</div>
             </td>
             <td class=\\"d2h-ins d2h-change\\">
-                <div class=\\"d2h-code-line d2h-ins d2h-change\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\"><ins>test1r</ins></span>
                 </div>
@@ -492,7 +492,7 @@ describe('LineByLineRenderer', () => {
                         <tbody class=\\"d2h-diff-tbody\\">
                         <tr>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-line d2h-info\\">
+                <div class=\\"d2h-code-line\\">
                     File without changes
                 </div>
             </td>
@@ -553,7 +553,7 @@ describe('LineByLineRenderer', () => {
                         <tr>
             <td class=\\"d2h-code-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-line d2h-info\\"><a href=\\"http://example.com\\">Custom link to render</a></div>
+                <div class=\\"d2h-code-line\\"><a href=\\"http://example.com\\">Custom link to render</a></div>
             </td>
         </tr>
                         </tbody>
@@ -622,7 +622,7 @@ describe('LineByLineRenderer', () => {
         "<tr>
             <td class=\\"d2h-code-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-line d2h-info\\">@@ -1 +1 @@</div>
+                <div class=\\"d2h-code-line\\">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
             <td class=\\"d2h-code-linenumber d2h-cntx\\">
@@ -630,7 +630,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\">1</div>
             </td>
             <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-line d2h-cntx\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
                     <span class=\\"d2h-code-line-ctn\\">one context line</span>
                 </div>
@@ -641,7 +641,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\"></div>
             </td>
             <td class=\\"d2h-del d2h-change\\">
-                <div class=\\"d2h-code-line d2h-del d2h-change\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">-</span>
                     <span class=\\"d2h-code-line-ctn\\"><del>test</del></span>
                 </div>
@@ -652,7 +652,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\">2</div>
             </td>
             <td class=\\"d2h-ins d2h-change\\">
-                <div class=\\"d2h-code-line d2h-ins d2h-change\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\"><ins>test1r</ins></span>
                 </div>
@@ -663,7 +663,7 @@ describe('LineByLineRenderer', () => {
         <div class=\\"line-num2\\">3</div>
             </td>
             <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-line d2h-ins\\">
+                <div class=\\"d2h-code-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\">test2r</span>
                 </div>

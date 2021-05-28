@@ -13,7 +13,7 @@ describe('SideBySideRenderer', () => {
         Object {
           "left": "<tr>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\">
+                <div class=\\"d2h-code-side-line\\">
                     File without changes
                 </div>
             </td>
@@ -82,14 +82,14 @@ describe('SideBySideRenderer', () => {
           "left": "<tr>
             <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\">@@ -19,7 +19,7 @@</div>
+                <div class=\\"d2h-code-side-line\\">@@ -19,7 +19,7 @@</div>
             </td>
         </tr><tr>
             <td class=\\"d2h-code-side-linenumber d2h-cntx\\">
               19
             </td>
             <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-side-line d2h-cntx\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
                     <span class=\\"d2h-code-line-ctn\\">context</span>
                 </div>
@@ -99,7 +99,7 @@ describe('SideBySideRenderer', () => {
               20
             </td>
             <td class=\\"d2h-del d2h-change\\">
-                <div class=\\"d2h-code-side-line d2h-del d2h-change\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">-</span>
                     <span class=\\"d2h-code-line-ctn\\"><del>removed</del></span>
                 </div>
@@ -109,7 +109,7 @@ describe('SideBySideRenderer', () => {
               
             </td>
             <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
-                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder\\">
                     <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
                     <span class=\\"d2h-code-line-ctn\\"><br></span>
                 </div>
@@ -118,14 +118,14 @@ describe('SideBySideRenderer', () => {
           "right": "<tr>
             <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\"></div>
+                <div class=\\"d2h-code-side-line\\"></div>
             </td>
         </tr><tr>
             <td class=\\"d2h-code-side-linenumber d2h-cntx\\">
               19
             </td>
             <td class=\\"d2h-cntx\\">
-                <div class=\\"d2h-code-side-line d2h-cntx\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
                     <span class=\\"d2h-code-line-ctn\\">context</span>
                 </div>
@@ -135,7 +135,7 @@ describe('SideBySideRenderer', () => {
               20
             </td>
             <td class=\\"d2h-ins d2h-change\\">
-                <div class=\\"d2h-code-side-line d2h-ins d2h-change\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\"><ins>added</ins></span>
                 </div>
@@ -145,7 +145,7 @@ describe('SideBySideRenderer', () => {
               21
             </td>
             <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-side-line d2h-ins\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\">another added</span>
                 </div>
@@ -174,7 +174,7 @@ describe('SideBySideRenderer', () => {
               
             </td>
             <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
-                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder\\">
                     <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
                     <span class=\\"d2h-code-line-ctn\\"><br></span>
                 </div>
@@ -185,7 +185,7 @@ describe('SideBySideRenderer', () => {
               30
             </td>
             <td class=\\"d2h-ins\\">
-                <div class=\\"d2h-code-side-line d2h-ins\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\">test</span>
                 </div>
@@ -214,7 +214,7 @@ describe('SideBySideRenderer', () => {
               30
             </td>
             <td class=\\"d2h-del\\">
-                <div class=\\"d2h-code-side-line d2h-del\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">-</span>
                     <span class=\\"d2h-code-line-ctn\\">test</span>
                 </div>
@@ -225,7 +225,7 @@ describe('SideBySideRenderer', () => {
               
             </td>
             <td class=\\"d2h-cntx d2h-emptyplaceholder\\">
-                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder\\">
+                <div class=\\"d2h-code-side-line d2h-code-side-emptyplaceholder\\">
                     <span class=\\"d2h-code-line-prefix\\">&nbsp;</span>
                     <span class=\\"d2h-code-line-ctn\\"><br></span>
                 </div>
@@ -299,14 +299,14 @@ describe('SideBySideRenderer', () => {
                             <tr>
             <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\">@@ -1 +1 @@</div>
+                <div class=\\"d2h-code-side-line\\">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
             <td class=\\"d2h-code-side-linenumber d2h-del d2h-change\\">
               1
             </td>
             <td class=\\"d2h-del d2h-change\\">
-                <div class=\\"d2h-code-side-line d2h-del d2h-change\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">-</span>
                     <span class=\\"d2h-code-line-ctn\\"><del>test</del></span>
                 </div>
@@ -323,14 +323,14 @@ describe('SideBySideRenderer', () => {
                             <tr>
             <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\"></div>
+                <div class=\\"d2h-code-side-line\\"></div>
             </td>
         </tr><tr>
             <td class=\\"d2h-code-side-linenumber d2h-ins d2h-change\\">
               1
             </td>
             <td class=\\"d2h-ins d2h-change\\">
-                <div class=\\"d2h-code-side-line d2h-ins d2h-change\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\"><ins>test1r</ins></span>
                 </div>
@@ -383,7 +383,7 @@ describe('SideBySideRenderer', () => {
                             <tbody class=\\"d2h-diff-tbody\\">
                             <tr>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\">
+                <div class=\\"d2h-code-side-line\\">
                     File without changes
                 </div>
             </td>
@@ -455,7 +455,7 @@ describe('SideBySideRenderer', () => {
                             <tr>
             <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\"><a href=\\"http://example.com\\">Custom link to render</a></div>
+                <div class=\\"d2h-code-side-line\\"><a href=\\"http://example.com\\">Custom link to render</a></div>
             </td>
         </tr>
                             </tbody>
@@ -469,7 +469,7 @@ describe('SideBySideRenderer', () => {
                             <tr>
             <td class=\\"d2h-code-side-linenumber d2h-info\\"></td>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-side-line d2h-info\\"></div>
+                <div class=\\"d2h-code-side-line\\"></div>
             </td>
         </tr>
                             </tbody>
@@ -514,7 +514,7 @@ describe('SideBySideRenderer', () => {
               1
             </td>
             <td class=\\"d2h-del d2h-change\\">
-                <div class=\\"d2h-code-side-line d2h-del d2h-change\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">-</span>
                     <span class=\\"d2h-code-line-ctn\\"><del>test</del></span>
                 </div>
@@ -525,7 +525,7 @@ describe('SideBySideRenderer', () => {
               1
             </td>
             <td class=\\"d2h-ins d2h-change\\">
-                <div class=\\"d2h-code-side-line d2h-ins d2h-change\\">
+                <div class=\\"d2h-code-side-line\\">
                     <span class=\\"d2h-code-line-prefix\\">+</span>
                     <span class=\\"d2h-code-line-ctn\\"><ins>test1r</ins></span>
                 </div>
