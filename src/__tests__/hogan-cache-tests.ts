@@ -12,7 +12,7 @@ describe('HoganJsUtils', () => {
       expect(result).toMatchInlineSnapshot(`
         "<tr>
             <td class=\\"d2h-info\\">
-                <div class=\\"d2h-code-line d2h-info\\">
+                <div class=\\"d2h-code-line\\">
                     File without changes
                 </div>
             </td>
