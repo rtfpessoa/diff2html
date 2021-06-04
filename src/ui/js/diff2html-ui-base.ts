@@ -144,6 +144,11 @@ export class Diff2HtmlUI {
     // Collect all the diff files and execute the highlight on their lines
     const files = this.targetElement.querySelectorAll('.d2h-file-wrapper');
     files.forEach(file => {
+      // HACK: help Typescript know that `this.hljs` is defined since we already checked it
+      if (this.hljs === null) return;
+      const language = file.getAttribute('data-lang');
+      const hljsLanguage = language ? this.hljs.getLanguage(language) : undefined;
+
       // Collect all the code lines and execute the highlight on them
       const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
       codeLines.forEach(line => {
@@ -155,15 +160,12 @@ export class Diff2HtmlUI {
 
         if (text === null || lineParent === null || !this.isElement(lineParent)) return;
 
-        const language = file.getAttribute('data-lang') || 'plaintext';
-        const result: HighlightResult = this.hljs.getLanguage(language)
-          ? closeTags(
-              this.hljs.highlight(text, {
-                language,
-                ignoreIllegals: true,
-              }),
-            )
-          : closeTags(this.hljs.highlightAuto(text));
+        const result: HighlightResult = closeTags(
+          this.hljs.highlight(text, {
+            language: hljsLanguage?.name || 'plaintext',
+            ignoreIllegals: true,
+          }),
+        );
 
         const originalStream = nodeStream(line);
         if (originalStream.length) {
