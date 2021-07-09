@@ -26,6 +26,7 @@ diff2html generates pretty HTML diffs from git diff or unified diff output.
 - [Online Example](#online-example)
 - [Distributions](#distributions)
 - [Usage](#usage)
+- [Diff Text Input](#diff-text-input)
 - [Diff2HtmlUI Usage](#diff2htmlui-usage)
   - [Diff2HtmlUI API](#diff2htmlui-api)
   - [Diff2HtmlUI Configuration](#diff2htmlui-configuration)
@@ -117,6 +118,13 @@ Diff2Html can be used in various ways as listed in the [distributions](#distribu
   control about what you can do with the json or html generated.
 
 Bellow you can find more details and examples about each option.
+
+## Diff Text Input
+
+diff2html accepts the text contents of a
+[unified diff](https://www.gnu.org/software/diffutils/manual/html_node/Unified-Format.html) or the superset format git
+diff (https://git-scm.com/docs/git-diff) (not combined or word diff). To provide multiples files as input just
+concatenate the diffs (just like the output of git diff).
 
 ## Diff2HtmlUI Usage
 
