@@ -276,7 +276,7 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       startFile();
 
       // diff --git a/blocked_delta_results.png b/blocked_delta_results.png
-      const gitDiffStart = /^diff --git "?(.+)"? "?(.+)"?/;
+      const gitDiffStart = /^diff --git "?([a-ciow]\/.+)"? "?([a-ciow]\/.+)"?/;
       if ((values = gitDiffStart.exec(line))) {
         possibleOldName = getFilename(values[1], undefined, config.dstPrefix);
         possibleNewName = getFilename(values[2], undefined, config.srcPrefix);
