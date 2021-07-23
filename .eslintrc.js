@@ -52,5 +52,7 @@ module.exports = {
     'sonarjs/no-duplicate-string': 'off',
     // Too verbose
     'sonarjs/cognitive-complexity': 'off',
+    // Too verbose
+    'sonarjs/no-nested-template-literals': 'off',
   },
 };
