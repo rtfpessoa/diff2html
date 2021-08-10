@@ -117,7 +117,7 @@ Diff2Html can be used in various ways as listed in the [distributions](#distribu
 - [Diff2Html](#diff2html-usage): using the parser and html generator directly from the library gives you complete
   control about what you can do with the json or html generated.
 
-Bellow you can find more details and examples about each option.
+Below you can find more details and examples about each option.
 
 ## Diff Text Input
 
