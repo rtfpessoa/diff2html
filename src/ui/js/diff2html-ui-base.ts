@@ -1,4 +1,4 @@
-import { closeTags, nodeStream, mergeStreams } from './highlight.js-helpers';
+import { closeTags, nodeStream, mergeStreams, getLanguage } from './highlight.js-helpers';
 
 import { html, Diff2HtmlConfig, defaultDiff2HtmlConfig } from '../../diff2html';
 import { DiffFile } from '../../types';
@@ -142,7 +142,7 @@ export class Diff2HtmlUI {
       // HACK: help Typescript know that `this.hljs` is defined since we already checked it
       if (this.hljs === null) return;
       const language = file.getAttribute('data-lang');
-      const hljsLanguage = language ? this.hljs.getLanguage(language) : undefined;
+      const hljsLanguage = language ? getLanguage(language) : 'plaintext';
 
       // Collect all the code lines and execute the highlight on them
       const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
@@ -157,7 +157,7 @@ export class Diff2HtmlUI {
 
         const result: HighlightResult = closeTags(
           this.hljs.highlight(text, {
-            language: hljsLanguage?.name || 'plaintext',
+            language: hljsLanguage,
             ignoreIllegals: true,
           }),
         );
