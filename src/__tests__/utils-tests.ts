@@ -4,18 +4,18 @@ describe('Utils', () => {
   describe('escapeForRegExp', () => {
     it('should escape markdown link text', () => {
       const result = escapeForRegExp('[Link](https://diff2html.xyz)');
-      expect(result).toEqual('\\[Link\\]\\(https:\\/\\/diff2html\\.xyz\\)');
+      expect(result).toBe('\\[Link\\]\\(https:\\/\\/diff2html\\.xyz\\)');
     });
     it('should escape all dangerous characters', () => {
       const result = escapeForRegExp('-[]/{}()*+?.\\^$|');
-      expect(result).toEqual('\\-\\[\\]\\/\\{\\}\\(\\)\\*\\+\\?\\.\\\\\\^\\$\\|');
+      expect(result).toBe('\\-\\[\\]\\/\\{\\}\\(\\)\\*\\+\\?\\.\\\\\\^\\$\\|');
     });
   });
 
   describe('unifyPath', () => {
     it('should unify windows style path', () => {
       const result = unifyPath('\\Users\\Downloads\\diff.html');
-      expect(result).toEqual('/Users/Downloads/diff.html');
+      expect(result).toBe('/Users/Downloads/diff.html');
     });
   });
 
