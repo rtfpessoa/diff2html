@@ -42,10 +42,20 @@
   cursor: pointer;
 }
 
+.flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
 .is-fullwidth {
   flex-grow: 1;
 }
 
 .is-vertical {
   flex-direction: column;
+}
+
+.align-middle {
+  vertical-align: middle;
 }
