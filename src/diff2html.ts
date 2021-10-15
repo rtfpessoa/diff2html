@@ -12,6 +12,7 @@ export interface Diff2HtmlConfig
     HoganJsUtilsConfig {
   outputFormat?: OutputFormatType;
   drawFileList?: boolean;
+  lazy?: boolean;
 }
 
 export const defaultDiff2HtmlConfig = {
@@ -19,6 +20,7 @@ export const defaultDiff2HtmlConfig = {
   ...defaultSideBySideRendererConfig,
   outputFormat: OutputFormatType.LINE_BY_LINE,
   drawFileList: true,
+  lazy: false,
 };
 
 export function parse(diffInput: string, configuration: Diff2HtmlConfig = {}): DiffFile[] {
@@ -36,8 +38,18 @@ export function html(diffInput: string | DiffFile[], configuration: Diff2HtmlCon
 
   const diffOutput =
     config.outputFormat === 'side-by-side'
-      ? new SideBySideRenderer(hoganUtils, config).render(diffJson)
-      : new LineByLineRenderer(hoganUtils, config).render(diffJson);
+      ? new SideBySideRenderer(hoganUtils, config).render(config.lazy ? [] : diffJson)
+      : new LineByLineRenderer(hoganUtils, config).render(config.lazy ? [] : diffJson);
 
   return fileList + diffOutput;
+}
+
+export function htmlFile(diffFile: DiffFile, configuration: Diff2HtmlConfig = {}): string {
+  const config = { ...defaultDiff2HtmlConfig, ...configuration };
+
+  const hoganUtils = new HoganJsUtils(config);
+
+  return config.outputFormat === 'side-by-side'
+      ? new SideBySideRenderer(hoganUtils, config).renderFile(diffFile)
+      : new LineByLineRenderer(hoganUtils, config).renderFile(diffFile);
 }

@@ -55,6 +55,11 @@ export default class LineByLineRenderer {
     return this.hoganUtils.render(genericTemplatesPath, 'wrapper', { content: diffsHtml });
   }
 
+  renderFile(diffFile: DiffFile): string {
+    const diffs = diffFile.blocks.length ? this.generateFileHtml(diffFile) : this.generateEmptyDiff();
+    return this.makeFileDiffHtml(diffFile, diffs);
+  }
+
   makeFileDiffHtml(file: DiffFile, diffs: string): string {
     if (this.config.renderNothingWhenEmpty && Array.isArray(file.blocks) && file.blocks.length === 0) return '';
 

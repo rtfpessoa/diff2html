@@ -1,6 +1,6 @@
 import { closeTags, nodeStream, mergeStreams, getLanguage } from './highlight.js-helpers';
 
-import { html, Diff2HtmlConfig, defaultDiff2HtmlConfig } from '../../diff2html';
+import { html, parse, Diff2HtmlConfig, defaultDiff2HtmlConfig, htmlFile } from '../../diff2html';
 import { DiffFile } from '../../types';
 import { HighlightResult, HLJSApi } from 'highlight.js';
 
@@ -15,6 +15,7 @@ export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
    */
   smartSelection?: boolean;
   fileContentToggle?: boolean;
+  lazy?: boolean;
 }
 
 export const defaultDiff2HtmlUIConfig = {
@@ -29,10 +30,12 @@ export const defaultDiff2HtmlUIConfig = {
    */
   smartSelection: true,
   fileContentToggle: true,
+  lazy: true,
 };
 
 export class Diff2HtmlUI {
   readonly config: typeof defaultDiff2HtmlUIConfig;
+  readonly diffFiles: DiffFile[];
   readonly diffHtml: string;
   readonly targetElement: HTMLElement;
   readonly hljs: HLJSApi | null = null;
@@ -41,13 +44,15 @@ export class Diff2HtmlUI {
 
   constructor(target: HTMLElement, diffInput?: string | DiffFile[], config: Diff2HtmlUIConfig = {}, hljs?: HLJSApi) {
     this.config = { ...defaultDiff2HtmlUIConfig, ...config };
-    this.diffHtml = diffInput !== undefined ? html(diffInput, this.config) : target.innerHTML;
+    this.diffFiles = typeof diffInput === 'string' ? parse(diffInput, this.config) : diffInput ?? [];
+    this.diffHtml = diffInput !== undefined ? html(this.diffFiles, this.config) : target.innerHTML;
     this.targetElement = target;
     if (hljs !== undefined) this.hljs = hljs;
   }
 
   draw(): void {
     this.targetElement.innerHTML = this.diffHtml;
+    if (this.config.lazy) this.bindDrawFiles();
     if (this.config.synchronisedScroll) this.synchronisedScroll();
     if (this.config.highlight) this.highlightCode();
     if (this.config.fileListToggle) this.fileListToggle(this.config.fileListStartVisible);
@@ -74,6 +79,22 @@ export class Diff2HtmlUI {
       left.addEventListener('scroll', onScroll);
       right.addEventListener('scroll', onScroll);
     });
+  }
+
+  bindDrawFiles(): void {
+    const fileListItems: NodeListOf<HTMLElement> = this.targetElement.querySelectorAll('.d2h-file-name');
+    fileListItems.forEach((i, idx) =>
+      i.addEventListener('click', () => {
+        console.log('HERE');
+
+        const tmpDiv = document.createElement('div');
+        tmpDiv.innerHTML = htmlFile(this.diffFiles[idx], this.config);
+
+        if (tmpDiv.firstChild) {
+          this.targetElement.querySelector('.d2h-wrapper')?.appendChild(tmpDiv.firstChild);
+        }
+      }),
+    );
   }
 
   fileListToggle(startVisible: boolean): void {
