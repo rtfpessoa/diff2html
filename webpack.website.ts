@@ -11,6 +11,8 @@ type Plugin = ((this: webpack.Compiler, compiler: webpack.Compiler) => void) | w
 
 function plugins(page: string): Plugin[] {
   return [
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
@@ -37,6 +39,8 @@ function plugins(page: string): Plugin[] {
         minifyURLs: true,
       },
     }),
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     new CopyWebpackPlugin({
       patterns: [
         { from: 'website/favicon.ico', to: 'favicon.ico' },
