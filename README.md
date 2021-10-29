@@ -535,6 +535,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://twitter.com/pierrci"><img src="https://avatars.githubusercontent.com/u/5020707?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Pierric Cistac</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=Pierrci" title="Documentation">📖</a> <a href="https://github.com/rtfpessoa/diff2html/commits?author=Pierrci" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/xlith"><img src="https://avatars.githubusercontent.com/u/510560?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Civan Yavuzşen</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=xlith" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/timgates42"><img src="https://avatars.githubusercontent.com/u/47873678?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tim Gates</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=timgates42" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/campersau"><img src="https://avatars.githubusercontent.com/u/4009570?v=4?s=100" width="100px;" alt=""/><br /><sub><b>campersau</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=campersau" title="Code">💻</a></td>
   </tr>
 </table>
 
