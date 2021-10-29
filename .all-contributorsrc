@@ -283,6 +283,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "Pierrci",
+      "name": "Pierric Cistac",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5020707?v=4",
+      "profile": "https://twitter.com/pierrci",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
