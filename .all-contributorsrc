@@ -274,6 +274,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "charguer",
+      "name": "Arthur Charguéraud",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1830652?v=4",
+      "profile": "https://github.com/charguer",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
