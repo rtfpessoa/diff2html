@@ -302,6 +302,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "timgates42",
+      "name": "Tim Gates",
+      "avatar_url": "https://avatars.githubusercontent.com/u/47873678?v=4",
+      "profile": "https://github.com/timgates42",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
