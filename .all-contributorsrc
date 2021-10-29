@@ -265,6 +265,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "domdomegg",
+      "name": "Adam Jones",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4953590?v=4",
+      "profile": "https://domdomegg.github.io/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
