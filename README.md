@@ -533,6 +533,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://domdomegg.github.io/"><img src="https://avatars.githubusercontent.com/u/4953590?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Adam Jones</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=domdomegg" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/charguer"><img src="https://avatars.githubusercontent.com/u/1830652?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Arthur Charguéraud</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=charguer" title="Documentation">📖</a></td>
     <td align="center"><a href="https://twitter.com/pierrci"><img src="https://avatars.githubusercontent.com/u/5020707?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Pierric Cistac</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=Pierrci" title="Documentation">📖</a> <a href="https://github.com/rtfpessoa/diff2html/commits?author=Pierrci" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/xlith"><img src="https://avatars.githubusercontent.com/u/510560?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Civan Yavuzşen</b></sub></a><br /><a href="https://github.com/rtfpessoa/diff2html/commits?author=xlith" title="Code">💻</a></td>
   </tr>
 </table>
 
