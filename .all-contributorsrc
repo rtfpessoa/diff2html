@@ -327,6 +327,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "dependabot-preview[bot]",
+      "name": "dependabot-preview[bot]",
+      "avatar_url": "https://avatars.githubusercontent.com/in/2141?v=4",
+      "profile": "https://github.com/apps/dependabot-preview",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
