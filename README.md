@@ -303,30 +303,23 @@ index 0000001..0ddf2ba
 #### StimulusJS with TypeScript
 
 ```ts
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from '@hotwired/stimulus';
 
-import {
-  Diff2HtmlUI,
-  Diff2HtmlUIConfig,
-} from "diff2html/lib/ui/js/diff2html-ui-slim.js";
+import { Diff2HtmlUI, Diff2HtmlUIConfig } from 'diff2html/lib/ui/js/diff2html-ui-slim.js';
 
 // Requires `yarn add highlight.js`
-import "highlight.js/styles/github.css";
-import "diff2html/bundles/css/diff2html.min.css";
+import 'highlight.js/styles/github.css';
+import 'diff2html/bundles/css/diff2html.min.css';
 
 export default class extends Controller {
   connect(): void {
-    const diff2htmlUi = new Diff2HtmlUI(
-      this.diffElement,
-      this.unifiedDiff,
-      this.diffConfiguration
-    );
+    const diff2htmlUi = new Diff2HtmlUI(this.diffElement, this.unifiedDiff, this.diffConfiguration);
 
     diff2htmlUi.draw();
   }
 
   get unifiedDiff(): string {
-    return this.data.get("unifiedDiff") || "";
+    return this.data.get('unifiedDiff') || '';
   }
 
   get diffElement(): HTMLElement {
@@ -336,7 +329,7 @@ export default class extends Controller {
   get diffConfiguration(): Diff2HtmlUIConfig {
     return {
       drawFileList: true,
-      matching: "lines",
+      matching: 'lines',
     };
   }
 }
