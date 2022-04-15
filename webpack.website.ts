@@ -3,7 +3,8 @@ import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
+// eslint-disable-next-line import/default
+import CopyPlugin from 'copy-webpack-plugin';
 
 const pages = ['index', 'demo'];
 
@@ -11,8 +12,6 @@ type Plugin = ((this: webpack.Compiler, compiler: webpack.Compiler) => void) | w
 
 function plugins(page: string): Plugin[] {
   return [
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
@@ -39,9 +38,7 @@ function plugins(page: string): Plugin[] {
         minifyURLs: true,
       },
     }),
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    new CopyWebpackPlugin({
+    new CopyPlugin({
       patterns: [
         { from: 'website/favicon.ico', to: 'favicon.ico' },
         { from: 'website/robots.txt', to: 'robots.txt' },
