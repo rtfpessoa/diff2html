@@ -376,7 +376,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
   `false`
 - `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is
   `2500`
-- `ignoreWhiteSpaces`: ignore line with only repeated white spacings (Only in Side by side View).
+- `ignoreWhiteSpaces`: ignore line with only repeated white spacings (Only in Side by side View), using recommended
+  matching type with this option is "words".
 - `maxLineSizeInBlockForComparison`: maximum number os characters of the bigger line in a block to apply comparison,
   default is `200`
 - `compiledTemplates`: object ([Hogan.js](https://github.com/twitter/hogan.js/) template values) with previously
