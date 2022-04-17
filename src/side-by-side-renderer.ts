@@ -100,34 +100,41 @@ export default class SideBySideRenderer {
           left: this.makeHeaderHtml(block.header, file),
           right: this.makeHeaderHtml(''),
         };
-
+        let contextStash: (DiffLineContent & DiffLineContext)[] = []; // if white space are ignored, context  should be relevant
+        let processContext = false;
         this.applyLineGroupping(block).forEach(([contextLines, oldLines, newLines]) => {
           if (oldLines.length && newLines.length && !contextLines.length) {
             this.applyRematchMatching(oldLines, newLines, matcher).map(([oldLines, newLines]) => {
               const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
               fileHtml.left += left;
               fileHtml.right += right;
+              if (!left && !right) {
+                contextStash = [];
+                processContext = false;
+              } else processContext = true;
             });
-          } else if (contextLines.length) {
-            contextLines.forEach(line => {
-              const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
-              const { left, right } = this.generateLineHtml(
-                {
-                  type: renderUtils.CSSLineClass.CONTEXT,
-                  prefix: prefix,
-                  content: content,
-                  number: line.oldNumber,
-                },
-                {
-                  type: renderUtils.CSSLineClass.CONTEXT,
-                  prefix: prefix,
-                  content: content,
-                  number: line.newNumber,
-                },
-              );
-              fileHtml.left += left;
-              fileHtml.right += right;
-            });
+          } else if (contextLines.length || contextStash.length) {
+            if (!processContext) contextStash = contextStash.concat(contextLines);
+            else
+              contextLines.concat(processContext ? contextStash : []).forEach(line => {
+                const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
+                const { left, right } = this.generateLineHtml(
+                  {
+                    type: renderUtils.CSSLineClass.CONTEXT,
+                    prefix: prefix,
+                    content: content,
+                    number: line.oldNumber,
+                  },
+                  {
+                    type: renderUtils.CSSLineClass.CONTEXT,
+                    prefix: prefix,
+                    content: content,
+                    number: line.newNumber,
+                  },
+                );
+                fileHtml.left += left;
+                fileHtml.right += right;
+              });
           } else if (oldLines.length || newLines.length) {
             const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
             fileHtml.left += left;
