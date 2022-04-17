@@ -206,6 +206,7 @@ type Elements = {
   };
   checkboxes: {
     drawFileList: HTMLInputElement;
+    ignoreWhiteSpaces: HTMLInputElement;
   };
 };
 
@@ -265,6 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     checkboxes: {
       drawFileList: getHTMLInputElementById('diff-url-options-show-files'),
+      ignoreWhiteSpaces: getHTMLInputElementById('diff-url-options-ignore-w-spaces'),
     },
   };
 
@@ -277,6 +279,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   config.matchWordsThreshold && (elements.options.wordsThreshold.value = config.matchWordsThreshold.toString());
   config.matchingMaxComparisons &&
     (elements.options.matchingMaxComparisons.value = config.matchingMaxComparisons.toString());
+  config.ignoreWhiteSpaces && (elements.checkboxes.ignoreWhiteSpaces.checked = config.ignoreWhiteSpaces);
 
   Object.entries(elements.options).forEach(([option, element]) =>
     element.addEventListener('change', () => {

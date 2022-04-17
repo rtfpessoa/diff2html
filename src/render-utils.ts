@@ -37,6 +37,7 @@ export interface RenderConfig {
   matchWordsThreshold?: number;
   maxLineLengthHighlight?: number;
   diffStyle?: DiffStyleType;
+  ignoreWhiteSpaces?: boolean;
 }
 
 export const defaultRenderConfig = {
@@ -44,6 +45,7 @@ export const defaultRenderConfig = {
   matchWordsThreshold: 0.25,
   maxLineLengthHighlight: 10000,
   diffStyle: DiffStyleType.WORD,
+  ignoreWhiteSpaces: false,
 };
 
 const separator = '/';
