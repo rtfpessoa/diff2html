@@ -9,6 +9,7 @@ export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
   highlight?: boolean;
   fileListToggle?: boolean;
   fileListStartVisible?: boolean;
+  highlightLanguage?: string;
   /**
    * @deprecated since version 3.1.0
    * Smart selection is now enabled by default with vanilla CSS
@@ -23,6 +24,7 @@ export const defaultDiff2HtmlUIConfig = {
   highlight: true,
   fileListToggle: true,
   fileListStartVisible: false,
+  highlightLanguage: '',
   /**
    * @deprecated since version 3.1.0
    * Smart selection is now enabled by default with vanilla CSS
@@ -141,8 +143,15 @@ export class Diff2HtmlUI {
     files.forEach(file => {
       // HACK: help Typescript know that `this.hljs` is defined since we already checked it
       if (this.hljs === null) return;
-      const language = file.getAttribute('data-lang');
-      const hljsLanguage = language ? getLanguage(language) : 'plaintext';
+      const hljsLanguage = (() => {
+        const highlightLanguage = this.config.highlightLanguage;
+        if (highlightLanguage === '') {
+          const language = file.getAttribute('data-lang');
+          return language ? getLanguage(language) : 'plaintext';
+        } else {
+          return highlightLanguage;
+        }
+      })();
 
       // Collect all the code lines and execute the highlight on them
       const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
