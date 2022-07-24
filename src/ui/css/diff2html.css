@@ -99,6 +99,7 @@
 }
 
 .d2h-files-diff {
+  display: flex;
   width: 100%;
 }
 
