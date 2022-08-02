@@ -6,7 +6,7 @@
  */
 
 .d2h-d-none {
-  display: none;
+  display: none !important;
 }
 
 .d2h-wrapper {
