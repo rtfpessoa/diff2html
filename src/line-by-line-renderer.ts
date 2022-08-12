@@ -63,17 +63,19 @@ export default class LineByLineRenderer {
     const fileIconTemplate = this.hoganUtils.template(iconsBaseTemplatesPath, 'file');
     const fileTagTemplate = this.hoganUtils.template(tagsBaseTemplatesPath, renderUtils.getFileIcon(file));
 
-    return fileDiffTemplate.render({
+    return fileDiffTemplate({
       file: file,
       fileHtmlId: renderUtils.getHtmlId(file),
       diffs: diffs,
-      filePath: filePathTemplate.render(
+      filePath: filePathTemplate(
         {
           fileDiffName: renderUtils.filenameDiff(file),
         },
         {
-          fileIcon: fileIconTemplate,
-          fileTag: fileTagTemplate,
+          partials: {
+            fileIcon: fileIconTemplate,
+            fileTag: fileTagTemplate,
+          },
         },
       ),
     });
