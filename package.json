@@ -82,14 +82,13 @@
   },
   "dependencies": {
     "diff": "5.1.0",
-    "hogan.js": "3.0.2"
+    "wontache": "0.1.0"
   },
   "optionalDependencies": {
     "highlight.js": "11.6.0"
   },
   "devDependencies": {
     "@types/diff": "5.0.2",
-    "@types/hogan.js": "3.0.1",
     "@types/jest": "28.1.6",
     "@types/mkdirp": "1.0.2",
     "@types/node": "18.6.0",

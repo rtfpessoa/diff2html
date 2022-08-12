@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../typings/wontache/wontache.d.ts" />
 /*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +18,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-import * as hogan from 'hogan.js';
+import mustache from 'wontache';
 import nopt from 'nopt';
 import * as mkderp from 'mkdirp';
 
@@ -107,25 +109,20 @@ function removeByteOrderMark(text: string): string {
 }
 
 // Wrap templates
-function wrap(file: string, name: string, openedFile: string): string {
-  const hoganTemplateString = `new Hogan.Template(${hogan.compile(openedFile, { asString: true })})`;
+function wrap(name: string, openedFile: string): string {
+  const templateString = mustache(openedFile).source;
 
   const objectName = options.variable || 'templates';
   const objectAccessor = `${objectName}["${name}"]`;
-  const objectStmt = `${objectAccessor} = ${hoganTemplateString};`;
+  const objectStmt = `${objectAccessor} = ${templateString};`;
 
   switch (options.wrapper) {
-    case 'amd':
-      return `define(${
-        !options.outputdir ? `"${path.join(path.dirname(file), name)}", ` : ''
-      }["hogan.js"], function(Hogan) { return ${hoganTemplateString}; });`;
-
     case 'node':
       // If we have a template per file the export will expose the template directly
       return options.outputdir ? `global.${objectStmt};\nmodule.exports = ${objectAccessor};` : `global.${objectStmt}`;
 
     case 'ts':
-      return `// @ts-ignore\n${objectStmt}`;
+      return `// eslint-disable-next-line @typescript-eslint/ban-ts-comment\n// @ts-ignore\n${objectStmt}`;
     default:
       return objectStmt;
   }
@@ -137,16 +134,18 @@ function prepareOutput(content: string): string {
     case 'amd':
       return content;
     case 'node':
-      return `(function() {
+      return `const mustache = require('wontache');
+(function() {
 if (!!!global.${variableName}) global.${variableName} = {};
-var Hogan = require("hogan.js");
 ${content}
 ${!options.outputdir ? `module.exports = global.${variableName};\n` : ''})();`;
 
     case 'ts':
-      return `import * as Hogan from "hogan.js";
-type CompiledTemplates = { [name: string]: Hogan.Template };
-export const ${variableName}: CompiledTemplates = {};
+      return `/* eslint-disable @typescript-eslint/no-unused-vars */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import mustache, { CompiledTemplate } from 'wontache';
+export const defaultTemplates: { [_: string]: CompiledTemplate } = {};
 ${content}`;
 
     default:
@@ -172,7 +171,7 @@ const templates = extractFiles(options.argv.remain)
     if (!timmedFileContents) return;
 
     const name = namespace(path.basename(file).replace(/\..*$/, ''));
-    const cleanFileContents = wrap(file, name, removeByteOrderMark(timmedFileContents));
+    const cleanFileContents = wrap(name, removeByteOrderMark(timmedFileContents));
 
     if (!options.outputdir) return cleanFileContents;
 
