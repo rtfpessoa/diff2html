@@ -92,19 +92,19 @@ jobs:
           paths:
             - '*'
 
-  build-node-16:
+  build-node-18:
     <<: *build-stable
     docker:
-      - image: node:16
+      - image: node:18
 
-  build-node-17:
+  build-node-16:
     <<: *build-common
     docker:
-      - image: node:17
+      - image: node:16
 
   tag_version:
     docker:
-      - image: node:16
+      - image: node:18
     working_directory: ~/workdir
     steps:
       - attach_workspace:
@@ -122,7 +122,7 @@ jobs:
 
   publish_library:
     docker:
-      - image: node:16
+      - image: node:18
     working_directory: ~/workdir
     steps:
       - attach_workspace:
@@ -196,14 +196,14 @@ workflows:
       - build-node-16:
           requires:
             - checkout-and-version
-      - build-node-17:
+      - build-node-18:
           requires:
             - checkout-and-version
       - publish_approval:
           type: approval
           requires:
             - build-node-16
-            - build-node-17
+            - build-node-18
       - tag_version:
           requires:
             - publish_approval
