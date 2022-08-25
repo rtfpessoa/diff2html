@@ -103,7 +103,8 @@
   overflow-y: hidden;
 }
 
-.d2h-files-diff.d2h-d-none, .d2h-file-diff.d2h-d-none {
+.d2h-files-diff.d2h-d-none,
+.d2h-file-diff.d2h-d-none {
   display: none;
 }
 
