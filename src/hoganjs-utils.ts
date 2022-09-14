@@ -1,4 +1,4 @@
-import * as Hogan from 'hogan.js';
+import mustache, { CompiledTemplate, Partials } from 'wontache';
 
 import { defaultTemplates } from './diff2html-templates';
 
@@ -7,7 +7,7 @@ export interface RawTemplates {
 }
 
 export interface CompiledTemplates {
-  [name: string]: Hogan.Template;
+  [name: string]: CompiledTemplate;
 }
 
 export interface HoganJsUtilsConfig {
@@ -21,7 +21,7 @@ export default class HoganJsUtils {
   constructor({ compiledTemplates = {}, rawTemplates = {} }: HoganJsUtilsConfig) {
     const compiledRawTemplates = Object.entries(rawTemplates).reduce<CompiledTemplates>(
       (previousTemplates, [name, templateString]) => {
-        const compiledTemplate: Hogan.Template = Hogan.compile(templateString, { asString: false });
+        const compiledTemplate: CompiledTemplate = mustache(templateString);
         return { ...previousTemplates, [name]: compiledTemplate };
       },
       {},
@@ -30,21 +30,21 @@ export default class HoganJsUtils {
     this.preCompiledTemplates = { ...defaultTemplates, ...compiledTemplates, ...compiledRawTemplates };
   }
 
-  static compile(templateString: string): Hogan.Template {
-    return Hogan.compile(templateString, { asString: false });
+  static compile(templateString: string): CompiledTemplate {
+    return mustache(templateString);
   }
 
-  render(namespace: string, view: string, params: Hogan.Context, partials?: Hogan.Partials, indent?: string): string {
+  render(namespace: string, view: string, params: object, partials?: Partials): string {
     const templateKey = this.templateKey(namespace, view);
     try {
       const template = this.preCompiledTemplates[templateKey];
-      return template.render(params, partials, indent);
+      return template(params, { partials });
     } catch (e) {
       throw new Error(`Could not find template to render '${templateKey}'`);
     }
   }
 
-  template(namespace: string, view: string): Hogan.Template {
+  template(namespace: string, view: string): CompiledTemplate {
     return this.preCompiledTemplates[this.templateKey(namespace, view)];
   }
 
