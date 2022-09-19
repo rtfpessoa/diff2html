@@ -40,19 +40,14 @@ export default class SideBySideRenderer {
   }
 
   render(diffFiles: DiffFile[]): string {
-    const diffsHtml = diffFiles
-      .map(file => {
-        let diffs;
-        if (file.blocks.length) {
-          diffs = this.generateFileHtml(file);
-        } else {
-          diffs = this.generateEmptyDiff();
-        }
-        return this.makeFileDiffHtml(file, diffs);
-      })
-      .join('\n');
+    const diffsHtml = diffFiles.map(this.renderFile).join('\n');
 
     return this.hoganUtils.render(genericTemplatesPath, 'wrapper', { content: diffsHtml });
+  }
+
+  renderFile(diffFile: DiffFile): string {
+    const diffs = diffFile.blocks.length ? this.generateFileHtml(diffFile) : this.generateEmptyDiff();
+    return this.makeFileDiffHtml(diffFile, diffs);
   }
 
   makeFileDiffHtml(file: DiffFile, diffs: FileHtml): string {

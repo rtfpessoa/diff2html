@@ -1,6 +1,6 @@
 import { closeTags, nodeStream, mergeStreams, getLanguage } from './highlight.js-helpers';
 
-import { html, Diff2HtmlConfig, defaultDiff2HtmlConfig } from '../../diff2html';
+import { html, parse, Diff2HtmlConfig, defaultDiff2HtmlConfig, htmlFile } from '../../diff2html';
 import { DiffFile } from '../../types';
 import { HighlightResult, HLJSApi } from 'highlight.js';
 
@@ -15,6 +15,7 @@ export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
    */
   smartSelection?: boolean;
   fileContentToggle?: boolean;
+  lazy?: boolean;
 }
 
 export const defaultDiff2HtmlUIConfig = {
@@ -29,10 +30,12 @@ export const defaultDiff2HtmlUIConfig = {
    */
   smartSelection: true,
   fileContentToggle: true,
+  lazy: true,
 };
 
 export class Diff2HtmlUI {
   readonly config: typeof defaultDiff2HtmlUIConfig;
+  readonly diffFiles: DiffFile[];
   readonly diffHtml: string;
   readonly targetElement: HTMLElement;
   readonly hljs: HLJSApi | null = null;
@@ -41,13 +44,20 @@ export class Diff2HtmlUI {
 
   constructor(target: HTMLElement, diffInput?: string | DiffFile[], config: Diff2HtmlUIConfig = {}, hljs?: HLJSApi) {
     this.config = { ...defaultDiff2HtmlUIConfig, ...config };
-    this.diffHtml = diffInput !== undefined ? html(diffInput, this.config) : target.innerHTML;
+
+    if (config.lazy && (config.fileListStartVisible ?? true)) {
+      this.config.fileListStartVisible = true;
+    }
+
+    this.diffFiles = typeof diffInput === 'string' ? parse(diffInput, this.config) : diffInput ?? [];
+    this.diffHtml = diffInput !== undefined ? html(this.diffFiles, this.config) : target.innerHTML;
     this.targetElement = target;
     if (hljs !== undefined) this.hljs = hljs;
   }
 
   draw(): void {
     this.targetElement.innerHTML = this.diffHtml;
+    if (this.config.lazy) this.bindDrawFiles();
     if (this.config.synchronisedScroll) this.synchronisedScroll();
     if (this.config.highlight) this.highlightCode();
     if (this.config.fileListToggle) this.fileListToggle(this.config.fileListStartVisible);
@@ -74,6 +84,27 @@ export class Diff2HtmlUI {
       left.addEventListener('scroll', onScroll);
       right.addEventListener('scroll', onScroll);
     });
+  }
+
+  bindDrawFiles(): void {
+    const fileListItems: NodeListOf<HTMLElement> = this.targetElement.querySelectorAll('.d2h-file-name');
+    fileListItems.forEach((i, idx) =>
+      i.addEventListener('click', () => {
+        const fileId = i.getAttribute('href');
+        if (fileId && this.targetElement.querySelector(fileId)) {
+          return;
+        }
+
+        const tmpDiv = document.createElement('div');
+        tmpDiv.innerHTML = htmlFile(this.diffFiles[idx], this.config);
+        const fileElem = tmpDiv.querySelector('.d2h-file-wrapper');
+
+        if (fileElem) {
+          this.targetElement.querySelector('.d2h-wrapper')?.appendChild(fileElem);
+          this.highlightFile(fileElem);
+        }
+      }),
+    );
   }
 
   fileListToggle(startVisible: boolean): void {
@@ -138,43 +169,49 @@ export class Diff2HtmlUI {
 
     // Collect all the diff files and execute the highlight on their lines
     const files = this.targetElement.querySelectorAll('.d2h-file-wrapper');
-    files.forEach(file => {
+    files.forEach(this.highlightFile);
+  }
+
+  highlightFile(file: Element): void {
+    if (this.hljs === null) {
+      throw new Error('Missing a `highlight.js` implementation. Please provide one when instantiating Diff2HtmlUI.');
+    }
+
+    // HACK: help Typescript know that `this.hljs` is defined since we already checked it
+    if (this.hljs === null) return;
+    const language = file.getAttribute('data-lang');
+    const hljsLanguage = language ? getLanguage(language) : 'plaintext';
+
+    // Collect all the code lines and execute the highlight on them
+    const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
+    codeLines.forEach(line => {
       // HACK: help Typescript know that `this.hljs` is defined since we already checked it
       if (this.hljs === null) return;
-      const language = file.getAttribute('data-lang');
-      const hljsLanguage = language ? getLanguage(language) : 'plaintext';
 
-      // Collect all the code lines and execute the highlight on them
-      const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
-      codeLines.forEach(line => {
-        // HACK: help Typescript know that `this.hljs` is defined since we already checked it
-        if (this.hljs === null) return;
+      const text = line.textContent;
+      const lineParent = line.parentNode;
 
-        const text = line.textContent;
-        const lineParent = line.parentNode;
+      if (text === null || lineParent === null || !this.isElement(lineParent)) return;
 
-        if (text === null || lineParent === null || !this.isElement(lineParent)) return;
+      const result: HighlightResult = closeTags(
+        this.hljs.highlight(text, {
+          language: hljsLanguage,
+          ignoreIllegals: true,
+        }),
+      );
 
-        const result: HighlightResult = closeTags(
-          this.hljs.highlight(text, {
-            language: hljsLanguage,
-            ignoreIllegals: true,
-          }),
-        );
+      const originalStream = nodeStream(line);
+      if (originalStream.length) {
+        const resultNode = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+        resultNode.innerHTML = result.value;
+        result.value = mergeStreams(originalStream, nodeStream(resultNode), text);
+      }
 
-        const originalStream = nodeStream(line);
-        if (originalStream.length) {
-          const resultNode = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
-          resultNode.innerHTML = result.value;
-          result.value = mergeStreams(originalStream, nodeStream(resultNode), text);
-        }
-
-        line.classList.add('hljs');
-        if (result.language) {
-          line.classList.add(result.language);
-        }
-        line.innerHTML = result.value;
-      });
+      line.classList.add('hljs');
+      if (result.language) {
+        line.classList.add(result.language);
+      }
+      line.innerHTML = result.value;
     });
   }
 
