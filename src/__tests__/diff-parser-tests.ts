@@ -14,20 +14,20 @@ describe('DiffParser', () => {
         '+test1r\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+test1r",
                     "newNumber": 1,
                     "oldNumber": undefined,
@@ -64,20 +64,20 @@ describe('DiffParser', () => {
         '+test1r\r\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+test1r",
                     "newNumber": 1,
                     "oldNumber": undefined,
@@ -114,20 +114,20 @@ describe('DiffParser', () => {
         '+test1r\r';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+test1r",
                     "newNumber": 1,
                     "oldNumber": undefined,
@@ -164,20 +164,20 @@ describe('DiffParser', () => {
         '+test1r\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+test1r",
                     "newNumber": 1,
                     "oldNumber": undefined,
@@ -214,26 +214,26 @@ describe('DiffParser', () => {
         '+bananas';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 2,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-cenas",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+cenas com ananas",
                     "newNumber": 1,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+bananas",
                     "newNumber": 2,
                     "oldNumber": undefined,
@@ -271,26 +271,26 @@ describe('DiffParser', () => {
         '+bananas';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 2,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-cenas",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+cenas com ananas",
                     "newNumber": 1,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+bananas",
                     "newNumber": 2,
                     "oldNumber": undefined,
@@ -329,26 +329,26 @@ describe('DiffParser', () => {
         '-});\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,3 +0,0 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-define(() => {",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "-  return typeof undefined;",
                     "newNumber": undefined,
                     "oldNumber": 2,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "-});",
                     "newNumber": undefined,
                     "oldNumber": 3,
@@ -390,38 +390,38 @@ describe('DiffParser', () => {
         '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 5,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -0,0 +1,5 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "+var parser = require('./source/git-parser');",
                     "newNumber": 1,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+",
                     "newNumber": 2,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+var patchLineList = [ false, false, false, false ];",
                     "newNumber": 3,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+",
                     "newNumber": 4,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+console.log(parser.parsePatchDiffResult(text, patchLineList));",
                     "newNumber": 5,
                     "oldNumber": undefined,
@@ -463,44 +463,44 @@ describe('DiffParser', () => {
         '+console.log(parser.parsePatchDiffResult(text, patchLineList));\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 6,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,6 +1,5 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "+var parser = require('./source/git-parser');",
                     "newNumber": 1,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+",
                     "newNumber": 2,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
-                    "content": "+var text = 'diff --git a/components/app/app.html b/components/app/app.html\\\\nindex ecb7a95..027bd9b 100644\\\\n--- a/components/app/app.html\\\\n+++ b/components/app/app.html\\\\n@@ -52,0 +53,3 @@\\\\n+\\\\n+\\\\n+\\\\n@@ -56,0 +60,3 @@\\\\n+\\\\n+\\\\n+\\\\n'",
+                  {
+                    "content": "+var text = 'diff --git a/components/app/app.html b/components/app/app.html\\nindex ecb7a95..027bd9b 100644\\n--- a/components/app/app.html\\n+++ b/components/app/app.html\\n@@ -52,0 +53,3 @@\\n+\\n+\\n+\\n@@ -56,0 +60,3 @@\\n+\\n+\\n+\\n'",
                     "newNumber": 3,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+var patchLineList = [ false, false, false, false ];",
                     "newNumber": 4,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+",
                     "newNumber": 5,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+console.log(parser.parsePatchDiffResult(text, patchLineList));",
                     "newNumber": 6,
                     "oldNumber": undefined,
@@ -555,74 +555,74 @@ describe('DiffParser', () => {
         '           dataPriv.set( this, "__className__", this.className );\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 2,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,10 +1,9 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " define([",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"../core\\",",
+                  {
+                    "content": "   "../core",",
                     "newNumber": 2,
                     "oldNumber": 2,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"../var/rnotwhite\\",",
+                  {
+                    "content": "   "../var/rnotwhite",",
                     "newNumber": 3,
                     "oldNumber": 3,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-  \\"../var/strundefined\\",",
+                  {
+                    "content": "-  "../var/strundefined",",
                     "newNumber": undefined,
                     "oldNumber": 4,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "   \\"../data/var/dataPriv\\",",
+                  {
+                    "content": "   "../data/var/dataPriv",",
                     "newNumber": 4,
                     "oldNumber": 5,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"../core/init\\"",
+                  {
+                    "content": "   "../core/init"",
                     "newNumber": 5,
                     "oldNumber": 6,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "-], function( jQuery, rnotwhite, strundefined, dataPriv ) {",
                     "newNumber": undefined,
                     "oldNumber": 7,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+], function( jQuery, rnotwhite, dataPriv ) {",
                     "newNumber": 6,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 7,
                     "oldNumber": 8,
                     "type": "context",
                   },
-                  Object {
-                    "content": " var rclass = /[\\\\t\\\\r\\\\n\\\\f]/g;",
+                  {
+                    "content": " var rclass = /[\\t\\r\\n\\f]/g;",
                     "newNumber": 8,
                     "oldNumber": 9,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 9,
                     "oldNumber": 10,
@@ -633,53 +633,53 @@ describe('DiffParser', () => {
                 "oldStartLine": 1,
                 "oldStartLine2": null,
               },
-              Object {
+              {
                 "header": "@@ -128,7 +127,7 @@ jQuery.fn.extend({",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "         }",
                     "newNumber": 127,
                     "oldNumber": 128,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 128,
                     "oldNumber": 129,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "       // Toggle whole class name",
                     "newNumber": 129,
                     "oldNumber": 130,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-      } else if ( type === strundefined || type === \\"boolean\\" ) {",
+                  {
+                    "content": "-      } else if ( type === strundefined || type === "boolean" ) {",
                     "newNumber": undefined,
                     "oldNumber": 131,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "+      } else if ( value === undefined || type === \\"boolean\\" ) {",
+                  {
+                    "content": "+      } else if ( value === undefined || type === "boolean" ) {",
                     "newNumber": 130,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "         if ( this.className ) {",
                     "newNumber": 131,
                     "oldNumber": 132,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "           // store className if set",
                     "newNumber": 132,
                     "oldNumber": 133,
                     "type": "context",
                   },
-                  Object {
-                    "content": "           dataPriv.set( this, \\"__className__\\", this.className );",
+                  {
+                    "content": "           dataPriv.set( this, "__className__", this.className );",
                     "newNumber": 133,
                     "oldNumber": 134,
                     "type": "context",
@@ -732,56 +732,56 @@ describe('DiffParser', () => {
         '   "./var/slice",\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -101,7 +101,7 @@ var rootjQuery,",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "     // HANDLE: $(function)",
                     "newNumber": 101,
                     "oldNumber": 101,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "     // Shortcut for document ready",
                     "newNumber": 102,
                     "oldNumber": 102,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "     } else if ( jQuery.isFunction( selector ) ) {",
                     "newNumber": 103,
                     "oldNumber": 103,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-      return typeof rootjQuery.ready !== \\"undefined\\" ?",
+                  {
+                    "content": "-      return typeof rootjQuery.ready !== "undefined" ?",
                     "newNumber": undefined,
                     "oldNumber": 104,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+      return rootjQuery.ready !== undefined ?",
                     "newNumber": 104,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "         rootjQuery.ready( selector ) :",
                     "newNumber": 105,
                     "oldNumber": 105,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "         // Execute immediately if ready is not present",
                     "newNumber": 106,
                     "oldNumber": 106,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "         selector( jQuery );",
                     "newNumber": 107,
                     "oldNumber": 107,
@@ -803,44 +803,44 @@ describe('DiffParser', () => {
             "newName": "src/core/init.js",
             "oldName": "src/core/init.js",
           },
-          Object {
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,6 +1,5 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " define([",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./core\\",",
+                  {
+                    "content": "   "./core",",
                     "newNumber": 2,
                     "oldNumber": 2,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-  \\"./var/strundefined\\",",
+                  {
+                    "content": "-  "./var/strundefined",",
                     "newNumber": undefined,
                     "oldNumber": 3,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "   \\"./var/rnotwhite\\",",
+                  {
+                    "content": "   "./var/rnotwhite",",
                     "newNumber": 3,
                     "oldNumber": 4,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/hasOwn\\",",
+                  {
+                    "content": "   "./var/hasOwn",",
                     "newNumber": 4,
                     "oldNumber": 5,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/slice\\",",
+                  {
+                    "content": "   "./var/slice",",
                     "newNumber": 5,
                     "oldNumber": 6,
                     "type": "context",
@@ -896,140 +896,140 @@ describe('DiffParser', () => {
         '       for_each_ref(get_name);\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 9,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@@ -98,20 -98,12 +98,20 @@@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "   return (a_date > b_date) ? -1 : (a_date == b_date) ? 0 : 1;",
                     "newNumber": 98,
                     "oldNumber": 98,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "  }",
                     "newNumber": 99,
                     "oldNumber": 99,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "  ",
                     "newNumber": 100,
                     "oldNumber": 100,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "- static void describe(char *arg)",
                     "newNumber": undefined,
                     "oldNumber": 101,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": " -static void describe(struct commit *cmit, int last_one)",
                     "newNumber": undefined,
                     "oldNumber": 102,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "++static void describe(char *arg, int last_one)",
                     "newNumber": 101,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "  {",
                     "newNumber": 102,
                     "oldNumber": 103,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " + unsigned char sha1[20];",
                     "newNumber": 103,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " + struct commit *cmit;",
                     "newNumber": 104,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "   struct commit_list *list;",
                     "newNumber": 105,
                     "oldNumber": 104,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "   static int initialized = 0;",
                     "newNumber": 106,
                     "oldNumber": 105,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "   struct commit_name *n;",
                     "newNumber": 107,
                     "oldNumber": 106,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "  ",
                     "newNumber": 108,
                     "oldNumber": 107,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " + if (get_sha1(arg, sha1) < 0)",
                     "newNumber": 109,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " +     usage(describe_usage);",
                     "newNumber": 110,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " + cmit = lookup_commit_reference(sha1);",
                     "newNumber": 111,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " + if (!cmit)",
                     "newNumber": 112,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " +     usage(describe_usage);",
                     "newNumber": 113,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " +",
                     "newNumber": 114,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "   if (!initialized) {",
                     "newNumber": 115,
                     "oldNumber": 108,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "       initialized = 1;",
                     "newNumber": 116,
                     "oldNumber": 109,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "       for_each_ref(get_name);",
                     "newNumber": 117,
                     "oldNumber": 110,
@@ -1042,7 +1042,7 @@ describe('DiffParser', () => {
               },
             ],
             "checksumAfter": "fabadb8",
-            "checksumBefore": Array [
+            "checksumBefore": [
               "cc95eb0",
               "4866510",
             ],
@@ -1065,10 +1065,10 @@ describe('DiffParser', () => {
         'copy to more-index.js\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [],
+            "blocks": [],
             "changedPercentage": 5,
             "deletedLines": 0,
             "isCopy": true,
@@ -1088,10 +1088,10 @@ describe('DiffParser', () => {
         'rename to other-index.js\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [],
+            "blocks": [],
             "deletedLines": 0,
             "isGitDiff": true,
             "isRename": true,
@@ -1114,20 +1114,20 @@ describe('DiffParser', () => {
         '+test1r\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+test1r",
                     "newNumber": 1,
                     "oldNumber": undefined,
@@ -1171,26 +1171,26 @@ describe('DiffParser', () => {
       ].join('\n');
       const result = parse(diffs);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 2,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+test1r",
                     "newNumber": 1,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+test2r",
                     "newNumber": 2,
                     "oldNumber": undefined,
@@ -1208,25 +1208,25 @@ describe('DiffParser', () => {
             "newName": "sample.js",
             "oldName": "sample.js",
           },
-          Object {
+          {
             "addedLines": 2,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+test1r",
                     "newNumber": 1,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+test2r",
                     "newNumber": 2,
                     "oldNumber": undefined,
@@ -1253,26 +1253,26 @@ describe('DiffParser', () => {
         '--- a/sample.js\n' + '+++ b/sample.js\n' + '@@ -1 +1,2 @@\n' + '-test\n' + '+test1r\n' + '+test2r\n';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 2,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "+test1r",
                     "newNumber": 1,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+test2r",
                     "newNumber": 2,
                     "oldNumber": undefined,
@@ -1308,14 +1308,14 @@ describe('DiffParser', () => {
         '+test1';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "-test",
                     "newNumber": undefined,
                     "oldNumber": 1,
@@ -1326,10 +1326,10 @@ describe('DiffParser', () => {
                 "oldStartLine": 1,
                 "oldStartLine2": null,
               },
-              Object {
+              {
                 "header": "@@ -10 +20,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "+test",
                     "newNumber": 20,
                     "oldNumber": undefined,
@@ -1347,13 +1347,13 @@ describe('DiffParser', () => {
             "newName": "sample.js",
             "oldName": "sample.js",
           },
-          Object {
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1 +1,2 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": "+test1",
                     "newNumber": 1,
                     "oldNumber": undefined,
@@ -1391,62 +1391,62 @@ describe('DiffParser', () => {
         '++++ 2';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 3,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,8 +1,8 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " test",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 2,
                     "oldNumber": 2,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "-- 1",
                     "newNumber": undefined,
                     "oldNumber": 3,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "--- 1",
                     "newNumber": undefined,
                     "oldNumber": 4,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": "---- 1",
                     "newNumber": undefined,
                     "oldNumber": 5,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 3,
                     "oldNumber": 6,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "++ 2",
                     "newNumber": 4,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+++ 2",
                     "newNumber": 5,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "++++ 2",
                     "newNumber": 6,
                     "oldNumber": undefined,
@@ -1472,14 +1472,14 @@ describe('DiffParser', () => {
       const diff = '--- sample.js\n' + '+++ sample.js\n' + '@@ @@\n' + ' test';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " test",
                     "newNumber": 0,
                     "oldNumber": 0,
@@ -1510,13 +1510,13 @@ describe('DiffParser', () => {
         'Binary files differ';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "Binary files differ",
-                "lines": Array [],
+                "lines": [],
                 "newStartLine": 0,
                 "oldStartLine": 0,
                 "oldStartLine2": null,
@@ -1553,38 +1553,38 @@ describe('DiffParser', () => {
         ' ';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,4 +1,32 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " function foo() {",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-var bar = \\"Whoops!\\";",
+                  {
+                    "content": "-var bar = "Whoops!";",
                     "newNumber": undefined,
                     "oldNumber": 2,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "+var baz = \\"Whoops!\\";",
+                  {
+                    "content": "+var baz = "Whoops!";",
                     "newNumber": 2,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " }",
                     "newNumber": 3,
                     "oldNumber": 3,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 4,
                     "oldNumber": 4,
@@ -1657,56 +1657,56 @@ describe('DiffParser', () => {
         ' ';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 2,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,6 +1,8 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " class Test {",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 2,
                     "oldNumber": 2,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "   def method1 = ???",
                     "newNumber": 3,
                     "oldNumber": 3,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "+",
                     "newNumber": 4,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": "+  def method2 = ???",
                     "newNumber": 5,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 6,
                     "oldNumber": 4,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "   def myMethod = ???",
                     "newNumber": 7,
                     "oldNumber": 5,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 8,
                     "oldNumber": 6,
@@ -1717,46 +1717,46 @@ describe('DiffParser', () => {
                 "oldStartLine": 1,
                 "oldStartLine2": null,
               },
-              Object {
+              {
                 "header": "@@ -10,7 +12,6 @@ class Test {",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " ",
                     "newNumber": 12,
                     "oldNumber": 10,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "   def + = ???",
                     "newNumber": 13,
                     "oldNumber": 11,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 14,
                     "oldNumber": 12,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": "-  def |> = ???",
                     "newNumber": undefined,
                     "oldNumber": 13,
                     "type": "delete",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 15,
                     "oldNumber": 14,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " }",
                     "newNumber": 16,
                     "oldNumber": 15,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 17,
                     "oldNumber": 16,
@@ -1780,12 +1780,12 @@ describe('DiffParser', () => {
             "oldName": "	Test.scala",
             "unchangedPercentage": 88,
           },
-          Object {
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "Binary file",
-                "lines": Array [],
+                "lines": [],
                 "newStartLine": 0,
                 "oldStartLine": 0,
                 "oldStartLine2": null,
@@ -1802,37 +1802,37 @@ describe('DiffParser', () => {
             "newName": "	tardis.png",
             "oldName": "/dev/null",
           },
-          Object {
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,4 +1,32 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " function foo() {",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-var bar = \\"Whoops!\\";",
+                  {
+                    "content": "-var bar = "Whoops!";",
                     "newNumber": undefined,
                     "oldNumber": 2,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "+var baz = \\"Whoops!\\";",
+                  {
+                    "content": "+var baz = "Whoops!";",
                     "newNumber": 2,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " }",
                     "newNumber": 3,
                     "oldNumber": 3,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 4,
                     "oldNumber": 4,
@@ -1895,13 +1895,13 @@ describe('DiffParser', () => {
         ' ';
       const result = parse(diff);
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "GIT binary patch",
-                "lines": Array [],
+                "lines": [],
                 "newStartLine": 0,
                 "oldStartLine": 0,
                 "oldStartLine2": null,
@@ -1918,37 +1918,37 @@ describe('DiffParser', () => {
             "newName": "favicon.png",
             "oldName": "favicon.png",
           },
-          Object {
+          {
             "addedLines": 1,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,4 +1,32 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " function foo() {",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-var bar = \\"Whoops!\\";",
+                  {
+                    "content": "-var bar = "Whoops!";",
                     "newNumber": undefined,
                     "oldNumber": 2,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "+var baz = \\"Whoops!\\";",
+                  {
+                    "content": "+var baz = "Whoops!";",
                     "newNumber": 2,
                     "oldNumber": undefined,
                     "type": "insert",
                   },
-                  Object {
+                  {
                     "content": " }",
                     "newNumber": 3,
                     "oldNumber": 3,
                     "type": "context",
                   },
-                  Object {
+                  {
                     "content": " ",
                     "newNumber": 4,
                     "oldNumber": 4,
@@ -2004,13 +2004,13 @@ describe('DiffParser', () => {
         '   "./var/slice",\n';
       const result = parse(diff, { diffMaxChanges: 1 });
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "Diff too big to be displayed",
-                "lines": Array [],
+                "lines": [],
                 "newStartLine": 0,
                 "oldStartLine": 0,
                 "oldStartLine2": null,
@@ -2027,44 +2027,44 @@ describe('DiffParser', () => {
             "newName": "src/core/init.js",
             "oldName": "src/core/init.js",
           },
-          Object {
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,6 +1,5 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " define([",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./core\\",",
+                  {
+                    "content": "   "./core",",
                     "newNumber": 2,
                     "oldNumber": 2,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-  \\"./var/strundefined\\",",
+                  {
+                    "content": "-  "./var/strundefined",",
                     "newNumber": undefined,
                     "oldNumber": 3,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "   \\"./var/rnotwhite\\",",
+                  {
+                    "content": "   "./var/rnotwhite",",
                     "newNumber": 3,
                     "oldNumber": 4,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/hasOwn\\",",
+                  {
+                    "content": "   "./var/hasOwn",",
                     "newNumber": 4,
                     "oldNumber": 5,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/slice\\",",
+                  {
+                    "content": "   "./var/slice",",
                     "newNumber": 5,
                     "oldNumber": 6,
                     "type": "context",
@@ -2117,13 +2117,13 @@ describe('DiffParser', () => {
         '   "./var/slice",\n';
       const result = parse(diff, { diffMaxChanges: 1, diffTooBigMessage: (i: number) => `Custom ${i}` });
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "Custom 0",
-                "lines": Array [],
+                "lines": [],
                 "newStartLine": 0,
                 "oldStartLine": 0,
                 "oldStartLine2": null,
@@ -2140,44 +2140,44 @@ describe('DiffParser', () => {
             "newName": "src/core/init.js",
             "oldName": "src/core/init.js",
           },
-          Object {
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,6 +1,5 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " define([",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./core\\",",
+                  {
+                    "content": "   "./core",",
                     "newNumber": 2,
                     "oldNumber": 2,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-  \\"./var/strundefined\\",",
+                  {
+                    "content": "-  "./var/strundefined",",
                     "newNumber": undefined,
                     "oldNumber": 3,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "   \\"./var/rnotwhite\\",",
+                  {
+                    "content": "   "./var/rnotwhite",",
                     "newNumber": 3,
                     "oldNumber": 4,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/hasOwn\\",",
+                  {
+                    "content": "   "./var/hasOwn",",
                     "newNumber": 4,
                     "oldNumber": 5,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/slice\\",",
+                  {
+                    "content": "   "./var/slice",",
                     "newNumber": 5,
                     "oldNumber": 6,
                     "type": "context",
@@ -2230,13 +2230,13 @@ describe('DiffParser', () => {
         '   "./var/slice",\n';
       const result = parse(diff, { diffMaxLineLength: 50 });
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "Diff too big to be displayed",
-                "lines": Array [],
+                "lines": [],
                 "newStartLine": 0,
                 "oldStartLine": 0,
                 "oldStartLine2": null,
@@ -2253,44 +2253,44 @@ describe('DiffParser', () => {
             "newName": "src/core/init.js",
             "oldName": "src/core/init.js",
           },
-          Object {
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,6 +1,5 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " define([",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./core\\",",
+                  {
+                    "content": "   "./core",",
                     "newNumber": 2,
                     "oldNumber": 2,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-  \\"./var/strundefined\\",",
+                  {
+                    "content": "-  "./var/strundefined",",
                     "newNumber": undefined,
                     "oldNumber": 3,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "   \\"./var/rnotwhite\\",",
+                  {
+                    "content": "   "./var/rnotwhite",",
                     "newNumber": 3,
                     "oldNumber": 4,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/hasOwn\\",",
+                  {
+                    "content": "   "./var/hasOwn",",
                     "newNumber": 4,
                     "oldNumber": 5,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/slice\\",",
+                  {
+                    "content": "   "./var/slice",",
                     "newNumber": 5,
                     "oldNumber": 6,
                     "type": "context",
@@ -2343,13 +2343,13 @@ describe('DiffParser', () => {
         '   "./var/slice",\n';
       const result = parse(diff, { diffMaxLineLength: 50, diffTooBigMessage: (i: number) => `Custom ${i}` });
       expect(result).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "Custom 0",
-                "lines": Array [],
+                "lines": [],
                 "newStartLine": 0,
                 "oldStartLine": 0,
                 "oldStartLine2": null,
@@ -2366,44 +2366,44 @@ describe('DiffParser', () => {
             "newName": "src/core/init.js",
             "oldName": "src/core/init.js",
           },
-          Object {
+          {
             "addedLines": 0,
-            "blocks": Array [
-              Object {
+            "blocks": [
+              {
                 "header": "@@ -1,6 +1,5 @@",
-                "lines": Array [
-                  Object {
+                "lines": [
+                  {
                     "content": " define([",
                     "newNumber": 1,
                     "oldNumber": 1,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./core\\",",
+                  {
+                    "content": "   "./core",",
                     "newNumber": 2,
                     "oldNumber": 2,
                     "type": "context",
                   },
-                  Object {
-                    "content": "-  \\"./var/strundefined\\",",
+                  {
+                    "content": "-  "./var/strundefined",",
                     "newNumber": undefined,
                     "oldNumber": 3,
                     "type": "delete",
                   },
-                  Object {
-                    "content": "   \\"./var/rnotwhite\\",",
+                  {
+                    "content": "   "./var/rnotwhite",",
                     "newNumber": 3,
                     "oldNumber": 4,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/hasOwn\\",",
+                  {
+                    "content": "   "./var/hasOwn",",
                     "newNumber": 4,
                     "oldNumber": 5,
                     "type": "context",
                   },
-                  Object {
-                    "content": "   \\"./var/slice\\",",
+                  {
+                    "content": "   "./var/slice",",
                     "newNumber": 5,
                     "oldNumber": 6,
                     "type": "context",
