@@ -177,7 +177,7 @@ jobs:
 
   publish_website:
     machine:
-      image: ubuntu-1604:202004-01
+      image: ubuntu-2204:current
     working_directory: ~/workdir
     steps:
       - attach_workspace:
