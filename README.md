@@ -385,6 +385,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
   For example: `{ "tag-file-changed": "<span class="d2h-tag d2h-changed d2h-changed-tag">MODIFIED</span>" }`
   > For more information regarding the possible templates look into
   > [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
+- `highlightLanguages`: Map of extension to language name, used for highlighting. This overrides the default language
+  detection based on file extensions.
 
 ### Diff2Html Browser
 

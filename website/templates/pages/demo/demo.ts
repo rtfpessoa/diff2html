@@ -22,7 +22,7 @@ import './demo.css';
 type URLParams = {
   diff?: string;
   diffTooBigMessage?: string;
-  [key: string]: string | boolean | number | undefined;
+  [key: string]: string | boolean | number | Map<string, string> | undefined;
 };
 
 const searchParam = 'diff';
