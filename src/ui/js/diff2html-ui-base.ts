@@ -146,6 +146,10 @@ export class Diff2HtmlUI {
 
       const language = file.getAttribute('data-lang');
 
+      if (!(this.config.highlightLanguages instanceof Map)) {
+        this.config.highlightLanguages = new Map(Object.entries(this.config.highlightLanguages));
+      }
+
       const hljsLanguage =
         language && this.config.highlightLanguages.has(language)
           ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
