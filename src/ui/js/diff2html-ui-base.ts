@@ -16,6 +16,7 @@ export interface Diff2HtmlUIConfig extends Diff2HtmlConfig {
    */
   smartSelection?: boolean;
   fileContentToggle?: boolean;
+  stickyFileHeaders?: boolean;
 }
 
 export const defaultDiff2HtmlUIConfig = {
@@ -31,6 +32,7 @@ export const defaultDiff2HtmlUIConfig = {
    */
   smartSelection: true,
   fileContentToggle: true,
+  stickyFileHeaders: false,
 };
 
 export class Diff2HtmlUI {
@@ -54,6 +56,7 @@ export class Diff2HtmlUI {
     if (this.config.highlight) this.highlightCode();
     if (this.config.fileListToggle) this.fileListToggle(this.config.fileListStartVisible);
     if (this.config.fileContentToggle) this.fileContentToggle();
+    if (this.config.stickyFileHeaders) this.stickyFileHeaders();
   }
 
   synchronisedScroll(): void {
@@ -185,6 +188,12 @@ export class Diff2HtmlUI {
         }
         line.innerHTML = result.value;
       });
+    });
+  }
+
+  stickyFileHeaders(): void {
+    this.targetElement.querySelectorAll('.d2h-file-header').forEach(header => {
+      header.classList.add('d2h-sticky-header');
     });
   }
 

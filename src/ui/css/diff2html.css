@@ -17,6 +17,11 @@
   background-color: #f7f7f7;
   font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+.d2h-file-header.d2h-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 
 .d2h-file-stats {
   display: -webkit-box;
