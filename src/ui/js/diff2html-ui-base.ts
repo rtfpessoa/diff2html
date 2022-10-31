@@ -32,7 +32,7 @@ export const defaultDiff2HtmlUIConfig = {
    */
   smartSelection: true,
   fileContentToggle: true,
-  stickyFileHeaders: false,
+  stickyFileHeaders: true,
 };
 
 export class Diff2HtmlUI {
