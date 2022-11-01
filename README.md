@@ -156,6 +156,7 @@ draw(): void
 synchronisedScroll(): void
 fileListToggle(startVisible: boolean): void
 highlightCode(): void
+stickyFileHeaders(): void
 ```
 
 ### Diff2HtmlUI Configuration
@@ -165,6 +166,7 @@ highlightCode(): void
 - `fileListToggle`: allow the file summary list to be toggled: `true` or `false`, default is `true`
 - `fileListStartVisible`: choose if the file summary list starts visible: `true` or `false`, default is `false`
 - `fileContentToggle`: allow each file contents to be toggled: `true` or `false`, default is `true`
+- `stickyFileHeaders`: make file headers sticky: `true` or `false`, default is `true`
 - [All the options](#diff2html-configuration) from Diff2Html are also valid configurations in Diff2HtmlUI
 
 ### Diff2HtmlUI Browser
