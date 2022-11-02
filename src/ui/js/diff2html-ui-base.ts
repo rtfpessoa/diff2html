@@ -137,16 +137,14 @@ export class Diff2HtmlUI {
   }
 
   highlightCode(): void {
-    if (this.hljs === null) {
+    const hljs = this.hljs;
+    if (hljs === null) {
       throw new Error('Missing a `highlight.js` implementation. Please provide one when instantiating Diff2HtmlUI.');
     }
 
     // Collect all the diff files and execute the highlight on their lines
     const files = this.targetElement.querySelectorAll('.d2h-file-wrapper');
     files.forEach(file => {
-      // HACK: help Typescript know that `this.hljs` is defined since we already checked it
-      if (this.hljs === null) return;
-
       const language = file.getAttribute('data-lang');
 
       if (!(this.config.highlightLanguages instanceof Map)) {
@@ -164,16 +162,13 @@ export class Diff2HtmlUI {
       // Collect all the code lines and execute the highlight on them
       const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
       codeLines.forEach(line => {
-        // HACK: help Typescript know that `this.hljs` is defined since we already checked it
-        if (this.hljs === null) return;
-
         const text = line.textContent;
         const lineParent = line.parentNode;
 
         if (text === null || lineParent === null || !this.isElement(lineParent)) return;
 
         const result: HighlightResult = closeTags(
-          this.hljs.highlight(text, {
+          hljs.highlight(text, {
             language: hljsLanguage,
             ignoreIllegals: true,
           }),
