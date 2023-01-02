@@ -100,7 +100,7 @@
 }
 
 .d2h-files-diff {
-  display: flex;
+  display: table;
   width: 100%;
 }
 
