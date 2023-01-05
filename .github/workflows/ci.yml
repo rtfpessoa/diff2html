@@ -1,0 +1,12 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-and-publish:
+    uses: ./.github/workflows/test-and-publish.yml
+    with:
+      environment: dev
+    secrets: inherit
