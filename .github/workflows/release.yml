@@ -22,8 +22,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: docs
+          path: docs/
       - name: Publish to S3
+        working-directory: docs
         run: |
-          cd docs
           aws s3 sync --region eu-west-1 --delete . s3://diff2html.xyz --metadata-directive REPLACE --cache-control max-age=31557600
           aws cloudfront create-invalidation --region eu-west-1 --distribution-id $AWS_CF_DISTRIBUTION_ID --paths /index.html /demo.html /sitemap.xml /robots.txt
