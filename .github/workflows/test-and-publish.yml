@@ -84,6 +84,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: versions
+      - name: Store version
+        run: echo "version=$(cat .version)" >> $GITHUB_ENV
       - name: Configure Git
         run: |
             git config user.email "gh-actions@users.noreply.github.com"
@@ -140,6 +142,11 @@ jobs:
             yarn publish --tag $(cat .tag) --non-interactive --new-version $(cat .version)
             # HACK: Restore npm package name
             sed -i 's/^  "name":.*/  "name": "diff2html",/g' package.json
+      - name: Tag commit
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          tag: "${{ env.version }}"
       - name: Upload docs
         uses: actions/upload-artifact@v3
         with:
