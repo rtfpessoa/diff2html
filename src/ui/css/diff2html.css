@@ -133,7 +133,7 @@
   display: inline-block;
   white-space: nowrap;
   user-select: none;
-  width: 100%;
+  width: auto;
   /* Compensate for the absolute positioning of the line numbers */
   padding: 0 4.5em;
 }
