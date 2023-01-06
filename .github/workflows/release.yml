@@ -25,6 +25,11 @@ jobs:
           path: docs/
       - name: Publish to S3
         working-directory: docs
+        env:
+          AWS_CF_DISTRIBUTION_ID: ${{ secrets.AWS_CF_DISTRIBUTION_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: |
           aws s3 sync --region eu-west-1 --delete . s3://diff2html.xyz --metadata-directive REPLACE --cache-control max-age=31557600
           aws cloudfront create-invalidation --region eu-west-1 --distribution-id $AWS_CF_DISTRIBUTION_ID --paths /index.html /demo.html /sitemap.xml /robots.txt
