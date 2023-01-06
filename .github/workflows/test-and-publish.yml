@@ -85,6 +85,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: versions
+      - name: Store version
+        run: echo "version=$(cat .version)" >> $GITHUB_ENV
       - name: Configure Git
         run: |
             git config user.email "gh-actions@users.noreply.github.com"
