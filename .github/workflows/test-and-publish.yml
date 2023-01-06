@@ -26,6 +26,7 @@ jobs:
           export NEXT_VERSION="$(/bin/git-version --folder=$PWD --release-branch=master)"
           echo "Next version is ${NEXT_VERSION}"
           echo "${NEXT_VERSION}" > .version
+          echo "version=${NEXT_VERSION}" >> $GITHUB_ENV
       - name: Get next npm tag name
         run: |
           if [ "${GITHUB_REF_NAME}" = "master" ]; then
@@ -140,6 +141,11 @@ jobs:
             yarn publish --tag $(cat .tag) --non-interactive --new-version $(cat .version)
             # HACK: Restore npm package name
             sed -i 's/^  "name":.*/  "name": "diff2html",/g' package.json
+      - name: Tag commit
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          tag: "${{ env.version }}"
       - name: Upload docs
         uses: actions/upload-artifact@v3
         with:
