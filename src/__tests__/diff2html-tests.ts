@@ -439,7 +439,7 @@ describe('Diff2Html', () => {
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
             <td class="d2h-info">
-                <div class="d2h-code-side-line"></div>
+                <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr><tr>
             <td class="d2h-code-side-linenumber d2h-ins d2h-change">
@@ -510,7 +510,7 @@ describe('Diff2Html', () => {
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
             <td class="d2h-info">
-                <div class="d2h-code-side-line"></div>
+                <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr><tr>
             <td class="d2h-code-side-linenumber d2h-ins d2h-change">
@@ -601,7 +601,7 @@ describe('Diff2Html', () => {
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
             <td class="d2h-info">
-                <div class="d2h-code-side-line"></div>
+                <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr><tr>
             <td class="d2h-code-side-linenumber d2h-ins d2h-change">
