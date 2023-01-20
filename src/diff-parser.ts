@@ -272,7 +272,7 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     const nxtLine = diffLines[lineIndex + 1];
     const afterNxtLine = diffLines[lineIndex + 2];
 
-    if (line.startsWith('diff')) {
+    if (line.startsWith('diff --git') || line.startsWith('diff --combined')) {
       startFile();
 
       // diff --git a/blocked_delta_results.png b/blocked_delta_results.png
@@ -287,6 +287,22 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       }
 
       currentFile.isGitDiff = true;
+      return;
+    }
+
+    if (line.startsWith('Binary files') && !currentFile?.isGitDiff) {
+      startFile();
+      const unixDiffBinaryStart = /^Binary files "?([a-ciow]\/.+)"? and "?([a-ciow]\/.+)"? differ/;
+      if ((values = unixDiffBinaryStart.exec(line))) {
+        possibleOldName = getFilename(values[1], undefined, config.dstPrefix);
+        possibleNewName = getFilename(values[2], undefined, config.srcPrefix);
+      }
+
+      if (currentFile === null) {
+        throw new Error('Where is my file !!!');
+      }
+
+      currentFile.isBinary = true;
       return;
     }
 
