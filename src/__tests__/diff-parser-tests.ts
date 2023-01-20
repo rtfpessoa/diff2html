@@ -2427,5 +2427,96 @@ describe('DiffParser', () => {
         ]
       `);
     });
+
+    it('should parse unix diff with binary file', () => {
+      const diff =
+        'diff -ur a/htest.html b/htest.html\n' +
+        '--- a/htest.html        2023-01-10 09:43:04.284427636 +0800\n' +
+        '+++ b/htest.html        2023-01-10 09:43:10.308388990 +0800\n' +
+        '@@ -1 +1 @@\n' +
+        '-<a>test</a>\n' +
+        '+<a>new test</a>\n' +
+        'Binary files a/image.gif and b/image.gif differ\n' +
+        'diff -ur a/test.json b/test.json\n' +
+        '--- a/test.json 2023-01-10 09:43:07.832404870 +0800\n' +
+        '+++ b/test.json 2023-01-10 09:43:12.708373605 +0800\n' +
+        '@@ -1 +1 @@\n' +
+        '-{"list": [1, 2]}\n' +
+        '+{"list": [1, 2, 3]}';
+
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "addedLines": 1,
+            "blocks": [
+              {
+                "header": "@@ -1 +1 @@",
+                "lines": [
+                  {
+                    "content": "-<a>test</a>",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  {
+                    "content": "+<a>new test</a>",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 1,
+            "isCombined": false,
+            "language": "html",
+            "newName": "htest.html",
+            "oldName": "htest.html",
+          },
+          {
+            "addedLines": 0,
+            "blocks": [],
+            "deletedLines": 0,
+            "isBinary": true,
+            "newName": "image.gif",
+            "oldName": "image.gif",
+          },
+          {
+            "addedLines": 1,
+            "blocks": [
+              {
+                "header": "@@ -1 +1 @@",
+                "lines": [
+                  {
+                    "content": "-{"list": [1, 2]}",
+                    "newNumber": undefined,
+                    "oldNumber": 1,
+                    "type": "delete",
+                  },
+                  {
+                    "content": "+{"list": [1, 2, 3]}",
+                    "newNumber": 1,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "deletedLines": 1,
+            "isCombined": false,
+            "language": "json",
+            "newName": "test.json",
+            "oldName": "test.json",
+          },
+        ]
+      `);
+    });
   });
 });
