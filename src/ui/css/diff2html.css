@@ -124,7 +124,7 @@
   display: inline-block;
   white-space: nowrap;
   user-select: none;
-  width: 100%;
+  width: calc(100% - 16em);
   /* Compensate for the absolute positioning of the line numbers */
   padding: 0 8em;
 }
@@ -133,7 +133,7 @@
   display: inline-block;
   white-space: nowrap;
   user-select: none;
-  width: auto;
+  width: calc(100% - 9em);
   /* Compensate for the absolute positioning of the line numbers */
   padding: 0 4.5em;
 }
