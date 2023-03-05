@@ -55,7 +55,7 @@ export default class SideBySideRenderer {
     return this.hoganUtils.render(genericTemplatesPath, 'wrapper', { content: diffsHtml });
   }
 
-  makeFileDiffHtml(file: DiffFile, diffs: FileHtml): string {
+  makeFileDiffHtml(file: DiffFile, diffs: string): string {
     if (this.config.renderNothingWhenEmpty && Array.isArray(file.blocks) && file.blocks.length === 0) return '';
 
     const fileDiffTemplate = this.hoganUtils.template(baseTemplatesPath, 'file-diff');
@@ -79,34 +79,32 @@ export default class SideBySideRenderer {
     });
   }
 
-  generateEmptyDiff(): FileHtml {
-    return {
-      right: '',
-      left: this.hoganUtils.render(genericTemplatesPath, 'empty-diff', {
-        contentClass: 'd2h-code-side-line',
-        CSSLineClass: renderUtils.CSSLineClass,
-      }),
-    };
+  generateEmptyDiff(): string {
+    return this.hoganUtils.render(genericTemplatesPath, 'empty-diff', {
+      contentClass: 'd2h-code-side-line',
+      colspan: '4',
+      CSSLineClass: renderUtils.CSSLineClass,
+    });
   }
 
-  generateFileHtml(file: DiffFile): FileHtml {
+  generateFileHtml(file: DiffFile): string {
     const matcher = Rematch.newMatcherFn(
       Rematch.newDistanceFn((e: DiffLine) => renderUtils.deconstructLine(e.content, file.isCombined).content),
     );
 
     return file.blocks
       .map(block => {
-        const fileHtml = {
-          left: this.makeHeaderHtml(block.header, file),
-          right: this.makeHeaderHtml(''),
+        const fileHtml: FileHtml = {
+          left: [this.makeHeaderHtml(block.header, file)],
+          right: [''],
         };
 
-        this.applyLineGroupping(block).forEach(([contextLines, oldLines, newLines]) => {
+        this.applyLineGrouping(block).forEach(([contextLines, oldLines, newLines]) => {
           if (oldLines.length && newLines.length && !contextLines.length) {
             this.applyRematchMatching(oldLines, newLines, matcher).map(([oldLines, newLines]) => {
               const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
-              fileHtml.left += left;
-              fileHtml.right += right;
+              fileHtml.left.push(...left);
+              fileHtml.right.push(...right);
             });
           } else if (contextLines.length) {
             contextLines.forEach(line => {
@@ -125,13 +123,13 @@ export default class SideBySideRenderer {
                   number: line.newNumber,
                 },
               );
-              fileHtml.left += left;
-              fileHtml.right += right;
+              fileHtml.left.push(...left);
+              fileHtml.right.push(...right);
             });
           } else if (oldLines.length || newLines.length) {
             const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
-            fileHtml.left += left;
-            fileHtml.right += right;
+            fileHtml.left.push(...left);
+            fileHtml.right.push(...right);
           } else {
             console.error('Unknown state reached while processing groups of lines', contextLines, oldLines, newLines);
           }
@@ -139,15 +137,19 @@ export default class SideBySideRenderer {
 
         return fileHtml;
       })
-      .reduce(
-        (accomulated, html) => {
-          return { left: accomulated.left + html.left, right: accomulated.right + html.right };
-        },
-        { left: '', right: '' },
-      );
+      .map((block_html: FileHtml) => {
+        let block_html_string = '';
+        for (let block_line_index = 0; block_line_index < block_html.left.length; block_line_index++) {
+          block_html_string = block_html_string.concat(
+            `<tr>${block_html.left[block_line_index]} ${block_html.right[block_line_index]}</tr>`,
+          );
+        }
+        return block_html_string;
+      })
+      .join('\n');
   }
 
-  applyLineGroupping(block: DiffBlock): DiffLineGroups {
+  applyLineGrouping(block: DiffBlock): DiffLineGroups {
     const blockLinesGroups: DiffLineGroups = [];
 
     let oldLines: (DiffLineDeleted & DiffLineContent)[] = [];
@@ -206,6 +208,8 @@ export default class SideBySideRenderer {
   makeHeaderHtml(blockHeader: string, file?: DiffFile): string {
     return this.hoganUtils.render(genericTemplatesPath, 'block-header', {
       CSSLineClass: renderUtils.CSSLineClass,
+      margin_colspan: '1',
+      colspan: '3',
       blockHeader: file?.isTooBig ? blockHeader : renderUtils.escapeForHtml(blockHeader),
       lineClass: 'd2h-code-side-linenumber',
       contentClass: 'd2h-code-side-line',
@@ -213,9 +217,9 @@ export default class SideBySideRenderer {
   }
 
   processChangedLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
-    const fileHtml = {
-      right: '',
-      left: '',
+    const fileHtml: FileHtml = {
+      left: [],
+      right: [],
     };
 
     const maxLinesNumber = Math.max(oldLines.length, newLines.length);
@@ -263,8 +267,8 @@ export default class SideBySideRenderer {
           : undefined;
 
       const { left, right } = this.generateLineHtml(preparedOldLine, preparedNewLine);
-      fileHtml.left += left;
-      fileHtml.right += right;
+      fileHtml.left.push(...left);
+      fileHtml.right.push(...right);
     }
 
     return fileHtml;
@@ -272,8 +276,8 @@ export default class SideBySideRenderer {
 
   generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
     return {
-      left: this.generateSingleHtml(oldLine),
-      right: this.generateSingleHtml(newLine),
+      left: [this.generateSingleHtml(oldLine)],
+      right: [this.generateSingleHtml(newLine)],
     };
   }
 
@@ -281,14 +285,22 @@ export default class SideBySideRenderer {
     const lineClass = 'd2h-code-side-linenumber';
     const contentClass = 'd2h-code-side-line';
 
-    return this.hoganUtils.render(genericTemplatesPath, 'line', {
-      type: line?.type || `${renderUtils.CSSLineClass.CONTEXT} d2h-emptyplaceholder`,
+    const type = line?.type || `${renderUtils.CSSLineClass.CONTEXT} d2h-emptyplaceholder`;
+
+    const line_number_cell = this.hoganUtils.render(genericTemplatesPath, 'line-number', {
+      type: type,
       lineClass: line !== undefined ? lineClass : `${lineClass} d2h-code-side-emptyplaceholder`,
+      lineNumber: line?.number,
+    });
+
+    const line_content_cell = this.hoganUtils.render(genericTemplatesPath, 'line', {
+      type: type,
       contentClass: line !== undefined ? contentClass : `${contentClass} d2h-code-side-emptyplaceholder`,
       prefix: line?.prefix === ' ' ? '&nbsp;' : line?.prefix,
       content: line?.content,
-      lineNumber: line?.number,
     });
+
+    return line_number_cell.concat(line_content_cell);
   }
 }
 
@@ -306,6 +318,6 @@ type DiffPreparedLine = {
 };
 
 type FileHtml = {
-  left: string;
-  right: string;
+  left: string[];
+  right: string[];
 };

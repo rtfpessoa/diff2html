@@ -7,6 +7,17 @@
 
 .d2h-wrapper {
   text-align: left;
+  word-wrap: break-word;
+}
+
+.d2h-wrapper * {
+  box-sizing: border-box;
+}
+
+.d2h-wrapper table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .d2h-file-header {
@@ -94,18 +105,19 @@
 
 .d2h-diff-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   font-family: 'Menlo', 'Consolas', monospace;
   font-size: 13px;
+  word-wrap: break-word;
+}
+
+.d2h-diff-table.d2h-split-diff {
+  table-layout: fixed;
 }
 
 .d2h-files-diff {
   display: flex;
   width: 100%;
-}
-
-.d2h-file-diff {
-  overflow-y: hidden;
 }
 
 .d2h-files-diff.d2h-d-none,
@@ -114,36 +126,34 @@
 }
 
 .d2h-file-side-diff {
-  display: inline-block;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  width: 50%;
+  width: 100%;
 }
 
-.d2h-code-line {
-  display: inline-block;
-  white-space: nowrap;
-  user-select: none;
-  width: calc(100% - 16em);
-  /* Compensate for the absolute positioning of the line numbers */
-  padding: 0 8em;
-}
-
+.d2h-code-line,
 .d2h-code-side-line {
-  display: inline-block;
-  white-space: nowrap;
   user-select: none;
-  width: calc(100% - 9em);
-  /* Compensate for the absolute positioning of the line numbers */
-  padding: 0 4.5em;
+  padding-left: 22px;
+  position: relative;
+  padding-right: 10px;
+  line-height: 20px;
+  vertical-align: top;
+}
+
+.d2h-code-marker::before {
+  position: absolute;
+  top: 1px;
+  left: 8px;
+  padding-right: 8px;
+  content: attr(data-code-marker);
 }
 
 .d2h-code-line-ctn {
-  display: inline-block;
+  display: table-cell;
   background: none;
   padding: 0;
-  word-wrap: normal;
-  white-space: pre;
+  word-wrap: anywhere;
+  white-space: pre-wrap;
+  overflow: visible;
   user-select: text;
   width: 100%;
   vertical-align: middle;
@@ -178,61 +188,31 @@
   white-space: pre;
 }
 
-.line-num1 {
-  box-sizing: border-box;
-  float: left;
-  width: 3.5em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 0.5em 0 0.5em;
+.d2h-code-linenumber::before,
+.d2h-code-side-linenumber::before {
+  content: attr(data-line-number);
 }
 
-.line-num2 {
-  box-sizing: border-box;
-  float: right;
-  width: 3.5em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 0.5em 0 0.5em;
-}
-
-.d2h-code-linenumber {
-  box-sizing: border-box;
-  width: 7.5em;
-  /* Keep the numbers fixed on line contents scroll */
-  position: absolute;
-  display: inline-block;
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.3);
-  text-align: right;
-  border: solid #eeeeee;
-  border-width: 0 1px 0 1px;
-  cursor: pointer;
-}
-
-.d2h-code-linenumber:after {
-  content: '\200b';
-}
-
-.d2h-code-side-linenumber {
-  /* Keep the numbers fixed on line contents scroll */
-  position: absolute;
-  display: inline-block;
-  box-sizing: border-box;
-  width: 4em;
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.3);
-  text-align: right;
-  border: solid #eeeeee;
-  border-width: 0 1px 0 1px;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 0.5em 0 0.5em;
-}
-
+.d2h-code-linenumber:after,
 .d2h-code-side-linenumber:after {
   content: '\200b';
+}
+
+.d2h-code-side-linenumber,
+.d2h-code-linenumber {
+  /* Keep the numbers fixed on line contents scroll */
+  position: relative;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.3);
+  text-align: right;
+  border: solid #eeeeee;
+  border-width: 0 1px 0 1px;
+  line-height: 20px;
+  font-size: 12px;
+  width: 1%;
+  min-width: 50px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .d2h-code-side-emptyplaceholder,

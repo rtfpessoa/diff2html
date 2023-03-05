@@ -82,6 +82,7 @@ export default class LineByLineRenderer {
   generateEmptyDiff(): string {
     return this.hoganUtils.render(genericTemplatesPath, 'empty-diff', {
       contentClass: 'd2h-code-line',
+      colspan: '2',
       CSSLineClass: renderUtils.CSSLineClass,
     });
   }
@@ -93,35 +94,43 @@ export default class LineByLineRenderer {
 
     return file.blocks
       .map(block => {
-        let lines = this.hoganUtils.render(genericTemplatesPath, 'block-header', {
-          CSSLineClass: renderUtils.CSSLineClass,
-          blockHeader: file.isTooBig ? block.header : renderUtils.escapeForHtml(block.header),
-          lineClass: 'd2h-code-linenumber',
-          contentClass: 'd2h-code-line',
-        });
+        const lines: string[] = [];
 
-        this.applyLineGroupping(block).forEach(([contextLines, oldLines, newLines]) => {
+        lines.push(
+          this.hoganUtils.render(genericTemplatesPath, 'block-header', {
+            CSSLineClass: renderUtils.CSSLineClass,
+            margin_colspan: '2',
+            colspan: '1',
+            blockHeader: file.isTooBig ? block.header : renderUtils.escapeForHtml(block.header),
+            lineClass: 'd2h-code-linenumber',
+            contentClass: 'd2h-code-line',
+          }),
+        );
+
+        this.applyLineGrouping(block).forEach(([contextLines, oldLines, newLines]) => {
           if (oldLines.length && newLines.length && !contextLines.length) {
             this.applyRematchMatching(oldLines, newLines, matcher).map(([oldLines, newLines]) => {
               const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
-              lines += left;
-              lines += right;
+              lines.push(...left);
+              lines.push(...right);
             });
           } else if (contextLines.length) {
             contextLines.forEach(line => {
               const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
-              lines += this.generateSingleLineHtml({
-                type: renderUtils.CSSLineClass.CONTEXT,
-                prefix: prefix,
-                content: content,
-                oldNumber: line.oldNumber,
-                newNumber: line.newNumber,
-              });
+              lines.push(
+                this.generateSingleLineHtml({
+                  type: renderUtils.CSSLineClass.CONTEXT,
+                  prefix: prefix,
+                  content: content,
+                  oldNumber: line.oldNumber,
+                  newNumber: line.newNumber,
+                }),
+              );
             });
           } else if (oldLines.length || newLines.length) {
             const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
-            lines += left;
-            lines += right;
+            lines.push(...left);
+            lines.push(...right);
           } else {
             console.error('Unknown state reached while processing groups of lines', contextLines, oldLines, newLines);
           }
@@ -129,10 +138,13 @@ export default class LineByLineRenderer {
 
         return lines;
       })
+      .map((block_html: string[]) => {
+        return block_html.map(line => `<tr>${line}</tr>`).join('\n');
+      })
       .join('\n');
   }
 
-  applyLineGroupping(block: DiffBlock): DiffLineGroups {
+  applyLineGrouping(block: DiffBlock): DiffLineGroups {
     const blockLinesGroups: DiffLineGroups = [];
 
     let oldLines: (DiffLineDeleted & DiffLineContent)[] = [];
@@ -189,9 +201,9 @@ export default class LineByLineRenderer {
   }
 
   processChangedLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
-    const fileHtml = {
-      right: '',
-      left: '',
+    const fileHtml: FileHtml = {
+      left: [],
+      right: [],
     };
 
     const maxLinesNumber = Math.max(oldLines.length, newLines.length);
@@ -241,8 +253,8 @@ export default class LineByLineRenderer {
           : undefined;
 
       const { left, right } = this.generateLineHtml(preparedOldLine, preparedNewLine);
-      fileHtml.left += left;
-      fileHtml.right += right;
+      fileHtml.left.push(...left);
+      fileHtml.right.push(...right);
     }
 
     return fileHtml;
@@ -250,27 +262,34 @@ export default class LineByLineRenderer {
 
   generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
     return {
-      left: this.generateSingleLineHtml(oldLine),
-      right: this.generateSingleLineHtml(newLine),
+      left: [this.generateSingleLineHtml(oldLine)],
+      right: [this.generateSingleLineHtml(newLine)],
     };
   }
 
   generateSingleLineHtml(line?: DiffPreparedLine): string {
     if (line === undefined) return '';
 
-    const lineNumberHtml = this.hoganUtils.render(baseTemplatesPath, 'numbers', {
-      oldNumber: line.oldNumber || '',
-      newNumber: line.newNumber || '',
+    const oldLineNumberHtml = this.hoganUtils.render(genericTemplatesPath, 'line-number', {
+      type: line.type,
+      lineClass: line.oldNumber ? 'd2h-code-linenumber' : 'd2h-code-emptyplaceholder',
+      lineNumber: line.oldNumber,
     });
 
-    return this.hoganUtils.render(genericTemplatesPath, 'line', {
+    const newLineNumberHtml = this.hoganUtils.render(genericTemplatesPath, 'line-number', {
       type: line.type,
-      lineClass: 'd2h-code-linenumber',
+      lineClass: line.newNumber ? 'd2h-code-linenumber' : 'd2h-code-emptyplaceholder',
+      lineNumber: line.newNumber,
+    });
+
+    const newLineContentHtml = this.hoganUtils.render(genericTemplatesPath, 'line', {
+      type: line.type,
       contentClass: 'd2h-code-line',
       prefix: line.prefix === ' ' ? '&nbsp;' : line.prefix,
       content: line.content,
-      lineNumber: lineNumberHtml,
     });
+
+    return oldLineNumberHtml.concat(newLineNumberHtml, newLineContentHtml);
   }
 }
 
@@ -289,6 +308,6 @@ type DiffPreparedLine = {
 };
 
 type FileHtml = {
-  left: string;
-  right: string;
+  left: string[];
+  right: string[];
 };
