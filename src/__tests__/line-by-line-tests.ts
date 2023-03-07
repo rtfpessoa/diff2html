@@ -23,9 +23,19 @@ describe('LineByLineRenderer', () => {
 
   describe('makeLineHtml', () => {
     it('should work for insertions', () => {
+      const file = {
+        addedLines: 12,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'my/file/name.js',
+        isCombined: false,
+        isGitDiff: false,
+        blocks: [],
+      };
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      const fileHtml = lineByLineRenderer.generateSingleLineHtml({
+      const fileHtml = lineByLineRenderer.generateSingleLineHtml(file, {
         type: CSSLineClass.INSERTS,
         prefix: '+',
         content: 'test',
@@ -49,9 +59,19 @@ describe('LineByLineRenderer', () => {
     });
 
     it('should work for deletions', () => {
+      const file = {
+        addedLines: 12,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'my/file/name.js',
+        isCombined: false,
+        isGitDiff: false,
+        blocks: [],
+      };
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      const fileHtml = lineByLineRenderer.generateSingleLineHtml({
+      const fileHtml = lineByLineRenderer.generateSingleLineHtml(file, {
         type: CSSLineClass.DELETES,
         prefix: '-',
         content: 'test',
@@ -75,9 +95,19 @@ describe('LineByLineRenderer', () => {
     });
 
     it('should convert indents into non breakin spaces (2 white spaces)', () => {
+      const file = {
+        addedLines: 12,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'my/file/name.js',
+        isCombined: false,
+        isGitDiff: false,
+        blocks: [],
+      };
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      const fileHtml = lineByLineRenderer.generateSingleLineHtml({
+      const fileHtml = lineByLineRenderer.generateSingleLineHtml(file, {
         type: CSSLineClass.INSERTS,
         prefix: '+',
         content: '  test',
@@ -101,9 +131,19 @@ describe('LineByLineRenderer', () => {
     });
 
     it('should convert indents into non breakin spaces (4 white spaces)', () => {
+      const file = {
+        addedLines: 12,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'my/file/name.js',
+        isCombined: false,
+        isGitDiff: false,
+        blocks: [],
+      };
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      const fileHtml = lineByLineRenderer.generateSingleLineHtml({
+      const fileHtml = lineByLineRenderer.generateSingleLineHtml(file, {
         type: CSSLineClass.INSERTS,
         prefix: '+',
         content: '    test',
@@ -127,9 +167,19 @@ describe('LineByLineRenderer', () => {
     });
 
     it('should preserve tabs', () => {
+      const file = {
+        addedLines: 12,
+        deletedLines: 41,
+        language: 'js',
+        oldName: 'my/file/name.js',
+        newName: 'my/file/name.js',
+        isCombined: false,
+        isGitDiff: false,
+        blocks: [],
+      };
       const hoganUtils = new HoganJsUtils({});
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils, {});
-      const fileHtml = lineByLineRenderer.generateSingleLineHtml({
+      const fileHtml = lineByLineRenderer.generateSingleLineHtml(file, {
         type: CSSLineClass.INSERTS,
         prefix: '+',
         content: '\ttest',
