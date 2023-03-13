@@ -200,6 +200,7 @@
 .d2h-code-side-linenumber,
 .d2h-code-linenumber {
   /* Keep the numbers fixed on line contents scroll */
+  white-space: nowrap;
   position: relative;
   background-color: #fff;
   color: rgba(0, 0, 0, 0.3);
