@@ -137,6 +137,10 @@
   overflow-y: hidden;
 }
 
+.d2h-file-side-diff {
+  width: 100%;
+}
+
 .d2h-code-line,
 .d2h-code-side-line {
   user-select: none;
