@@ -76,15 +76,20 @@ export default class LineByLineRenderer {
           fileTag: fileTagTemplate,
         },
       ),
+      overflowClass: this.config.diffOverflow.concat('-overflow'),
     });
   }
 
   generateEmptyDiff(): string {
-    return this.hoganUtils.render(genericTemplatesPath, 'empty-diff', {
-      contentClass: 'd2h-code-line',
-      colspan: '2',
-      CSSLineClass: renderUtils.CSSLineClass,
-    });
+    return (
+      '<tr' +
+      this.hoganUtils.render(genericTemplatesPath, 'empty-diff', {
+        contentClass: 'd2h-code-line',
+        colspan: '2',
+        CSSLineClass: renderUtils.CSSLineClass,
+      }) +
+      '</tr>'
+    );
   }
 
   generateFileHtml(file: DiffFile): string {
@@ -253,17 +258,17 @@ export default class LineByLineRenderer {
           : undefined;
 
       const { left, right } = this.generateLineHtml(preparedOldLine, preparedNewLine);
-      fileHtml.left.push(...left);
-      fileHtml.right.push(...right);
+      fileHtml.left.push(left);
+      fileHtml.right.push(right);
     }
 
     return fileHtml;
   }
 
-  generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
+  generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): LineHtml {
     return {
-      left: [this.generateSingleLineHtml(oldLine)],
-      right: [this.generateSingleLineHtml(newLine)],
+      left: this.generateSingleLineHtml(oldLine),
+      right: this.generateSingleLineHtml(newLine),
     };
   }
 
@@ -305,6 +310,11 @@ type DiffPreparedLine = {
   content: string;
   oldNumber?: number;
   newNumber?: number;
+};
+
+type LineHtml = {
+  left: string;
+  right: string;
 };
 
 type FileHtml = {

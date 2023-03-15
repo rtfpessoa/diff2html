@@ -30,7 +30,7 @@
 .d2h-file-header.d2h-sticky-header {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 10;
 }
 
 .d2h-file-stats {
@@ -104,13 +104,20 @@
 
 .d2h-diff-table {
   width: 100%;
-  border-collapse: separate;
   font-family: 'Menlo', 'Consolas', monospace;
   font-size: 13px;
   word-wrap: break-word;
 }
 
-.d2h-diff-table.d2h-split-diff {
+.scroll-overflow .d2h-diff-table {
+  border-collapse: collapse;
+}
+
+.wrap-overflow .d2h-diff-table {
+  border-collapse: separate;
+}
+
+.wrap-overflow .d2h-diff-table.d2h-split-diff {
   table-layout: fixed;
 }
 
@@ -124,8 +131,10 @@
   display: none;
 }
 
-.d2h-file-side-diff {
-  width: 100%;
+.d2h-file-diff.scroll-overflow,
+.d2h-file-side-diff.scroll-overflow {
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 .d2h-code-line,
@@ -138,6 +147,11 @@
   vertical-align: top;
 }
 
+.scroll-overflow .d2h-code-line,
+.scroll-overflow .d2h-code-side-line {
+  white-space: nowrap;
+}
+
 .d2h-code-marker::before {
   position: absolute;
   top: 1px;
@@ -146,13 +160,22 @@
   content: attr(data-code-marker);
 }
 
+.wrap-overflow .d2h-code-line-ctn {
+  word-wrap: anywhere;
+  overflow: visible;
+  white-space: pre-wrap;
+}
+
+.scroll-overflow .d2h-code-line-ctn {
+  overflow: scroll;
+}
+
 .d2h-code-line-ctn {
   display: table-cell;
   background: none;
   padding: 0;
-  word-wrap: anywhere;
-  white-space: pre-wrap;
-  overflow: visible;
+  word-wrap: normal;
+  white-space: pre;
   user-select: text;
   width: 100%;
   vertical-align: middle;
@@ -197,14 +220,38 @@
   content: '\200b';
 }
 
+.wrap-overflow .d2h-code-side-linenumber,
+.wrap-overflow .d2h-code-linenumber,
+.wrap-overflow .d2h-code-emptyplaceholder {
+  position: relative;
+}
+
+.scroll-overflow .d2h-code-side-linenumber,
+.scroll-overflow .d2h-code-linenumber,
+.scroll-overflow .d2h-code-emptyplaceholder {
+  position: sticky;
+  z-index: 1;
+}
+
+.scroll-overflow .d2h-code-side-linenumber {
+  left: 0;
+}
+
+.scroll-overflow.d2h-file-diff tr td:first-child {
+  left: 0;
+}
+
+.scroll-overflow.d2h-file-diff tr td:nth-child(2) {
+  left: 50px;
+}
+
 .d2h-code-side-linenumber,
 .d2h-code-linenumber {
-  /* Keep the numbers fixed on line contents scroll */
   white-space: nowrap;
-  position: relative;
   background-color: #fff;
   color: rgba(0, 0, 0, 0.3);
   text-align: right;
+  vertical-align: top;
   border: solid #eeeeee;
   border-width: 0 1px 0 1px;
   line-height: 20px;

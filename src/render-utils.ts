@@ -2,7 +2,15 @@ import * as jsDiff from 'diff';
 
 import { unifyPath, hashCode } from './utils';
 import * as rematch from './rematch';
-import { LineMatchingType, DiffStyleType, LineType, DiffLineParts, DiffFile, DiffFileName } from './types';
+import {
+  LineMatchingType,
+  DiffStyleType,
+  DiffOverflowType,
+  LineType,
+  DiffLineParts,
+  DiffFile,
+  DiffFileName,
+} from './types';
 
 export type CSSLineClass =
   | 'd2h-ins'
@@ -37,6 +45,7 @@ export interface RenderConfig {
   matchWordsThreshold?: number;
   maxLineLengthHighlight?: number;
   diffStyle?: DiffStyleType;
+  diffOverflow?: DiffOverflowType;
 }
 
 export const defaultRenderConfig = {
@@ -44,6 +53,7 @@ export const defaultRenderConfig = {
   matchWordsThreshold: 0.25,
   maxLineLengthHighlight: 10000,
   diffStyle: DiffStyleType.WORD,
+  diffOverflow: DiffOverflowType.SCROLL,
 };
 
 const separator = '/';

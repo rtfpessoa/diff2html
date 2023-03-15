@@ -3,32 +3,13 @@
       {{{filePath}}}
     </div>
     <div class="d2h-files-diff">
-        <div class="d2h-file-side-diff scroll-overflow">
+        <div class="d2h-file-side-diff wrap-overflow">
             <div class="d2h-code-wrapper">
                 <table class="d2h-diff-table d2h-split-diff">
                     <thead hidden>
                         <tr>
                             <th scope="col">Original file line number</th>
                             <th scope="col">Original file content</th>
-                        </tr>
-                    </thead>
-
-                    <colgroup>
-                        <col style="width: 40px;">
-                        <col>
-                    </colgroup>
-
-                    <tbody class="d2h-diff-tbody">
-                    {{{diffs.left}}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="d2h-file-side-diff scroll-overflow">
-            <div class="d2h-code-wrapper">
-                <table class="d2h-diff-table d2h-split-diff">
-                    <thead hidden>
-                        <tr>
                             <th scope="col">Diff line number</th>
                             <th scope="col">Diff content</th>
                         </tr>
@@ -37,10 +18,12 @@
                     <colgroup>
                         <col style="width: 40px;">
                         <col>
+                        <col style="width: 40px;">
+                        <col>
                     </colgroup>
 
                     <tbody class="d2h-diff-tbody">
-                    {{{diffs.right}}}
+                    {{{diffs}}}
                     </tbody>
                 </table>
             </div>

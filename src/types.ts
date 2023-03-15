@@ -91,3 +91,10 @@ export const DiffStyleType: { [_: string]: DiffStyleType } = {
   WORD: 'word',
   CHAR: 'char',
 };
+
+export type DiffOverflowType = 'scroll' | 'wrap';
+
+export const DiffOverflowType: { [_: string]: DiffOverflowType } = {
+  SCROLL: 'scroll',
+  WRAP: 'wrap',
+};

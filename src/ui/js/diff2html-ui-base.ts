@@ -63,6 +63,8 @@ export class Diff2HtmlUI {
     this.targetElement.querySelectorAll('.d2h-file-wrapper').forEach(wrapper => {
       const [left, right] = Array<Element>().slice.call(wrapper.querySelectorAll('.d2h-file-side-diff'));
 
+      console.log(left, right);
+
       if (left === undefined || right === undefined) return;
 
       const onScroll = (event: Event): void => {
