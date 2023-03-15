@@ -123,20 +123,6 @@ export default class LineByLineRenderer {
             contextLines.forEach(line => {
               const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
               lines.push(
-                this.generateSingleLineHtml({
-                  type: renderUtils.CSSLineClass.CONTEXT,
-                  prefix: prefix,
-                  content: content,
-                  oldNumber: line.oldNumber,
-                  newNumber: line.newNumber,
-                }),
-              );
-            });
-          } else if (oldLines.length || newLines.length) {
-            const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
-            lines.push(...left);
-            lines.push(...right);
-              lines.push(
                 this.generateSingleLineHtml(file, {
                   type: renderUtils.CSSLineClass.CONTEXT,
                   prefix: prefix,
@@ -218,7 +204,6 @@ export default class LineByLineRenderer {
 
     return doMatching ? matcher(oldLines, newLines) : [[oldLines, newLines]];
   }
-
 
   processChangedLines(file: DiffFile, isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
     const fileHtml: FileHtml = {
@@ -307,7 +292,6 @@ export default class LineByLineRenderer {
       contentClass: 'd2h-code-line',
       prefix: line.prefix === ' ' ? '&nbsp;' : line.prefix,
       content: line.content,
-      lineNumber: lineNumberHtml,
       line,
       file,
     });
