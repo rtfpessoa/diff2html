@@ -156,7 +156,6 @@
   text-decoration: none;
   background-color: #ffb6ba;
   border-radius: 0.2em;
-  vertical-align: middle;
 }
 
 .d2h-code-line ins,
@@ -167,7 +166,6 @@
   background-color: #97f295;
   border-radius: 0.2em;
   text-align: left;
-  vertical-align: middle;
 }
 
 .d2h-code-line-prefix {
