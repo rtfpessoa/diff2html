@@ -11,7 +11,7 @@
 [![npm downloads](https://img.shields.io/npm/dt/diff2html)](https://www.npmjs.com/package/diff2html)
 
 [![jsdelivr CDN Downloads](https://data.jsdelivr.com/v1/package/npm/diff2html/badge)](https://www.jsdelivr.com/package/npm/diff2html)
-[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange)](#contributors)
 
 diff2html generates pretty HTML diffs from git diff or unified diff output.
 
