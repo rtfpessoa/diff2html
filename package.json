@@ -41,9 +41,9 @@
     "prettier": "prettier --ignore-path .gitignore '**/*.+(js|jsx|ts|tsx|json|css|html|md|mdx)'",
     "format:check": "yarn run prettier --check",
     "format:fix": "yarn run prettier --write",
-    "build": "yarn run build:css && yarn run build:templates && yarn run build:es5 && yarn run build:esm && yarn run build:bundles && yarn run build:website",
-    "build:es5": "rm -rf lib; tsc -p tsconfig.json --outDir lib",
-    "build:esm": "rm -rf lib-esm; tsc -p tsconfig.json -m es6 --outDir lib-esm",
+    "build": "yarn run build:css && yarn run build:templates && yarn run build:commonjs && yarn run build:esm && yarn run build:bundles && yarn run build:website",
+    "build:commonjs": "rm -rf lib; tsc -p tsconfig.json --outDir lib",
+    "build:esm": "rm -rf lib-esm; tsc -p tsconfig.json -m ESNext --outDir lib-esm",
     "build:bundles": "rm -rf ./bundles/js; webpack --mode production --config webpack.bundles.ts",
     "build:css": "rm -rf ./bundles/css; postcss --config ./postcss.config.js --no-map -o ./bundles/css/diff2html.min.css ./src/ui/css/diff2html.css",
     "build:templates": "ts-node ./scripts/hulk.ts --wrapper ts --variable 'defaultTemplates' ./src/templates/*.mustache > ./src/diff2html-templates.ts",
@@ -150,7 +150,8 @@
     "trim-newlines": ">=3.0.1",
     "async": ">=2.6.4",
     "terser": ">=5.14.2",
-    "semver-regex": ">=4.0.5"
+    "semver-regex": ">=4.0.5",
+    "http-cache-semantics": ">=4.1.1"
   },
   "license": "MIT",
   "files": [
