@@ -1,22 +1,19 @@
 # diff2html
 
-[![Codacy Quality Badge](https://api.codacy.com/project/badge/Grade/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/rtfpessoa/diff2html?utm_source=github.com&utm_medium=referral&utm_content=rtfpessoa/diff2html&utm_campaign=Badge_Grade)
-[![Codacy Coverage Badge](https://api.codacy.com/project/badge/Coverage/06412dc3f5a14f568778d0db8a1f7dc8)](https://www.codacy.com/app/rtfpessoa/diff2html?utm_source=github.com&utm_medium=referral&utm_content=rtfpessoa/diff2html&utm_campaign=Badge_Coverage)
-[![CircleCI](https://circleci.com/gh/rtfpessoa/diff2html.svg?style=svg)](https://circleci.com/gh/rtfpessoa/diff2html)
+[![npm](https://img.shields.io/npm/v/diff2html)](https://www.npmjs.com/package/diff2html)
+[![node](https://img.shields.io/node/v/diff2html)](https://www.npmjs.com/package/diff2html)
+[![npm](https://img.shields.io/npm/l/diff2html)](https://www.npmjs.com/package/diff2html)
+[![GitHub Actions](https://github.com/rtfpessoa/diff2html/actions/workflows/release.yml/badge.svg)](https://github.com/rtfpessoa/diff2html/actions/workflows/release.yml)
 
-[![npm](https://img.shields.io/npm/v/diff2html?style=flat)](https://www.npmjs.com/package/diff2html)
-[![Dependency Status](https://david-dm.org/rtfpessoa/diff2html.svg)](https://david-dm.org/rtfpessoa/diff2html)
-[![devDependency Status](https://david-dm.org/rtfpessoa/diff2html/dev-status.svg)](https://david-dm.org/rtfpessoa/diff2html#info=devDependencies)
+[![npm weekly downloads](https://img.shields.io/npm/dw/diff2html)](https://www.npmjs.com/package/diff2html)
+[![npm monthly downloads](https://img.shields.io/npm/dm/diff2html)](https://www.npmjs.com/package/diff2html)
+[![npm yearly downloads](https://img.shields.io/npm/dy/diff2html)](https://www.npmjs.com/package/diff2html)
+[![npm downloads](https://img.shields.io/npm/dt/diff2html)](https://www.npmjs.com/package/diff2html)
+
 [![jsdelivr CDN Downloads](https://data.jsdelivr.com/v1/package/npm/diff2html/badge)](https://www.jsdelivr.com/package/npm/diff2html)
-
-[![node](https://img.shields.io/node/v/diff2html.svg)]() [![npm](https://img.shields.io/npm/l/diff2html.svg)]()
-[![npm](https://img.shields.io/npm/dm/diff2html.svg)](https://www.npmjs.com/package/diff2html)
 [![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors)
-[![Gitter](https://badges.gitter.im/rtfpessoa/diff2html.svg)](https://gitter.im/rtfpessoa/diff2html?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 diff2html generates pretty HTML diffs from git diff or unified diff output.
-
-[![NPM](https://nodei.co/npm/diff2html.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/diff2html/)
 
 ## Table of Contents
 
