@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 #### Example with plain HTML+CSS+JS
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -453,7 +453,7 @@ export class AppDiffComponent implements OnInit {
 - HTML
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>diff2html</title>
