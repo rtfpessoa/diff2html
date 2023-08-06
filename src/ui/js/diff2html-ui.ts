@@ -9,4 +9,5 @@ export class Diff2HtmlUI extends Diff2HtmlUIBase {
   }
 }
 
-export { Diff2HtmlUIConfig, defaultDiff2HtmlUIConfig };
+export { defaultDiff2HtmlUIConfig };
+export type { Diff2HtmlUIConfig };
