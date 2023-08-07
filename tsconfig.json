@@ -10,7 +10,7 @@
     "jsx": "preserve",
     "allowJs": false,
     "checkJs": false,
-    "importHelpers": true,
+    "importHelpers": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
