@@ -133,6 +133,7 @@
     "ts-jest": "29.1.1",
     "ts-loader": "9.4.4",
     "ts-node": "10.9.1",
+    "tslib": "2.6.1",
     "typescript": "5.1.6",
     "url-loader": "4.1.1",
     "webpack": "5.88.2",
