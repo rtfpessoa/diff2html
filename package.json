@@ -60,7 +60,7 @@
     "validate": "yarn run build:templates && yarn run format:check && yarn run lint:check && yarn run build && yarn run test:coverage",
     "fix": "yarn run format:fix && yarn run lint:fix",
     "start": "yarn run start:website",
-    "start:website": "webpack-dev-server --mode development --config webpack.website.ts",
+    "start:website": "webpack serve --mode development --config webpack.website.ts",
     "preversion": "yarn run validate",
     "version": "git add -A package.json",
     "prepare": "husky install"
@@ -137,6 +137,7 @@
     "url-loader": "4.1.1",
     "webpack": "5.88.2",
     "webpack-cli": "5.1.4",
+    "webpack-dev-server": "4.15.1",
     "whatwg-fetch": "3.6.17"
   },
   "resolutions": {
