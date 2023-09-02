@@ -203,6 +203,28 @@ export default class SideBySideRenderer {
     return doMatching ? matcher(oldLines, newLines) : [[oldLines, newLines]];
   }
 
+  ignoreWhiteSpaces(oldLines: DiffLine[], newLines: DiffLine[]): DiffLine[][] {
+    const maxLinesNumber = Math.max(oldLines.length, newLines.length);
+    const oldLinesProcessed = [];
+    const newLinesProcessed = [];
+    for (let i = 0; i < maxLinesNumber; i++) {
+      const oldLine = oldLines[i];
+      const newLine = newLines[i];
+      if (oldLine != undefined && newLine != undefined && oldLine.oldNumber == newLine.newNumber) {
+        const oldContent = oldLine.content.substr(1);
+        const newContent = newLine.content.substr(1);
+
+        const spaceMatch = /\s/g;
+        if (oldContent != newContent && oldContent.replace(spaceMatch, '') == newContent.replace(spaceMatch, ''))
+          continue;
+      }
+      oldLinesProcessed.push(oldLine);
+      newLinesProcessed.push(newLine);
+    }
+
+    return [oldLinesProcessed, newLinesProcessed];
+  }
+
   makeHeaderHtml(blockHeader: string, file?: DiffFile): string {
     return this.hoganUtils.render(genericTemplatesPath, 'block-header', {
       CSSLineClass: renderUtils.CSSLineClass,
@@ -217,8 +239,11 @@ export default class SideBySideRenderer {
       right: '',
       left: '',
     };
+    const [filteredOldLines, filteredNewLines] = this.config?.ignoreWhiteSpaces
+      ? this.ignoreWhiteSpaces(oldLines, newLines)
+      : [oldLines, newLines];
 
-    const maxLinesNumber = Math.max(oldLines.length, newLines.length);
+    const maxLinesNumber = Math.max(filteredOldLines.length, filteredNewLines.length);
     for (let i = 0; i < maxLinesNumber; i++) {
       const oldLine = oldLines[i];
       const newLine = newLines[i];
