@@ -1,4 +1,8 @@
-{{#partial "content"}}
-{{> content}}
+{{#partial 'scripts'}}
+{{! define here page-specific source script files }}
+<script src="./demo.ts" defer="defer"></script>
 {{/partial}}
-{{> ../../template}}
+{{#partial "content"}}
+{{> demo/content}}
+{{/partial}}
+{{> template}}

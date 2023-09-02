@@ -1,28 +1,40 @@
 import path from 'path';
-
-import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import HtmlBundlerPlugin from 'html-bundler-webpack-plugin';
 // eslint-disable-next-line import/default
 import CopyPlugin from 'copy-webpack-plugin';
 
-const pages = ['index', 'demo'];
-
-type Plugin = ((this: webpack.Compiler, compiler: webpack.Compiler) => void) | webpack.WebpackPluginInstance;
-
-function plugins(page: string): Plugin[] {
-  return [
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
-    }),
-    new HtmlWebpackPlugin({
-      hash: true,
-      inject: true,
-      title: `${page} page`,
-      filename: `${page}.html`,
-      template: `./website/templates/pages/${page}/${page}.handlebars`,
-      minify: {
+const config = {
+  output: {
+    path: path.resolve(__dirname, './docs'),
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+  },
+  plugins: [
+    new HtmlBundlerPlugin({
+      entry: {
+        // define templates here
+        index: './website/templates/pages/index/index.handlebars', // => docs/index.html,
+        demo: './website/templates/pages/demo/demo.handlebars', // => docs/demo.html
+      },
+      js: {
+        // output filename of compiled JavaScript, used if `inline` option is false (defaults)
+        filename: '[name].[contenthash:8].js',
+        //inline: true, // inlines JS into HTML
+      },
+      css: {
+        // output filename of extracted CSS, used if `inline` option is false (defaults)
+        filename: '[name].[contenthash:8].css',
+        //inline: true, // inlines CSS into HTML
+      },
+      preprocessor: 'handlebars', // use the handlebars compiler
+      preprocessorOptions: {
+        knownHelpersOnly: false,
+        helpers: [path.join(__dirname, 'website/templates/helpers')],
+        partials: [path.join(__dirname, 'website/templates/partials'), path.join(__dirname, 'website/templates/pages')],
+      },
+      minify: 'auto', // minify in production mode only
+      minifyOptions: {
         html5: true,
         collapseWhitespace: true,
         caseSensitive: true,
@@ -45,107 +57,74 @@ function plugins(page: string): Plugin[] {
         { from: 'website/sitemap.xml', to: 'sitemap.xml' },
       ],
     }),
-  ];
-}
-
-const config: webpack.Configuration[] = pages.map(page => {
-  return {
-    entry: {
-      [page]: `./website/templates/pages/${page}/${page}.ts`,
-    },
-    output: {
-      path: path.resolve(__dirname, './docs'),
-    },
-    resolve: {
-      extensions: ['.tsx', '.ts', '.jsx', '.js'],
-    },
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: 'ts-loader',
-          exclude: /node_modules/,
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(gif|png|jpe?g|webp)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name][ext]?[hash]',
         },
-        {
-          test: /\.(html)$/,
-          use: {
-            loader: 'html-loader',
+        use: [
+          {
+            loader: 'image-webpack-loader',
             options: {
-              attrs: ['img:src'],
+              mozjpeg: {
+                progressive: true,
+                quality: 65,
+              },
+              optipng: {
+                enabled: true,
+              },
+              pngquant: {
+                quality: [0.65, 0.9],
+                speed: 4,
+              },
+              gifsicle: {
+                interlaced: false,
+              },
+              webp: {
+                quality: 75,
+              },
             },
           },
-        },
-        {
-          test: /\.handlebars$/,
-          loader: 'handlebars-loader',
-          options: {
-            inlineRequires: '/images/',
-            precompileOptions: {
-              knownHelpersOnly: false,
-            },
-            helperDirs: [path.join(__dirname, 'website/templates/helpers')],
-            partialDirs: [path.join(__dirname, 'website/templates')],
+        ],
+      },
+      {
+        test: /\.(css)$/,
+        use: [{ loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader'],
+      },
+      {
+        test: /\.woff(2)?(\?v=\d\.\d\.\d)?$/,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 1000,
           },
         },
-        {
-          test: /\.(gif|png|jpe?g|webp)$/i,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: '[name].[ext]?[hash]',
-                outputPath: 'images',
-                esModule: false,
-              },
-            },
-            {
-              loader: 'image-webpack-loader',
-              options: {
-                mozjpeg: {
-                  progressive: true,
-                  quality: 65,
-                },
-                optipng: {
-                  enabled: true,
-                },
-                pngquant: {
-                  quality: [0.65, 0.9],
-                  speed: 4,
-                },
-                gifsicle: {
-                  interlaced: false,
-                },
-                webp: {
-                  quality: 75,
-                },
-              },
-            },
-          ],
-        },
-        {
-          test: /\.(css)$/,
-          use: [MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader'],
-        },
-        {
-          test: /\.woff(2)?(\?v=\d\.\d\.\d)?$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1000,
-                mimetype: 'application/font-woff',
-              },
-            },
-          ],
-        },
-        {
-          test: /\.(ttf|eot|svg)(\?v=\d\.\d\.\d)?$/,
-          loader: 'file-loader',
-        },
-      ],
+      },
+      {
+        test: /\.(ttf|eot|svg)(\?v=\d\.\d\.\d)?$/,
+        type: 'asset/resource',
+      },
+    ],
+  },
+  // enable live reload after changes
+  devServer: {
+    static: path.resolve(__dirname, './docs'),
+    watchFiles: {
+      paths: ['website/**/*.*'],
+      options: {
+        usePolling: true,
+      },
     },
-    plugins: plugins(page),
-  };
-});
+  },
+};
 
 export default config;

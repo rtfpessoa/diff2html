@@ -1,6 +1,6 @@
 import Clipboard from 'clipboard';
 
-import '../../../main.ts';
+import '../../../main';
 import '../../../main.css';
 import './index.css';
 

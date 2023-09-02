@@ -1,6 +1,6 @@
 import { Diff2HtmlUI, defaultDiff2HtmlUIConfig, Diff2HtmlUIConfig } from '../../../../src/ui/js/diff2html-ui-slim';
 
-import '../../../main.ts';
+import '../../../main';
 import '../../../main.css';
 import 'highlight.js/styles/github.css';
 import '../../../../src/ui/css/diff2html.css';
