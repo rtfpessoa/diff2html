@@ -381,3 +381,31 @@
 .d2h-moved-tag {
   border: #3572b0 1px solid;
 }
+
+.dark.d2h-files-diff .d2h-code-side-linenumber,
+.dark.d2h-files-diff .d2h-info,
+.dark.d2h-files-diff .d2h-emptyplaceholder,
+.dark.d2h-files-diff .d2h-code-side-emptyplaceholder {
+  background-color: #272822;
+  color: #d0d0d0;
+}
+
+.dark.d2h-files-diff span {
+  color: #d0d0d0;
+}
+
+.dark.d2h-files-diff .d2h-del {
+  background-color: #7d4e50;
+}
+
+.dark.d2h-files-diff del {
+  background-color: #a07c7e;
+}
+
+.dark.d2h-files-diff .d2h-ins {
+  background-color: #748a74;
+}
+
+.dark.d2h-files-diff ins {
+  background-color: #177016;
+}
