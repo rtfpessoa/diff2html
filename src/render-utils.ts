@@ -2,7 +2,15 @@ import * as jsDiff from 'diff';
 
 import { unifyPath, hashCode } from './utils';
 import * as rematch from './rematch';
-import { LineMatchingType, DiffStyleType, LineType, DiffLineParts, DiffFile, DiffFileName } from './types';
+import {
+  ColorSchemeType,
+  DiffFile,
+  DiffFileName,
+  DiffLineParts,
+  DiffStyleType,
+  LineMatchingType,
+  LineType,
+} from './types';
 
 export type CSSLineClass =
   | 'd2h-ins'
@@ -37,6 +45,7 @@ export interface RenderConfig {
   matchWordsThreshold?: number;
   maxLineLengthHighlight?: number;
   diffStyle?: DiffStyleType;
+  colorScheme?: ColorSchemeType;
 }
 
 export const defaultRenderConfig = {
@@ -44,6 +53,7 @@ export const defaultRenderConfig = {
   matchWordsThreshold: 0.25,
   maxLineLengthHighlight: 10000,
   diffStyle: DiffStyleType.WORD,
+  colorScheme: ColorSchemeType.LIGHT,
 };
 
 const separator = '/';
@@ -73,6 +83,17 @@ export function toCSSClass(lineType: LineType): CSSLineClass {
       return CSSLineClass.INSERTS;
     case LineType.DELETE:
       return CSSLineClass.DELETES;
+  }
+}
+
+export function colorSchemeToCss(colorScheme: ColorSchemeType): string {
+  switch (colorScheme) {
+    case ColorSchemeType.DARK:
+      return ' dark';
+    case ColorSchemeType.AUTO:
+      return ' auto-color-scheme';
+    default:
+      return '';
   }
 }
 
