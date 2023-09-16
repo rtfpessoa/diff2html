@@ -10,9 +10,7 @@
 }
 
 .d2h-dark-color-scheme .d2h-files-diff,
-.d2h-dark-color-scheme .d2h-files-diff .d2h-info,
-.d2h-dark-color-scheme .d2h-files-diff .d2h-emptyplaceholder,
-.d2h-dark-color-scheme .d2h-files-diff .d2h-code-side-emptyplaceholder {
+.d2h-dark-color-scheme .d2h-files-diff .d2h-emptyplaceholder {
   background-color: #272822;
   color: #d0d0d0;
 }
@@ -34,7 +32,7 @@
 .d2h-dark-color-scheme .d2h-file-header {
   color: #d0d0d0;
   background-color: #272822;
-  border-bottom: #272822;
+  border-bottom: #494b40;
 }
 
 .d2h-file-header.d2h-sticky-header {
@@ -60,11 +58,6 @@
   vertical-align: middle;
 }
 
-.d2h-dark-color-scheme .d2h-lines-added {
-  border: 1px solid #7d4e50;
-  color: #177016;
-}
-
 .d2h-lines-deleted {
   text-align: left;
   border: 1px solid #e9aeae;
@@ -73,11 +66,6 @@
   padding: 2px;
   vertical-align: middle;
   margin-left: 1px;
-}
-
-.d2h-dark-color-scheme .d2h-lines-deleted {
-  border: 1px solid #a07c7e;
-  color: #a07c7e;
 }
 
 .d2h-file-name-wrapper {
@@ -104,7 +92,7 @@
 }
 
 .d2h-dark-color-scheme .d2h-file-wrapper {
-  border: 1px solid #272822;
+  border: 1px solid #494b40;
 }
 
 .d2h-file-collapse {
@@ -202,7 +190,7 @@
 
 .d2h-dark-color-scheme .d2h-code-line del,
 .d2h-dark-color-scheme .d2h-code-side-line del {
-  background-color: #7d4e50;
+  background-color: #604243;
 }
 
 .d2h-code-line ins,
@@ -217,7 +205,7 @@
 
 .d2h-dark-color-scheme .d2h-code-line ins,
 .d2h-dark-color-scheme .d2h-code-side-line ins {
-  background-color: #177016;
+  background-color: #195219;
 }
 
 .d2h-code-line-prefix {
@@ -290,7 +278,7 @@
 .d2h-dark-color-scheme .d2h-code-side-linenumber {
   background-color: #272822;
   color: #d0d0d0;
-  border-color: #272822;
+  border-color: #494b40;
 }
 
 .d2h-code-side-linenumber:after {
@@ -303,10 +291,10 @@
   border-color: #e1e1e1;
 }
 
-.d2h-dark-color-scheme .d2h-code-side-emptyplaceholder,
-.d2h-dark-color-scheme .d2h-emptyplaceholder {
-  background-color: #272822;
-  border-color: #272822;
+.d2h-dark-color-scheme .d2h-files-diff .d2h-code-side-emptyplaceholder,
+.d2h-dark-color-scheme .d2h-files-diff .d2h-emptyplaceholder {
+  background-color: #494b40;
+  border-color: #66695a;
 }
 
 .d2h-code-linenumber,
@@ -331,7 +319,7 @@
 }
 
 .d2h-dark-color-scheme .d2h-del {
-  background-color: #7d4e50;
+  background-color: #905a5c;
   border-color: #a07c7e;
 }
 
@@ -342,7 +330,7 @@
 
 .d2h-dark-color-scheme .d2h-ins {
   background-color: #177016;
-  border-color: #97f295;
+  border-color: #219f1f;
 }
 
 .d2h-info {
@@ -352,8 +340,8 @@
 }
 
 .d2h-dark-color-scheme .d2h-info {
-  background-color: #272822;
-  color: #d0d0d0;
+  background-color: #32342c;
+  color: #929292;
   border-color: #272822;
 }
 
@@ -450,16 +438,8 @@
   color: #c33;
 }
 
-.d2h-dark-color-scheme .d2h-deleted {
-  color: #a07c7e;
-}
-
 .d2h-added {
   color: #399839;
-}
-
-.d2h-dark-color-scheme .d2h-added {
-  color: #177016;
 }
 
 .d2h-changed {
