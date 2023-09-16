@@ -1259,7 +1259,69 @@ describe('Diff2Html', () => {
       /* eslint-enable no-irregular-whitespace */
     });
 
-    describe('with dark mode flag', () => {
+    describe('with auto colorScheme', () => {
+      it('should return a html diff with dark mode', () => {
+        const result = html(diffExample1, {
+          drawFileList: false,
+          colorScheme: ColorSchemeType.AUTO,
+        });
+        expect(result).toMatchInlineSnapshot(`
+          "<div class="d2h-wrapper d2h-auto-color-scheme">
+              <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">
+              <div class="d2h-file-header">
+              <span class="d2h-file-name-wrapper">
+              <svg aria-hidden="true" class="d2h-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">
+                  <path d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"></path>
+              </svg>    <span class="d2h-file-name">sample</span>
+              <span class="d2h-tag d2h-changed d2h-changed-tag">CHANGED</span></span>
+          <label class="d2h-file-collapse">
+              <input class="d2h-file-collapse-input" type="checkbox" name="viewed" value="viewed">
+              Viewed
+          </label>
+              </div>
+              <div class="d2h-file-diff">
+                  <div class="d2h-code-wrapper">
+                      <table class="d2h-diff-table">
+                          <tbody class="d2h-diff-tbody">
+                          <tr>
+              <td class="d2h-code-linenumber d2h-info"></td>
+              <td class="d2h-info">
+                  <div class="d2h-code-line">@@ -1 +1 @@</div>
+              </td>
+          </tr><tr>
+              <td class="d2h-code-linenumber d2h-del d2h-change">
+                <div class="line-num1">1</div>
+          <div class="line-num2"></div>
+              </td>
+              <td class="d2h-del d2h-change">
+                  <div class="d2h-code-line">
+                      <span class="d2h-code-line-prefix">-</span>
+                      <span class="d2h-code-line-ctn"><del>test</del></span>
+                  </div>
+              </td>
+          </tr><tr>
+              <td class="d2h-code-linenumber d2h-ins d2h-change">
+                <div class="line-num1"></div>
+          <div class="line-num2">1</div>
+              </td>
+              <td class="d2h-ins d2h-change">
+                  <div class="d2h-code-line">
+                      <span class="d2h-code-line-prefix">+</span>
+                      <span class="d2h-code-line-ctn"><ins>test1</ins></span>
+                  </div>
+              </td>
+          </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+          </div>"
+        `);
+      });
+    });
+
+    describe('with dark colorScheme', () => {
       it('should return a html diff with dark mode', () => {
         const result = html(diffExample1, {
           drawFileList: false,
