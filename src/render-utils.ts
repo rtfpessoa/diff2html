@@ -89,9 +89,9 @@ export function toCSSClass(lineType: LineType): CSSLineClass {
 export function colorSchemeToCss(colorScheme: ColorSchemeType): string {
   switch (colorScheme) {
     case ColorSchemeType.DARK:
-      return ' dark';
+      return ' d2h-dark-color-scheme';
     case ColorSchemeType.AUTO:
-      return ' auto-color-scheme';
+      return ' d2h-auto-color-scheme';
     default:
       return '';
   }

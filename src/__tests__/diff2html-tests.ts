@@ -1266,7 +1266,7 @@ describe('Diff2Html', () => {
           colorScheme: ColorSchemeType.DARK,
         });
         expect(result).toMatchInlineSnapshot(`
-          "<div class="d2h-wrapper dark">
+          "<div class="d2h-wrapper d2h-dark-color-scheme">
               <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">
               <div class="d2h-file-header">
               <span class="d2h-file-name-wrapper">
