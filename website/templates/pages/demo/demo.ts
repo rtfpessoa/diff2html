@@ -200,6 +200,7 @@ type Elements = {
   };
   options: {
     outputFormat: HTMLInputElement;
+    colorScheme: HTMLInputElement;
     matching: HTMLInputElement;
     wordsThreshold: HTMLInputElement;
     matchingMaxComparisons: HTMLInputElement;
@@ -259,6 +260,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     options: {
       outputFormat: getHTMLInputElementById('diff-url-options-output-format'),
+      colorScheme: getHTMLInputElementById('diff-url-options-color-scheme'),
       matching: getHTMLInputElementById('diff-url-options-matching'),
       wordsThreshold: getHTMLInputElementById('diff-url-options-match-words-threshold'),
       matchingMaxComparisons: getHTMLInputElementById('diff-url-options-matching-max-comparisons'),
@@ -272,6 +274,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Update HTML inputs from any changes in URL
   config.outputFormat && (elements.options.outputFormat.value = config.outputFormat);
+  config.colorScheme && (elements.options.colorScheme.value = config.colorScheme);
   config.drawFileList && (elements.checkboxes.drawFileList.checked = config.drawFileList);
   config.matching && (elements.options.matching.value = config.matching);
   config.matchWordsThreshold && (elements.options.wordsThreshold.value = config.matchWordsThreshold.toString());

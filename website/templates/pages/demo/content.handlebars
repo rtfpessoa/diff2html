@@ -33,7 +33,7 @@
     </div>
 
     <div class="columns is-desktop is-multiline">
-      <div class="column is-one-fifth-widescreen">
+      <div class="column is-one-sixth-widescreen">
         <label title="Output format of the HTML, either line by line or side by side">
           <p>Output Format</p>
           <select class="options-label-value" id="diff-url-options-output-format" name="outputFormat">
@@ -42,14 +42,24 @@
           </select>
         </label>
       </div>
-      <div class="column is-one-fifth-widescreen">
+      <div class="column is-one-sixth-widescreen">
+        <label title="Color scheme to render. Auto uses user preference.">
+          <p>Color Scheme</p>
+          <select class="options-label-value" id="diff-url-options-color-scheme" name="colorScheme">
+            <option value="light" selected>Light</option>
+            <option value="dark">Dark</option>
+            <option value="auto">Auto</option>
+          </select>
+        </label>
+      </div>
+      <div class="column is-one-sixth-widescreen">
         <label title="Show the file list summary before the diff">
           <p>File Summary</p>
           <input class="options-label-value" id="diff-url-options-show-files" type="checkbox" name="drawFileList"
             checked />
         </label>
       </div>
-      <div class="column is-one-fifth-widescreen">
+      <div class="column is-one-sixth-widescreen">
         <label title="Level of matching for the comparison algorithm">
           <p>Matching Type</p>
           <select class="options-label-value" id="diff-url-options-matching" name="matching">
@@ -59,14 +69,14 @@
           </select>
         </label>
       </div>
-      <div class="column is-one-fifth-widescreen">
+      <div class="column is-one-sixth-widescreen">
         <label title="Similarity threshold for the matching algorithm">
           <p>Words Threshold</p>
           <input class="options-label-value" id="diff-url-options-match-words-threshold" type="number"
             name="matchWordsThreshold" value="0.25" step="0.05" min="0" max="1" />
         </label>
       </div>
-      <div class="column is-one-fifth-widescreen">
+      <div class="column is-one-sixth-widescreen">
         <label title="Maximum number of comparison performed by the matching algorithm in a block of changes">
           <p>Max Comparisons</p>
           <input class="options-label-value" id="diff-url-options-matching-max-comparisons" type="number"
