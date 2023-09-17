@@ -392,12 +392,12 @@
   --d2h-dark-border-color: #494b40;
   --d2h-dark-ligher-border: #66695a;
 
-  --d2h-dark-del-bg-color: #905a5c;
-  --d2h-dark-del-highlight-bg-color: #604243;
+  --d2h-dark-del-bg-color: #604243;
+  --d2h-dark-del-highlight-bg-color: #905a5c;
   --d2h-dark-del-border-color: #a07c7e;
 
-  --d2h-dark-ins-bg-color: #177016;
-  --d2h-dark-ins-highlight-bg-color: #0f4a07;
+  --d2h-dark-ins-bg-color: #0f4a07;
+  --d2h-dark-ins-highlight-bg-color: #177016;
   --d2h-dark-ins-border-color: #219f1f;
 
   --d2h-dark-info-bg-color: #32342c;
