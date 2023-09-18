@@ -1,8 +1,8 @@
 import { render } from '../file-list-renderer';
 import HoganJsUtils from '../hoganjs-utils';
 
-describe('FileListPrinter', () => {
-  describe('generateFileList', () => {
+describe('FileListRenderer', () => {
+  describe('render', () => {
     it('should expose old and new files to templates', () => {
       const hoganUtils = new HoganJsUtils({
         rawTemplates: {
