@@ -1,4 +1,4 @@
-import { render } from '../file-list-renderer';
+import { FileListRenderer } from '../file-list-renderer';
 import HoganJsUtils from '../hoganjs-utils';
 
 describe('FileListRenderer', () => {
@@ -10,6 +10,7 @@ describe('FileListRenderer', () => {
           'file-summary-line': '{{oldName}}, {{newName}}, {{fileName}}',
         },
       });
+      const fileListRenderer = new FileListRenderer(hoganUtils);
       const files = [
         {
           isCombined: false,
@@ -55,7 +56,7 @@ describe('FileListRenderer', () => {
         },
       ];
 
-      const fileHtml = render(files, hoganUtils);
+      const fileHtml = fileListRenderer.render(files);
 
       expect(fileHtml).toMatchInlineSnapshot(`
         "my/file/name.js, my/file/name.js, my/file/name.js
@@ -67,6 +68,8 @@ describe('FileListRenderer', () => {
 
     it('should work for all kinds of files', () => {
       const hoganUtils = new HoganJsUtils({});
+      const fileListRenderer = new FileListRenderer(hoganUtils);
+
       const files = [
         {
           isCombined: false,
@@ -111,7 +114,7 @@ describe('FileListRenderer', () => {
           isDeleted: true,
         },
       ];
-      const fileHtml = render(files, hoganUtils);
+      const fileHtml = fileListRenderer.render(files);
       expect(fileHtml).toMatchInlineSnapshot(`
         "<div class="d2h-file-list-wrapper">
             <div class="d2h-file-list-header">
