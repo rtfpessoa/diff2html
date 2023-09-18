@@ -453,6 +453,12 @@
   border-color: var(--d2h-dark-ligher-border);
 }
 
+.d2h-dark-color-scheme .d2h-code-linenumber {
+  background-color: var(--d2h-dark-bg-color);
+  color: var(--d2h-dark-color);
+  border-color: var(--d2h-dark-border-color);
+}
+
 .d2h-dark-color-scheme .d2h-del {
   background-color: var(--d2h-dark-del-bg-color);
   border-color: var(--d2h-dark-del-border-color);
@@ -466,7 +472,7 @@
 .d2h-dark-color-scheme .d2h-info {
   background-color: var(--d2h-dark-info-bg-color);
   color: var(--d2h-dark-info-color);
-  border-color: var(--d2h-dark-bg-color);
+  border-color: var(--d2h-dark-border-color);
 }
 
 .d2h-dark-color-scheme .d2h-file-diff .d2h-del.d2h-change {
@@ -487,12 +493,6 @@
 
 .d2h-dark-color-scheme .d2h-file-collapse.d2h-selected {
   background-color: var(--d2h-dark-bg-color);
-}
-
-.d2h-dark-color-scheme .d2h-code-linenumber {
-  background-color: var(--d2h-dark-bg-color);
-  color: var(--d2h-dark-color);
-  border-color: var(--d2h-dark-bg-color);
 }
 
 .d2h-dark-color-scheme .d2h-file-list-wrapper a {
@@ -584,6 +584,12 @@
     border-color: var(--d2h-dark-ligher-border);
   }
 
+  .d2h-auto-color-scheme .d2h-code-linenumber {
+    background-color: var(--d2h-dark-bg-color);
+    color: var(--d2h-dark-color);
+    border-color: var(--d2h-dark-border-color);
+  }
+
   .d2h-auto-color-scheme .d2h-del {
     background-color: var(--d2h-dark-del-bg-color);
     border-color: var(--d2h-dark-del-border-color);
@@ -597,7 +603,7 @@
   .d2h-auto-color-scheme .d2h-info {
     background-color: var(--d2h-dark-info-bg-color);
     color: var(--d2h-dark-info-color);
-    border-color: var(--d2h-dark-bg-color);
+    border-color: var(--d2h-dark-border-color);
   }
 
   .d2h-auto-color-scheme .d2h-file-diff .d2h-del.d2h-change {
@@ -618,12 +624,6 @@
 
   .d2h-auto-color-scheme .d2h-file-collapse.d2h-selected {
     background-color: var(--d2h-dark-bg-color);
-  }
-
-  .d2h-auto-color-scheme .d2h-code-linenumber {
-    background-color: var(--d2h-dark-bg-color);
-    color: var(--d2h-dark-color);
-    border-color: var(--d2h-dark-bg-color);
   }
 
   .d2h-auto-color-scheme .d2h-file-list-wrapper a {
