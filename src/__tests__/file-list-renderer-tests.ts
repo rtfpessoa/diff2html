@@ -178,7 +178,7 @@ describe('FileListRenderer', () => {
     });
 
     describe('with dark colorScheme', () => {
-      it('should work for all kinds of files', () => {
+      it('should should include dark colorScheme', () => {
         const hoganUtils = new HoganJsUtils({});
         const fileListRenderer = new FileListRenderer(hoganUtils, {
           colorScheme: ColorSchemeType.DARK,
@@ -224,7 +224,7 @@ describe('FileListRenderer', () => {
     });
 
     describe('with auto colorScheme', () => {
-      it('should work for all kinds of files', () => {
+      it('should should include auto colorScheme', () => {
         const hoganUtils = new HoganJsUtils({});
         const fileListRenderer = new FileListRenderer(hoganUtils, {
           colorScheme: ColorSchemeType.AUTO,

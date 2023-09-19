@@ -1320,7 +1320,7 @@ describe('Diff2Html', () => {
         `);
       });
 
-      it('should include auto mode on file list', () => {
+      it('should include auto colorScheme on file list', () => {
         const result = html(diffExample1, {
           drawFileList: true,
           colorScheme: ColorSchemeType.AUTO,
@@ -1462,7 +1462,7 @@ describe('Diff2Html', () => {
         `);
       });
 
-      it('should include dark mode on file list', () => {
+      it('should include dark colorScheme on file list', () => {
         const result = html(diffExample1, {
           drawFileList: true,
           colorScheme: ColorSchemeType.DARK,
