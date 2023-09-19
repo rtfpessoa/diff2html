@@ -10,7 +10,7 @@ export interface FileListRendererConfig {
 }
 
 export const defaultFileListRendererConfig = {
-  colorScheme: ColorSchemeType.LIGHT,
+  colorScheme: renderUtils.defaultRenderConfig.colorScheme,
 };
 
 export class FileListRenderer {
