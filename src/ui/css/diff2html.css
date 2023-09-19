@@ -553,11 +553,11 @@
 }
 
 .d2h-dark-color-scheme .d2h-file-list-wrapper a {
-  color: var(--d2h-dark-moved-color);
+  color: var(--d2h-dark-moved-label-color);
 }
 
 .d2h-dark-color-scheme .d2h-file-list-wrapper a:visited {
-  color: var(--d2h-dark-moved-color);
+  color: var(--d2h-dark-moved-label-color);
 }
 
 .d2h-dark-color-scheme .d2h-file-list > li {
@@ -569,7 +569,7 @@
 }
 
 .d2h-dark-color-scheme .d2h-moved {
-  color: var(--d2h-dark-moved-color);
+  color: var(--d2h-dark-moved-label-color);
 }
 
 .d2h-dark-color-scheme .d2h-tag {
@@ -589,7 +589,7 @@
 }
 
 .d2h-dark-color-scheme .d2h-moved-tag {
-  border: var(--d2h-dark-moved-color) 1px solid;
+  border: var(--d2h-dark-moved-label-color) 1px solid;
 }
 
 /**
@@ -693,11 +693,11 @@
   }
 
   .d2h-auto-color-scheme .d2h-file-list-wrapper a {
-    color: var(--d2h-dark-moved-color);
+    color: var(--d2h-dark-moved-label-color);
   }
 
   .d2h-auto-color-scheme .d2h-file-list-wrapper a:visited {
-    color: var(--d2h-dark-moved-color);
+    color: var(--d2h-dark-moved-label-color);
   }
 
   .d2h-auto-color-scheme .d2h-file-list > li {
@@ -709,7 +709,7 @@
   }
 
   .d2h-auto-color-scheme .d2h-moved {
-    color: var(--d2h-dark-moved-color);
+    color: var(--d2h-dark-moved-label-color);
   }
 
   .d2h-auto-color-scheme .d2h-tag {
@@ -729,6 +729,6 @@
   }
 
   .d2h-auto-color-scheme .d2h-moved-tag {
-    border: var(--d2h-dark-moved-color) 1px solid;
+    border: var(--d2h-dark-moved-label-color) 1px solid;
   }
 }
