@@ -49,7 +49,7 @@ const jsonExample1: DiffFile[] = [
 ];
 
 describe('Diff2Html', () => {
-  describe('getJsonFromDiff', () => {
+  describe('parse', () => {
     it('should parse simple diff to json', () => {
       const diff =
         'diff --git a/sample b/sample\n' +
@@ -199,7 +199,9 @@ describe('Diff2Html', () => {
         ]
       `);
     });
+  });
 
+  describe('html', () => {
     it('should generate pretty line by line html from diff', () => {
       const result = html(diffExample1, { drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
