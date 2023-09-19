@@ -12,7 +12,7 @@
 
   --d2h-line-border-color: #eeeeee;
 
-  --d2h-file-header-color: #f7f7f7;
+  --d2h-file-header-bg-color: #f7f7f7;
   --d2h-file-header-border-color: #d8d8d8;
 
   --d2h-empty-placeholder-bg-color: #f1f1f1;
@@ -49,6 +49,9 @@
 
   --d2h-dark-line-border-color: #5a5c51;
 
+  --d2h-dark-file-header-bg-color: #4f5146;
+  --d2h-dark-file-header-border-color: #3f4136;
+
   --d2h-dark-empty-placeholder-bg-color: #494b40;
   --d2h-dark-empty-placeholder-border-color: #66695a;
 
@@ -81,7 +84,7 @@
   height: 35px;
   padding: 5px 10px;
   border-bottom: 1px solid var(--d2h-file-header-border-color);
-  background-color: var(--d2h-file-header-color);
+  background-color: var(--d2h-file-header-bg-color);
   font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -465,8 +468,8 @@
 
 .d2h-dark-color-scheme .d2h-file-header {
   color: var(--d2h-dark-color);
-  background-color: var(--d2h-dark-bg-color);
-  border-bottom: var(--d2h-dark-border-color);
+  background-color: var(--d2h-dark-file-header-bg-color);
+  border-bottom: var(--d2h-dark-file-header-border-color);
 }
 
 .d2h-dark-color-scheme .d2h-lines-added {
@@ -605,8 +608,8 @@
 
   .d2h-auto-color-scheme .d2h-file-header {
     color: var(--d2h-dark-color);
-    background-color: var(--d2h-dark-bg-color);
-    border-bottom: var(--d2h-dark-border-color);
+    background-color: var(--d2h-dark-file-header-bg-color);
+    border-bottom: var(--d2h-dark-file-header-border-color);
   }
 
   .d2h-auto-color-scheme .d2h-lines-added {
