@@ -375,7 +375,7 @@ The HTML output accepts a Javascript object with configuration. Possible options
   `false`
 - `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is
   `2500`
-- `maxLineSizeInBlockForComparison`: maximum number os characters of the bigger line in a block to apply comparison,
+- `maxLineSizeInBlockForComparison`: maximum number of characters of the bigger line in a block to apply comparison,
   default is `200`
 - `compiledTemplates`: object ([Hogan.js](https://github.com/twitter/hogan.js/) template values) with previously
   compiled templates to replace parts of the html, default is `{}`. For example:
