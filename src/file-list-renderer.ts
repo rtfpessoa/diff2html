@@ -1,15 +1,25 @@
 import * as renderUtils from './render-utils';
 import HoganJsUtils from './hoganjs-utils';
-import { DiffFile } from './types';
+import { ColorSchemeType, DiffFile } from './types';
 
 const baseTemplatesPath = 'file-summary';
 const iconsBaseTemplatesPath = 'icon';
 
+export interface FileListRendererConfig {
+  colorScheme?: ColorSchemeType;
+}
+
+export const defaultFileListRendererConfig = {
+  colorScheme: ColorSchemeType.LIGHT,
+};
+
 export class FileListRenderer {
   private readonly hoganUtils: HoganJsUtils;
+  private readonly config: typeof defaultFileListRendererConfig;
 
-  constructor(hoganUtils: HoganJsUtils) {
+  constructor(hoganUtils: HoganJsUtils, config: FileListRendererConfig = {}) {
     this.hoganUtils = hoganUtils;
+    this.config = { ...defaultFileListRendererConfig, ...config };
   }
 
   render(diffFiles: DiffFile[]): string {
@@ -34,6 +44,7 @@ export class FileListRenderer {
       .join('\n');
 
     return this.hoganUtils.render(baseTemplatesPath, 'wrapper', {
+      colorScheme: renderUtils.colorSchemeToCss(this.config.colorScheme),
       filesNumber: diffFiles.length,
       files: files,
     });

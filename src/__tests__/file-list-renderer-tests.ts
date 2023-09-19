@@ -1,5 +1,6 @@
 import { FileListRenderer } from '../file-list-renderer';
 import HoganJsUtils from '../hoganjs-utils';
+import { ColorSchemeType } from '../types';
 
 describe('FileListRenderer', () => {
   describe('render', () => {
@@ -174,6 +175,98 @@ describe('FileListRenderer', () => {
             </ol>
         </div>"
       `);
+    });
+
+    describe('with dark colorScheme', () => {
+      it('should work for all kinds of files', () => {
+        const hoganUtils = new HoganJsUtils({});
+        const fileListRenderer = new FileListRenderer(hoganUtils, {
+          colorScheme: ColorSchemeType.DARK,
+        });
+
+        const files = [
+          {
+            isCombined: false,
+            isGitDiff: false,
+            blocks: [],
+            addedLines: 12,
+            deletedLines: 41,
+            language: 'js',
+            oldName: 'my/file/name.js',
+            newName: 'my/file/name.js',
+          },
+        ];
+        const fileHtml = fileListRenderer.render(files);
+        expect(fileHtml).toMatchInlineSnapshot(`
+          "<div class="d2h-file-list-wrapper d2h-dark-color-scheme">
+              <div class="d2h-file-list-header">
+                  <span class="d2h-file-list-title">Files changed (1)</span>
+                  <a class="d2h-file-switch d2h-hide">hide</a>
+                  <a class="d2h-file-switch d2h-show">show</a>
+              </div>
+              <ol class="d2h-file-list">
+              <li class="d2h-file-list-line">
+              <span class="d2h-file-name-wrapper">
+                <svg aria-hidden="true" class="d2h-icon d2h-changed" height="16" title="modified" version="1.1"
+                     viewBox="0 0 14 16" width="14">
+                    <path d="M13 1H1C0.45 1 0 1.45 0 2v12c0 0.55 0.45 1 1 1h12c0.55 0 1-0.45 1-1V2c0-0.55-0.45-1-1-1z m0 13H1V2h12v12zM4 8c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3z"></path>
+                </svg>      <a href="#d2h-781444" class="d2h-file-name">my/file/name.js</a>
+                <span class="d2h-file-stats">
+                    <span class="d2h-lines-added">+12</span>
+                    <span class="d2h-lines-deleted">-41</span>
+                </span>
+              </span>
+          </li>
+              </ol>
+          </div>"
+        `);
+      });
+    });
+
+    describe('with auto colorScheme', () => {
+      it('should work for all kinds of files', () => {
+        const hoganUtils = new HoganJsUtils({});
+        const fileListRenderer = new FileListRenderer(hoganUtils, {
+          colorScheme: ColorSchemeType.AUTO,
+        });
+
+        const files = [
+          {
+            isCombined: false,
+            isGitDiff: false,
+            blocks: [],
+            addedLines: 12,
+            deletedLines: 41,
+            language: 'js',
+            oldName: 'my/file/name.js',
+            newName: 'my/file/name.js',
+          },
+        ];
+        const fileHtml = fileListRenderer.render(files);
+        expect(fileHtml).toMatchInlineSnapshot(`
+          "<div class="d2h-file-list-wrapper d2h-auto-color-scheme">
+              <div class="d2h-file-list-header">
+                  <span class="d2h-file-list-title">Files changed (1)</span>
+                  <a class="d2h-file-switch d2h-hide">hide</a>
+                  <a class="d2h-file-switch d2h-show">show</a>
+              </div>
+              <ol class="d2h-file-list">
+              <li class="d2h-file-list-line">
+              <span class="d2h-file-name-wrapper">
+                <svg aria-hidden="true" class="d2h-icon d2h-changed" height="16" title="modified" version="1.1"
+                     viewBox="0 0 14 16" width="14">
+                    <path d="M13 1H1C0.45 1 0 1.45 0 2v12c0 0.55 0.45 1 1 1h12c0.55 0 1-0.45 1-1V2c0-0.55-0.45-1-1-1z m0 13H1V2h12v12zM4 8c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3z"></path>
+                </svg>      <a href="#d2h-781444" class="d2h-file-name">my/file/name.js</a>
+                <span class="d2h-file-stats">
+                    <span class="d2h-lines-added">+12</span>
+                    <span class="d2h-lines-deleted">-41</span>
+                </span>
+              </span>
+          </li>
+              </ol>
+          </div>"
+        `);
+      });
     });
   });
 });
