@@ -501,7 +501,7 @@
 .d2h-dark-color-scheme .d2h-code-side-linenumber {
   background-color: var(--d2h-dark-bg-color);
   color: var(--d2h-dark-color);
-  border-color: var(--d2h-dark-border-color);
+  border-color: var(--d2h-dark-line-border-color);
 }
 
 .d2h-dark-color-scheme .d2h-files-diff .d2h-code-side-emptyplaceholder,
@@ -513,7 +513,7 @@
 .d2h-dark-color-scheme .d2h-code-linenumber {
   background-color: var(--d2h-dark-bg-color);
   color: var(--d2h-dark-color);
-  border-color: var(--d2h-line-border-color);
+  border-color: var(--d2h-dark-line-border-color);
 }
 
 .d2h-dark-color-scheme .d2h-del {
@@ -641,7 +641,7 @@
   .d2h-auto-color-scheme .d2h-code-side-linenumber {
     background-color: var(--d2h-dark-bg-color);
     color: var(--d2h-dark-color);
-    border-color: var(--d2h-line-border-color);
+    border-color: var(--d2h-dark-line-border-color);
   }
 
   .d2h-auto-color-scheme .d2h-files-diff .d2h-code-side-emptyplaceholder,
@@ -653,7 +653,7 @@
   .d2h-auto-color-scheme .d2h-code-linenumber {
     background-color: var(--d2h-dark-bg-color);
     color: var(--d2h-dark-color);
-    border-color: var(--d2h-dark-border-color);
+    border-color: var(--d2h-dark-line-border-color);
   }
 
   .d2h-auto-color-scheme .d2h-del {
