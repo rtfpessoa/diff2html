@@ -32,7 +32,10 @@ export function html(diffInput: string | DiffFile[], configuration: Diff2HtmlCon
 
   const hoganUtils = new HoganJsUtils(config);
 
-  const fileList = config.drawFileList ? new FileListRenderer(hoganUtils).render(diffJson) : '';
+  const { colorScheme } = config;
+  const fileListRendererConfig = { colorScheme };
+
+  const fileList = config.drawFileList ? new FileListRenderer(hoganUtils, fileListRendererConfig).render(diffJson) : '';
 
   const diffOutput =
     config.outputFormat === 'side-by-side'
