@@ -5,6 +5,8 @@ import '../../../main.css';
 import 'highlight.js/styles/github.css';
 import '../../../../src/ui/css/diff2html.css';
 import './demo.css';
+import { colorSchemeToCss } from '../../../../src/render-utils';
+import { ColorSchemeType } from '../../../../src/types';
 
 /*
  * Example URLs:
@@ -155,7 +157,14 @@ async function getDiff(request: Request): Promise<string> {
 
 function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements): void {
   const diff2htmlUi = new Diff2HtmlUI(elements.structure.diffTarget, diffString, config);
+
+  setBodyColorScheme(diff2htmlUi.config.colorScheme);
+
   diff2htmlUi.draw();
+}
+
+function setBodyColorScheme(colorScheme: ColorSchemeType): void {
+  document.body.className = colorSchemeToCss(colorScheme);
 }
 
 async function prepareInitialState(elements: Elements): Promise<[Diff2HtmlUIConfig, string]> {
