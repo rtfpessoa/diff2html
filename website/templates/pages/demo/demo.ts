@@ -2,7 +2,7 @@ import { Diff2HtmlUI, defaultDiff2HtmlUIConfig, Diff2HtmlUIConfig } from '../../
 
 import '../../../main.ts';
 import '../../../main.css';
-import 'highlight.js/styles/github.css';
+import './github-highlights.css';
 import '../../../../src/ui/css/diff2html.css';
 import './demo.css';
 import { colorSchemeToCss } from '../../../../src/render-utils';
