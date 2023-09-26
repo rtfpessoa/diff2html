@@ -44,39 +44,39 @@
    * Dark Color Scheme
    */
 
-  --d2h-dark-color: #e6edf3;
-  --d2h-dark-bg-color: #171814;
-  --d2h-dark-border-color: #494b40;
+  --d2h-dark-color: rgb(230, 237, 243);
+  --d2h-dark-bg-color: rgb(13, 17, 23);
+  --d2h-dark-border-color: rgb(48, 54, 61);
 
-  --d2h-dark-dim-color: #929292;
+  --d2h-dark-dim-color: rgb(110, 118, 129);
 
-  --d2h-dark-line-border-color: #5a5c51;
+  --d2h-dark-line-border-color: rgb(33, 38, 45);
 
-  --d2h-dark-file-header-bg-color: #272823;
-  --d2h-dark-file-header-border-color: #3f4136;
+  --d2h-dark-file-header-bg-color: rgb(22, 27, 34);
+  --d2h-dark-file-header-border-color: rgb(48, 54, 61);
 
-  --d2h-dark-empty-placeholder-bg-color: #494b40;
-  --d2h-dark-empty-placeholder-border-color: #66695a;
+  --d2h-dark-empty-placeholder-bg-color: #rgba(110, 118, 129, 0.1);
+  --d2h-dark-empty-placeholder-border-color: rgb(48, 54, 61);
 
-  --d2h-dark-selected-color: #00489f;
+  --d2h-dark-selected-color: rgba(56, 139, 253, 0.1);
 
-  --d2h-dark-ins-bg-color: #0f4a07;
-  --d2h-dark-ins-border-color: #219f1f;
-  --d2h-dark-ins-highlight-bg-color: #177016;
-  --d2h-dark-ins-label-color: #4f9f4f;
+  --d2h-dark-ins-bg-color: rgba(46, 160, 67, 0.15);
+  --d2h-dark-ins-border-color: rgba(46, 160, 67, 0.4);
+  --d2h-dark-ins-highlight-bg-color: rgba(46, 160, 67, 0.4);
+  --d2h-dark-ins-label-color: rgb(63, 185, 80);
 
-  --d2h-dark-del-bg-color: #604243;
-  --d2h-dark-del-border-color: #a07c7e;
-  --d2h-dark-del-highlight-bg-color: #905a5c;
-  --d2h-dark-del-label-color: #ca4f54;
+  --d2h-dark-del-bg-color: rgba(248, 81, 73, 0.1);
+  --d2h-dark-del-border-color: rgba(248, 81, 73, 0.4);
+  --d2h-dark-del-highlight-bg-color: rgba(248, 81, 73, 0.4);
+  --d2h-dark-del-label-color: rgb(248, 81, 73);
 
-  --d2h-dark-change-del-color: #9b7707;
-  --d2h-dark-change-ins-color: #366b36;
+  --d2h-dark-change-del-color: rgba(210, 153, 34, 0.2);
+  --d2h-dark-change-ins-color: rgba(46, 160, 67, 0.25);
 
-  --d2h-dark-info-bg-color: #32342c;
-  --d2h-dark-info-border-color: #4f5146;
+  --d2h-dark-info-bg-color: rgba(56, 139, 253, 0.1);
+  --d2h-dark-info-border-color: rgba(56, 139, 253, 0.4);
 
-  --d2h-dark-change-label-color: #d0b44c;
+  --d2h-dark-change-label-color: rgb(210, 153, 34);
   --d2h-dark-moved-label-color: #3572b0;
 }
 
@@ -497,6 +497,8 @@
 }
 
 .d2h-dark-color-scheme .d2h-code-side-linenumber {
+  background-color: var(--d2h-dark-bg-color);
+  color: var(--d2h-dark-dim-color);
   border-color: var(--d2h-dark-line-border-color);
 }
 
