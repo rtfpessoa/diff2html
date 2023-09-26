@@ -449,7 +449,7 @@ describe('LineByLineRenderer', () => {
       });
       const html = lineByLineRenderer.render(exampleJson);
       expect(html).toMatchInlineSnapshot(`
-        "<div class="d2h-wrapper">
+        "<div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="txt">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">
@@ -523,7 +523,7 @@ describe('LineByLineRenderer', () => {
       });
       const html = lineByLineRenderer.render(exampleJson);
       expect(html).toMatchInlineSnapshot(`
-        "<div class="d2h-wrapper">
+        "<div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="js">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">
@@ -583,7 +583,7 @@ describe('LineByLineRenderer', () => {
       const lineByLineRenderer = new LineByLineRenderer(hoganUtils);
       const html = lineByLineRenderer.render(exampleJson);
       expect(html).toMatchInlineSnapshot(`
-        "<div class="d2h-wrapper">
+        "<div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="js">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">

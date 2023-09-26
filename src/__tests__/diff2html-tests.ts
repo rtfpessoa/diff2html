@@ -205,7 +205,7 @@ describe('Diff2Html', () => {
     it('should generate pretty line by line html from diff', () => {
       const result = html(diffExample1, { drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-wrapper">
+        "<div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">
@@ -262,7 +262,7 @@ describe('Diff2Html', () => {
     it('should generate pretty line by line html from json', () => {
       const result = html(jsonExample1, { drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-wrapper">
+        "<div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">
@@ -319,7 +319,7 @@ describe('Diff2Html', () => {
     it('should generate pretty diff with files summary', () => {
       const result = html(diffExample1, { drawFileList: true });
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-file-list-wrapper">
+        "<div class="d2h-file-list-wrapper d2h-light-color-scheme">
             <div class="d2h-file-list-header">
                 <span class="d2h-file-list-title">Files changed (1)</span>
                 <a class="d2h-file-switch d2h-hide">hide</a>
@@ -339,7 +339,7 @@ describe('Diff2Html', () => {
             </span>
         </li>
             </ol>
-        </div><div class="d2h-wrapper">
+        </div><div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">
@@ -396,7 +396,7 @@ describe('Diff2Html', () => {
     it('should generate pretty side by side html from diff', () => {
       const result = html(diffExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-wrapper">
+        "<div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">
             <div class="d2h-file-header">
               <span class="d2h-file-name-wrapper">
@@ -467,7 +467,7 @@ describe('Diff2Html', () => {
     it('should generate pretty side by side html from json', () => {
       const result = html(jsonExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-wrapper">
+        "<div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">
             <div class="d2h-file-header">
               <span class="d2h-file-name-wrapper">
@@ -538,7 +538,7 @@ describe('Diff2Html', () => {
     it('should generate pretty side by side html from diff 2', () => {
       const result = html(diffExample1, { outputFormat: OutputFormatType.SIDE_BY_SIDE, drawFileList: true });
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-file-list-wrapper">
+        "<div class="d2h-file-list-wrapper d2h-light-color-scheme">
             <div class="d2h-file-list-header">
                 <span class="d2h-file-list-title">Files changed (1)</span>
                 <a class="d2h-file-switch d2h-hide">hide</a>
@@ -558,7 +558,7 @@ describe('Diff2Html', () => {
             </span>
         </li>
             </ol>
-        </div><div class="d2h-wrapper">
+        </div><div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-675094" class="d2h-file-wrapper" data-lang="">
             <div class="d2h-file-header">
               <span class="d2h-file-name-wrapper">
@@ -652,7 +652,7 @@ describe('Diff2Html', () => {
         ' \n';
       const result = html(diffExample2, { drawFileList: false });
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-wrapper">
+        "<div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-211439" class="d2h-file-wrapper" data-lang="md">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">
@@ -878,7 +878,7 @@ describe('Diff2Html', () => {
 
       const result = html(diff);
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-file-list-wrapper">
+        "<div class="d2h-file-list-wrapper d2h-light-color-scheme">
             <div class="d2h-file-list-header">
                 <span class="d2h-file-list-title">Files changed (1)</span>
                 <a class="d2h-file-switch d2h-hide">hide</a>
@@ -898,7 +898,7 @@ describe('Diff2Html', () => {
             </span>
         </li>
             </ol>
-        </div><div class="d2h-wrapper">
+        </div><div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-597266" class="d2h-file-wrapper" data-lang="html">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">
@@ -980,7 +980,7 @@ describe('Diff2Html', () => {
       const result = html(diff);
       /* eslint-disable no-irregular-whitespace */
       expect(result).toMatchInlineSnapshot(`
-        "<div class="d2h-file-list-wrapper">
+        "<div class="d2h-file-list-wrapper d2h-light-color-scheme">
             <div class="d2h-file-list-header">
                 <span class="d2h-file-list-title">Files changed (1)</span>
                 <a class="d2h-file-switch d2h-hide">hide</a>
@@ -1000,7 +1000,7 @@ describe('Diff2Html', () => {
             </span>
         </li>
             </ol>
-        </div><div class="d2h-wrapper">
+        </div><div class="d2h-wrapper d2h-light-color-scheme">
             <div id="d2h-719103" class="d2h-file-wrapper" data-lang="js">
             <div class="d2h-file-header">
             <span class="d2h-file-name-wrapper">

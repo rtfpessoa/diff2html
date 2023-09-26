@@ -117,7 +117,7 @@ describe('FileListRenderer', () => {
       ];
       const fileHtml = fileListRenderer.render(files);
       expect(fileHtml).toMatchInlineSnapshot(`
-        "<div class="d2h-file-list-wrapper">
+        "<div class="d2h-file-list-wrapper d2h-light-color-scheme">
             <div class="d2h-file-list-header">
                 <span class="d2h-file-list-title">Files changed (4)</span>
                 <a class="d2h-file-switch d2h-hide">hide</a>
