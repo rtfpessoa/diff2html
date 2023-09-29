@@ -5,3 +5,21 @@
 .diff-url-btn.is-small {
   font-size: 0.85rem;
 }
+
+.d2h-dark-color-scheme .title {
+  color: #fff;
+}
+
+.d2h-dark-color-scheme .footer {
+  background-color: #2d2d2d;
+}
+
+@media (prefers-color-scheme: dark) {
+  .d2h-auto-color-scheme .title {
+    color: #fff;
+  }
+
+  .d2h-auto-color-scheme .footer {
+    background-color: #2d2d2d;
+  }
+}

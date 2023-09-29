@@ -52,7 +52,10 @@ export default class LineByLineRenderer {
       })
       .join('\n');
 
-    return this.hoganUtils.render(genericTemplatesPath, 'wrapper', { content: diffsHtml });
+    return this.hoganUtils.render(genericTemplatesPath, 'wrapper', {
+      colorScheme: renderUtils.colorSchemeToCss(this.config.colorScheme),
+      content: diffsHtml,
+    });
   }
 
   makeFileDiffHtml(file: DiffFile, diffs: string): string {

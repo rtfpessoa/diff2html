@@ -91,3 +91,9 @@ export const DiffStyleType: { [_: string]: DiffStyleType } = {
   WORD: 'word',
   CHAR: 'char',
 };
+
+export enum ColorSchemeType {
+  AUTO = 'auto',
+  DARK = 'dark',
+  LIGHT = 'light',
+}

@@ -2,9 +2,11 @@ import { Diff2HtmlUI, defaultDiff2HtmlUIConfig, Diff2HtmlUIConfig } from '../../
 
 import '../../../main.ts';
 import '../../../main.css';
-import 'highlight.js/styles/github.css';
+import './github-highlights.css';
 import '../../../../src/ui/css/diff2html.css';
 import './demo.css';
+import { colorSchemeToCss } from '../../../../src/render-utils';
+import { ColorSchemeType } from '../../../../src/types';
 
 /*
  * Example URLs:
@@ -155,7 +157,14 @@ async function getDiff(request: Request): Promise<string> {
 
 function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements): void {
   const diff2htmlUi = new Diff2HtmlUI(elements.structure.diffTarget, diffString, config);
+
+  setBodyColorScheme(diff2htmlUi.config.colorScheme);
+
   diff2htmlUi.draw();
+}
+
+function setBodyColorScheme(colorScheme: ColorSchemeType): void {
+  document.body.className = colorSchemeToCss(colorScheme);
 }
 
 async function prepareInitialState(elements: Elements): Promise<[Diff2HtmlUIConfig, string]> {
@@ -200,6 +209,7 @@ type Elements = {
   };
   options: {
     outputFormat: HTMLInputElement;
+    colorScheme: HTMLInputElement;
     matching: HTMLInputElement;
     wordsThreshold: HTMLInputElement;
     matchingMaxComparisons: HTMLInputElement;
@@ -259,6 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     options: {
       outputFormat: getHTMLInputElementById('diff-url-options-output-format'),
+      colorScheme: getHTMLInputElementById('diff-url-options-color-scheme'),
       matching: getHTMLInputElementById('diff-url-options-matching'),
       wordsThreshold: getHTMLInputElementById('diff-url-options-match-words-threshold'),
       matchingMaxComparisons: getHTMLInputElementById('diff-url-options-matching-max-comparisons'),
@@ -272,6 +283,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Update HTML inputs from any changes in URL
   config.outputFormat && (elements.options.outputFormat.value = config.outputFormat);
+  config.colorScheme && (elements.options.colorScheme.value = config.colorScheme);
   config.drawFileList && (elements.checkboxes.drawFileList.checked = config.drawFileList);
   config.matching && (elements.options.matching.value = config.matching);
   config.matchWordsThreshold && (elements.options.wordsThreshold.value = config.matchWordsThreshold.toString());

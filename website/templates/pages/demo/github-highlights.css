@@ -1,0 +1,332 @@
+/*!
+  Theme Adapted from highlight.js github theme
+  Theme: Modified GitHub Dark
+  Description: Dark theme as seen on github.com, modified for diff2html demo
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-dark
+  Current colors taken from GitHub's CSS
+*/
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+code.hljs {
+  padding: 3px 5px;
+}
+
+.hljs {
+  color: #24292e;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: #d73a49;
+}
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: #6f42c1;
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id,
+.hljs-variable {
+  color: #005cc5;
+}
+.hljs-meta .hljs-string,
+.hljs-regexp,
+.hljs-string {
+  color: #032f62;
+}
+.hljs-built_in,
+.hljs-symbol {
+  color: #e36209;
+}
+.hljs-code,
+.hljs-comment,
+.hljs-formula {
+  color: #6a737d;
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-pseudo,
+.hljs-selector-tag {
+  color: #22863a;
+}
+.hljs-subst {
+  color: #24292e;
+}
+.hljs-section {
+  color: #005cc5;
+  font-weight: 700;
+}
+.hljs-bullet {
+  color: #735c0f;
+}
+.hljs-emphasis {
+  color: #24292e;
+  font-style: italic;
+}
+.hljs-strong {
+  color: #24292e;
+  font-weight: 700;
+}
+.hljs-addition {
+  color: #22863a;
+  background-color: #f0fff4;
+}
+.hljs-deletion {
+  color: #b31d28;
+  background-color: #ffeef0;
+}
+
+.d2h-dark-color-scheme .hljs {
+  color: #c9d1d9;
+}
+.d2h-dark-color-scheme .hljs-doctag,
+.d2h-dark-color-scheme .hljs-keyword,
+.d2h-dark-color-scheme .hljs-meta .hljs-keyword,
+.d2h-dark-color-scheme .hljs-template-tag,
+.d2h-dark-color-scheme .hljs-template-variable,
+.d2h-dark-color-scheme .hljs-type,
+.d2h-dark-color-scheme .hljs-variable.language_ {
+  color: #ff7b72;
+}
+.d2h-dark-color-scheme .hljs-title,
+.d2h-dark-color-scheme .hljs-title.class_,
+.d2h-dark-color-scheme .hljs-title.class_.inherited__,
+.d2h-dark-color-scheme .hljs-title.function_ {
+  color: #d2a8ff;
+}
+.d2h-dark-color-scheme .hljs-attr,
+.d2h-dark-color-scheme .hljs-attribute,
+.d2h-dark-color-scheme .hljs-literal,
+.d2h-dark-color-scheme .hljs-meta,
+.d2h-dark-color-scheme .hljs-number,
+.d2h-dark-color-scheme .hljs-operator,
+.d2h-dark-color-scheme .hljs-selector-attr,
+.d2h-dark-color-scheme .hljs-selector-class,
+.d2h-dark-color-scheme .hljs-selector-id,
+.d2h-dark-color-scheme .hljs-variable {
+  color: #79c0ff;
+}
+.d2h-dark-color-scheme .hljs-meta .hljs-string,
+.d2h-dark-color-scheme .hljs-regexp,
+.d2h-dark-color-scheme .hljs-string {
+  color: #a5d6ff;
+}
+.d2h-dark-color-scheme .hljs-built_in,
+.d2h-dark-color-scheme .hljs-symbol {
+  color: #ffa657;
+}
+.d2h-dark-color-scheme .hljs-code,
+.d2h-dark-color-scheme .hljs-comment,
+.d2h-dark-color-scheme .hljs-formula {
+  color: #8b949e;
+}
+.d2h-dark-color-scheme .hljs-name,
+.d2h-dark-color-scheme .hljs-quote,
+.d2h-dark-color-scheme .hljs-selector-pseudo,
+.d2h-dark-color-scheme .hljs-selector-tag {
+  color: #7ee787;
+}
+.d2h-dark-color-scheme .hljs-subst {
+  color: #c9d1d9;
+}
+.d2h-dark-color-scheme .hljs-section {
+  color: #1f6feb;
+  font-weight: 700;
+}
+.d2h-dark-color-scheme .hljs-bullet {
+  color: #f2cc60;
+}
+.d2h-dark-color-scheme .hljs-emphasis {
+  color: #c9d1d9;
+  font-style: italic;
+}
+.d2h-dark-color-scheme .hljs-strong {
+  color: #c9d1d9;
+  font-weight: 700;
+}
+.d2h-dark-color-scheme .hljs-addition {
+  color: #aff5b4;
+  background-color: #033a16;
+}
+.d2h-dark-color-scheme .hljs-deletion {
+  color: #ffdcd7;
+  background-color: #67060c;
+}
+
+@media (prefers-color-scheme: dark) {
+  .d2h-auto-color-scheme .hljs {
+    color: #c9d1d9;
+  }
+  .d2h-auto-color-scheme .hljs-doctag,
+  .d2h-auto-color-scheme .hljs-keyword,
+  .d2h-auto-color-scheme .hljs-meta .hljs-keyword,
+  .d2h-auto-color-scheme .hljs-template-tag,
+  .d2h-auto-color-scheme .hljs-template-variable,
+  .d2h-auto-color-scheme .hljs-type,
+  .d2h-auto-color-scheme .hljs-variable.language_ {
+    color: #ff7b72;
+  }
+  .d2h-auto-color-scheme .hljs-title,
+  .d2h-auto-color-scheme .hljs-title.class_,
+  .d2h-auto-color-scheme .hljs-title.class_.inherited__,
+  .d2h-auto-color-scheme .hljs-title.function_ {
+    color: #d2a8ff;
+  }
+  .d2h-auto-color-scheme .hljs-attr,
+  .d2h-auto-color-scheme .hljs-attribute,
+  .d2h-auto-color-scheme .hljs-literal,
+  .d2h-auto-color-scheme .hljs-meta,
+  .d2h-auto-color-scheme .hljs-number,
+  .d2h-auto-color-scheme .hljs-operator,
+  .d2h-auto-color-scheme .hljs-selector-attr,
+  .d2h-auto-color-scheme .hljs-selector-class,
+  .d2h-auto-color-scheme .hljs-selector-id,
+  .d2h-auto-color-scheme .hljs-variable {
+    color: #79c0ff;
+  }
+  .d2h-auto-color-scheme .hljs-meta .hljs-string,
+  .d2h-auto-color-scheme .hljs-regexp,
+  .d2h-auto-color-scheme .hljs-string {
+    color: #a5d6ff;
+  }
+  .d2h-auto-color-scheme .hljs-built_in,
+  .d2h-auto-color-scheme .hljs-symbol {
+    color: #ffa657;
+  }
+  .d2h-auto-color-scheme .hljs-code,
+  .d2h-auto-color-scheme .hljs-comment,
+  .d2h-auto-color-scheme .hljs-formula {
+    color: #8b949e;
+  }
+  .d2h-auto-color-scheme .hljs-name,
+  .d2h-auto-color-scheme .hljs-quote,
+  .d2h-auto-color-scheme .hljs-selector-pseudo,
+  .d2h-auto-color-scheme .hljs-selector-tag {
+    color: #7ee787;
+  }
+  .d2h-auto-color-scheme .hljs-subst {
+    color: #c9d1d9;
+  }
+  .d2h-auto-color-scheme .hljs-section {
+    color: #1f6feb;
+    font-weight: 700;
+  }
+  .d2h-auto-color-scheme .hljs-bullet {
+    color: #f2cc60;
+  }
+  .d2h-auto-color-scheme .hljs-emphasis {
+    color: #c9d1d9;
+    font-style: italic;
+  }
+  .d2h-auto-color-scheme .hljs-strong {
+    color: #c9d1d9;
+    font-weight: 700;
+  }
+  .d2h-auto-color-scheme .hljs-addition {
+    color: #aff5b4;
+    background-color: #033a16;
+  }
+  .d2h-auto-color-scheme .hljs-deletion {
+    color: #ffdcd7;
+    background-color: #67060c;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .d2h-auto-color-scheme .hljs {
+    color: #24292e;
+  }
+  .d2h-auto-color-scheme .hljs-doctag,
+  .d2h-auto-color-scheme .hljs-keyword,
+  .d2h-auto-color-scheme .hljs-meta .hljs-keyword,
+  .d2h-auto-color-scheme .hljs-template-tag,
+  .d2h-auto-color-scheme .hljs-template-variable,
+  .d2h-auto-color-scheme .hljs-type,
+  .d2h-auto-color-scheme .hljs-variable.language_ {
+    color: #d73a49;
+  }
+  .d2h-auto-color-scheme .hljs-title,
+  .d2h-auto-color-scheme .hljs-title.class_,
+  .d2h-auto-color-scheme .hljs-title.class_.inherited__,
+  .d2h-auto-color-scheme .hljs-title.function_ {
+    color: #6f42c1;
+  }
+  .d2h-auto-color-scheme .hljs-attr,
+  .d2h-auto-color-scheme .hljs-attribute,
+  .d2h-auto-color-scheme .hljs-literal,
+  .d2h-auto-color-scheme .hljs-meta,
+  .d2h-auto-color-scheme .hljs-number,
+  .d2h-auto-color-scheme .hljs-operator,
+  .d2h-auto-color-scheme .hljs-selector-attr,
+  .d2h-auto-color-scheme .hljs-selector-class,
+  .d2h-auto-color-scheme .hljs-selector-id,
+  .d2h-auto-color-scheme .hljs-variable {
+    color: #005cc5;
+  }
+  .d2h-auto-color-scheme .hljs-meta .hljs-string,
+  .d2h-auto-color-scheme .hljs-regexp,
+  .d2h-auto-color-scheme .hljs-string {
+    color: #032f62;
+  }
+  .d2h-auto-color-scheme .hljs-built_in,
+  .d2h-auto-color-scheme .hljs-symbol {
+    color: #e36209;
+  }
+  .d2h-auto-color-scheme .hljs-code,
+  .d2h-auto-color-scheme .hljs-comment,
+  .d2h-auto-color-scheme .hljs-formula {
+    color: #6a737d;
+  }
+  .d2h-auto-color-scheme .hljs-name,
+  .d2h-auto-color-scheme .hljs-quote,
+  .d2h-auto-color-scheme .hljs-selector-pseudo,
+  .d2h-auto-color-scheme .hljs-selector-tag {
+    color: #22863a;
+  }
+  .d2h-auto-color-scheme .hljs-subst {
+    color: #24292e;
+  }
+  .d2h-auto-color-scheme .hljs-section {
+    color: #005cc5;
+    font-weight: 700;
+  }
+  .d2h-auto-color-scheme .hljs-bullet {
+    color: #735c0f;
+  }
+  .d2h-auto-color-scheme .hljs-emphasis {
+    color: #24292e;
+    font-style: italic;
+  }
+  .d2h-auto-color-scheme .hljs-strong {
+    color: #24292e;
+    font-weight: 700;
+  }
+  .d2h-auto-color-scheme .hljs-addition {
+    color: #22863a;
+    background-color: #f0fff4;
+  }
+  .d2h-auto-color-scheme .hljs-deletion {
+    color: #b31d28;
+    background-color: #ffeef0;
+  }
+}

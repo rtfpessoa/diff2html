@@ -201,7 +201,7 @@ diff2htmlUi.draw();
 
 ```html
 <!-- Stylesheet -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
 
 <!-- Javascripts -->
@@ -225,6 +225,21 @@ document.addEventListener('DOMContentLoaded', () => {
   diff2htmlUi.draw();
   diff2htmlUi.highlightCode();
 });
+```
+
+When using the `auto` color scheme, you will need to specify both the light and dark themes for highlight.js to use.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"
+  media="screen and (prefers-color-scheme: light)"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css"
+  media="screen and (prefers-color-scheme: dark)"
+/>
 ```
 
 #### Collapsable File Summary List
@@ -386,6 +401,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
   > [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
 - `highlightLanguages`: Map of extension to language name, used for highlighting. This overrides the default language
   detection based on file extensions.
+- `colorScheme`: color scheme to use for the diff, default is `light`. Possible values are `light`, `dark`, and `auto`
+  which will use the browser's preferred color scheme.
 
 ### Diff2Html Browser
 

@@ -1,5 +1,5 @@
 import * as DiffParser from './diff-parser';
-import * as fileListPrinter from './file-list-renderer';
+import { FileListRenderer } from './file-list-renderer';
 import LineByLineRenderer, { LineByLineRendererConfig, defaultLineByLineRendererConfig } from './line-by-line-renderer';
 import SideBySideRenderer, { SideBySideRendererConfig, defaultSideBySideRendererConfig } from './side-by-side-renderer';
 import { DiffFile, OutputFormatType } from './types';
@@ -32,7 +32,10 @@ export function html(diffInput: string | DiffFile[], configuration: Diff2HtmlCon
 
   const hoganUtils = new HoganJsUtils(config);
 
-  const fileList = config.drawFileList ? fileListPrinter.render(diffJson, hoganUtils) : '';
+  const { colorScheme } = config;
+  const fileListRendererConfig = { colorScheme };
+
+  const fileList = config.drawFileList ? new FileListRenderer(hoganUtils, fileListRendererConfig).render(diffJson) : '';
 
   const diffOutput =
     config.outputFormat === 'side-by-side'
