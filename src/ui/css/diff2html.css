@@ -55,7 +55,7 @@
   --d2h-dark-file-header-bg-color: rgb(22, 27, 34);
   --d2h-dark-file-header-border-color: rgb(48, 54, 61);
 
-  --d2h-dark-empty-placeholder-bg-color: #rgba(110, 118, 129, 0.1);
+  --d2h-dark-empty-placeholder-bg-color: rgba(110, 118, 129, 0.1);
   --d2h-dark-empty-placeholder-border-color: rgb(48, 54, 61);
 
   --d2h-dark-selected-color: rgba(56, 139, 253, 0.1);
