@@ -5,7 +5,8 @@
  *
  */
 
-:root {
+:root,
+:host {
   --d2h-bg-color: #fff;
   --d2h-border-color: #ddd;
 
