@@ -134,8 +134,8 @@ function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
     const newObject = !Number.isNaN(Number(v))
       ? { [k]: Number(v) }
       : v === 'true' || v === 'false'
-      ? { [k]: Boolean(v) }
-      : { [k]: v };
+        ? { [k]: Boolean(v) }
+        : { [k]: v };
     return { ...object, ...newObject };
   }, {});
 }
