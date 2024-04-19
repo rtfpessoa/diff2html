@@ -10,9 +10,9 @@
 
 - Before sending a pull request make sure your code is tested.
 
-- Before sending a pull request for a feature, be sure to run tests with `yarn test`.
+- Before sending a pull request for a feature, be sure to run tests with `npm run test`.
 
-- Use the same coding style as the rest of the codebase, most of the check can be performed with `yarn run lint`.
+- Use the same coding style as the rest of the codebase, most of the check can be performed with `npm run run lint`.
 
 - Use `git rebase` (not `git merge`) to sync your work from time to time with the master branch.
 
