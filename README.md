@@ -321,7 +321,7 @@ import { Controller } from '@hotwired/stimulus';
 
 import { Diff2HtmlUI, Diff2HtmlUIConfig } from 'diff2html/lib/ui/js/diff2html-ui-slim.js';
 
-// Requires `yarn add highlight.js`
+// Requires `npm install highlight.js`
 import 'highlight.js/styles/github.css';
 import 'diff2html/bundles/css/diff2html.min.css';
 
