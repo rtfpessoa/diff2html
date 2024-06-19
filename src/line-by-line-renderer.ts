@@ -16,6 +16,7 @@ export interface LineByLineRendererConfig extends renderUtils.RenderConfig {
   renderNothingWhenEmpty?: boolean;
   matchingMaxComparisons?: number;
   maxLineSizeInBlockForComparison?: number;
+  lineFolding?: boolean;
 }
 
 export const defaultLineByLineRendererConfig = {
@@ -23,6 +24,7 @@ export const defaultLineByLineRendererConfig = {
   renderNothingWhenEmpty: false,
   matchingMaxComparisons: 2500,
   maxLineSizeInBlockForComparison: 200,
+  lineFolding: true
 };
 
 const genericTemplatesPath = 'generic';
@@ -70,6 +72,7 @@ export default class LineByLineRenderer {
       file: file,
       fileHtmlId: renderUtils.getHtmlId(file),
       diffs: diffs,
+      diffClass: (this.config.lineFolding) ? 'd2h-wrapped-file-diff' : '',
       filePath: filePathTemplate.render(
         {
           fileDiffName: renderUtils.filenameDiff(file),
@@ -96,11 +99,13 @@ export default class LineByLineRenderer {
 
     return file.blocks
       .map(block => {
-        let lines = this.hoganUtils.render(genericTemplatesPath, 'block-header', {
-          CSSLineClass: renderUtils.CSSLineClass,
-          blockHeader: file.isTooBig ? block.header : renderUtils.escapeForHtml(block.header),
-          lineClass: 'd2h-code-linenumber',
-          contentClass: 'd2h-code-line',
+        let lines = this.hoganUtils.render(genericTemplatesPath, 'line', {
+          lineContent: this.hoganUtils.render(genericTemplatesPath, 'block-header', {
+            CSSLineClass: renderUtils.CSSLineClass,
+            blockHeader: file.isTooBig ? block.header : renderUtils.escapeForHtml(block.header),
+            lineClass: 'd2h-code-linenumber',
+            contentClass: 'd2h-code-line',
+          })
         });
 
         this.applyLineGroupping(block).forEach(([contextLines, oldLines, newLines]) => {
@@ -113,13 +118,15 @@ export default class LineByLineRenderer {
           } else if (contextLines.length) {
             contextLines.forEach(line => {
               const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
-              lines += this.generateSingleLineHtml(file, {
-                type: renderUtils.CSSLineClass.CONTEXT,
-                prefix: prefix,
-                content: content,
-                oldNumber: line.oldNumber,
-                newNumber: line.newNumber,
-              });
+              lines += this.hoganUtils.render(genericTemplatesPath, 'line', {
+                lineContent: this.generateSingleLineHtml(file, {
+                  type: renderUtils.CSSLineClass.CONTEXT,
+                  prefix: prefix,
+                  content: content,
+                  oldNumber: line.oldNumber,
+                  newNumber: line.newNumber,
+                })
+              })
             });
           } else if (oldLines.length || newLines.length) {
             const { left, right } = this.processChangedLines(file, file.isCombined, oldLines, newLines);
@@ -253,8 +260,12 @@ export default class LineByLineRenderer {
 
   generateLineHtml(file: DiffFile, oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
     return {
-      left: this.generateSingleLineHtml(file, oldLine),
-      right: this.generateSingleLineHtml(file, newLine),
+      left: this.hoganUtils.render(genericTemplatesPath, 'line', {
+        lineContent: this.generateSingleLineHtml(file, oldLine)
+      }),
+      right: this.hoganUtils.render(genericTemplatesPath, 'line', {
+        lineContent: this.generateSingleLineHtml(file, newLine),
+      })
     };
   }
 
@@ -265,8 +276,8 @@ export default class LineByLineRenderer {
       oldNumber: line.oldNumber || '',
       newNumber: line.newNumber || '',
     });
-
-    return this.hoganUtils.render(genericTemplatesPath, 'line', {
+    
+    return this.hoganUtils.render(genericTemplatesPath, 'line-content', {
       type: line.type,
       lineClass: 'd2h-code-linenumber',
       contentClass: 'd2h-code-line',
