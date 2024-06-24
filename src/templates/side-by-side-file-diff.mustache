@@ -2,7 +2,7 @@
     <div class="d2h-file-header">
       {{{filePath}}}
     </div>
-    <div class="d2h-files-diff">
+    <div class="d2h-files-diff {{diffClass}}">
         <div class="d2h-file-side-diff">
             <div class="d2h-code-wrapper">
                 <table class="d2h-diff-table">
@@ -12,6 +12,7 @@
                 </table>
             </div>
         </div>
+        {{#diffs.right}}
         <div class="d2h-file-side-diff">
             <div class="d2h-code-wrapper">
                 <table class="d2h-diff-table">
@@ -21,5 +22,6 @@
                 </table>
             </div>
         </div>
+        {{/diffs.right}}
     </div>
 </div>
