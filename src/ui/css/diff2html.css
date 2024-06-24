@@ -606,6 +606,7 @@
 
 .d2h-wrapped-file-diff .d2h-code-line-ctn {
   white-space: break-spaces;
+  word-break: break-word;
 }
 
 .d2h-wrapped-file-diff .d2h-code-side-line {
