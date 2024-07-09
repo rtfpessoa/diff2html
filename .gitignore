@@ -29,8 +29,18 @@ bower_components/
 # Terraform
 /terraform/.terraform
 
+# Compiled templates
 /src/diff2html-templates.*
+
+# Compiled website
 /docs/
+
+# Bundles temporary typescript files compiled by webpack
+/bundles-out/
+
+# Web bundles
 /bundles/
+# CommonJS library
 /lib/
+# ESNext library
 /lib-esm/

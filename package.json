@@ -43,7 +43,7 @@
     "format:check": "npm run prettier --check",
     "format:fix": "npm run prettier --write",
     "build": "npm run build:css && npm run build:templates && npm run build:commonjs && npm run build:esm && npm run build:bundles && npm run build:website",
-    "build:commonjs": "rm -rf lib; tsc -p tsconfig.json --outDir lib",
+    "build:commonjs": "rm -rf lib; tsc -p tsconfig.json -m CommonJS --outDir lib",
     "build:esm": "rm -rf lib-esm; tsc -p tsconfig.json -m ESNext --outDir lib-esm",
     "build:bundles": "rm -rf ./bundles/js; webpack --mode production --config webpack.bundles.ts",
     "build:css": "rm -rf ./bundles/css; postcss --config ./postcss.config.js --no-map -o ./bundles/css/diff2html.min.css ./src/ui/css/diff2html.css",
