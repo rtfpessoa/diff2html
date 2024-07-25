@@ -291,7 +291,7 @@
 
 .d2h-code-side-linenumber {
   /* Keep the numbers fixed on line contents scroll */
-  position: absolute;
+  position: inherit;
   display: inline-block;
   box-sizing: border-box;
   width: 4em;
