@@ -82,7 +82,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download versions
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: versions
       - name: Store version
