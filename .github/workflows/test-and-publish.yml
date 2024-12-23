@@ -39,7 +39,7 @@ jobs:
           echo "Next tag is ${PUBLISH_TAG}"
           echo "${PUBLISH_TAG}" > publish-tag.txt
       - name: Upload versions
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: versions
           if-no-files-found: error
@@ -82,7 +82,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download versions
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: versions
       - name: Store version
@@ -141,7 +141,7 @@ jobs:
           # HACK: Restore npm package name
           sed -i 's/^  "name":.*/  "name": "diff2html",/g' package.json
       - name: Upload docs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docs
           if-no-files-found: error
