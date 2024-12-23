@@ -25,7 +25,7 @@ jobs:
         run: |
           export NEXT_VERSION="$(/bin/git-version --folder=$PWD --release-branch=master)"
           echo "Next version is ${NEXT_VERSION}"
-          echo "${NEXT_VERSION}" > .version
+          echo "${NEXT_VERSION}" > next-version.txt
           echo "version=${NEXT_VERSION}" >> $GITHUB_ENV
       - name: Get next npm tag name
         run: |
@@ -37,15 +37,15 @@ jobs:
             export PUBLISH_TAG="pr"
           fi
           echo "Next tag is ${PUBLISH_TAG}"
-          echo "${PUBLISH_TAG}" > .tag
+          echo "${PUBLISH_TAG}" > publish-tag.txt
       - name: Upload versions
         uses: actions/upload-artifact@v3
         with:
           name: versions
           if-no-files-found: error
           path: |
-            .version
-            .tag
+            next-version.txt
+            publish-tag.txt
 
   build:
     runs-on: ubuntu-latest
@@ -86,7 +86,7 @@ jobs:
         with:
           name: versions
       - name: Store version
-        run: echo "version=$(cat .version)" >> $GITHUB_ENV
+        run: echo "version=$(cat next-version.txt)" >> $GITHUB_ENV
       - name: Configure Git
         run: |
             git config user.email "gh-actions@users.noreply.github.com"
@@ -115,9 +115,9 @@ jobs:
       - name: Version package
         run: |
             # Update version in packages to publish
-            npm version $(cat .version) -m "Release version %s"
+            npm version $(cat next-version.txt) -m "Release version %s"
       - name: Publish to NPM
-        run: npm publish --tag $(cat .tag)
+        run: npm publish --tag $(cat publish-tag.txt)
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
@@ -136,8 +136,8 @@ jobs:
         run: |
             # HACK: Override npm package name to be able to publish in GitHub
             sed -i 's/^  "name":.*/  "name": "@rtfpessoa\/diff2html",/g' package.json
-            echo "Going to publish version $(cat .version) to GitHub"
-            npm publish --tag $(cat .tag)
+            echo "Going to publish version $(cat next-version.txt) to GitHub"
+            npm publish --tag $(cat publish-tag.txt)
             # HACK: Restore npm package name
             sed -i 's/^  "name":.*/  "name": "diff2html",/g' package.json
       - name: Upload docs
