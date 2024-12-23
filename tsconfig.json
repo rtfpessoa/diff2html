@@ -1,8 +1,8 @@
 {
-  "include": ["*env.d.ts", "src/**/*", "./typings/**/*"],
+  "include": ["src/**/*", "typings/**/*"],
   "exclude": ["node_modules", "src/__tests__/**"],
   "compilerOptions": {
-    "outDir": "lib",
+    "outDir": "bundles-out",
     "module": "CommonJS",
     "moduleResolution": "Node",
     "target": "ES6",

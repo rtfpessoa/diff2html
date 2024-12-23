@@ -458,18 +458,16 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     } else if ((values = index.exec(line))) {
       currentFile.checksumBefore = values[1];
       currentFile.checksumAfter = values[2];
-      values[3] && (currentFile.mode = values[3]);
+      if (values[3]) currentFile.mode = values[3];
     } else if ((values = combinedIndex.exec(line))) {
       currentFile.checksumBefore = [values[2], values[3]];
       currentFile.checksumAfter = values[1];
     } else if ((values = combinedMode.exec(line))) {
       currentFile.oldMode = [values[2], values[3]];
       currentFile.newMode = values[1];
-      // eslint-disable-next-line sonarjs/no-duplicated-branches
     } else if ((values = combinedNewFile.exec(line))) {
       currentFile.newFileMode = values[1];
       currentFile.isNew = true;
-      // eslint-disable-next-line sonarjs/no-duplicated-branches
     } else if ((values = combinedDeletedFile.exec(line))) {
       currentFile.deletedFileMode = values[1];
       currentFile.isDeleted = true;

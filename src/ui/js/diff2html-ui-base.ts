@@ -153,8 +153,7 @@ export class Diff2HtmlUI {
 
       let hljsLanguage =
         language && this.config.highlightLanguages.has(language)
-          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            this.config.highlightLanguages.get(language)!
+          ? this.config.highlightLanguages.get(language)!
           : language
             ? getLanguage(language)
             : 'plaintext';

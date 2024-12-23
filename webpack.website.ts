@@ -3,7 +3,6 @@ import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-// eslint-disable-next-line import/default
 import CopyPlugin from 'copy-webpack-plugin';
 
 const pages = ['index', 'demo'];

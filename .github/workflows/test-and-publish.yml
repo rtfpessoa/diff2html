@@ -25,7 +25,7 @@ jobs:
         run: |
           export NEXT_VERSION="$(/bin/git-version --folder=$PWD --release-branch=master)"
           echo "Next version is ${NEXT_VERSION}"
-          echo "${NEXT_VERSION}" > .version
+          echo "${NEXT_VERSION}" > next-version.txt
           echo "version=${NEXT_VERSION}" >> $GITHUB_ENV
       - name: Get next npm tag name
         run: |
@@ -37,22 +37,22 @@ jobs:
             export PUBLISH_TAG="pr"
           fi
           echo "Next tag is ${PUBLISH_TAG}"
-          echo "${PUBLISH_TAG}" > .tag
+          echo "${PUBLISH_TAG}" > publish-tag.txt
       - name: Upload versions
         uses: actions/upload-artifact@v3
         with:
           name: versions
           if-no-files-found: error
           path: |
-            .version
-            .tag
+            next-version.txt
+            publish-tag.txt
 
   build:
     runs-on: ubuntu-latest
     needs: [version]
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [16.x, 18.x, 20.x, 22.x]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -64,8 +64,8 @@ jobs:
           cache: 'npm'
       - name: Log environment setup
         run: |
-            node -v
-            npm -v
+          node -v
+          npm -v
       - name: Install dependencies
         run: npm install
       - name: Build templates
@@ -86,60 +86,60 @@ jobs:
         with:
           name: versions
       - name: Store version
-        run: echo "version=$(cat .version)" >> $GITHUB_ENV
+        run: echo "version=$(cat next-version.txt)" >> $GITHUB_ENV
       - name: Configure Git
         run: |
-            git config user.email "gh-actions@users.noreply.github.com"
-            git config user.name "GitHub Actions"
+          git config user.email "gh-actions@users.noreply.github.com"
+          git config user.name "GitHub Actions"
       - name: Tag commit
         uses: tvdias/github-tagger@v0.0.1
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          tag: "${{ env.version }}"
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          tag: '${{ env.version }}'
       - name: Install dependencies
         run: npm install
       - uses: actions/setup-node@v3
         with:
           registry-url: 'https://registry.npmjs.org'
-          node-version: '18.x'
+          node-version: '22.x'
       - name: Configure NPM version
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-            rm -f .npmrc
-            touch .npmrc
-            echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-            echo "registry=https://registry.npmjs.org/" >> .npmrc
-            echo "access=public" >> .npmrc
-            echo "save-exact=true" >> .npmrc
+          rm -f .npmrc
+          touch .npmrc
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "access=public" >> .npmrc
+          echo "save-exact=true" >> .npmrc
       - name: Version package
         run: |
-            # Update version in packages to publish
-            npm version $(cat .version) -m "Release version %s"
+          # Update version in packages to publish
+          npm version $(cat next-version.txt) -m "Release version %s"
       - name: Publish to NPM
-        run: npm publish --tag $(cat .tag)
+        run: npm publish --tag $(cat publish-tag.txt)
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '22.x'
           registry-url: 'https://npm.pkg.github.com'
       - name: Configure NPM version
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-            rm -f .npmrc
-            touch .npmrc
-            echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-            echo "@rtfpessoa:registry=https://npm.pkg.github.com/" >> .npmrc
-            echo "access=public" >> .npmrc
-            echo "save-exact=true" >> .npmrc
+          rm -f .npmrc
+          touch .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+          echo "@rtfpessoa:registry=https://npm.pkg.github.com/" >> .npmrc
+          echo "access=public" >> .npmrc
+          echo "save-exact=true" >> .npmrc
       - name: Publish to GPR
         run: |
-            # HACK: Override npm package name to be able to publish in GitHub
-            sed -i 's/^  "name":.*/  "name": "@rtfpessoa\/diff2html",/g' package.json
-            echo "Going to publish version $(cat .version) to GitHub"
-            npm publish --tag $(cat .tag)
-            # HACK: Restore npm package name
-            sed -i 's/^  "name":.*/  "name": "diff2html",/g' package.json
+          # HACK: Override npm package name to be able to publish in GitHub
+          sed -i 's/^  "name":.*/  "name": "@rtfpessoa\/diff2html",/g' package.json
+          echo "Going to publish version $(cat next-version.txt) to GitHub"
+          npm publish --tag $(cat publish-tag.txt)
+          # HACK: Restore npm package name
+          sed -i 's/^  "name":.*/  "name": "diff2html",/g' package.json
       - name: Upload docs
         uses: actions/upload-artifact@v3
         with:

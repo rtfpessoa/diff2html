@@ -123,10 +123,16 @@ function prepareRequest(url: string): Request {
 
 function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
   // Removing `diff` and `diffTooBigMessage` form `urlParams` to avoid being inserted
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { diff, diffTooBigMessage, ...urlParamsRest } = urlParams;
+
+  const defaultColorScheme: ColorSchemeType =
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? ColorSchemeType.DARK
+      : ColorSchemeType.LIGHT;
+
   const config: URLParams = {
     ...defaultDiff2HtmlUIConfig,
+    colorScheme: defaultColorScheme,
     ...urlParamsRest,
   };
 
@@ -245,6 +251,7 @@ function getHTMLElementById(id: string): HTMLElement {
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Improves browser compatibility
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('whatwg-fetch');
 
   const drawAndUpdateUrl = async (
@@ -282,13 +289,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   let [config, diffString] = await prepareInitialState(elements);
 
   // Update HTML inputs from any changes in URL
-  config.outputFormat && (elements.options.outputFormat.value = config.outputFormat);
-  config.colorScheme && (elements.options.colorScheme.value = config.colorScheme);
-  config.drawFileList && (elements.checkboxes.drawFileList.checked = config.drawFileList);
-  config.matching && (elements.options.matching.value = config.matching);
-  config.matchWordsThreshold && (elements.options.wordsThreshold.value = config.matchWordsThreshold.toString());
-  config.matchingMaxComparisons &&
-    (elements.options.matchingMaxComparisons.value = config.matchingMaxComparisons.toString());
+  if (config.outputFormat) elements.options.outputFormat.value = config.outputFormat;
+  if (config.colorScheme) elements.options.colorScheme.value = config.colorScheme;
+  if (config.drawFileList) elements.checkboxes.drawFileList.checked = config.drawFileList;
+  if (config.matching) elements.options.matching.value = config.matching;
+  if (config.matchWordsThreshold) elements.options.wordsThreshold.value = config.matchWordsThreshold.toString();
+  if (config.matchingMaxComparisons)
+    elements.options.matchingMaxComparisons.value = config.matchingMaxComparisons.toString();
 
   Object.entries(elements.options).forEach(([option, element]) =>
     element.addEventListener('change', () => {
