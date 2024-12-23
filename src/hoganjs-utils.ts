@@ -39,7 +39,7 @@ export default class HoganJsUtils {
     try {
       const template = this.preCompiledTemplates[templateKey];
       return template.render(params, partials, indent);
-    } catch (e) {
+    } catch (_e) {
       throw new Error(`Could not find template to render '${templateKey}'`);
     }
   }

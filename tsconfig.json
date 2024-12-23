@@ -1,5 +1,5 @@
 {
-  "include": ["*env.d.ts", "src/**/*", "./typings/**/*"],
+  "include": ["src/**/*", "typings/**/*"],
   "exclude": ["node_modules", "src/__tests__/**"],
   "compilerOptions": {
     "outDir": "bundles-out",
