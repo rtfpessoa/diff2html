@@ -88,6 +88,7 @@
     "highlight.js": "11.9.0"
   },
   "devDependencies": {
+    "prettier-2": "npm:prettier@^2",
     "@eslint/js": "^9.17.0",
     "@eslint/json": "^0.9.0",
     "@types/diff": "^6.0.0",
