@@ -10,6 +10,7 @@ import {
   DiffLineDeleted,
   DiffLineInserted,
   DiffLineContent,
+  DiffLineNoNewline,
 } from './types';
 
 export interface SideBySideRendererConfig extends renderUtils.RenderConfig {
@@ -114,20 +115,39 @@ export default class SideBySideRenderer {
           } else if (contextLines.length) {
             contextLines.forEach(line => {
               const { prefix, content } = renderUtils.deconstructLine(line.content, file.isCombined);
-              const { left, right } = this.generateLineHtml(
-                {
+              let leftContext = undefined;
+              let rightContext = undefined;
+              if (line.type !== LineType.NO_NEW_LINE) {
+                leftContext = {
                   type: renderUtils.CSSLineClass.CONTEXT,
                   prefix: prefix,
                   content: content,
                   number: line.oldNumber,
-                },
-                {
+                };
+                rightContext = {
                   type: renderUtils.CSSLineClass.CONTEXT,
                   prefix: prefix,
                   content: content,
                   number: line.newNumber,
-                },
-              );
+                };
+              } else if (line.type === LineType.NO_NEW_LINE) {
+                if (line.isLeft) {
+                  leftContext = {
+                    type: renderUtils.CSSLineClass.CONTEXT,
+                    prefix: prefix,
+                    content: content,
+                    number: line.oldNumber,
+                  };
+                } else {
+                  rightContext = {
+                    type: renderUtils.CSSLineClass.CONTEXT,
+                    prefix: prefix,
+                    content: content,
+                    number: line.newNumber,
+                  };
+                }
+              }
+              const { left, right } = this.generateLineHtml(leftContext, rightContext);
               fileHtml.left += left;
               fileHtml.right += right;
             });
@@ -155,6 +175,7 @@ export default class SideBySideRenderer {
 
     let oldLines: (DiffLineDeleted & DiffLineContent)[] = [];
     let newLines: (DiffLineInserted & DiffLineContent)[] = [];
+    let lastLineType: LineType = LineType.DELETE;
 
     for (let i = 0; i < block.lines.length; i++) {
       const diffLine = block.lines[i];
@@ -169,13 +190,27 @@ export default class SideBySideRenderer {
       }
 
       if (diffLine.type === LineType.CONTEXT) {
-        blockLinesGroups.push([[diffLine], [], []]);
+        if (diffLine.content.trim() === '\\ No newline at end of file') {
+          const noNewLine: DiffLineNoNewline & DiffLineContent = {
+            ...diffLine,
+            isLeft: lastLineType === LineType.DELETE,
+            type: LineType.NO_NEW_LINE,
+          };
+          blockLinesGroups.push([[noNewLine], [], []]);
+        } else {
+          blockLinesGroups.push([[diffLine], [], []]);
+        }
       } else if (diffLine.type === LineType.INSERT && oldLines.length === 0) {
         blockLinesGroups.push([[], [], [diffLine]]);
       } else if (diffLine.type === LineType.INSERT && oldLines.length > 0) {
         newLines.push(diffLine);
       } else if (diffLine.type === LineType.DELETE) {
         oldLines.push(diffLine);
+      }
+
+      // Track the last non-context line type to determine where "No newline" belongs
+      if (diffLine.type !== LineType.CONTEXT) {
+        lastLineType = diffLine.type;
       }
     }
 
@@ -296,7 +331,7 @@ export default class SideBySideRenderer {
 }
 
 type DiffLineGroups = [
-  (DiffLineContext & DiffLineContent)[],
+  ((DiffLineContext & DiffLineContent) | (DiffLineNoNewline & DiffLineContent))[],
   (DiffLineDeleted & DiffLineContent)[],
   (DiffLineInserted & DiffLineContent)[],
 ][];
