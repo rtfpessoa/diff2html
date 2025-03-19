@@ -470,8 +470,7 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     } else if ((values = combinedDeletedFile.exec(line))) {
       currentFile.deletedFileMode = values[1];
       currentFile.isDeleted = true;
-    }
-    if (line.match(noNewlineAtEndOfFile)) {
+    } else if (line.match(noNewlineAtEndOfFile)) {
       createLine(line);
     }
   });
