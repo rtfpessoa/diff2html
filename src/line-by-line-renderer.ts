@@ -11,6 +11,7 @@ import {
   DiffLineContext,
   DiffLineInserted,
 } from './types';
+import { max } from './utils';
 
 export interface LineByLineRendererConfig extends renderUtils.RenderConfig {
   renderNothingWhenEmpty?: boolean;
@@ -29,27 +30,6 @@ const genericTemplatesPath = 'generic';
 const baseTemplatesPath = 'line-by-line';
 const iconsBaseTemplatesPath = 'icon';
 const tagsBaseTemplatesPath = 'tag';
-
-/**
- * @description Finds the maximum value in an array of numbers safely
- *
- * This function iterates through the array manually instead of using Math.max(...arr)
- * to avoid "Maximum call stack size exceeded" errors that can occur when spreading
- * very large arrays as function arguments. This is especially important when dealing
- * with large diffs that may contain thousands of lines.
- *
- * @param arr - The array of numbers
- * @returns The maximum value in the array
- */
-function max(arr: number[]): number {
-  const length = arr.length;
-  let max = -Infinity;
-
-  for (let i = 0; i < length; i++) {
-    max = Math.max(max, arr[i]);
-  }
-  return max;
-}
 
 export default class LineByLineRenderer {
   private readonly hoganUtils: HoganJsUtils;
