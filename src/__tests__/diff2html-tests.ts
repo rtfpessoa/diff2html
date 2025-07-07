@@ -974,6 +974,11 @@ describe('Diff2Html', () => {
       `);
     });
 
+    it('Should works with large diff blocks', () => {
+      const diff = fs.readFileSync('src/__tests__/diffs/large.diff', 'utf-8');
+      expect(() => html(diff)).not.toThrow();
+    });
+
     it('should escape html correctly', () => {
       const diff = fs.readFileSync('src/__tests__/diffs/bad-escaping.diff', 'utf-8');
 
