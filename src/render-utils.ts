@@ -83,6 +83,8 @@ export function toCSSClass(lineType: LineType): CSSLineClass {
       return CSSLineClass.INSERTS;
     case LineType.DELETE:
       return CSSLineClass.DELETES;
+    case LineType.NO_NEW_LINE:
+      return CSSLineClass.CONTEXT;
   }
 }
 
