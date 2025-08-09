@@ -224,7 +224,7 @@ describe('Diff2Html', () => {
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
@@ -281,7 +281,7 @@ describe('Diff2Html', () => {
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
@@ -358,7 +358,7 @@ describe('Diff2Html', () => {
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
@@ -416,7 +416,7 @@ describe('Diff2Html', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
@@ -440,7 +440,7 @@ describe('Diff2Html', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr><tr>
@@ -487,7 +487,7 @@ describe('Diff2Html', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
@@ -511,7 +511,7 @@ describe('Diff2Html', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr><tr>
@@ -578,7 +578,7 @@ describe('Diff2Html', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
@@ -602,7 +602,7 @@ describe('Diff2Html', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr><tr>
@@ -671,7 +671,7 @@ describe('Diff2Html', () => {
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -1,7 +1,6 @@</div>
             </td>
         </tr><tr>
@@ -754,7 +754,7 @@ describe('Diff2Html', () => {
         </tr>
         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -11,7 +10,7 @@ $a=&amp;quot;&amp;lt;table&amp;gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;- 1.1.9: Fix around ubuntu&amp;#x27;s inability to cache promises. [#8</div>
             </td>
         </tr><tr>
@@ -917,7 +917,7 @@ describe('Diff2Html', () => {
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -1,2 +1,2 @@</div>
             </td>
         </tr><tr>
@@ -1024,7 +1024,7 @@ describe('Diff2Html', () => {
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -1,5 +1,5 @@</div>
             </td>
         </tr><tr>
@@ -1107,7 +1107,7 @@ describe('Diff2Html', () => {
         </tr>
         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -24,12 +24,7 @@ $(function() {</div>
             </td>
         </tr><tr>
@@ -1290,7 +1290,7 @@ describe('Diff2Html', () => {
                           <tbody class="d2h-diff-tbody">
                           <tr>
               <td class="d2h-code-linenumber d2h-info"></td>
-              <td class="d2h-info">
+              <td colspan="" class="d2h-info">
                   <div class="d2h-code-line">@@ -1 +1 @@</div>
               </td>
           </tr><tr>
@@ -1370,7 +1370,7 @@ describe('Diff2Html', () => {
                                   <tbody class="d2h-diff-tbody">
                                   <tr>
                       <td class="d2h-code-linenumber d2h-info"></td>
-                      <td class="d2h-info">
+                      <td colspan="" class="d2h-info">
                           <div class="d2h-code-line">@@ -1 +1 @@</div>
                       </td>
                   </tr><tr>
@@ -1432,7 +1432,7 @@ describe('Diff2Html', () => {
                           <tbody class="d2h-diff-tbody">
                           <tr>
               <td class="d2h-code-linenumber d2h-info"></td>
-              <td class="d2h-info">
+              <td colspan="" class="d2h-info">
                   <div class="d2h-code-line">@@ -1 +1 @@</div>
               </td>
           </tr><tr>
@@ -1512,7 +1512,7 @@ describe('Diff2Html', () => {
                                   <tbody class="d2h-diff-tbody">
                                   <tr>
                       <td class="d2h-code-linenumber d2h-info"></td>
-                      <td class="d2h-info">
+                      <td colspan="" class="d2h-info">
                           <div class="d2h-code-line">@@ -1 +1 @@</div>
                       </td>
                   </tr><tr>
