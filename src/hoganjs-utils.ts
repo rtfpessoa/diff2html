@@ -1,4 +1,4 @@
-import * as Hogan from 'hogan.js';
+import * as Hogan from '@profoundlogic/hogan';
 
 import { defaultTemplates } from './diff2html-templates';
 

@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "diff": "^7.0.0",
-    "hogan.js": "3.0.2"
+    "@profoundlogic/hogan": "^3.0.4"
   },
   "optionalDependencies": {
     "highlight.js": "11.9.0"
