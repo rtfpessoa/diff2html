@@ -13,6 +13,9 @@
  *  limitations under the License.
  */
 
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="./profoundlogic__hogan.d.ts" />
+
 import * as path from 'path';
 import * as fs from 'fs';
 

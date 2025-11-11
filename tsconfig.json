@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*", "typings/**/*"],
+  "include": ["src/**/*", "typings/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "src/__tests__/**"],
   "compilerOptions": {
     "outDir": "bundles-out",
@@ -32,6 +32,7 @@
     "preserveConstEnums": true,
     "alwaysStrict": true,
     "noImplicitAny": true,
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    "typeRoots": ["./node_modules/@types", "./typings"]
   }
 }
