@@ -68,6 +68,15 @@
   "main": "./lib/diff2html.js",
   "module": "./lib-esm/diff2html.js",
   "types": "./lib/diff2html.d.ts",
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "typeRoots": [
+        "./node_modules/@types",
+        "./typings"
+      ]
+    }
+  },
   "lint-staged": {
     "**/*.+(js|jsx|ts|tsx|json)": [
       "prettier --write",
@@ -82,7 +91,7 @@
   },
   "dependencies": {
     "diff": "^7.0.0",
-    "hogan.js": "3.0.2"
+    "@profoundlogic/hogan": "^3.0.4"
   },
   "optionalDependencies": {
     "highlight.js": "11.9.0"
