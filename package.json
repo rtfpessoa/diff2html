@@ -68,15 +68,6 @@
   "main": "./lib/diff2html.js",
   "module": "./lib-esm/diff2html.js",
   "types": "./lib/diff2html.d.ts",
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs",
-      "typeRoots": [
-        "./node_modules/@types",
-        "./typings"
-      ]
-    }
-  },
   "lint-staged": {
     "**/*.+(js|jsx|ts|tsx|json)": [
       "prettier --write",

@@ -112,6 +112,8 @@ jobs:
           echo "registry=https://registry.npmjs.org/" >> .npmrc
           echo "access=public" >> .npmrc
           echo "save-exact=true" >> .npmrc
+      - name: Prepare release
+        run: npm run validate
       - name: Version package
         run: |
           # Update version in packages to publish
