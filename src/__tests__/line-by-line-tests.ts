@@ -11,7 +11,7 @@ describe('LineByLineRenderer', () => {
       const fileHtml = lineByLineRenderer.generateEmptyDiff();
       expect(fileHtml).toMatchInlineSnapshot(`
         "<tr>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">
                     File without changes
                 </div>
@@ -468,7 +468,7 @@ describe('LineByLineRenderer', () => {
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
@@ -541,7 +541,7 @@ describe('LineByLineRenderer', () => {
                     <table class="d2h-diff-table">
                         <tbody class="d2h-diff-tbody">
                         <tr>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">
                     File without changes
                 </div>
@@ -602,7 +602,7 @@ describe('LineByLineRenderer', () => {
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line"><a href="http://example.com">Custom link to render</a></div>
             </td>
         </tr>
@@ -671,7 +671,7 @@ describe('LineByLineRenderer', () => {
       expect(html).toMatchInlineSnapshot(`
         "<tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>

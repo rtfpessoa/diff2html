@@ -12,7 +12,7 @@ describe('SideBySideRenderer', () => {
       expect(fileHtml).toMatchInlineSnapshot(`
         {
           "left": "<tr>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">
                     File without changes
                 </div>
@@ -81,7 +81,7 @@ describe('SideBySideRenderer', () => {
         {
           "left": "<tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">@@ -19,7 +19,7 @@</div>
             </td>
         </tr><tr>
@@ -117,7 +117,7 @@ describe('SideBySideRenderer', () => {
         </tr>",
           "right": "<tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr><tr>
@@ -298,7 +298,7 @@ describe('SideBySideRenderer', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">@@ -1 +1 @@</div>
             </td>
         </tr><tr>
@@ -322,7 +322,7 @@ describe('SideBySideRenderer', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr><tr>
@@ -382,7 +382,7 @@ describe('SideBySideRenderer', () => {
                         <table class="d2h-diff-table">
                             <tbody class="d2h-diff-tbody">
                             <tr>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">
                     File without changes
                 </div>
@@ -454,7 +454,7 @@ describe('SideBySideRenderer', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line"><a href="http://example.com">Custom link to render</a></div>
             </td>
         </tr>
@@ -468,7 +468,7 @@ describe('SideBySideRenderer', () => {
                             <tbody class="d2h-diff-tbody">
                             <tr>
             <td class="d2h-code-side-linenumber d2h-info"></td>
-            <td class="d2h-info">
+            <td colspan="" class="d2h-info">
                 <div class="d2h-code-side-line">&nbsp;</div>
             </td>
         </tr>
