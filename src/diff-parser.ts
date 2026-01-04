@@ -87,16 +87,15 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
   const binaryFiles = /^Binary files (.*) and (.*) differ/;
   const binaryDiff = /^GIT binary patch/;
 
+  const noNewlineAtEndOfFile = /^\\ No newline at end of file/;
+
   /* Combined Diff */
   const combinedIndex = /^index ([\da-z]+),([\da-z]+)\.\.([\da-z]+)/;
   const combinedMode = /^mode (\d{6}),(\d{6})\.\.(\d{6})/;
   const combinedNewFile = /^new file mode (\d{6})/;
   const combinedDeletedFile = /^deleted file mode (\d{6}),(\d{6})/;
 
-  const diffLines = diffInput
-    .replace(/\\ No newline at end of file/g, '')
-    .replace(/\r\n?/g, '\n')
-    .split('\n');
+  const diffLines = diffInput.replace(/\r\n?/g, '\n').split('\n');
 
   /* Add previous block(if exists) before start a new file */
   function saveBlock(): void {
@@ -471,6 +470,8 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     } else if ((values = combinedDeletedFile.exec(line))) {
       currentFile.deletedFileMode = values[1];
       currentFile.isDeleted = true;
+    } else if (line.match(noNewlineAtEndOfFile)) {
+      createLine(line);
     }
   });
 
