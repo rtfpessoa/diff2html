@@ -81,7 +81,7 @@
     ]
   },
   "dependencies": {
-    "diff": "^7.0.0",
+    "diff": "^8.0.3",
     "@profoundlogic/hogan": "^3.0.4"
   },
   "optionalDependencies": {
