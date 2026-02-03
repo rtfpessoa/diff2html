@@ -1,0 +1,19 @@
+    <td class="{{lineClass}} {{type}}">
+        {{{lineNumber}}}
+    </td>
+    <td class="{{type}}">
+        <div class="{{contentClass}}">
+        {{#prefix}}
+            <span class="d2h-code-wrapped-line-prefix">{{{prefix}}}</span>
+        {{/prefix}}
+        {{^prefix}}
+            <span class="d2h-code-wrapped-line-prefix">&nbsp;</span>
+        {{/prefix}}
+        {{#content}}
+            <span class="d2h-code-wrapped-line-ctn">{{{content}}}</span>
+        {{/content}}
+        {{^content}}
+            <span class="d2h-code-wrapped-line-ctn"><br></span>
+        {{/content}}
+        </div>
+    </td>

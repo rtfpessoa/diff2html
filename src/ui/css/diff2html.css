@@ -176,6 +176,22 @@
   font-size: 13px;
 }
 
+.d2h-diff-wrapped-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.d2h-diff-wrapped-col-linenumber {
+  width: 4em;
+}
+
+.d2h-diff-wrapped-col-contents {
+  width: calc(50% - 4em);
+}
+
 .d2h-files-diff {
   display: flex;
   width: 100%;
@@ -215,6 +231,15 @@
   padding: 0 4.5em;
 }
 
+.d2h-code-wrapped-side-line {
+  display: inline-block;
+  white-space: nowrap;
+  user-select: none;
+  width: calc(100% - 1em);
+  /* No compensate for the line numbers */
+  padding-left: 0.5em;
+}
+
 .d2h-code-line-ctn {
   display: inline-block;
   background: none;
@@ -226,8 +251,21 @@
   vertical-align: middle;
 }
 
+.d2h-code-wrapped-line-ctn {
+  display: inline-block;
+  background: none;
+  padding: 0;
+  word-wrap: normal;
+  white-space: pre-wrap;
+  user-select: text;
+  width: 100%;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
 .d2h-code-line del,
-.d2h-code-side-line del {
+.d2h-code-side-line del,
+.d2h-code-wrapped-side-line del {
   display: inline-block;
   margin-top: -1px;
   text-decoration: none;
@@ -236,7 +274,8 @@
 }
 
 .d2h-code-line ins,
-.d2h-code-side-line ins {
+.d2h-code-side-line ins,
+.d2h-code-wrapped-side-line ins {
   display: inline-block;
   margin-top: -1px;
   text-decoration: none;
@@ -251,6 +290,15 @@
   padding: 0;
   word-wrap: normal;
   white-space: pre;
+}
+
+.d2h-code-wrapped-line-prefix {
+  display: inline;
+  background: none;
+  padding: 0;
+  word-wrap: normal;
+  white-space: pre;
+  vertical-align: top;
 }
 
 .line-num1 {
@@ -310,6 +358,25 @@
   content: '\200b';
 }
 
+.d2h-code-wrapped-side-linenumber {
+  display: table-cell;
+  box-sizing: border-box;
+  width: 4em;
+  background-color: var(--d2h-bg-color);
+  color: var(--d2h-dim-color);
+  text-align: right;
+  border: solid var(--d2h-line-border-color);
+  border-width: 0 1px 0 1px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 0.5em 0 0.5em;
+}
+
+.d2h-code-wrapped-side-linenumber:after {
+  content: '\200b';
+}
+
 .d2h-code-side-emptyplaceholder,
 .d2h-emptyplaceholder {
   background-color: var(--d2h-empty-placeholder-bg-color);
@@ -318,13 +385,16 @@
 
 .d2h-code-linenumber,
 .d2h-code-side-linenumber,
+.d2h-code-wrapped-side-linenumber,
 .d2h-code-line-prefix,
+.d2h-code-wrapped-line-prefix,
 .d2h-emptyplaceholder {
   user-select: none;
 }
 
 .d2h-code-linenumber,
-.d2h-code-side-linenumber {
+.d2h-code-side-linenumber,
+.d2h-code-wrapped-side-linenumber {
   direction: rtl;
 }
 
@@ -484,12 +554,14 @@
 }
 
 .d2h-dark-color-scheme .d2h-code-line del,
-.d2h-dark-color-scheme .d2h-code-side-line del {
+.d2h-dark-color-scheme .d2h-code-side-line del,
+.d2h-dark-color-scheme .d2h-code-wrapped-side-line del {
   background-color: var(--d2h-dark-del-highlight-bg-color);
 }
 
 .d2h-dark-color-scheme .d2h-code-line ins,
-.d2h-dark-color-scheme .d2h-code-side-line ins {
+.d2h-dark-color-scheme .d2h-code-side-line ins,
+.d2h-dark-color-scheme .d2h-code-wrapped-side-line ins {
   background-color: var(--d2h-dark-ins-highlight-bg-color);
 }
 
@@ -498,6 +570,12 @@
 }
 
 .d2h-dark-color-scheme .d2h-code-side-linenumber {
+  background-color: var(--d2h-dark-bg-color);
+  color: var(--d2h-dark-dim-color);
+  border-color: var(--d2h-dark-line-border-color);
+}
+
+.d2h-dark-color-scheme .d2h-code-wrapped-side-linenumber {
   background-color: var(--d2h-dark-bg-color);
   color: var(--d2h-dark-dim-color);
   border-color: var(--d2h-dark-line-border-color);
@@ -624,12 +702,14 @@
   }
 
   .d2h-auto-color-scheme .d2h-code-line del,
-  .d2h-auto-color-scheme .d2h-code-side-line del {
+  .d2h-auto-color-scheme .d2h-code-side-line del,
+  .d2h-dark-color-scheme .d2h-code-wrapped-side-line del {
     background-color: var(--d2h-dark-del-highlight-bg-color);
   }
 
   .d2h-auto-color-scheme .d2h-code-line ins,
-  .d2h-auto-color-scheme .d2h-code-side-line ins {
+  .d2h-auto-color-scheme .d2h-code-side-line ins,
+  .d2h-dark-color-scheme .d2h-code-wrapped-side-line ins {
     background-color: var(--d2h-dark-ins-highlight-bg-color);
   }
 
@@ -638,6 +718,12 @@
   }
 
   .d2h-auto-color-scheme .d2h-code-side-linenumber {
+    background-color: var(--d2h-dark-bg-color);
+    color: var(--d2h-dark-dim-color);
+    border-color: var(--d2h-dark-line-border-color);
+  }
+
+  .d2h-auto-color-scheme .d2h-code-wrapped-side-linenumber {
     background-color: var(--d2h-dark-bg-color);
     color: var(--d2h-dark-dim-color);
     border-color: var(--d2h-dark-line-border-color);

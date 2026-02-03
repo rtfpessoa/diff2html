@@ -164,7 +164,7 @@ export class Diff2HtmlUI {
       }
 
       // Collect all the code lines and execute the highlight on them
-      const codeLines = file.querySelectorAll('.d2h-code-line-ctn');
+      const codeLines = file.querySelectorAll('.d2h-code-line-ctn, .d2h-code-wrapped-line-ctn');
       codeLines.forEach(line => {
         const text = line.textContent;
         const lineParent = line.parentNode;
