@@ -7,6 +7,7 @@ export enum LineType {
   INSERT = 'insert',
   DELETE = 'delete',
   CONTEXT = 'context',
+  NO_NEW_LINE = 'noNewLine',
 }
 
 export interface DiffLineDeleted {
@@ -25,6 +26,13 @@ export interface DiffLineContext {
   type: LineType.CONTEXT;
   oldNumber: number;
   newNumber: number;
+}
+
+export interface DiffLineNoNewline {
+  type: LineType.NO_NEW_LINE;
+  oldNumber: number;
+  newNumber: number;
+  isLeft: boolean;
 }
 
 export type DiffLineContent = {
