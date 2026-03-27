@@ -600,7 +600,7 @@
   border: var(--d2h-dark-moved-label-color) 1px solid;
 }
 
-/* line folding */
+/* wrap lines */
 
 .d2h-wrapped-file-diff .d2h-file-side-diff {
   flex-basis: 100%;
