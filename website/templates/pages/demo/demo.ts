@@ -222,6 +222,7 @@ type Elements = {
   };
   checkboxes: {
     drawFileList: HTMLInputElement;
+    wrapLines: HTMLInputElement;
   };
 };
 
@@ -283,6 +284,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     checkboxes: {
       drawFileList: getHTMLInputElementById('diff-url-options-show-files'),
+      wrapLines: getHTMLInputElementById('diff-url-options-line-folding'),
     },
   };
 
@@ -292,6 +294,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (config.outputFormat) elements.options.outputFormat.value = config.outputFormat;
   if (config.colorScheme) elements.options.colorScheme.value = config.colorScheme;
   if (config.drawFileList) elements.checkboxes.drawFileList.checked = config.drawFileList;
+  if (config.wrapLines) elements.checkboxes.wrapLines.checked = config.wrapLines;
   if (config.matching) elements.options.matching.value = config.matching;
   if (config.matchWordsThreshold) elements.options.wordsThreshold.value = config.matchWordsThreshold.toString();
   if (config.matchingMaxComparisons)

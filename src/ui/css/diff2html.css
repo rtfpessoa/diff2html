@@ -283,6 +283,7 @@
   border: solid var(--d2h-line-border-color);
   border-width: 0 1px 0 1px;
   cursor: pointer;
+  height: 100%;
 }
 
 .d2h-code-linenumber:after {
@@ -597,6 +598,40 @@
 
 .d2h-dark-color-scheme .d2h-moved-tag {
   border: var(--d2h-dark-moved-label-color) 1px solid;
+}
+
+/* wrap lines */
+
+.d2h-wrapped-file-diff .d2h-file-side-diff {
+  flex-basis: 100%;
+  width: 100%;
+}
+
+.d2h-wrapped-file-diff .d2h-code-line-ctn {
+  display: inline;
+  white-space: break-spaces;
+  word-break: break-word;
+}
+
+.d2h-wrapped-file-diff .d2h-code-side-line {
+  width: auto;
+}
+
+.d2h-wrapped-file-diff .d2h-info .d2h-code-side-line {
+  white-space: break-spaces;
+}
+
+.d2h-wrapped-file-diff tr {
+  position: relative;
+}
+
+.d2h-wrapped-file-diff tr .d2h-code-side-linenumber {
+  height: 100%;
+}
+
+.d2h-wrapped-file-diff .d2h-file-side-diff tr .d2h-cntx:nth-child(2),
+.d2h-wrapped-file-diff .d2h-file-side-diff tr .d2h-cntx:nth-child(4) {
+  width: 50%;
 }
 
 /**

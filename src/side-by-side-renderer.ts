@@ -17,6 +17,7 @@ export interface SideBySideRendererConfig extends renderUtils.RenderConfig {
   renderNothingWhenEmpty?: boolean;
   matchingMaxComparisons?: number;
   maxLineSizeInBlockForComparison?: number;
+  wrapLines?: boolean;
 }
 
 export const defaultSideBySideRendererConfig = {
@@ -24,6 +25,7 @@ export const defaultSideBySideRendererConfig = {
   renderNothingWhenEmpty: false,
   matchingMaxComparisons: 2500,
   maxLineSizeInBlockForComparison: 200,
+  wrapLines: true,
 };
 
 const genericTemplatesPath = 'generic';
@@ -71,6 +73,7 @@ export default class SideBySideRenderer {
       file: file,
       fileHtmlId: renderUtils.getHtmlId(file),
       diffs: diffs,
+      diffClass: this.config.wrapLines ? 'd2h-wrapped-file-diff' : '',
       filePath: filePathTemplate.render(
         {
           fileDiffName: renderUtils.filenameDiff(file),
@@ -205,12 +208,33 @@ export default class SideBySideRenderer {
   }
 
   makeHeaderHtml(blockHeader: string, file?: DiffFile): string {
-    return this.hoganUtils.render(genericTemplatesPath, 'block-header', {
+    const wrapLines = this.config.wrapLines;
+    let headerContent = this.hoganUtils.render(genericTemplatesPath, 'block-header', {
       CSSLineClass: renderUtils.CSSLineClass,
       blockHeader: file?.isTooBig ? blockHeader : renderUtils.escapeForHtml(blockHeader),
       lineClass: 'd2h-code-side-linenumber',
       contentClass: 'd2h-code-side-line',
     });
+    if (blockHeader.length !== 0) {
+      if (wrapLines) {
+        headerContent += this.hoganUtils.render(genericTemplatesPath, 'block-header', {
+          CSSLineClass: renderUtils.CSSLineClass,
+          blockHeader: '',
+          lineClass: 'd2h-code-side-linenumber',
+          contentClass: 'd2h-code-side-line',
+        });
+      }
+      return this.hoganUtils.render(genericTemplatesPath, 'line', {
+        lineContent: headerContent,
+      });
+    } else {
+      if (!wrapLines) {
+        return this.hoganUtils.render(genericTemplatesPath, 'line', {
+          lineContent: headerContent,
+        });
+      }
+      return blockHeader;
+    }
   }
 
   processChangedLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]): FileHtml {
@@ -272,17 +296,31 @@ export default class SideBySideRenderer {
   }
 
   generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
-    return {
-      left: this.generateSingleHtml(oldLine),
-      right: this.generateSingleHtml(newLine),
-    };
+    const wrapLines = this.config.wrapLines;
+    if (wrapLines) {
+      return {
+        left: this.hoganUtils.render(genericTemplatesPath, 'line', {
+          lineContent: this.generateSingleHtml(oldLine) + this.generateSingleHtml(newLine),
+        }),
+        right: '',
+      };
+    } else {
+      return {
+        left: this.hoganUtils.render(genericTemplatesPath, 'line', {
+          lineContent: this.generateSingleHtml(oldLine),
+        }),
+        right: this.hoganUtils.render(genericTemplatesPath, 'line', {
+          lineContent: this.generateSingleHtml(newLine),
+        }),
+      };
+    }
   }
 
   generateSingleHtml(line?: DiffPreparedLine): string {
     const lineClass = 'd2h-code-side-linenumber';
     const contentClass = 'd2h-code-side-line';
 
-    return this.hoganUtils.render(genericTemplatesPath, 'line', {
+    return this.hoganUtils.render(genericTemplatesPath, 'line-content', {
       type: line?.type || `${renderUtils.CSSLineClass.CONTEXT} d2h-emptyplaceholder`,
       lineClass: line !== undefined ? lineClass : `${lineClass} d2h-code-side-emptyplaceholder`,
       contentClass: line !== undefined ? contentClass : `${contentClass} d2h-code-side-emptyplaceholder`,

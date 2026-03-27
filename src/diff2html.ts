@@ -6,10 +6,7 @@ import { DiffFile, OutputFormatType } from './types';
 import HoganJsUtils, { HoganJsUtilsConfig } from './hoganjs-utils';
 
 export interface Diff2HtmlConfig
-  extends DiffParser.DiffParserConfig,
-    LineByLineRendererConfig,
-    SideBySideRendererConfig,
-    HoganJsUtilsConfig {
+  extends DiffParser.DiffParserConfig, LineByLineRendererConfig, SideBySideRendererConfig, HoganJsUtilsConfig {
   outputFormat?: OutputFormatType;
   drawFileList?: boolean;
 }
@@ -19,6 +16,7 @@ export const defaultDiff2HtmlConfig = {
   ...defaultSideBySideRendererConfig,
   outputFormat: OutputFormatType.LINE_BY_LINE,
   drawFileList: true,
+  wrapLines: false,
 };
 
 export function parse(diffInput: string, configuration: Diff2HtmlConfig = {}): DiffFile[] {
