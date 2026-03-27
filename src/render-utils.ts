@@ -46,6 +46,7 @@ export interface RenderConfig {
   maxLineLengthHighlight?: number;
   diffStyle?: DiffStyleType;
   colorScheme?: ColorSchemeType;
+  wrapLines?: boolean;
 }
 
 export const defaultRenderConfig = {

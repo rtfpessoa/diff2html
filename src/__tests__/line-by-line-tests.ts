@@ -43,18 +43,16 @@ describe('LineByLineRenderer', () => {
         newNumber: 30,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
-        "<tr>
-            <td class="d2h-code-linenumber d2h-ins">
-              <div class="line-num1"></div>
+        "<td class="d2h-code-linenumber d2h-ins">
+            <div class="line-num1"></div>
         <div class="line-num2">30</div>
-            </td>
-            <td class="d2h-ins">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">+</span>
-                    <span class="d2h-code-line-ctn">test</span>
-                </div>
-            </td>
-        </tr>"
+        </td>
+        <td class="d2h-ins">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">+</span>
+                <span class="d2h-code-line-ctn">test</span>
+            </div>
+        </td>"
       `);
     });
 
@@ -79,18 +77,16 @@ describe('LineByLineRenderer', () => {
         newNumber: undefined,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
-        "<tr>
-            <td class="d2h-code-linenumber d2h-del">
-              <div class="line-num1">30</div>
+        "<td class="d2h-code-linenumber d2h-del">
+            <div class="line-num1">30</div>
         <div class="line-num2"></div>
-            </td>
-            <td class="d2h-del">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">-</span>
-                    <span class="d2h-code-line-ctn">test</span>
-                </div>
-            </td>
-        </tr>"
+        </td>
+        <td class="d2h-del">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">-</span>
+                <span class="d2h-code-line-ctn">test</span>
+            </div>
+        </td>"
       `);
     });
 
@@ -115,18 +111,16 @@ describe('LineByLineRenderer', () => {
         newNumber: 30,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
-        "<tr>
-            <td class="d2h-code-linenumber d2h-ins">
-              <div class="line-num1"></div>
+        "<td class="d2h-code-linenumber d2h-ins">
+            <div class="line-num1"></div>
         <div class="line-num2">30</div>
-            </td>
-            <td class="d2h-ins">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">+</span>
-                    <span class="d2h-code-line-ctn">  test</span>
-                </div>
-            </td>
-        </tr>"
+        </td>
+        <td class="d2h-ins">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">+</span>
+                <span class="d2h-code-line-ctn">  test</span>
+            </div>
+        </td>"
       `);
     });
 
@@ -151,18 +145,16 @@ describe('LineByLineRenderer', () => {
         newNumber: 30,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
-        "<tr>
-            <td class="d2h-code-linenumber d2h-ins">
-              <div class="line-num1"></div>
+        "<td class="d2h-code-linenumber d2h-ins">
+            <div class="line-num1"></div>
         <div class="line-num2">30</div>
-            </td>
-            <td class="d2h-ins">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">+</span>
-                    <span class="d2h-code-line-ctn">    test</span>
-                </div>
-            </td>
-        </tr>"
+        </td>
+        <td class="d2h-ins">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">+</span>
+                <span class="d2h-code-line-ctn">    test</span>
+            </div>
+        </td>"
       `);
     });
 
@@ -187,18 +179,16 @@ describe('LineByLineRenderer', () => {
         newNumber: 30,
       });
       expect(fileHtml).toMatchInlineSnapshot(`
-        "<tr>
-            <td class="d2h-code-linenumber d2h-ins">
-              <div class="line-num1"></div>
+        "<td class="d2h-code-linenumber d2h-ins">
+            <div class="line-num1"></div>
         <div class="line-num2">30</div>
-            </td>
-            <td class="d2h-ins">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">+</span>
-                    <span class="d2h-code-line-ctn">	test</span>
-                </div>
-            </td>
-        </tr>"
+        </td>
+        <td class="d2h-ins">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">+</span>
+                <span class="d2h-code-line-ctn">	test</span>
+            </div>
+        </td>"
       `);
     });
   });
@@ -235,7 +225,7 @@ describe('LineByLineRenderer', () => {
             Viewed
         </label>
             </div>
-            <div class="d2h-file-diff">
+            <div class="d2h-file-diff d2h-wrapped-file-diff">
                 <div class="d2h-code-wrapper">
                     <table class="d2h-diff-table">
                         <tbody class="d2h-diff-tbody">
@@ -279,7 +269,7 @@ describe('LineByLineRenderer', () => {
             Viewed
         </label>
             </div>
-            <div class="d2h-file-diff">
+            <div class="d2h-file-diff d2h-wrapped-file-diff">
                 <div class="d2h-code-wrapper">
                     <table class="d2h-diff-table">
                         <tbody class="d2h-diff-tbody">
@@ -323,7 +313,7 @@ describe('LineByLineRenderer', () => {
             Viewed
         </label>
             </div>
-            <div class="d2h-file-diff">
+            <div class="d2h-file-diff d2h-wrapped-file-diff">
                 <div class="d2h-code-wrapper">
                     <table class="d2h-diff-table">
                         <tbody class="d2h-diff-tbody">
@@ -367,7 +357,7 @@ describe('LineByLineRenderer', () => {
             Viewed
         </label>
             </div>
-            <div class="d2h-file-diff">
+            <div class="d2h-file-diff d2h-wrapped-file-diff">
                 <div class="d2h-code-wrapper">
                     <table class="d2h-diff-table">
                         <tbody class="d2h-diff-tbody">
@@ -462,38 +452,41 @@ describe('LineByLineRenderer', () => {
             Viewed
         </label>
             </div>
-            <div class="d2h-file-diff">
+            <div class="d2h-file-diff d2h-wrapped-file-diff">
                 <div class="d2h-code-wrapper">
                     <table class="d2h-diff-table">
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
-                <div class="d2h-code-line">@@ -1 +1 @@</div>
-            </td>
-        </tr><tr>
-            <td class="d2h-code-linenumber d2h-del d2h-change">
-              <div class="line-num1">1</div>
-        <div class="line-num2"></div>
-            </td>
-            <td class="d2h-del d2h-change">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">-</span>
-                    <span class="d2h-code-line-ctn"><del>test</del></span>
-                </div>
-            </td>
-        </tr><tr>
-            <td class="d2h-code-linenumber d2h-ins d2h-change">
-              <div class="line-num1"></div>
-        <div class="line-num2">1</div>
-            </td>
-            <td class="d2h-ins d2h-change">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">+</span>
-                    <span class="d2h-code-line-ctn"><ins>test1r</ins></span>
-                </div>
-            </td>
+        <td class="d2h-info">
+            <div class="d2h-code-line">@@ -1 +1 @@</div>
+        </td>
         </tr>
+        <tr>
+            <td class="d2h-code-linenumber d2h-del d2h-change">
+            <div class="line-num1">1</div>
+        <div class="line-num2"></div>
+        </td>
+        <td class="d2h-del d2h-change">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">-</span>
+                <span class="d2h-code-line-ctn"><del>test</del></span>
+            </div>
+        </td>
+        </tr>
+        <tr>
+            <td class="d2h-code-linenumber d2h-ins d2h-change">
+            <div class="line-num1"></div>
+        <div class="line-num2">1</div>
+        </td>
+        <td class="d2h-ins d2h-change">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">+</span>
+                <span class="d2h-code-line-ctn"><ins>test1r</ins></span>
+            </div>
+        </td>
+        </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -536,7 +529,7 @@ describe('LineByLineRenderer', () => {
             Viewed
         </label>
             </div>
-            <div class="d2h-file-diff">
+            <div class="d2h-file-diff d2h-wrapped-file-diff">
                 <div class="d2h-code-wrapper">
                     <table class="d2h-diff-table">
                         <tbody class="d2h-diff-tbody">
@@ -596,16 +589,17 @@ describe('LineByLineRenderer', () => {
             Viewed
         </label>
             </div>
-            <div class="d2h-file-diff">
+            <div class="d2h-file-diff d2h-wrapped-file-diff">
                 <div class="d2h-code-wrapper">
                     <table class="d2h-diff-table">
                         <tbody class="d2h-diff-tbody">
                         <tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
-                <div class="d2h-code-line"><a href="http://example.com">Custom link to render</a></div>
-            </td>
+        <td class="d2h-info">
+            <div class="d2h-code-line"><a href="http://example.com">Custom link to render</a></div>
+        </td>
         </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -671,54 +665,59 @@ describe('LineByLineRenderer', () => {
       expect(html).toMatchInlineSnapshot(`
         "<tr>
             <td class="d2h-code-linenumber d2h-info"></td>
-            <td class="d2h-info">
-                <div class="d2h-code-line">@@ -1 +1 @@</div>
-            </td>
-        </tr><tr>
+        <td class="d2h-info">
+            <div class="d2h-code-line">@@ -1 +1 @@</div>
+        </td>
+        </tr>
+        <tr>
             <td class="d2h-code-linenumber d2h-cntx">
-              <div class="line-num1">1</div>
+            <div class="line-num1">1</div>
         <div class="line-num2">1</div>
-            </td>
-            <td class="d2h-cntx">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">&nbsp;</span>
-                    <span class="d2h-code-line-ctn">one context line</span>
-                </div>
-            </td>
-        </tr><tr>
+        </td>
+        <td class="d2h-cntx">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">&nbsp;</span>
+                <span class="d2h-code-line-ctn">one context line</span>
+            </div>
+        </td>
+        </tr>
+        <tr>
             <td class="d2h-code-linenumber d2h-del d2h-change">
-              <div class="line-num1">2</div>
+            <div class="line-num1">2</div>
         <div class="line-num2"></div>
-            </td>
-            <td class="d2h-del d2h-change">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">-</span>
-                    <span class="d2h-code-line-ctn"><del>test</del></span>
-                </div>
-            </td>
-        </tr><tr>
+        </td>
+        <td class="d2h-del d2h-change">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">-</span>
+                <span class="d2h-code-line-ctn"><del>test</del></span>
+            </div>
+        </td>
+        </tr>
+        <tr>
             <td class="d2h-code-linenumber d2h-ins d2h-change">
-              <div class="line-num1"></div>
+            <div class="line-num1"></div>
         <div class="line-num2">2</div>
-            </td>
-            <td class="d2h-ins d2h-change">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">+</span>
-                    <span class="d2h-code-line-ctn"><ins>test1r</ins></span>
-                </div>
-            </td>
-        </tr><tr>
+        </td>
+        <td class="d2h-ins d2h-change">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">+</span>
+                <span class="d2h-code-line-ctn"><ins>test1r</ins></span>
+            </div>
+        </td>
+        </tr>
+        <tr>
             <td class="d2h-code-linenumber d2h-ins">
-              <div class="line-num1"></div>
+            <div class="line-num1"></div>
         <div class="line-num2">3</div>
-            </td>
-            <td class="d2h-ins">
-                <div class="d2h-code-line">
-                    <span class="d2h-code-line-prefix">+</span>
-                    <span class="d2h-code-line-ctn">test2r</span>
-                </div>
-            </td>
-        </tr>"
+        </td>
+        <td class="d2h-ins">
+            <div class="d2h-code-line">
+                <span class="d2h-code-line-prefix">+</span>
+                <span class="d2h-code-line-ctn">test2r</span>
+            </div>
+        </td>
+        </tr>
+        "
       `);
     });
   });
