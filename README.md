@@ -408,7 +408,7 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
 Import the stylesheet and the library code.
 
-To load correctly in the Browser you need to include the stylesheet in the final HTML.
+To load correctly in the Browser you need to include the style sheet in the final HTML.
 
 ```html
 <!-- CSS -->
