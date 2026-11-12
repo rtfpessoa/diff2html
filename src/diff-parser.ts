@@ -93,10 +93,7 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
   const combinedNewFile = /^new file mode (\d{6})/;
   const combinedDeletedFile = /^deleted file mode (\d{6}),(\d{6})/;
 
-  const diffLines = diffInput
-    .replace(/\\ No newline at end of file/g, '')
-    .replace(/\r\n?/g, '\n')
-    .split('\n');
+  const diffLines = diffInput.replace(/\r\n?/g, '\n').split('\n');
 
   /* Add previous block(if exists) before start a new file */
   function saveBlock(): void {
@@ -261,7 +258,9 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     // Unmerged paths, and possibly other non-diffable files
     // https://github.com/scottgonzalez/pretty-diff/issues/11
     // Also, remove some useless lines
-    if (!line || line.startsWith('*')) {
+    // Lines starting with "\ " are markers like "\ No newline at end of file"
+    // (the message text can be translated, so only the prefix is checked)
+    if (!line || line.startsWith('*') || line.startsWith('\\ ')) {
       return;
     }
 
