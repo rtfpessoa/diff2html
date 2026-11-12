@@ -2514,5 +2514,85 @@ describe('DiffParser', () => {
         ]
       `);
     });
+
+    it('should keep "\\ No newline at end of file" text inside content lines', () => {
+      const diff =
+        'diff --git a/fix.patch b/fix.patch\n' +
+        'index 0000001..0ddf2ba 100644\n' +
+        '--- a/fix.patch\n' +
+        '+++ b/fix.patch\n' +
+        '@@ -1,4 +1,4 @@\n' +
+        ' @@ -1 +1 @@\n' +
+        '-+old\n' +
+        '-\\ No newline at end of file\n' +
+        '++new\n' +
+        '+\\ No newline at end of file\n' +
+        ' \\ No newline at end of file\n' +
+        '\\ No newline at end of file\n';
+
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "addedLines": 2,
+            "blocks": [
+              {
+                "header": "@@ -1,4 +1,4 @@",
+                "lines": [
+                  {
+                    "content": " @@ -1 +1 @@",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  {
+                    "content": "-+old",
+                    "newNumber": undefined,
+                    "oldNumber": 2,
+                    "type": "delete",
+                  },
+                  {
+                    "content": "-\\ No newline at end of file",
+                    "newNumber": undefined,
+                    "oldNumber": 3,
+                    "type": "delete",
+                  },
+                  {
+                    "content": "++new",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  {
+                    "content": "+\\ No newline at end of file",
+                    "newNumber": 3,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  {
+                    "content": " \\ No newline at end of file",
+                    "newNumber": 4,
+                    "oldNumber": 4,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0ddf2ba",
+            "checksumBefore": "0000001",
+            "deletedLines": 2,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "patch",
+            "mode": "100644",
+            "newName": "fix.patch",
+            "oldName": "fix.patch",
+          },
+        ]
+      `);
+    });
   });
 });
