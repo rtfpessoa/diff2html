@@ -6,10 +6,7 @@ import { DiffFile, OutputFormatType } from './types';
 import HoganJsUtils, { HoganJsUtilsConfig } from './hoganjs-utils';
 
 export interface Diff2HtmlConfig
-  extends DiffParser.DiffParserConfig,
-    LineByLineRendererConfig,
-    SideBySideRendererConfig,
-    HoganJsUtilsConfig {
+  extends DiffParser.DiffParserConfig, LineByLineRendererConfig, SideBySideRendererConfig, HoganJsUtilsConfig {
   outputFormat?: OutputFormatType;
   drawFileList?: boolean;
 }
