@@ -88,38 +88,14 @@ const config: webpack.Configuration[] = pages.map(page => {
         },
         {
           test: /\.(gif|png|jpe?g|webp)$/i,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: '[name].[ext]?[hash]',
-                outputPath: 'images',
-                esModule: false,
-              },
+          use: {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]?[hash]',
+              outputPath: 'images',
+              esModule: false,
             },
-            {
-              loader: 'image-webpack-loader',
-              options: {
-                mozjpeg: {
-                  progressive: true,
-                  quality: 65,
-                },
-                optipng: {
-                  enabled: true,
-                },
-                pngquant: {
-                  quality: [0.65, 0.9],
-                  speed: 4,
-                },
-                gifsicle: {
-                  interlaced: false,
-                },
-                webp: {
-                  quality: 75,
-                },
-              },
-            },
-          ],
+          },
         },
         {
           test: /\.(css)$/,
