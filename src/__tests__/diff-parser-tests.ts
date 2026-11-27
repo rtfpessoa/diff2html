@@ -288,6 +288,22 @@ describe('DiffParser', () => {
       expect([result[0].oldName, result[0].newName]).toEqual(['C:\\work\\old.txt', 'C:\\work\\new.txt']);
     });
 
+    it('should parse diff with a space in the file name', () => {
+      // git ends --- and +++ names that contain a space with a TAB
+      const diff =
+        'diff --git a/My Docs/app.js b/My Docs/app.js\n' +
+        'index 4c679d7..e9bd385 100644\n' +
+        '--- a/My Docs/app.js\t\n' +
+        '+++ b/My Docs/app.js\t\n' +
+        '@@ -1 +1,2 @@\n' +
+        ' const x = 1;\n' +
+        '+const y = 2;';
+      const [file] = parse(diff);
+      expect(file.oldName).toBe('My Docs/app.js');
+      expect(file.newName).toBe('My Docs/app.js');
+      expect(file.language).toBe('js');
+    });
+
     it('should parse diff with prefix', () => {
       const diff =
         'diff --git "\tbla with \ttab.scala" "\tbla with \ttab.scala"\n' +
