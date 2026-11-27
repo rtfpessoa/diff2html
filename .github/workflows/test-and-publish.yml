@@ -49,6 +49,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -72,22 +73,17 @@ jobs:
           # The clean tree was already validated. Skip local release hooks and Git tagging here.
           npm --ignore-scripts version --no-git-tag-version "$version"
           { printf 'version=%s\n' "$version"; printf 'tag=%s\n' "$tag"; } >> "$GITHUB_OUTPUT"
-      - name: Tag validated commit
+      - name: Publish to npm with trusted publishing
         env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_VERSION: ${{ steps.release.outputs.version }}
-        run: |
-          gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
-            --field "ref=refs/tags/$RELEASE_VERSION" --field "sha=$GITHUB_SHA"
-      - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
         run: |
-          config=$(mktemp "$RUNNER_TEMP/diff2html-npm.XXXXXX")
-          trap 'rm -f "$config"' EXIT
-          printf '%s\n' "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > "$config"
-          npm publish --userconfig "$config" --registry https://registry.npmjs.org/ --access public --tag "$RELEASE_TAG"
+          # Use the OIDC-capable CLI only here; validation keeps its own pinned npm version.
+          npm_cli=(npm)
+          if [[ $(npm --version) != 12.2.3 ]]; then
+            npm_cli=(npm exec --yes --package=npm@12.2.3 -- npm)
+          fi
+          [[ $("${npm_cli[@]}" --version) == 12.2.3 ]]
+          "${npm_cli[@]}" publish --registry https://registry.npmjs.org/ --access public --tag "$RELEASE_TAG"
       - name: Publish to GitHub Packages
         env:
           NODE_AUTH_TOKEN: ${{ github.token }}
@@ -98,6 +94,13 @@ jobs:
           printf '%s\n' "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}" > "$config"
           npm pkg set 'name=@rtfpessoa/diff2html'
           npm publish --userconfig "$config" --registry https://npm.pkg.github.com/ --access public --tag "$RELEASE_TAG"
+      - name: Tag published commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
+            --field "ref=refs/tags/$RELEASE_VERSION" --field "sha=$GITHUB_SHA"
       - name: Upload docs
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
