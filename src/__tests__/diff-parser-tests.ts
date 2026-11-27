@@ -304,6 +304,36 @@ describe('DiffParser', () => {
       expect(file.language).toBe('js');
     });
 
+    it('should decode quoted Git paths without stripping filename characters', () => {
+      const path = String.raw`"a/😀 \"hi\"\\test 2016-10-25 11:37:14 +0200.txt\t"`;
+      const diff = `diff --git ${path} ${path}\n--- ${path}\t\n+++ ${path}\t\n@@ -1 +1 @@\n-a\n+b\n`;
+      const [file] = parse(diff);
+      const filename = '😀 "hi"\\test 2016-10-25 11:37:14 +0200.txt\t';
+      expect([file.oldName, file.newName]).toEqual([filename, filename]);
+    });
+
+    it.each(['rename', 'copy'])('should decode Git %s metadata without stripping path prefixes', operation => {
+      const from = String.raw`a/say \"hi\".txt`;
+      const to = String.raw`b/\344\275\240\345\245\275.txt`;
+      const diff = `diff --git "a/${from}" "b/${to}"\nsimilarity index 100%\n${operation} from "${from}"\n${operation} to "${to}"\n`;
+      const [file] = parse(diff);
+      expect([file.oldName, file.newName]).toEqual(['a/say "hi".txt', 'b/你好.txt']);
+    });
+
+    it('should decode quoted Git paths when there are no file headers', () => {
+      const path = String.raw`\303\274ni and foo.txt`;
+      const diff = `diff --git "a/${path}" "b/${path}"\nold mode 100644\nnew mode 100755\n`;
+      const [file] = parse(diff);
+      expect([file.oldName, file.newName]).toEqual(['üni and foo.txt', 'üni and foo.txt']);
+    });
+
+    it('should decode quoted binary filenames that contain the separator text', () => {
+      const path = String.raw`\303\274ni and foo.bin`;
+      const diff = `diff --git "a/${path}" "b/${path}"\nBinary files "a/${path}" and "b/${path}" differ\n`;
+      const [file] = parse(diff);
+      expect([file.oldName, file.newName, file.isBinary]).toEqual(['üni and foo.bin', 'üni and foo.bin', true]);
+    });
+
     it('should parse diff with prefix', () => {
       const diff =
         'diff --git "\tbla with \ttab.scala" "\tbla with \ttab.scala"\n' +
