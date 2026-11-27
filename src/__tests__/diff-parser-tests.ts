@@ -255,6 +255,39 @@ describe('DiffParser', () => {
       `);
     });
 
+    it('should decode file names git quotes with escapes', () => {
+      const diff =
+        'diff --git "a/\\303\\274n\\303\\257.txt" "b/\\303\\274n\\303\\257.txt"\n' +
+        'index 4c679d7..e9bd385 100644\n' +
+        '--- "a/\\303\\274n\\303\\257.txt"\n' +
+        '+++ "b/\\303\\274n\\303\\257.txt"\n' +
+        '@@ -1 +1 @@\n' +
+        '-a\n' +
+        '+b\n' +
+        'diff --git "a/say \\"hi\\".txt" "b/\\344\\275\\240\\345\\245\\275.txt"\n' +
+        'similarity index 100%\n' +
+        'rename from "say \\"hi\\".txt"\n' +
+        'rename to "\\344\\275\\240\\345\\245\\275.txt"\n' +
+        'diff --git "a/😀\\"q.txt" "b/😀\\"q.txt"\n' +
+        '--- "a/😀\\"q.txt"\n' +
+        '+++ "b/😀\\"q.txt"\n' +
+        '@@ -1 +1 @@\n' +
+        '-a\n' +
+        '+b\n';
+      const result = parse(diff);
+      expect(result.map(file => [file.oldName, file.newName])).toEqual([
+        ['ünï.txt', 'ünï.txt'],
+        ['say "hi".txt', '你好.txt'],
+        ['😀"q.txt', '😀"q.txt'],
+      ]);
+    });
+
+    it('should keep backslashes in unquoted file names', () => {
+      const diff = '--- C:\\work\\old.txt\n' + '+++ C:\\work\\new.txt\n' + '@@ -1 +1 @@\n' + '-a\n' + '+b\n';
+      const result = parse(diff);
+      expect([result[0].oldName, result[0].newName]).toEqual(['C:\\work\\old.txt', 'C:\\work\\new.txt']);
+    });
+
     it('should parse diff with prefix', () => {
       const diff =
         'diff --git "\tbla with \ttab.scala" "\tbla with \ttab.scala"\n' +

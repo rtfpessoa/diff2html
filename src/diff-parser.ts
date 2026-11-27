@@ -18,6 +18,44 @@ function startsWithAny(str: string, prefixes: string[]): boolean {
   return prefixes.reduce<boolean>((startsWith, prefix) => startsWith || str.startsWith(prefix), false);
 }
 
+const gitEscapes: Record<string, number> = { a: 7, b: 8, t: 9, n: 10, v: 11, f: 12, r: 13, '"': 34, '\\': 92 };
+
+/**
+ * Git writes a path with special or non-ASCII characters in double quotes with C-style
+ * escapes, the bytes of UTF-8 characters as octal: "\303\274.txt" for ü.txt.
+ */
+function unescapeQuotedFilename(filename: string): string {
+  const bytes: number[] = [];
+  for (let i = 0; i < filename.length; i++) {
+    const char = String.fromCodePoint(filename.codePointAt(i) as number);
+    if (char !== '\\' || i === filename.length - 1) {
+      bytes.push(...new TextEncoder().encode(char));
+      i += char.length - 1;
+      continue;
+    }
+    const octal = /^[0-7]{3}/.exec(filename.slice(i + 1));
+    if (octal) {
+      bytes.push(parseInt(octal[0], 8));
+      i += 3;
+    } else if (filename[i + 1] in gitEscapes) {
+      bytes.push(gitEscapes[filename[i + 1]]);
+      i += 1;
+    } else {
+      bytes.push(92);
+    }
+  }
+  return new TextDecoder().decode(new Uint8Array(bytes));
+}
+
+/**
+ * Remove the double quotes git puts around a path, decoding its escapes.
+ * Unquoted paths are returned as they are.
+ */
+function unquoteFilename(filename: string): string {
+  const quoted = /^"(.*)"$/.exec(filename);
+  return quoted ? unescapeQuotedFilename(quoted[1]) : filename;
+}
+
 const baseDiffFilenamePrefixes = ['a/', 'b/', 'i/', 'w/', 'c/', 'o/'];
 function getFilename(line: string, linePrefix?: string, extraPrefix?: string): string {
   const prefixes = extraPrefix !== undefined ? [...baseDiffFilenamePrefixes, extraPrefix] : baseDiffFilenamePrefixes;
@@ -26,7 +64,9 @@ function getFilename(line: string, linePrefix?: string, extraPrefix?: string): s
     ? new RegExp(`^${escapeForRegExp(linePrefix)} "?(.+?)"?$`)
     : new RegExp('^"?(.+?)"?$');
 
-  const [, filename = ''] = FilenameRegExp.exec(line) || [];
+  const [, rawFilename = ''] = FilenameRegExp.exec(line) || [];
+  const isQuoted = (linePrefix ? line.slice(linePrefix.length + 1) : line).startsWith('"') || line.endsWith('"');
+  const filename = isQuoted ? unescapeQuotedFilename(rawFilename) : rawFilename;
   const matchingPrefix = prefixes.find(p => filename.indexOf(p) === 0);
   const fnameWithoutPrefix = matchingPrefix ? filename.slice(matchingPrefix.length) : filename;
 
@@ -74,11 +114,11 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
   const deletedFileMode = /^deleted file mode (\d{6})/;
   const newFileMode = /^new file mode (\d{6})/;
 
-  const copyFrom = /^copy from "?(.+)"?/;
-  const copyTo = /^copy to "?(.+)"?/;
+  const copyFrom = /^copy from (.+)/;
+  const copyTo = /^copy to (.+)/;
 
-  const renameFrom = /^rename from "?(.+)"?/;
-  const renameTo = /^rename to "?(.+)"?/;
+  const renameFrom = /^rename from (.+)/;
+  const renameTo = /^rename to (.+)/;
 
   const similarityIndex = /^similarity index (\d+)%/;
   const dissimilarityIndex = /^dissimilarity index (\d+)%/;
@@ -425,22 +465,22 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       currentFile.isNew = true;
     } else if ((values = copyFrom.exec(line))) {
       if (doesNotExistHunkHeader) {
-        currentFile.oldName = values[1];
+        currentFile.oldName = unquoteFilename(values[1]);
       }
       currentFile.isCopy = true;
     } else if ((values = copyTo.exec(line))) {
       if (doesNotExistHunkHeader) {
-        currentFile.newName = values[1];
+        currentFile.newName = unquoteFilename(values[1]);
       }
       currentFile.isCopy = true;
     } else if ((values = renameFrom.exec(line))) {
       if (doesNotExistHunkHeader) {
-        currentFile.oldName = values[1];
+        currentFile.oldName = unquoteFilename(values[1]);
       }
       currentFile.isRename = true;
     } else if ((values = renameTo.exec(line))) {
       if (doesNotExistHunkHeader) {
-        currentFile.newName = values[1];
+        currentFile.newName = unquoteFilename(values[1]);
       }
       currentFile.isRename = true;
     } else if ((values = binaryFiles.exec(line))) {
