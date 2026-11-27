@@ -2673,5 +2673,23 @@ describe('DiffParser', () => {
         ]
       `);
     });
+
+    it('should not count the format-patch signature as a deleted line', () => {
+      const diff =
+        'diff --git a/f.txt b/f.txt\n' +
+        'index 1..2 100644\n' +
+        '--- a/f.txt\n' +
+        '+++ b/f.txt\n' +
+        '@@ -1,2 +1,3 @@\n' +
+        ' a\n' +
+        ' b\n' +
+        '+c\n' +
+        '-- \n' +
+        '2.53.0\n';
+      const [file] = parse(diff);
+      expect(file.addedLines).toBe(1);
+      expect(file.deletedLines).toBe(0);
+      expect(file.blocks[0].lines.map(l => l.content)).toEqual([' a', ' b', '+c']);
+    });
   });
 });

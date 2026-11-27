@@ -97,6 +97,9 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
   let oldLine: number | null = null;
   let oldLine2: number | null = null; // Used for combined diff
   let newLine: number | null = null;
+  // lines left in the current hunk, from its header (null when unknown)
+  let oldLinesLeft: number | null = null;
+  let newLinesLeft: number | null = null;
 
   let possibleOldName: string | null = null;
   let possibleNewName: string | null = null;
@@ -198,10 +201,14 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
      */
 
     if (currentFile !== null) {
-      if ((values = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@.*/.exec(line))) {
+      oldLinesLeft = null;
+      newLinesLeft = null;
+      if ((values = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@.*/.exec(line))) {
         currentFile.isCombined = false;
         oldLine = parseInt(values[1], 10);
-        newLine = parseInt(values[2], 10);
+        newLine = parseInt(values[3], 10);
+        oldLinesLeft = values[2] === undefined ? 1 : parseInt(values[2], 10);
+        newLinesLeft = values[4] === undefined ? 1 : parseInt(values[4], 10);
       } else if ((values = /^@@@ -(\d+)(?:,\d+)? -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@@.*/.exec(line))) {
         currentFile.isCombined = true;
         oldLine = parseInt(values[1], 10);
@@ -246,12 +253,19 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     const addedPrefixes = currentFile.isCombined ? ['+ ', ' +', '++'] : ['+'];
     const deletedPrefixes = currentFile.isCombined ? ['- ', ' -', '--'] : ['-'];
 
-    if (startsWithAny(line, addedPrefixes)) {
+    const isAdded = startsWithAny(line, addedPrefixes);
+    const isDeleted = !isAdded && startsWithAny(line, deletedPrefixes);
+    if (oldLinesLeft !== null && newLinesLeft !== null) {
+      if (!isAdded) oldLinesLeft--;
+      if (!isDeleted) newLinesLeft--;
+    }
+
+    if (isAdded) {
       currentFile.addedLines++;
       currentLine.type = LineType.INSERT;
       currentLine.oldNumber = undefined;
       currentLine.newNumber = newLine++;
-    } else if (startsWithAny(line, deletedPrefixes)) {
+    } else if (isDeleted) {
       currentFile.deletedLines++;
       currentLine.type = LineType.DELETE;
       currentLine.oldNumber = oldLine++;
@@ -432,7 +446,9 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
      * 2. Old line     starts with: -
      * 3. Context line starts with: <SPACE>
      */
-    if (currentBlock && (line.startsWith('+') || line.startsWith('-') || line.startsWith(' '))) {
+    // `-- ` right after a complete hunk is the signature separator of `git format-patch`
+    const isPatchSignature = line === '-- ' && oldLinesLeft === 0 && newLinesLeft === 0;
+    if (currentBlock && !isPatchSignature && (line.startsWith('+') || line.startsWith('-') || line.startsWith(' '))) {
       createLine(line);
       return;
     }
