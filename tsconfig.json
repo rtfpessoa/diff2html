@@ -2,11 +2,13 @@
   "include": ["src/**/*", "typings/**/*.d.ts"],
   "exclude": ["node_modules", "src/__tests__/**"],
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "bundles-out",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "target": "ES6",
-    "lib": ["ES6", "DOM"],
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "target": "ES2015",
+    "lib": ["ES2015", "DOM"],
+    "types": ["node"],
     "jsx": "preserve",
     "allowJs": false,
     "checkJs": false,
@@ -32,7 +34,6 @@
     "preserveConstEnums": true,
     "alwaysStrict": true,
     "noImplicitAny": true,
-    "noImplicitThis": true,
-    "typeRoots": ["./node_modules/@types", "./typings"]
+    "noImplicitThis": true
   }
 }

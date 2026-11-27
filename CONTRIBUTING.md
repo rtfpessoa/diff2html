@@ -1,5 +1,14 @@
 ## How to contribute to diff2html
 
+### Development setup
+
+Use Node.js 26 (the exact default is in `.nvmrc`) and npm 12.2.3 to build the project from source. CI also validates
+Node.js 24.22.3 and 22.23.5 with the same npm version. These are contributor requirements; the published library still
+supports Node.js 12 and up.
+
+With a matching Node.js and npm, run `npm ci` and `npm run validate`. Use the project npm script policy as committed so
+local builds and release validation use the same dependency lifecycle rules.
+
 ### Main rules
 
 - Before you open a ticket or send a pull request, [search](https://github.com/rtfpessoa/diff2html/issues) for previous

@@ -182,8 +182,6 @@ export default class SideBySideRenderer {
 
     if (oldLines.length || newLines.length) {
       blockLinesGroups.push([[], oldLines, newLines]);
-      oldLines = [];
-      newLines = [];
     }
 
     return blockLinesGroups;
