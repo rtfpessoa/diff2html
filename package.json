@@ -88,11 +88,11 @@
     ]
   },
   "dependencies": {
-    "diff": "^8.0.3",
+    "diff": "^9.0.0",
     "@profoundlogic/hogan": "^3.0.4"
   },
   "optionalDependencies": {
-    "highlight.js": "11.11.1"
+    "highlight.js": "11.12.0"
   },
   "devDependencies": {
     "@all-contributors/cli": "7.1.0",
