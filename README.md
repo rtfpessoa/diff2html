@@ -371,7 +371,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
 - `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
 - `wrapLines`: visually wrap long lines in either output format, default is `false`. Side-by-side wrapping keeps the two
-  sides of each row aligned. Diff2HtmlUI applies the option when given diff input; it does not re-render existing HTML.
+  sides of each row aligned. Turn wrapping off to select multiple lines on one side without including the other side.
+  Diff2HtmlUI applies the option when given diff input; it does not re-render existing HTML.
 - `drawFileList`: show a file list before the diff: `true` or `false`, default is `true`
 - `srcPrefix`: add a prefix to all source (before changes) filepaths, default is `''`. Should match the prefix used when
   [generating the diff](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---src-prefixltprefixgt).
@@ -405,8 +406,8 @@ The HTML output accepts a Javascript object with configuration. Possible options
 
   Omitting `wrapLines` or setting it to `false` uses the existing templates unchanged. To support opt-in wrapping in a
   custom `line-by-line-file-diff` template, add `{{#wrapLines}} d2h-wrap-lines{{/wrapLines}}` to the `d2h-file-diff`
-  class list. When wrapping is enabled, side-by-side uses the separate `side-by-side-wrapped-*` templates for its single
-  paired table.
+  class list and preserve the stock template's direct wrapper, table, and row structure. When wrapping is enabled,
+  side-by-side uses the separate `side-by-side-wrapped-*` templates for its single paired table.
 
 - `highlightLanguages`: Map of extension to language name, used for highlighting. This overrides the default language
   detection based on file extensions.
