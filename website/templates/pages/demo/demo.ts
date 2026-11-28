@@ -136,7 +136,16 @@ function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
     ...urlParamsRest,
   };
 
+  // Use the full raw parameter for wrapLines, even when its value contains '=' or '?'.
+  const wrapLines =
+    window.location.search
+      .slice(1)
+      .split('&')
+      .filter(param => param.split('=', 1)[0] === 'wrapLines')
+      .pop() === 'wrapLines=true';
+
   return Object.entries(config).reduce((object, [k, v]) => {
+    if (k === 'wrapLines') return { ...object, wrapLines };
     const newObject = !Number.isNaN(Number(v))
       ? { [k]: Number(v) }
       : v === 'true' || v === 'false'
@@ -222,6 +231,7 @@ type Elements = {
   };
   checkboxes: {
     drawFileList: HTMLInputElement;
+    wrapLines: HTMLInputElement;
   };
 };
 
@@ -283,6 +293,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     checkboxes: {
       drawFileList: getHTMLInputElementById('diff-url-options-show-files'),
+      wrapLines: getHTMLInputElementById('diff-url-options-wrap-lines'),
     },
   };
 
@@ -292,6 +303,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (config.outputFormat) elements.options.outputFormat.value = config.outputFormat;
   if (config.colorScheme) elements.options.colorScheme.value = config.colorScheme;
   if (config.drawFileList) elements.checkboxes.drawFileList.checked = config.drawFileList;
+  elements.checkboxes.wrapLines.checked = config.wrapLines === true;
   if (config.matching) elements.options.matching.value = config.matching;
   if (config.matchWordsThreshold) elements.options.wordsThreshold.value = config.matchWordsThreshold.toString();
   if (config.matchingMaxComparisons)

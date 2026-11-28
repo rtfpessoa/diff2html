@@ -41,6 +41,7 @@ export interface RenderConfig {
   maxLineLengthHighlight?: number;
   diffStyle?: DiffStyleType;
   colorScheme?: ColorSchemeType;
+  wrapLines?: boolean;
 }
 
 export const defaultRenderConfig = {
@@ -49,6 +50,7 @@ export const defaultRenderConfig = {
   maxLineLengthHighlight: 10000,
   diffStyle: DiffStyleType.WORD,
   colorScheme: ColorSchemeType.LIGHT,
+  wrapLines: false,
 };
 
 const separator = '/';

@@ -370,6 +370,8 @@ function html(diffInput: string | DiffFile[], configuration: Diff2HtmlConfig = {
 The HTML output accepts a Javascript object with configuration. Possible options:
 
 - `outputFormat`: the format of the output data: `'line-by-line'` or `'side-by-side'`, default is `'line-by-line'`
+- `wrapLines`: visually wrap long lines in either output format, default is `false`. Side-by-side wrapping keeps the two
+  sides of each row aligned. Diff2HtmlUI applies the option when given diff input; it does not re-render existing HTML.
 - `drawFileList`: show a file list before the diff: `true` or `false`, default is `true`
 - `srcPrefix`: add a prefix to all source (before changes) filepaths, default is `''`. Should match the prefix used when
   [generating the diff](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---src-prefixltprefixgt).
@@ -397,8 +399,15 @@ The HTML output accepts a Javascript object with configuration. Possible options
   `{ "tag-file-changed": Hogan.compile("<span class="d2h-tag d2h-changed d2h-changed-tag">MODIFIED</span>") }`
 - `rawTemplates`: object (string values) with raw not compiled templates to replace parts of the html, default is `{}`.
   For example: `{ "tag-file-changed": "<span class="d2h-tag d2h-changed d2h-changed-tag">MODIFIED</span>" }`
+
   > For more information regarding the possible templates look into
   > [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
+
+  Omitting `wrapLines` or setting it to `false` uses the existing templates unchanged. To support opt-in wrapping in a
+  custom `line-by-line-file-diff` template, add `{{#wrapLines}} d2h-wrap-lines{{/wrapLines}}` to the `d2h-file-diff`
+  class list. When wrapping is enabled, side-by-side uses the separate `side-by-side-wrapped-*` templates for its single
+  paired table.
+
 - `highlightLanguages`: Map of extension to language name, used for highlighting. This overrides the default language
   detection based on file extensions.
 - `colorScheme`: color scheme to use for the diff, default is `light`. Possible values are `light`, `dark`, and `auto`
