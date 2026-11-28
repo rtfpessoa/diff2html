@@ -71,6 +71,7 @@ export default class LineByLineRenderer {
       file: file,
       fileHtmlId: renderUtils.getHtmlId(file),
       diffs: diffs,
+      ...(this.config.wrapLines === true ? { wrapLines: true } : {}),
       filePath: filePathTemplate.render(
         {
           fileDiffName: renderUtils.filenameDiff(file),
