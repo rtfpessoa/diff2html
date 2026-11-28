@@ -442,7 +442,18 @@
   display: inline;
 }
 
-/* A configured info message can contain another diff; stop inherited line wrapping at its root. */
+/* Wrap info text without preserving template indentation. */
+.d2h-wrap-lines
+  > .d2h-code-wrapper
+  > .d2h-diff-table
+  > .d2h-diff-tbody
+  > tr
+  > td.d2h-info
+  > :is(.d2h-code-line, .d2h-code-side-line) {
+  white-space: normal;
+}
+
+/* A configured info message can contain another diff; stop inherited wrapping at both widget roots. */
 .d2h-wrap-lines
   > .d2h-code-wrapper
   > .d2h-diff-table
@@ -450,7 +461,7 @@
   > tr
   > td.d2h-info
   > :is(.d2h-code-line, .d2h-code-side-line)
-  .d2h-wrapper {
+  :is(.d2h-file-list-wrapper, .d2h-wrapper) {
   white-space: normal;
   overflow-wrap: normal;
 }
