@@ -1,6 +1,6 @@
 import path from 'path';
 
-import webpack from 'webpack';
+import type webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
@@ -49,11 +49,13 @@ function plugins(page: string): Plugin[] {
 
 const config: webpack.Configuration[] = pages.map(page => {
   return {
+    // The dev-server client filters updates by compiler name in multi-compiler builds.
+    name: page,
     entry: {
       [page]: `./website/templates/pages/${page}/${page}.ts`,
     },
     output: {
-      path: path.resolve(__dirname, './docs'),
+      path: path.resolve(import.meta.dirname, './docs'),
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.jsx', '.js'],
@@ -82,40 +84,28 @@ const config: webpack.Configuration[] = pages.map(page => {
             precompileOptions: {
               knownHelpersOnly: false,
             },
-            helperDirs: [path.join(__dirname, 'website/templates/helpers')],
-            partialDirs: [path.join(__dirname, 'website/templates')],
+            helperDirs: [path.join(import.meta.dirname, 'website/templates/helpers')],
+            partialDirs: [path.join(import.meta.dirname, 'website/templates')],
           },
         },
         {
           test: /\.(gif|png|jpe?g|webp)$/i,
-          use: {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]?[hash]',
-              outputPath: 'images',
-              esModule: false,
-            },
-          },
+          type: 'asset/resource',
+          generator: { filename: 'images/[name][ext]?[contenthash]' },
         },
         {
           test: /\.(css)$/,
           use: [MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader'],
         },
         {
-          test: /\.woff(2)?(\?v=\d\.\d\.\d)?$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1000,
-                mimetype: 'application/font-woff',
-              },
-            },
-          ],
+          test: /\.woff2?$/,
+          type: 'asset',
+          parser: { dataUrlCondition: { maxSize: 1000 } },
+          generator: { dataUrl: { mimetype: 'application/font-woff' } },
         },
         {
-          test: /\.(ttf|eot|svg)(\?v=\d\.\d\.\d)?$/,
-          loader: 'file-loader',
+          test: /\.(ttf|eot|svg)$/,
+          type: 'asset/resource',
         },
       ],
     },
