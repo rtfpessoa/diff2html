@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-npm_version=10.9.4
+npm_version=12.2.3
 if [ "$(npm --version)" != "$npm_version" ]; then
   npm install --global "npm@$npm_version" --no-audit --no-fund
 fi
@@ -16,7 +16,7 @@ check_manifests() {
   test -z "$(git ls-files --others --exclude-standard -- package.json package-lock.json .npmrc)"
 }
 
-HUSKY=0 npm ci --no-audit --no-fund
+HUSKY=0 npm ci --engine-strict --strict-peer-deps --no-audit --no-fund
 check_manifests
 npm ls --all
 npm run validate

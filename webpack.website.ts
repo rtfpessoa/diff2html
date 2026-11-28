@@ -62,7 +62,7 @@ const config: webpack.Configuration[] = pages.map(page => {
       rules: [
         {
           test: /\.tsx?$/,
-          use: 'ts-loader',
+          use: { loader: 'ts-loader', options: { configFile: 'tsconfig.website.json' } },
           exclude: /node_modules/,
         },
         {
