@@ -138,6 +138,7 @@ export default class SideBySideRenderer {
               );
               fileHtml.left += left;
               fileHtml.right += right;
+              this.appendNoNewlineHtml(fileHtml, line.noNewline, line.noNewline);
             });
           } else if (oldLines.length || newLines.length) {
             const { left, right } = this.processChangedLines(file.isCombined, oldLines, newLines);
@@ -274,9 +275,20 @@ export default class SideBySideRenderer {
       const { left, right } = this.generateLineHtml(preparedOldLine, preparedNewLine);
       fileHtml.left += left;
       fileHtml.right += right;
+      this.appendNoNewlineHtml(fileHtml, oldLine?.noNewline, newLine?.noNewline);
     }
 
     return fileHtml;
+  }
+
+  private appendNoNewlineHtml(fileHtml: FileHtml, oldMarker?: string, newMarker?: string): void {
+    if (oldMarker === undefined && newMarker === undefined) return;
+    const { left, right } = this.generateLineHtml(
+      oldMarker === undefined ? undefined : renderUtils.prepareNoNewlineMarker(oldMarker),
+      newMarker === undefined ? undefined : renderUtils.prepareNoNewlineMarker(newMarker),
+    );
+    fileHtml.left += left;
+    fileHtml.right += right;
   }
 
   generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
@@ -328,7 +340,7 @@ type DiffPreparedLine = {
   type: renderUtils.CSSLineClass;
   prefix: string;
   content: string;
-  number: number;
+  number?: number;
 };
 
 type FileHtml = {

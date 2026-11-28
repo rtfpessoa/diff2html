@@ -29,6 +29,8 @@ export interface DiffLineContext {
 
 export type DiffLineContent = {
   content: string;
+  /** The original, possibly localized EOF marker following this line, if present. */
+  noNewline?: string;
 };
 
 export type DiffLine = (DiffLineDeleted | DiffLineInserted | DiffLineContext) & DiffLineContent;

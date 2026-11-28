@@ -117,6 +117,10 @@ export function escapeForHtml(str: string): string {
     .replace(/\//g, '&#x2F;');
 }
 
+export function prepareNoNewlineMarker(marker: string): DiffLineParts & { type: CSSLineClass } {
+  return { ...deconstructLine(marker, false), type: CSSLineClass.CONTEXT };
+}
+
 /**
  * Deconstructs diff @line by separating the content from the prefix type
  */

@@ -153,6 +153,7 @@ describe('Diff2Html', () => {
                   {
                     "content": "-}",
                     "newNumber": undefined,
+                    "noNewline": "\\ No newline at end of file",
                     "oldNumber": 54,
                     "type": "delete",
                   },
