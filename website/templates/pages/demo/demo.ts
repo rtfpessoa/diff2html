@@ -1,6 +1,6 @@
 import { Diff2HtmlUI, defaultDiff2HtmlUIConfig, Diff2HtmlUIConfig } from '../../../../src/ui/js/diff2html-ui-slim';
 
-import '../../../main.ts';
+import '../../../main';
 import '../../../main.css';
 import './github-highlights.css';
 import '../../../../src/ui/css/diff2html.css';
@@ -58,11 +58,7 @@ type Request = {
 };
 
 function prepareRequest(url: string): Request {
-  if (!validateUrl(url)) {
-    const errorMsg = 'Invalid url provided!';
-    console.error(errorMsg);
-    throw new Error(errorMsg);
-  }
+  if (!validateUrl(url)) throw new Error('Invalid url provided!');
 
   let fetchUrl;
   const headers = new Headers();
@@ -136,7 +132,16 @@ function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
     ...urlParamsRest,
   };
 
+  // Use the full raw parameter for wrapLines, even when its value contains '=' or '?'.
+  const wrapLines =
+    window.location.search
+      .slice(1)
+      .split('&')
+      .filter(param => param.split('=', 1)[0] === 'wrapLines')
+      .pop() === 'wrapLines=true';
+
   return Object.entries(config).reduce((object, [k, v]) => {
+    if (k === 'wrapLines') return { ...object, wrapLines };
     const newObject = !Number.isNaN(Number(v))
       ? { [k]: Number(v) }
       : v === 'true' || v === 'false'
@@ -147,18 +152,13 @@ function getConfiguration(urlParams: URLParams): Diff2HtmlUIConfig {
 }
 
 async function getDiff(request: Request): Promise<string> {
-  try {
-    const result = await fetch(request.url, {
-      method: 'GET',
-      headers: request.headers,
-      mode: 'cors',
-      cache: 'default',
-    });
-    return result.text();
-  } catch (error) {
-    console.error('Failed to retrieve diff', error);
-    throw error;
-  }
+  const result = await fetch(request.url, {
+    method: 'GET',
+    headers: request.headers,
+    mode: 'cors',
+    cache: 'default',
+  });
+  return result.text();
 }
 
 function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements): void {
@@ -171,20 +171,6 @@ function draw(diffString: string, config: Diff2HtmlUIConfig, elements: Elements)
 
 function setBodyColorScheme(colorScheme: ColorSchemeType): void {
   document.body.className = colorSchemeToCss(colorScheme);
-}
-
-async function prepareInitialState(elements: Elements): Promise<[Diff2HtmlUIConfig, string]> {
-  const urlParams = getParamsFromSearch(window.location.search);
-  const currentUrl = (urlParams && urlParams[searchParam]) || 'https://github.com/rtfpessoa/diff2html/pull/106';
-
-  if (currentUrl !== elements.url.input.value) elements.url.input.value = currentUrl;
-
-  const request = prepareRequest(currentUrl);
-
-  const initialConfiguration = getConfiguration(urlParams);
-  const initialDiff = await getDiff(request);
-
-  return [initialConfiguration, initialDiff];
 }
 
 function updateBrowserUrl(config: Diff2HtmlUIConfig, newDiffUrl: string): void {
@@ -222,6 +208,7 @@ type Elements = {
   };
   checkboxes: {
     drawFileList: HTMLInputElement;
+    wrapLines: HTMLInputElement;
   };
 };
 
@@ -254,18 +241,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('whatwg-fetch');
 
-  const drawAndUpdateUrl = async (
-    diffUrl: string,
-    diffString: string,
-    config: Diff2HtmlUIConfig,
-    elements: Elements,
-  ): Promise<void> => {
-    updateBrowserUrl(config, diffUrl);
-    const newRequest = prepareRequest(diffUrl);
-    diffString = await getDiff(newRequest);
-    draw(diffString, config, elements);
-  };
-
   const elements: Elements = {
     structure: {
       diffTarget: getHTMLElementById('url-diff-container'),
@@ -283,15 +258,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     checkboxes: {
       drawFileList: getHTMLInputElementById('diff-url-options-show-files'),
+      wrapLines: getHTMLInputElementById('diff-url-options-wrap-lines'),
     },
   };
 
-  let [config, diffString] = await prepareInitialState(elements);
+  let latestRequestId = 0;
+  const drawAndUpdateUrl = async (
+    diffUrl: string,
+    config: Diff2HtmlUIConfig,
+    updateUrlOnStart = false,
+  ): Promise<void> => {
+    const requestId = ++latestRequestId;
+    // Options update the URL immediately; Load leaves it alone until the fetch succeeds.
+    if (updateUrlOnStart) updateBrowserUrl(config, diffUrl);
+
+    let diffString: string;
+    try {
+      diffString = await getDiff(prepareRequest(diffUrl));
+    } catch (error) {
+      if (requestId === latestRequestId) console.error('Failed to retrieve diff', error);
+      return;
+    }
+
+    if (requestId !== latestRequestId) return;
+    if (!updateUrlOnStart) updateBrowserUrl(config, diffUrl);
+    draw(diffString, config, elements);
+  };
+
+  const urlParams = getParamsFromSearch(window.location.search);
+  elements.url.input.value = urlParams[searchParam] || 'https://github.com/rtfpessoa/diff2html/pull/106';
+  let config = getConfiguration(urlParams);
 
   // Update HTML inputs from any changes in URL
   if (config.outputFormat) elements.options.outputFormat.value = config.outputFormat;
   if (config.colorScheme) elements.options.colorScheme.value = config.colorScheme;
   if (config.drawFileList) elements.checkboxes.drawFileList.checked = config.drawFileList;
+  elements.checkboxes.wrapLines.checked = config.wrapLines === true;
   if (config.matching) elements.options.matching.value = config.matching;
   if (config.matchWordsThreshold) elements.options.wordsThreshold.value = config.matchWordsThreshold.toString();
   if (config.matchingMaxComparisons)
@@ -300,24 +302,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   Object.entries(elements.options).forEach(([option, element]) =>
     element.addEventListener('change', () => {
       config = { ...config, [option]: element.value };
-      drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
+      drawAndUpdateUrl(elements.url.input.value, config, true);
     }),
   );
 
   Object.entries(elements.checkboxes).forEach(([option, checkbox]) =>
     checkbox.addEventListener('change', () => {
       config = { ...config, [option]: checkbox.checked };
-      drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
+      drawAndUpdateUrl(elements.url.input.value, config, true);
     }),
   );
 
-  elements.url.button.addEventListener('click', async e => {
+  elements.url.button.addEventListener('click', e => {
     e.preventDefault();
-    const newDiffUrl = elements.url.input.value;
-    const newRequest = prepareRequest(newDiffUrl);
-    diffString = await getDiff(newRequest);
-    drawAndUpdateUrl(newDiffUrl, diffString, config, elements);
+    drawAndUpdateUrl(elements.url.input.value, config);
   });
 
-  return drawAndUpdateUrl(elements.url.input.value, diffString, config, elements);
+  return drawAndUpdateUrl(elements.url.input.value, config);
 });

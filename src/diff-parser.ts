@@ -21,6 +21,7 @@ const quotedFilename = /"(?:[^"\\]|\\.)*"/;
 const prefixedFilenamePattern = `${quotedFilename.source}|[a-ciow]/[^"]+`;
 const binaryFilenamePattern = `${quotedFilename.source}|[^"]+`;
 const gitDiffStart = new RegExp(`^diff --git (${prefixedFilenamePattern}) (${prefixedFilenamePattern})$`);
+const isGitFileHeader = (line: string): boolean => line.startsWith('diff --git') || line.startsWith('diff --combined');
 const unixDiffBinaryStart = new RegExp(
   `^Binary files (${prefixedFilenamePattern}) and (${prefixedFilenamePattern}) differ$`,
 );
@@ -283,11 +284,11 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
    *
    * Hunk header is a group of three lines started by ( `--- ` , `+++ ` , `@@` )
    */
-  function existHunkHeader(line: string, lineIdx: number): boolean {
-    let idx = lineIdx;
+  function existHunkHeader(lineIdx: number): boolean {
+    let idx = lineIdx + 1;
 
     while (idx < diffLines.length - 3) {
-      if (line.startsWith('diff')) {
+      if (isGitFileHeader(diffLines[idx])) {
         return false;
       }
 
@@ -322,7 +323,7 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     const nxtLine = diffLines[lineIndex + 1];
     const afterNxtLine = diffLines[lineIndex + 2];
 
-    if (line.startsWith('diff --git') || line.startsWith('diff --combined')) {
+    if (isGitFileHeader(line)) {
       startFile();
 
       // diff --git a/blocked_delta_results.png b/blocked_delta_results.png
@@ -453,8 +454,6 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       return;
     }
 
-    const doesNotExistHunkHeader = !existHunkHeader(line, lineIndex);
-
     if (currentFile === null) {
       throw new Error('Where is my file !!!');
     }
@@ -474,22 +473,22 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       currentFile.newFileMode = values[1];
       currentFile.isNew = true;
     } else if ((values = copyFrom.exec(line))) {
-      if (doesNotExistHunkHeader) {
+      if (!existHunkHeader(lineIndex)) {
         currentFile.oldName = unquoteFilename(values[1]);
       }
       currentFile.isCopy = true;
     } else if ((values = copyTo.exec(line))) {
-      if (doesNotExistHunkHeader) {
+      if (!existHunkHeader(lineIndex)) {
         currentFile.newName = unquoteFilename(values[1]);
       }
       currentFile.isCopy = true;
     } else if ((values = renameFrom.exec(line))) {
-      if (doesNotExistHunkHeader) {
+      if (!existHunkHeader(lineIndex)) {
         currentFile.oldName = unquoteFilename(values[1]);
       }
       currentFile.isRename = true;
     } else if ((values = renameTo.exec(line))) {
-      if (doesNotExistHunkHeader) {
+      if (!existHunkHeader(lineIndex)) {
         currentFile.newName = unquoteFilename(values[1]);
       }
       currentFile.isRename = true;

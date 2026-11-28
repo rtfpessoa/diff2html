@@ -1,6 +1,6 @@
 import handlebars, { HelperOptions } from 'handlebars';
 
-const loadPartial = <T>(name: string): handlebars.Template<T> => {
+const loadPartial = <T>(name: string): handlebars.TemplateDelegate<T> | undefined => {
   let partial = handlebars.partials[name];
   if (typeof partial === 'string') {
     partial = handlebars.compile(partial);

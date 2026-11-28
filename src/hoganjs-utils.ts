@@ -42,6 +42,7 @@ export default class HoganJsUtils {
       const template = this.preCompiledTemplates[templateKey];
       return template.render(params, partials, indent);
     } catch (_e) {
+      // eslint-disable-next-line preserve-caught-error -- Error causes require Node 16.9+.
       throw new Error(`Could not find template to render '${templateKey}'`);
     }
   }

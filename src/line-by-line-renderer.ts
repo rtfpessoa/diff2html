@@ -71,6 +71,7 @@ export default class LineByLineRenderer {
       file: file,
       fileHtmlId: renderUtils.getHtmlId(file),
       diffs: diffs,
+      ...(this.config.wrapLines === true ? { wrapLines: true } : {}),
       filePath: filePathTemplate.render(
         {
           fileDiffName: renderUtils.filenameDiff(file),
@@ -167,8 +168,6 @@ export default class LineByLineRenderer {
 
     if (oldLines.length || newLines.length) {
       blockLinesGroups.push([[], oldLines, newLines]);
-      oldLines = [];
-      newLines = [];
     }
 
     return blockLinesGroups;

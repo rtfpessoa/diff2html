@@ -4,22 +4,26 @@ on:
   push:
     branches: [master]
 
+permissions:
+  contents: read
+
 jobs:
   test-and-publish:
+    if: github.repository == 'rtfpessoa/diff2html' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
     uses: ./.github/workflows/test-and-publish.yml
-    with:
-      environment: production
-    secrets: inherit
 
   publish-website:
-    runs-on: ubuntu-latest
-    container:
-      image: amazon/aws-cli
+    if: github.repository == 'rtfpessoa/diff2html' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
     needs: [test-and-publish]
-    environment: 'production'
+    environment: production
     steps:
       - name: Download docs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: docs
           path: docs/
@@ -32,4 +36,4 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: |
           aws s3 sync --region eu-west-1 --delete . s3://diff2html.xyz --metadata-directive REPLACE --cache-control max-age=31557600
-          aws cloudfront create-invalidation --region eu-west-1 --distribution-id $AWS_CF_DISTRIBUTION_ID --paths /index.html /demo.html /sitemap.xml /robots.txt
+          aws cloudfront create-invalidation --region eu-west-1 --distribution-id "$AWS_CF_DISTRIBUTION_ID" --paths /index.html /demo.html /sitemap.xml /robots.txt

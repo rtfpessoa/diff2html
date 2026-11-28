@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/rtfpessoa/diff2html.git"
+    "url": "git+https://github.com/rtfpessoa/diff2html.git"
   },
   "bugs": {
     "url": "https://www.github.com/rtfpessoa/diff2html/issues"
@@ -38,29 +38,29 @@
     "lint:staged": "lint-staged",
     "lint:check": "eslint",
     "lint:fix": "eslint --fix",
-    "prettier": "prettier --ignore-path .gitignore '**/*.+(js|jsx|ts|tsx|json|css|html|md|mdx)'",
-    "format:check": "npm run prettier --check",
-    "format:fix": "npm run prettier --write",
+    "prettier": "prettier --ignore-path .gitignore '**/*.+(js|jsx|mjs|ts|tsx|mts|json|css|html|md|mdx)'",
+    "format:check": "npm run prettier -- --check",
+    "format:fix": "npm run prettier -- --write",
     "build": "npm run build:css && npm run build:templates && npm run build:commonjs && npm run build:esm && npm run build:bundles && npm run build:website",
-    "build:commonjs": "rm -rf lib; tsc -p tsconfig.json -m CommonJS --outDir lib",
-    "build:esm": "rm -rf lib-esm; tsc -p tsconfig.json -m ESNext --outDir lib-esm",
-    "build:bundles": "rm -rf ./bundles/js; webpack --mode production --config webpack.bundles.ts",
+    "build:commonjs": "rm -rf lib && tsc -p tsconfig.json --rootDir src --outDir lib",
+    "build:esm": "rm -rf lib-esm && tsc -p tsconfig.esm.json --rootDir src --outDir lib-esm",
+    "build:bundles": "rm -rf ./bundles/js; webpack --mode production --config webpack.bundles.mts",
     "build:css": "rm -rf ./bundles/css; postcss --config ./postcss.config.js --no-map -o ./bundles/css/diff2html.min.css ./src/ui/css/diff2html.css",
     "build:templates": "ts-node ./scripts/hulk.ts --wrapper ts --variable 'defaultTemplates' ./src/templates/*.mustache > ./src/diff2html-templates.ts",
-    "build:website": "rm -rf docs; webpack --mode production --config webpack.website.ts",
+    "build:website": "rm -rf docs; webpack --mode production --config webpack.website.mts",
     "gen": "npm run gen:toc",
-    "gen:toc-base": "markdown-toc --maxdepth 3 --bullets='-' -i",
-    "gen:toc": "npm run gen:toc-base README.md",
+    "gen:toc-base": "node scripts/update-readme-toc.mjs",
+    "gen:toc": "npm run gen:toc-base -- README.md",
     "test": "is-ci 'test:coverage' 'test:watch'",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch",
     "coverage:open": "npm run test:coverage && open ./coverage/index.html",
     "coverage:push": "curl -Ls https://coverage.codacy.com/get.sh | bash",
-    "validate": "npm run build:templates && npm run format:check && npm run lint:check && npm run build && npm run test:coverage",
+    "validate": "npm run build:templates && npm run format:check && npm run lint:check && node --test scripts/update-readme-toc-checks.mjs && npm run build && npm run test:coverage",
     "fix": "npm run format:fix && npm run lint:fix",
     "start": "npm run start:website",
-    "start:website": "webpack serve --mode development --config webpack.website.ts",
+    "start:website": "webpack serve --mode development --config webpack.website.mts",
     "preversion": "npm run validate",
     "version": "git add -A package.json",
     "prepare": "husky"
@@ -69,86 +69,80 @@
   "module": "./lib-esm/diff2html.js",
   "types": "./lib/diff2html.d.ts",
   "lint-staged": {
-    "**/*.+(js|jsx|ts|tsx|json)": [
+    "**/*.+(js|jsx|mjs|ts|tsx|mts|json)": [
       "prettier --write",
       "eslint --fix"
     ],
-    "**/*.+(css|html|md|mdx)": [
+    "**/*.+(css|html|mdx)": [
       "prettier --write"
     ],
-    "README.md": [
-      "npm run gen:toc-base"
+    "**/!(README).md": [
+      "prettier --write"
+    ],
+    "*/**/README.md": [
+      "prettier --write"
+    ],
+    "./README.md": [
+      "npm run gen:toc-base --",
+      "prettier --write"
     ]
   },
   "dependencies": {
-    "diff": "^8.0.3",
+    "diff": "^9.0.0",
     "@profoundlogic/hogan": "^3.0.4"
   },
   "optionalDependencies": {
-    "highlight.js": "11.11.1"
+    "highlight.js": "11.12.0"
   },
   "devDependencies": {
-    "prettier-2": "npm:prettier@^3",
-    "@eslint/js": "^9.39.2",
-    "@eslint/json": "^1.0.0",
+    "@all-contributors/cli": "7.1.0",
+    "@eslint/js": "10.0.1",
+    "@eslint/json": "2.1.1",
     "@types/hogan.js": "3.0.5",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^25.1.0",
+    "@types/jest": "30.0.0",
+    "@types/node": "26.6.11",
     "@types/nopt": "3.0.32",
-    "all-contributors-cli": "^6.26.1",
-    "autoprefixer": "^10.4.24",
+    "autoprefixer": "10.7.0",
     "bulma": "^1.0.4",
     "clipboard": "2.0.11",
-    "copy-webpack-plugin": "^13.0.1",
-    "css-loader": "^7.1.3",
-    "cssnano": "^7.1.2",
-    "eslint": "^9.39.2",
-    "eslint-plugin-jest": "29.12.1",
-    "eslint-plugin-promise": "^7.2.1",
-    "file-loader": "6.2.0",
-    "globals": "^17.2.0",
-    "handlebars": "4.7.8",
+    "copy-webpack-plugin": "14.0.0",
+    "css-loader": "7.1.5",
+    "cssnano": "9.9.0",
+    "eslint": "10.16.0",
+    "eslint-plugin-jest": "29.17.2",
+    "eslint-plugin-promise": "7.3.0",
+    "github-slugger": "2.0.0",
+    "globals": "17.14.0",
+    "handlebars": "4.7.10",
     "handlebars-loader": "1.7.3",
-    "html-webpack-plugin": "^5.6.6",
+    "html-webpack-plugin": "5.6.8",
     "husky": "^9.1.7",
-    "image-webpack-loader": "8.1.0",
     "is-ci-cli": "2.2.0",
-    "jest": "30.2.0",
-    "lint-staged": "^16.2.7",
-    "markdown-toc": "^1.2.0",
-    "mini-css-extract-plugin": "^2.10.0",
+    "jest": "30.5.2",
+    "lint-staged": "17.6.2",
+    "markdown-it": "15.0.3",
+    "mini-css-extract-plugin": "2.10.2",
     "mkdirp": "3.0.1",
-    "nopt": "^9.0.0",
-    "postcss": "^8.5.6",
-    "postcss-cli": "11.0.1",
-    "postcss-import": "^16.1.1",
-    "postcss-loader": "^8.2.0",
-    "postcss-preset-env": "^11.1.2",
-    "prettier": "^3.8.1",
-    "ts-jest": "^29.4.6",
-    "ts-loader": "9.5.4",
+    "nopt": "10.0.1",
+    "postcss": "8.5.34",
+    "postcss-cli": "12.0.0",
+    "postcss-import": "17.0.1",
+    "postcss-loader": "8.2.2",
+    "postcss-preset-env": "11.6.3",
+    "prettier": "3.10.1",
+    "ts-jest": "29.4.15",
+    "ts-loader": "9.6.2",
     "ts-node": "10.9.2",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0",
-    "url-loader": "4.1.1",
-    "webpack": "^5.104.1",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.3",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.74.0",
+    "webpack": "5.113.0",
+    "webpack-cli": "7.3.1",
+    "webpack-dev-server": "6.1.0",
     "whatwg-fetch": "3.6.20"
   },
-  "resolutions": {
-    "lodash": ">=4.17.20",
-    "minimist": ">=1.2.5",
-    "acorn": ">=7.4.0",
-    "autolinker": ">=3.14.1",
-    "bl": ">=2.2.1",
-    "decompress": ">=4.2.1",
-    "node-forge": ">=0.10.0",
-    "trim-newlines": ">=3.0.1",
-    "async": ">=2.6.4",
-    "terser": ">=5.14.2",
-    "semver-regex": ">=4.0.5",
-    "http-cache-semantics": ">=4.1.1"
+  "allowScripts": {
+    "@parcel/watcher": false,
+    "fsevents": false
   },
   "license": "MIT",
   "files": [
