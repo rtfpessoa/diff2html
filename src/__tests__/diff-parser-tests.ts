@@ -2676,6 +2676,8 @@ describe('DiffParser', () => {
 
     it('should not count the format-patch signature as a deleted line', () => {
       const diff =
+        'From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001\n' +
+        '\n' +
         'diff --git a/f.txt b/f.txt\n' +
         'index 1..2 100644\n' +
         '--- a/f.txt\n' +

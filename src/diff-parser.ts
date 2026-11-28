@@ -22,6 +22,7 @@ const prefixedFilenamePattern = `${quotedFilename.source}|[a-ciow]/[^"]+`;
 const binaryFilenamePattern = `${quotedFilename.source}|[^"]+`;
 const gitDiffStart = new RegExp(`^diff --git (${prefixedFilenamePattern}) (${prefixedFilenamePattern})$`);
 const isGitFileHeader = (line: string): boolean => line.startsWith('diff --git') || line.startsWith('diff --combined');
+const formatPatchEnvelope = /^From (?:[0-9a-f]{40}|[0-9a-f]{64}) Mon Sep 17 00:00:00 2001$/;
 const unixDiffBinaryStart = new RegExp(
   `^Binary files (${prefixedFilenamePattern}) and (${prefixedFilenamePattern}) differ$`,
 );
@@ -135,6 +136,8 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
   const combinedDeletedFile = /^deleted file mode (\d{6}),(\d{6})/;
 
   const diffLines = diffInput.replace(/\r\n?/g, '\n').split('\n');
+  const isFormatPatch = formatPatchEnvelope.test(diffLines[0]);
+  let inPatchSignature = false;
 
   /* Add previous block(if exists) before start a new file */
   function saveBlock(): void {
@@ -208,8 +211,10 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
         currentFile.isCombined = false;
         oldLine = parseInt(values[1], 10);
         newLine = parseInt(values[3], 10);
-        oldLinesLeft = values[2] === undefined ? 1 : parseInt(values[2], 10);
-        newLinesLeft = values[4] === undefined ? 1 : parseInt(values[4], 10);
+        if (isFormatPatch) {
+          oldLinesLeft = values[2] === undefined ? 1 : parseInt(values[2], 10);
+          newLinesLeft = values[4] === undefined ? 1 : parseInt(values[4], 10);
+        }
       } else if ((values = /^@@@ -(\d+)(?:,\d+)? -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@@.*/.exec(line))) {
         currentFile.isCombined = true;
         oldLine = parseInt(values[1], 10);
@@ -307,6 +312,26 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
   }
 
   diffLines.forEach((line, lineIndex) => {
+    if (isFormatPatch && formatPatchEnvelope.test(line)) {
+      saveBlock();
+      saveFile();
+      inPatchSignature = false;
+      return;
+    }
+    if (inPatchSignature) return;
+
+    // A format-patch footer follows a complete hunk (or a file without hunks).
+    // A raw diff with inaccurate counts may still contain a real `-- ` deletion.
+    if (
+      isFormatPatch &&
+      line === '-- ' &&
+      currentFile?.isGitDiff &&
+      (!currentBlock || (oldLinesLeft === 0 && newLinesLeft === 0))
+    ) {
+      inPatchSignature = true;
+      return;
+    }
+
     // Unmerged paths, and possibly other non-diffable files
     // https://github.com/scottgonzalez/pretty-diff/issues/11
     // Also, remove some useless lines
@@ -447,9 +472,7 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
      * 2. Old line     starts with: -
      * 3. Context line starts with: <SPACE>
      */
-    // `-- ` right after a complete hunk is the signature separator of `git format-patch`
-    const isPatchSignature = line === '-- ' && oldLinesLeft === 0 && newLinesLeft === 0;
-    if (currentBlock && !isPatchSignature && (line.startsWith('+') || line.startsWith('-') || line.startsWith(' '))) {
+    if (currentBlock && (line.startsWith('+') || line.startsWith('-') || line.startsWith(' '))) {
       createLine(line);
       return;
     }
