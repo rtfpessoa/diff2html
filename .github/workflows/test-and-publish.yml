@@ -2,44 +2,23 @@ name: test-and-publish
 
 on:
   workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
+
+permissions:
+  contents: read
 
 jobs:
   version:
-    runs-on: ubuntu-latest
-    container:
-      image: codacy/git-version
+    if: github.repository == 'rtfpessoa/diff2html' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - name: Fix tar access
-        run: apk add --update --no-progress tar
-      - name: Fix git access
-        run: |
-          git config --global --add safe.directory /__w/diff2html/diff2html
-      - name: Get next version
-        run: |
-          export NEXT_VERSION="$(/bin/git-version --folder=$PWD --release-branch=master)"
-          echo "Next version is ${NEXT_VERSION}"
-          echo "${NEXT_VERSION}" > next-version.txt
-          echo "version=${NEXT_VERSION}" >> $GITHUB_ENV
-      - name: Get next npm tag name
-        run: |
-          if [ "${GITHUB_REF_NAME}" = "master" ]; then
-            export PUBLISH_TAG="latest"
-          elif [ "${GITHUB_REF_NAME}" = "next" ]; then
-            export PUBLISH_TAG="next"
-          else
-            export PUBLISH_TAG="pr"
-          fi
-          echo "Next tag is ${PUBLISH_TAG}"
-          echo "${PUBLISH_TAG}" > publish-tag.txt
+          persist-credentials: false
+      - name: Get next release version
+        run: bash .github/scripts/release-version.sh
       - name: Upload versions
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: versions
           if-no-files-found: error
@@ -48,100 +27,92 @@ jobs:
             publish-tag.txt
 
   build:
-    runs-on: ubuntu-latest
+    if: github.repository == 'rtfpessoa/diff2html' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
     needs: [version]
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x, 20.x, 22.x]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: Log environment setup
-        run: |
-          node -v
-          npm -v
-      - name: Install dependencies
-        run: npm install
-      - name: Build templates
-        run: npm run build:templates
-      - name: Build library
-        run: npm run build
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Install locked dependencies and validate
+        run: bash .github/scripts/validate.sh
 
   publish:
-    runs-on: ubuntu-latest
-    needs: [build]
-    environment: ${{ inputs.environment }}
+    if: github.repository == 'rtfpessoa/diff2html' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    needs: [build, version]
+    environment: production
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Install locked dependencies and validate
+        run: bash .github/scripts/validate.sh
       - name: Download versions
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: versions
-      - name: Store version
-        run: echo "version=$(cat next-version.txt)" >> $GITHUB_ENV
-      - name: Configure Git
+      - name: Stamp package version
+        id: release
         run: |
-          git config user.email "gh-actions@users.noreply.github.com"
-          git config user.name "GitHub Actions"
-      - name: Tag commit
-        uses: tvdias/github-tagger@v0.0.1
-        with:
-          repo-token: '${{ secrets.GITHUB_TOKEN }}'
-          tag: '${{ env.version }}'
-      - name: Install dependencies
-        run: npm install
-      - uses: actions/setup-node@v3
-        with:
-          registry-url: 'https://registry.npmjs.org'
-          node-version: '22.x'
-      - name: Configure NPM version
+          version=$(<next-version.txt)
+          tag=$(<publish-tag.txt)
+          [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $tag == latest ]]
+          # The clean tree was already validated. Skip local release hooks and Git tagging here.
+          npm --ignore-scripts version --no-git-tag-version "$version"
+          { printf 'version=%s\n' "$version"; printf 'tag=%s\n' "$tag"; } >> "$GITHUB_OUTPUT"
+      - name: Check release tag is still unused
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
         run: |
-          rm -f .npmrc
-          touch .npmrc
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-          echo "registry=https://registry.npmjs.org/" >> .npmrc
-          echo "access=public" >> .npmrc
-          echo "save-exact=true" >> .npmrc
-      - name: Version package
-        run: |
-          # Update version in packages to publish
-          npm version $(cat next-version.txt) -m "Release version %s"
-      - name: Publish to NPM
-        run: npm publish --tag $(cat publish-tag.txt)
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '22.x'
-          registry-url: 'https://npm.pkg.github.com'
-      - name: Configure NPM version
+          ref="refs/tags/$RELEASE_VERSION"
+          refs=$(git ls-remote --refs origin "$ref") || exit 1
+          if awk -v ref="$ref" '$2 == ref { found = 1 } END { exit !found }' <<< "$refs"; then
+            printf 'Release tag already exists: %s\n' "$ref" >&2
+            exit 1
+          fi
+      - name: Publish to npm with trusted publishing
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
         run: |
-          rm -f .npmrc
-          touch .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-          echo "@rtfpessoa:registry=https://npm.pkg.github.com/" >> .npmrc
-          echo "access=public" >> .npmrc
-          echo "save-exact=true" >> .npmrc
-      - name: Publish to GPR
+          # Use the OIDC-capable CLI only here; validation keeps its own pinned npm version.
+          npm_cli=(npm)
+          if [[ $(npm --version) != 12.2.3 ]]; then
+            npm_cli=(npm exec --yes --package=npm@12.2.3 -- npm)
+          fi
+          [[ $("${npm_cli[@]}" --version) == 12.2.3 ]]
+          "${npm_cli[@]}" publish --registry https://registry.npmjs.org/ --access public --tag "$RELEASE_TAG"
+      - name: Publish to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
         run: |
-          # HACK: Override npm package name to be able to publish in GitHub
-          sed -i 's/^  "name":.*/  "name": "@rtfpessoa\/diff2html",/g' package.json
-          echo "Going to publish version $(cat next-version.txt) to GitHub"
-          npm publish --tag $(cat publish-tag.txt)
-          # HACK: Restore npm package name
-          sed -i 's/^  "name":.*/  "name": "diff2html",/g' package.json
+          config=$(mktemp "$RUNNER_TEMP/diff2html-gpr.XXXXXX")
+          trap 'rm -f "$config"' EXIT
+          printf '%s\n' "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}" > "$config"
+          npm pkg set 'name=@rtfpessoa/diff2html'
+          npm publish --userconfig "$config" --registry https://npm.pkg.github.com/ --access public --tag "$RELEASE_TAG"
+      - name: Tag published commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
+            --field "ref=refs/tags/$RELEASE_VERSION" --field "sha=$GITHUB_SHA"
       - name: Upload docs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: docs
           if-no-files-found: error

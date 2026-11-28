@@ -12,6 +12,7 @@ import {
   DiffLineContent,
   DiffLineNoNewline,
 } from './types';
+import { max } from './utils';
 
 export interface SideBySideRendererConfig extends renderUtils.RenderConfig {
   renderNothingWhenEmpty?: boolean;
@@ -62,7 +63,10 @@ export default class SideBySideRenderer {
   makeFileDiffHtml(file: DiffFile, diffs: FileHtml): string {
     if (this.config.renderNothingWhenEmpty && Array.isArray(file.blocks) && file.blocks.length === 0) return '';
 
-    const fileDiffTemplate = this.hoganUtils.template(baseTemplatesPath, 'file-diff');
+    const fileDiffTemplate = this.hoganUtils.template(
+      baseTemplatesPath,
+      this.config.wrapLines === true ? 'wrapped-file-diff' : 'file-diff',
+    );
     const filePathTemplate = this.hoganUtils.template(genericTemplatesPath, 'file-path');
     const fileIconTemplate = this.hoganUtils.template(iconsBaseTemplatesPath, 'file');
     const fileTagTemplate = this.hoganUtils.template(tagsBaseTemplatesPath, renderUtils.getFileIcon(file));
@@ -84,6 +88,10 @@ export default class SideBySideRenderer {
   }
 
   generateEmptyDiff(): FileHtml {
+    if (this.config.wrapLines === true) {
+      return { left: this.generateWrappedInfoHtml('File without changes'), right: '' };
+    }
+
     return {
       right: '',
       left: this.hoganUtils.render(genericTemplatesPath, 'empty-diff', {
@@ -102,7 +110,7 @@ export default class SideBySideRenderer {
       .map(block => {
         const fileHtml = {
           left: this.makeHeaderHtml(block.header, file),
-          right: this.makeHeaderHtml(''),
+          right: this.config.wrapLines === true ? '' : this.makeHeaderHtml(''),
         };
 
         this.applyLineGroupping(block).forEach(([contextLines, oldLines, newLines]) => {
@@ -216,8 +224,6 @@ export default class SideBySideRenderer {
 
     if (oldLines.length || newLines.length) {
       blockLinesGroups.push([[], oldLines, newLines]);
-      oldLines = [];
-      newLines = [];
     }
 
     return blockLinesGroups;
@@ -229,10 +235,7 @@ export default class SideBySideRenderer {
     matcher: Rematch.MatcherFn<DiffLine>,
   ): DiffLine[][][] {
     const comparisons = oldLines.length * newLines.length;
-    const maxLineSizeInBlock = Math.max.apply(
-      null,
-      [0].concat(oldLines.concat(newLines).map(elem => elem.content.length)),
-    );
+    const maxLineSizeInBlock = max(oldLines.concat(newLines).map(elem => elem.content.length));
     const doMatching =
       comparisons < this.config.matchingMaxComparisons &&
       maxLineSizeInBlock < this.config.maxLineSizeInBlockForComparison &&
@@ -242,9 +245,12 @@ export default class SideBySideRenderer {
   }
 
   makeHeaderHtml(blockHeader: string, file?: DiffFile): string {
+    const content = file?.isTooBig ? blockHeader : renderUtils.escapeForHtml(blockHeader);
+    if (this.config.wrapLines === true) return this.generateWrappedInfoHtml(content);
+
     return this.hoganUtils.render(genericTemplatesPath, 'block-header', {
       CSSLineClass: renderUtils.CSSLineClass,
-      blockHeader: file?.isTooBig ? blockHeader : renderUtils.escapeForHtml(blockHeader),
+      blockHeader: content,
       lineClass: 'd2h-code-side-linenumber',
       contentClass: 'd2h-code-side-line',
     });
@@ -309,6 +315,9 @@ export default class SideBySideRenderer {
   }
 
   generateLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {
+    // Wrapped output accumulates whole rows in the left buffer rather than aligning two separate tables.
+    if (this.config.wrapLines === true) return { left: this.generateWrappedLineHtml(oldLine, newLine), right: '' };
+
     return {
       left: this.generateSingleHtml(oldLine),
       right: this.generateSingleHtml(newLine),
@@ -316,17 +325,31 @@ export default class SideBySideRenderer {
   }
 
   generateSingleHtml(line?: DiffPreparedLine): string {
+    return this.hoganUtils.render(genericTemplatesPath, 'line', this.lineTemplateData(line));
+  }
+
+  private generateWrappedLineHtml(oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): string {
+    return this.hoganUtils.render(baseTemplatesPath, 'wrapped-line', {
+      sides: [this.lineTemplateData(oldLine), this.lineTemplateData(newLine)],
+    });
+  }
+
+  private generateWrappedInfoHtml(content: string): string {
+    return this.hoganUtils.render(baseTemplatesPath, 'wrapped-info', { content });
+  }
+
+  private lineTemplateData(line?: DiffPreparedLine) {
     const lineClass = 'd2h-code-side-linenumber';
     const contentClass = 'd2h-code-side-line';
 
-    return this.hoganUtils.render(genericTemplatesPath, 'line', {
+    return {
       type: line?.type || `${renderUtils.CSSLineClass.CONTEXT} d2h-emptyplaceholder`,
       lineClass: line !== undefined ? lineClass : `${lineClass} d2h-code-side-emptyplaceholder`,
       contentClass: line !== undefined ? contentClass : `${contentClass} d2h-code-side-emptyplaceholder`,
       prefix: line?.prefix === ' ' ? '&nbsp;' : line?.prefix,
       content: line?.content,
       lineNumber: line?.number,
-    });
+    };
   }
 }
 

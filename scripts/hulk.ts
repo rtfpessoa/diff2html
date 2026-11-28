@@ -13,10 +13,13 @@
  *  limitations under the License.
  */
 
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../typings/profoundlogic__hogan.d.ts" />
+
 import * as path from 'path';
 import * as fs from 'fs';
 
-import * as hogan from 'hogan.js';
+import * as hogan from '@profoundlogic/hogan';
 import nopt from 'nopt';
 import * as mkderp from 'mkdirp';
 
@@ -118,7 +121,7 @@ function wrap(file: string, name: string, openedFile: string): string {
     case 'amd':
       return `define(${
         !options.outputdir ? `"${path.join(path.dirname(file), name)}", ` : ''
-      }["hogan.js"], function(Hogan) { return ${hoganTemplateString}; });`;
+      }["@profoundlogic/hogan"], function(Hogan) { return ${hoganTemplateString}; });`;
 
     case 'node':
       // If we have a template per file the export will expose the template directly
@@ -139,12 +142,12 @@ function prepareOutput(content: string): string {
     case 'node':
       return `(function() {
 if (!!!global.${variableName}) global.${variableName} = {};
-var Hogan = require("hogan.js");
+var Hogan = require("@profoundlogic/hogan);
 ${content}
 ${!options.outputdir ? `module.exports = global.${variableName};\n` : ''})();`;
 
     case 'ts':
-      return `import * as Hogan from "hogan.js";
+      return `import * as Hogan from "@profoundlogic/hogan";
 type CompiledTemplates = { [name: string]: Hogan.Template };
 export const ${variableName}: CompiledTemplates = {};
 ${content}`;

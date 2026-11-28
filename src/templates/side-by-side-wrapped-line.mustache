@@ -1,0 +1,13 @@
+<tr>
+    {{#sides}}
+    <td class="{{lineClass}} {{type}}">
+      {{{lineNumber}}}
+    </td>
+    <td class="{{type}}">
+        <div class="{{contentClass}}">
+            <span class="d2h-code-line-prefix">{{#prefix}}{{{prefix}}}{{/prefix}}{{^prefix}}&nbsp;{{/prefix}}</span>
+            <span class="d2h-code-line-ctn">{{#content}}{{{content}}}{{/content}}{{^content}}<br>{{/content}}</span>
+        </div>
+    </td>
+    {{/sides}}
+</tr>

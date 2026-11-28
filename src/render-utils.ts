@@ -13,12 +13,7 @@ import {
 } from './types';
 
 export type CSSLineClass =
-  | 'd2h-ins'
-  | 'd2h-del'
-  | 'd2h-cntx'
-  | 'd2h-info'
-  | 'd2h-ins d2h-change'
-  | 'd2h-del d2h-change';
+  'd2h-ins' | 'd2h-del' | 'd2h-cntx' | 'd2h-info' | 'd2h-ins d2h-change' | 'd2h-del d2h-change';
 
 export const CSSLineClass: { [_: string]: CSSLineClass } = {
   INSERTS: 'd2h-ins',
@@ -46,6 +41,7 @@ export interface RenderConfig {
   maxLineLengthHighlight?: number;
   diffStyle?: DiffStyleType;
   colorScheme?: ColorSchemeType;
+  wrapLines?: boolean;
 }
 
 export const defaultRenderConfig = {
@@ -54,6 +50,7 @@ export const defaultRenderConfig = {
   maxLineLengthHighlight: 10000,
   diffStyle: DiffStyleType.WORD,
   colorScheme: ColorSchemeType.LIGHT,
+  wrapLines: false,
 };
 
 const separator = '/';

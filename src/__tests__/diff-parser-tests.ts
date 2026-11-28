@@ -255,6 +255,85 @@ describe('DiffParser', () => {
       `);
     });
 
+    it('should decode file names git quotes with escapes', () => {
+      const diff =
+        'diff --git "a/\\303\\274n\\303\\257.txt" "b/\\303\\274n\\303\\257.txt"\n' +
+        'index 4c679d7..e9bd385 100644\n' +
+        '--- "a/\\303\\274n\\303\\257.txt"\n' +
+        '+++ "b/\\303\\274n\\303\\257.txt"\n' +
+        '@@ -1 +1 @@\n' +
+        '-a\n' +
+        '+b\n' +
+        'diff --git "a/say \\"hi\\".txt" "b/\\344\\275\\240\\345\\245\\275.txt"\n' +
+        'similarity index 100%\n' +
+        'rename from "say \\"hi\\".txt"\n' +
+        'rename to "\\344\\275\\240\\345\\245\\275.txt"\n' +
+        'diff --git "a/😀\\"q.txt" "b/😀\\"q.txt"\n' +
+        '--- "a/😀\\"q.txt"\n' +
+        '+++ "b/😀\\"q.txt"\n' +
+        '@@ -1 +1 @@\n' +
+        '-a\n' +
+        '+b\n';
+      const result = parse(diff);
+      expect(result.map(file => [file.oldName, file.newName])).toEqual([
+        ['ünï.txt', 'ünï.txt'],
+        ['say "hi".txt', '你好.txt'],
+        ['😀"q.txt', '😀"q.txt'],
+      ]);
+    });
+
+    it('should keep backslashes in unquoted file names', () => {
+      const diff = '--- C:\\work\\old.txt\n' + '+++ C:\\work\\new.txt\n' + '@@ -1 +1 @@\n' + '-a\n' + '+b\n';
+      const result = parse(diff);
+      expect([result[0].oldName, result[0].newName]).toEqual(['C:\\work\\old.txt', 'C:\\work\\new.txt']);
+    });
+
+    it('should parse diff with a space in the file name', () => {
+      // git ends --- and +++ names that contain a space with a TAB
+      const diff =
+        'diff --git a/My Docs/app.js b/My Docs/app.js\n' +
+        'index 4c679d7..e9bd385 100644\n' +
+        '--- a/My Docs/app.js\t\n' +
+        '+++ b/My Docs/app.js\t\n' +
+        '@@ -1 +1,2 @@\n' +
+        ' const x = 1;\n' +
+        '+const y = 2;';
+      const [file] = parse(diff);
+      expect(file.oldName).toBe('My Docs/app.js');
+      expect(file.newName).toBe('My Docs/app.js');
+      expect(file.language).toBe('js');
+    });
+
+    it('should decode quoted Git paths without stripping filename characters', () => {
+      const path = String.raw`"a/😀 \"hi\"\\test 2016-10-25 11:37:14 +0200.txt\t"`;
+      const diff = `diff --git ${path} ${path}\n--- ${path}\t\n+++ ${path}\t\n@@ -1 +1 @@\n-a\n+b\n`;
+      const [file] = parse(diff);
+      const filename = '😀 "hi"\\test 2016-10-25 11:37:14 +0200.txt\t';
+      expect([file.oldName, file.newName]).toEqual([filename, filename]);
+    });
+
+    it.each(['rename', 'copy'])('should decode Git %s metadata without stripping path prefixes', operation => {
+      const from = String.raw`a/say \"hi\".txt`;
+      const to = String.raw`b/\344\275\240\345\245\275.txt`;
+      const diff = `diff --git "a/${from}" "b/${to}"\nsimilarity index 100%\n${operation} from "${from}"\n${operation} to "${to}"\n`;
+      const [file] = parse(diff);
+      expect([file.oldName, file.newName]).toEqual(['a/say "hi".txt', 'b/你好.txt']);
+    });
+
+    it('should decode quoted Git paths when there are no file headers', () => {
+      const path = String.raw`\303\274ni and foo.txt`;
+      const diff = `diff --git "a/${path}" "b/${path}"\nold mode 100644\nnew mode 100755\n`;
+      const [file] = parse(diff);
+      expect([file.oldName, file.newName]).toEqual(['üni and foo.txt', 'üni and foo.txt']);
+    });
+
+    it('should decode quoted binary filenames that contain the separator text', () => {
+      const path = String.raw`\303\274ni and foo.bin`;
+      const diff = `diff --git "a/${path}" "b/${path}"\nBinary files "a/${path}" and "b/${path}" differ\n`;
+      const [file] = parse(diff);
+      expect([file.oldName, file.newName, file.isBinary]).toEqual(['üni and foo.bin', 'üni and foo.bin', true]);
+    });
+
     it('should parse diff with prefix', () => {
       const diff =
         'diff --git "\tbla with \ttab.scala" "\tbla with \ttab.scala"\n' +
@@ -2513,6 +2592,106 @@ describe('DiffParser', () => {
           },
         ]
       `);
+    });
+
+    it('should keep "\\ No newline at end of file" text inside content lines', () => {
+      const diff =
+        'diff --git a/fix.patch b/fix.patch\n' +
+        'index 0000001..0ddf2ba 100644\n' +
+        '--- a/fix.patch\n' +
+        '+++ b/fix.patch\n' +
+        '@@ -1,4 +1,4 @@\n' +
+        ' @@ -1 +1 @@\n' +
+        '-+old\n' +
+        '-\\ No newline at end of file\n' +
+        '++new\n' +
+        '+\\ No newline at end of file\n' +
+        ' \\ No newline at end of file\n' +
+        '\\ No newline at end of file\n';
+
+      const result = parse(diff);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "addedLines": 2,
+            "blocks": [
+              {
+                "header": "@@ -1,4 +1,4 @@",
+                "lines": [
+                  {
+                    "content": " @@ -1 +1 @@",
+                    "newNumber": 1,
+                    "oldNumber": 1,
+                    "type": "context",
+                  },
+                  {
+                    "content": "-+old",
+                    "newNumber": undefined,
+                    "oldNumber": 2,
+                    "type": "delete",
+                  },
+                  {
+                    "content": "-\\ No newline at end of file",
+                    "newNumber": undefined,
+                    "oldNumber": 3,
+                    "type": "delete",
+                  },
+                  {
+                    "content": "++new",
+                    "newNumber": 2,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  {
+                    "content": "+\\ No newline at end of file",
+                    "newNumber": 3,
+                    "oldNumber": undefined,
+                    "type": "insert",
+                  },
+                  {
+                    "content": " \\ No newline at end of file",
+                    "newNumber": 4,
+                    "oldNumber": 4,
+                    "type": "context",
+                  },
+                ],
+                "newStartLine": 1,
+                "oldStartLine": 1,
+                "oldStartLine2": null,
+              },
+            ],
+            "checksumAfter": "0ddf2ba",
+            "checksumBefore": "0000001",
+            "deletedLines": 2,
+            "isCombined": false,
+            "isGitDiff": true,
+            "language": "patch",
+            "mode": "100644",
+            "newName": "fix.patch",
+            "oldName": "fix.patch",
+          },
+        ]
+      `);
+    });
+
+    it('should not count the format-patch signature as a deleted line', () => {
+      const diff =
+        'From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001\n' +
+        '\n' +
+        'diff --git a/f.txt b/f.txt\n' +
+        'index 1..2 100644\n' +
+        '--- a/f.txt\n' +
+        '+++ b/f.txt\n' +
+        '@@ -1,2 +1,3 @@\n' +
+        ' a\n' +
+        ' b\n' +
+        '+c\n' +
+        '-- \n' +
+        '2.53.0\n';
+      const [file] = parse(diff);
+      expect(file.addedLines).toBe(1);
+      expect(file.deletedLines).toBe(0);
+      expect(file.blocks[0].lines.map(l => l.content)).toEqual([' a', ' b', '+c']);
     });
   });
 });

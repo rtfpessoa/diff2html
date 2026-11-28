@@ -1,6 +1,6 @@
 import path from 'path';
 
-import webpack from 'webpack';
+import type webpack from 'webpack';
 
 const diff2htmlBrowserConfig: webpack.Configuration = {
   module: {
@@ -17,7 +17,7 @@ const diff2htmlBrowserConfig: webpack.Configuration = {
   },
   entry: './src/diff2html.ts',
   output: {
-    path: path.resolve(__dirname, 'bundles/js'),
+    path: path.resolve(import.meta.dirname, 'bundles/js'),
     libraryTarget: 'umd',
     globalObject: 'this',
     library: 'Diff2Html',
@@ -42,7 +42,7 @@ function diff2htmlUIBrowserConfig(entrypointName: string): webpack.Configuration
     },
     entry: `./src/ui/js/${entrypointName}.ts`,
     output: {
-      path: path.resolve(__dirname, 'bundles/js'),
+      path: path.resolve(import.meta.dirname, 'bundles/js'),
       libraryTarget: 'umd',
       globalObject: 'this',
       filename: `${entrypointName}.min.js`,

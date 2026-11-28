@@ -1,4 +1,6 @@
-import * as Hogan from 'hogan.js';
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../typings/profoundlogic__hogan.d.ts" />
+import * as Hogan from '@profoundlogic/hogan';
 
 import { defaultTemplates } from './diff2html-templates';
 
@@ -40,6 +42,7 @@ export default class HoganJsUtils {
       const template = this.preCompiledTemplates[templateKey];
       return template.render(params, partials, indent);
     } catch (_e) {
+      // eslint-disable-next-line preserve-caught-error -- Error causes require Node 16.9+.
       throw new Error(`Could not find template to render '${templateKey}'`);
     }
   }

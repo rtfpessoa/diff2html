@@ -1,6 +1,8 @@
 module.exports = {
   verbose: true,
-  preset: 'ts-jest',
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: { types: ['node', 'jest'] } }],
+  },
   testEnvironment: 'node',
   coverageDirectory: './coverage',
   coverageReporters: ['lcov', 'text', 'html', 'json', 'cobertura', 'clover'],
@@ -19,5 +21,4 @@ module.exports = {
       lines: 93,
     },
   },
-  prettierPath: require.resolve('prettier-2'),
 };
