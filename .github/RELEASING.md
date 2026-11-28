@@ -5,8 +5,9 @@ validates the locked build, publishes `diff2html` to npm and `@rtfpessoa/diff2ht
 and deploys the website. PR and non-master push checks do not publish.
 
 The [npm trusted publisher](https://docs.npmjs.com/trusted-publishers/) for `diff2html` must point to
-`rtfpessoa/diff2html`, workflow `release.yml` (the caller), and environment `production`. The npm publish step uses
-GitHub OIDC; the GitHub Packages step uses `GITHUB_TOKEN` separately.
+`rtfpessoa/diff2html`, workflow `release.yml` (the caller), and environment `production`. Under **Allowed actions**,
+enable direct `npm publish`; allowing only `npm stage publish` is not enough. The npm publish step uses GitHub OIDC; the
+GitHub Packages step uses `GITHUB_TOKEN` separately.
 
 ## Recovering a failed release
 

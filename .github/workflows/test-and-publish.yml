@@ -73,6 +73,16 @@ jobs:
           # The clean tree was already validated. Skip local release hooks and Git tagging here.
           npm --ignore-scripts version --no-git-tag-version "$version"
           { printf 'version=%s\n' "$version"; printf 'tag=%s\n' "$tag"; } >> "$GITHUB_OUTPUT"
+      - name: Check release tag is still unused
+        env:
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          ref="refs/tags/$RELEASE_VERSION"
+          refs=$(git ls-remote --refs origin "$ref") || exit 1
+          if awk -v ref="$ref" '$2 == ref { found = 1 } END { exit !found }' <<< "$refs"; then
+            printf 'Release tag already exists: %s\n' "$ref" >&2
+            exit 1
+          fi
       - name: Publish to npm with trusted publishing
         env:
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
