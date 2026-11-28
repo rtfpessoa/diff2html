@@ -122,6 +122,7 @@ export default class LineByLineRenderer {
                 oldNumber: line.oldNumber,
                 newNumber: line.newNumber,
               });
+              lines += this.generateNoNewlineHtml(file, line.noNewline);
             });
           } else if (oldLines.length || newLines.length) {
             const { left, right } = this.processChangedLines(file, file.isCombined, oldLines, newLines);
@@ -241,11 +242,15 @@ export default class LineByLineRenderer {
           : undefined;
 
       const { left, right } = this.generateLineHtml(file, preparedOldLine, preparedNewLine);
-      fileHtml.left += left;
-      fileHtml.right += right;
+      fileHtml.left += left + this.generateNoNewlineHtml(file, oldLine?.noNewline);
+      fileHtml.right += right + this.generateNoNewlineHtml(file, newLine?.noNewline);
     }
 
     return fileHtml;
+  }
+
+  private generateNoNewlineHtml(file: DiffFile, marker?: string): string {
+    return marker === undefined ? '' : this.generateSingleLineHtml(file, renderUtils.prepareNoNewlineMarker(marker));
   }
 
   generateLineHtml(file: DiffFile, oldLine?: DiffPreparedLine, newLine?: DiffPreparedLine): FileHtml {

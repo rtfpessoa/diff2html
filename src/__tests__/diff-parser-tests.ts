@@ -2651,6 +2651,7 @@ describe('DiffParser', () => {
                   {
                     "content": " \\ No newline at end of file",
                     "newNumber": 4,
+                    "noNewline": "\\ No newline at end of file",
                     "oldNumber": 4,
                     "type": "context",
                   },

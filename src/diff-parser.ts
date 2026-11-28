@@ -129,8 +129,6 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
 
   const binaryDiff = /^GIT binary patch/;
 
-  const noNewlineAtEndOfFile = /^\\ No newline at end of file/;
-
   /* Combined Diff */
   const combinedIndex = /^index ([\da-z]+),([\da-z]+)\.\.([\da-z]+)/;
   const combinedMode = /^mode (\d{6}),(\d{6})\.\.(\d{6})/;
@@ -334,12 +332,18 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       return;
     }
 
+    // EOF metadata begins with a bare backslash-space even when localized.
+    // Literal text still has its hunk prefix and is processed as content.
+    if (line.startsWith('\\ ')) {
+      const lines = currentBlock?.lines;
+      const previous = lines?.[lines.length - 1];
+      if (previous && previous.content === diffLines[lineIndex - 1]) previous.noNewline = line;
+      return;
+    }
+
     // Unmerged paths, and possibly other non-diffable files
     // https://github.com/scottgonzalez/pretty-diff/issues/11
-    // Also, remove some useless lines
-    // Lines starting with "\ " are markers like "\ No newline at end of file"
-    // (the message text can be translated, so only the prefix is checked)
-    if (!line || line.startsWith('*') || line.startsWith('\\ ')) {
+    if (!line || line.startsWith('*')) {
       return;
     }
 
@@ -545,8 +549,6 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
     } else if ((values = combinedDeletedFile.exec(line))) {
       currentFile.deletedFileMode = values[1];
       currentFile.isDeleted = true;
-    } else if (line.match(noNewlineAtEndOfFile)) {
-      createLine(line);
     }
   });
 

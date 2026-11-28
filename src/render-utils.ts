@@ -80,8 +80,6 @@ export function toCSSClass(lineType: LineType): CSSLineClass {
       return CSSLineClass.INSERTS;
     case LineType.DELETE:
       return CSSLineClass.DELETES;
-    case LineType.NO_NEW_LINE:
-      return CSSLineClass.CONTEXT;
   }
 }
 
@@ -117,6 +115,10 @@ export function escapeForHtml(str: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
     .replace(/\//g, '&#x2F;');
+}
+
+export function prepareNoNewlineMarker(marker: string): DiffLineParts & { type: CSSLineClass } {
+  return { ...deconstructLine(marker, false), type: CSSLineClass.CONTEXT };
 }
 
 /**
